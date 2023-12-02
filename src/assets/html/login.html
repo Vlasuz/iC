@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en" style="--accent: #EF3129; --accent-light: #FF0A00; --accent-dark: #CB241D; --theme-text-color: #fff; --theme-text-color-2: #EF3129;">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<link rel="stylesheet" href="css/style.min.css">
+</head>
+
+<body>
+
+	<div class="wrapper login-wrapper">
+
+		<main class="main is-none-aside" data-simplebar data-simplebar-auto-hide="false">
+			<section class="login">
+				<div class="login__wrapper">
+					<div class="login__col">
+						<div class="login__header">
+							<div class="login__logo">
+								<picture>
+									<source srcset="img/logo.avif" type="image/avif">
+									<source srcset="img/logo.webp" type="image/webp">
+									<img src="img/logo.png" alt="" width="100" height="100" loading="lazy">
+								</picture>
+							</div>
+							<div class="login__lang drop-down is-right-default">
+								<button class="login__lang--target drop-down__target" type="button">
+									<span>
+										En
+									</span>
+									<svg width="10" height="7" viewBox="0 0 10 7" class="login__lang--target-arrow drop-down__target--arrow">
+										<use xlink:href="img/sprites.svg#drop-down-arrow"></use>
+									</svg>
+								</button>
+								<div class="login__lang--block drop-down__block">
+									<ul class="login__lang--list drop-down__list">
+										<li>
+											<a href="#">
+												UA
+											</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div class="login__main">
+							<form class="login__form">
+								<h1 class="login__title title is-large">
+									Login
+								</h1>
+								<div class="login__drop-down drop-down select-drop-down">
+									<button class="drop-down__target select-drop-down__target" type="button" aria-label="iC Ukraine">
+										<span>iC Ukraine</span>
+										<svg width="10" height="7" viewBox="0 0 10 7" class="drop-down__target--arrow select-drop-down__target--arrow">
+											<use xlink:href="img/sprites.svg#drop-down-arrow"></use>
+										</svg>
+									</button>
+									<div class="drop-down__block select-drop-down__block">
+										<ul class="drop-down__list">
+											<li>
+												<a href="login-2.html">
+													CES clean energy solutions
+												</a>
+											</li>
+										</ul>
+									</div>
+								</div>
+								<label class="login__label">
+									<input type="email" name="email" placeholder="E-mail" required class="login__input input">
+								</label>
+								<label class="login__label">
+									<input type="password" name="password" placeholder="Password" required class="login__input input password-input">
+									<button class="login__show-password password-input__visible-toggle" type="button" title="Show/Hide password">
+										<svg width="15" height="15" viewBox="0 0 15 15">
+											<use xlink:href="img/sprites.svg#password-hidden"></use>
+										</svg>
+										<svg width="15" height="15" viewBox="0 0 15 15">
+											<use xlink:href="img/sprites.svg#password-viewed"></use>
+										</svg>
+									</button>
+								</label>
+								<div class="login__checkbox">
+									<label class="checkbox">
+										<input type="checkbox" name="stay-logged-in" class="checkbox__input">
+										<span class="checkbox__element">
+											<svg width="11" height="8" viewBox="0 0 11 8">
+												<use xlink:href="img/sprites.svg#check"></use>
+											</svg>
+										</span>
+										<span class="checkbox__text">
+											Stay logged in
+										</span>
+									</label>
+								</div>
+								<div class="login__form-row">
+									<button class="login__submit btn" type="submit">
+										Log in
+										<svg width="15" height="15" viewBox="0 0 15 15">
+											<use xlink:href="img/sprites.svg#login"></use>
+										</svg>
+									</button>
+									<a href="#forgot-password-popup" class="login__button btn is-transparent is-grey open-popup">
+										Forgot password
+									</a>
+								</div>
+							</form>
+						</div>
+						<div class="login__footer">
+							<ul class="login__privacy">
+								<li>
+									<a href="#">
+										Legal notice
+									</a>
+								</li>
+								<li>
+									<a href="#">
+										Compliance policy
+									</a>
+								</li>
+							</ul>
+							<div class="login__copyright">
+								Copyright © iC consulenten 2013 — 2023. All rights reserved.
+							</div>
+						</div>
+					</div>
+					<div class="login__col">
+						<div class="login__image">
+							<picture>
+								<source srcset="img/login/login-decor-1.avif" type="image/avif">
+								<source srcset="img/login/login-decor-1.webp" type="image/webp">
+								<img src="img/login/login-decor-1.png" alt="" width="0" height="0">
+							</picture>
+						</div>
+					</div>
+				</div>
+			</section>
+		</main>
+
+	</div>
+
+	<div class="forgot-password popup" id="forgot-password-popup" style="display: none;">
+		<div class="forgot-password__wrapper popup-wrapper">
+			<div class="forgot-password__bg popup-bg popup-close"></div>
+			<div class="forgot-password__body popup-body">
+				<button type="button" class="forgot-password__close-btn popup-close-btn popup-close" title="Close">
+					<svg width="15" height="15" viewBox="0 0 15 15">
+						<use xlink:href="img/sprites.svg#close"></use>
+					</svg>
+				</button>
+				<div class="forgot-password__container popup-container" data-simplebar data-simplebar-auto-hide="false">
+					<h2 class="forgot-password__title popup-title title is-center">
+						Forgot your password?
+					</h2>
+					<div class="forgot-password__text popup-text is-center">
+						Don’t worry, we will send you a new one! Just enter your e-mail below and check the Inbox.
+					</div>
+					<form class="popup-form">
+						<div class="popup-form__row">
+							<label class="popup-form__label is-full">
+								<input type="email" name="Email" required placeholder="Enter  your e-mail" class="input">
+							</label>
+						</div>
+						<div class="popup-form__row is-min-gap">
+							<button class="popup-form__cancel btn is-transparent popup-close" type="button">
+								Cancel
+							</button>
+							<button class="popup-form__submit btn" type="submit">
+								Reset password
+							</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="forgot-password-2 popup" id="thanks-popup" style="display: none;">
+		<div class="forgot-password-2__wrapper popup-wrapper">
+			<div class="forgot-password-2__bg popup-bg popup-close"></div>
+			<div class="forgot-password-2__body popup-body">
+				<button type="button" class="forgot-password__close-btn popup-close-btn popup-close" title="Close">
+					<svg width="15" height="15" viewBox="0 0 15 15">
+						<use xlink:href="img/sprites.svg#close"></use>
+					</svg>
+				</button>
+				<div class="forgot-password-2__container popup-container" data-simplebar data-simplebar-auto-hide="false">
+					<h2 class="forgot-password-2__title popup-title title is-center">
+						Thank you!
+					</h2>
+					<div class="forgot-password-2__text popup-text is-center">
+						We have sent the letter with instructions <br> to the e-mail: <u>o.rybak@ic-group.org</u>
+					</div>
+					<form class="popup-form">
+						<div class="popup-form__row-2">
+							<button class="popup-form__submit btn popup-close" type="button">
+								Continue
+							</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="forgot-password popup" id="reset-password-popup" style="display: none;">
+		<div class="forgot-password__wrapper popup-wrapper">
+			<div class="forgot-password__bg popup-bg popup-close"></div>
+			<div class="forgot-password__body popup-body">
+				<button type="button" class="forgot-password__close-btn popup-close-btn popup-close" title="Close">
+					<svg width="15" height="15" viewBox="0 0 15 15">
+						<use xlink:href="img/sprites.svg#close"></use>
+					</svg>
+				</button>
+				<div class="forgot-password__container popup-container" data-simplebar data-simplebar-auto-hide="false">
+					<h2 class="forgot-password__title popup-title title is-center">
+						Reset the password?
+					</h2>
+					<div class="forgot-password__text popup-text is-center">
+						We will send instructions on how to do it <br> to Olena Rybak.
+					</div>
+					<form class="popup-form">
+						<div class="popup-form__row is-min-gap">
+							<button class="popup-form__cancel btn is-transparent popup-close" type="button">
+								Cancel
+							</button>
+							<button class="popup-form__submit btn" type="submit">
+								Reset password
+							</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script src="js/libs.min.js"></script>
+	<script src="js/main.min.js"></script>
+
+</body>
+
+</html>

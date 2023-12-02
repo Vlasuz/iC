@@ -1,0 +1,107 @@
+import React, {useContext, useEffect, useState} from 'react'
+import { useSelector } from 'react-redux';
+import {IsPopupActiveContext} from "../PopupList";
+import {IProject} from "../../../models";
+
+interface IPopupEmployeeProjectsProps {
+    isOpenProjects: boolean
+    setIsOpenProjects: any
+}
+
+export const PopupEmployeeProjects: React.FC<IPopupEmployeeProjectsProps> = ({isOpenProjects, setIsOpenProjects}) => {
+
+    const projects: IProject[] = useSelector((state: any) => state.toolkit.projects)
+    const [selectedProjects, setSelectedProjects] = useState<IProject[]>([])
+
+    const handleSelectProject = (proj: IProject) => {
+        if(selectedProjects.some(item => item.id === proj.id)) {
+            setSelectedProjects(selectedProjects.filter(item => item.id !== proj.id))
+        } else {
+            setSelectedProjects(prev => [...prev, proj])
+        }
+    }
+
+    const handleCheckedAll = () => {
+        if(projects.length === selectedProjects.length) {
+            setSelectedProjects([])
+        } else {
+            setSelectedProjects(projects)
+        }
+    }
+    useEffect(() => {
+        if(isOpenProjects) return;
+
+        setTimeout(() => setSelectedProjects([]), 500)
+    }, [isOpenProjects])
+
+    return (
+        <div className={"sub-popup-employee popup is-sub" + (isOpenProjects ? " is-active" : "")} id="edit-sub-popup-employee" style={{display: "flex"}}>
+            <div className="sub-popup-employee__wrapper popup-wrapper">
+                <div className="sub-popup-employee__bg popup-bg" onClick={_ => setIsOpenProjects(false)}></div>
+                <div className="sub-popup-employee__body popup-body">
+                    <button type="button" className="sub-popup-employee__close-btn popup-close-btn" onClick={_ => setIsOpenProjects(false)} title="Close">
+                        <svg width="15" height="15" viewBox="0 0 15 15">
+                            <use xlinkHref="#close"></use>
+                        </svg>
+                    </button>
+                    <div className="sub-popup-employee__body--wrapper">
+                        <button type="button" className="sub-popup-employee__close-btn popup-close-btn" onClick={_ => setIsOpenProjects(false)} title="Close">
+                            <svg width="15" height="15" viewBox="0 0 15 15">
+                                <use xlinkHref="#close"></use>
+                            </svg>
+                        </button>
+                        <div className="sub-popup-employee__container popup-container" data-simplebar data-simplebar-auto-hide="false">
+                            <ul className="popup-checkbox-list">
+                                <li>
+                                    <label className="popup-checkbox">
+                                        <input type="checkbox" onChange={handleCheckedAll} checked={projects?.length === selectedProjects?.length} name="All projects" className="popup-checkbox__input all-check"/>
+                                        <span className="popup-checkbox__element">
+                                                <svg width="11" height="8" viewBox="0 0 11 8">
+                                                    <use xlinkHref="#check"></use>
+                                                </svg>
+                                            </span>
+                                        <span className="popup-checkbox__text">
+                                            All projects
+                                        </span>
+                                    </label>
+                                </li>
+
+                                {
+                                    projects.length && projects?.map(project =>
+                                        <li key={project.id}>
+                                            <label className="popup-checkbox">
+                                                <input onChange={_ => handleSelectProject(project)} checked={selectedProjects?.some(item => item.id === project.id)} type="checkbox" name={project.name} className="popup-checkbox__input"/>
+                                                <span className="popup-checkbox__element">
+                                                <svg width="11" height="8" viewBox="0 0 11 8">
+                                                    <use xlinkHref="#check"></use>
+                                                </svg>
+                                            </span>
+                                                <span className="popup-checkbox__text">
+                                                    {project.name}
+                                                </span>
+                                            </label>
+                                        </li>
+                                    )
+                                }
+
+
+                            </ul>
+                        </div>
+                        <div className="sub-popup-employee__search">
+                            <label>
+                                <input type="search" name="search" required placeholder="Search a project"
+                                       className="input"/>
+                            </label>
+                            <button className="btn is-grey" type="submit">
+                                Search
+                                <svg width="15" height="15" viewBox="0 0 15 15">
+                                    <use xlinkHref="#search"></use>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    )
+}

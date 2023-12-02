@@ -1,1 +1,12 @@
-/// <reference types="react-scripts" />
+declare module '*.wav';
+declare module '*.mp3';
+declare module '*.mp4';
+declare module '*.svg';
+declare module '*.png';
+declare module '*.jpg';
+declare module '*.gif';
+declare module '*.avif';
+declare module '*.webp';
+declare module 'aos';
+declare module 'google-translate-api';
+declare module 'socket.io-client';
