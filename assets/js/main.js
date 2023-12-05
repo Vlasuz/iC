@@ -1237,26 +1237,26 @@ setTimeout(() => {
 
 // =-=-=-=-=-=-=-=-=-=-=-=- <clipboard> -=-=-=-=-=-=-=-=-=-=-=-=
 
-    document.querySelectorAll('.copy-btn').forEach(copyBtn => {
-        const clipboard = new ClipboardJS(copyBtn);
-        clipboard.on('success', function (event) {
-            const input = copyBtn.parentElement.querySelector('.copy-input');
-            input.select();
-
-            copyBtn.classList.remove('tooltip-active');
-
-            setTimeout(() => {
-                copyBtn.classList.add('tooltip-active');
-            }, 0)
-
-            /* const tooltip = document.createElement('div');
-            tooltip.classList.add('copy-tooltip');
-            tooltip.textContent = input.dataset.copiedText;
-            tooltip.style.setProperty('--x', getCoords(copyBtn).left + 'px');
-            tooltip.style.setProperty('--y', getCoords(copyBtn).top + 'px'); */
-
-        })
-    })
+    // document.querySelectorAll('.copy-btn').forEach(copyBtn => {
+    //     const clipboard = new ClipboardJS(copyBtn);
+    //     clipboard.on('success', function (event) {
+    //         const input = copyBtn.parentElement.querySelector('.copy-input');
+    //         input.select();
+    //
+    //         copyBtn.classList.remove('tooltip-active');
+    //
+    //         setTimeout(() => {
+    //             copyBtn.classList.add('tooltip-active');
+    //         }, 0)
+    //
+    //         /* const tooltip = document.createElement('div');
+    //         tooltip.classList.add('copy-tooltip');
+    //         tooltip.textContent = input.dataset.copiedText;
+    //         tooltip.style.setProperty('--x', getCoords(copyBtn).left + 'px');
+    //         tooltip.style.setProperty('--y', getCoords(copyBtn).top + 'px'); */
+    //
+    //     })
+    // })
 
 // =-=-=-=-=-=-=-=-=-=-=-=- </clipboard> -=-=-=-=-=-=-=-=-=-=-=-=
 
