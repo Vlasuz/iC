@@ -22,4 +22,18 @@ export const EmployeesStyled = styled.div`
   .drop-down-absolute__block {
     z-index: 1;
   }
+  
+  .drop-down__list li.is-active {
+    background: rgba(150, 159, 187, 0.102);
+    a {
+      color: var(--accent);
+    }
+  }
+
+  .simplebar-content-wrapper {
+    height: 100% !important;
+  }
+  .section-table__main--container {
+    overflow: visible;
+  }
 `

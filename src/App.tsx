@@ -17,6 +17,8 @@ import {AppStyled} from "./App.styled";
 import {Vacations} from "./pages/vacations/Vacations";
 import {Costs} from "./pages/costs/Costs";
 import {Summary} from "./pages/summary/Summary";
+import {SummaryEmployees} from "./pages/summaryEmployees/SummaryEmployees";
+import getCookies from "./functions/getCookie";
 
 export const PopupContext: any = createContext(null)
 
@@ -29,9 +31,11 @@ function App() {
     const location = useLocation()
 
     useEffect(() => {
-        // if(Object.keys(userData).length) return;
-        //
-        // navigate("/login")
+        if(!getCookies('access_token')) {
+            return navigate("/login");
+        } else if (location.pathname.includes("login")) {
+            navigate("/");
+        }
 
 
         getBearer('get')
@@ -59,10 +63,10 @@ function App() {
                 <Sprites/>
                 <PopupList popup={popup}/>
 
-
                 <Wrapper>
 
                     <Routes location={location}>
+                        <Route path={'/summary/employees'} element={<SummaryEmployees/>}/>
                         <Route path={'/summary'} element={<Summary/>}/>
                         <Route path={'/costs'} element={<Costs/>}/>
                         <Route path={'/vacations'} element={<Vacations/>}/>
@@ -73,6 +77,7 @@ function App() {
                     </Routes>
 
                 </Wrapper>
+
             </PopupContext.Provider>
         </AppStyled>
     );

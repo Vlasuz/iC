@@ -9,7 +9,27 @@ interface IEmployeesItemProps {
     index: number
 }
 
+interface IStatus {
+    value: string
+    label: string
+}
+
 export const EmployeesItem: React.FC<IEmployeesItemProps> = ({data, index}) => {
+
+    const statusList: IStatus[] = [
+        {
+            value: "team_manager",
+            label: "Team manager"
+        },
+        {
+            value: "top_manager",
+            label: "Top manager"
+        },
+        {
+            value: "employee",
+            label: "Employee"
+        },
+    ]
 
     const countOfProjects = data.projects?.length === 1 ? data.projects?.length + " project" : data.projects?.length + " projects"
 
@@ -70,7 +90,7 @@ export const EmployeesItem: React.FC<IEmployeesItemProps> = ({data, index}) => {
     }
 
     const handleRemoveEmployee = () => {
-        setPopup({popup: "remove-table-item-popup", data})
+        setPopup({popup: "remove-employee-popup", data})
         setIsOpenContextMenu(false)
     }
 
@@ -94,7 +114,7 @@ export const EmployeesItem: React.FC<IEmployeesItemProps> = ({data, index}) => {
                 {data.role}
             </div>
             <div className="section-table__param">
-                {data.status}
+                {statusList.filter(item => item.value === data.status)[0].label}
             </div>
             <div className="section-table__param">
                 <a href={"mailto:" + data.email}>

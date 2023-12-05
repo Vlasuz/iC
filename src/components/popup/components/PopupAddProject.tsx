@@ -3,7 +3,7 @@ import axios from "axios";
 import {getBearer} from "../../../functions/getBearer";
 import {getApiLink} from "../../../functions/getApiLink";
 import { useDispatch } from 'react-redux';
-import { addProjects } from '../../../storage/toolkit';
+import { addProject } from '../../../storage/toolkit';
 import {IsPopupActiveContext} from "../PopupList";
 
 interface IPopupAddProjectProps {
@@ -26,7 +26,7 @@ export const PopupAddProject: React.FC<IPopupAddProjectProps> = () => {
             "name": nameValue,
             "description": descriptionValue
         }).then(({data}) => {
-            dispatch(addProjects(data))
+            dispatch(addProject(data))
             setIsPopupActive(false)
         }).catch(er => console.log(getApiLink("/api/admin/project/add/"), er))
     }

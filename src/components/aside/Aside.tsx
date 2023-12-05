@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React, {useContext, useEffect} from 'react'
 import {useDispatch, useSelector} from 'react-redux';
 import {IUser} from "../../models";
 import {NavLink, useNavigate} from "react-router-dom";
@@ -8,6 +8,7 @@ import logo_webp from './../../assets/html/img/logo.webp'
 import logo_png from './../../assets/html/img/logo.png'
 import setCookie from "../../functions/setCookie";
 import {AsideLanguages} from "./components/AsideLanguages";
+import {PopupContext} from "../../App";
 
 interface IAsideProps {
 
@@ -41,39 +42,41 @@ export const Aside: React.FC<IAsideProps> = () => {
             label: "Employees",
             link: "/employees",
             icon: "#members",
-            isActive: userData.role?.includes("admin")
+            isActive: !!Object.keys(userData).length && userData.role?.includes("admin")
         },
         {
             label: "Vacations",
             link: "/vacations",
             icon: "#calendar-check",
-            isActive: userData.role?.includes("admin")
+            isActive: !!Object.keys(userData).length && userData.role?.includes("admin")
         },
         {
             label: "Projects",
             link: "/projects",
             icon: "#calendar-selected",
-            isActive: userData.role?.includes("admin")
+            isActive: !!Object.keys(userData).length && userData.role?.includes("admin")
         },
         {
             label: "Timesheet",
             link: "/",
             icon: "#timesheet",
-            isActive: true
+            isActive: !!Object.keys(userData).length
         },
         {
             label: "Costs",
             link: "/costs",
             icon: "#costs",
-            isActive: true
+            isActive: !!Object.keys(userData).length
         },
         {
             label: "Summary",
             link: "/summary",
             icon: "#calendar-table",
-            isActive: true
+            isActive: !!Object.keys(userData).length
         },
     ]
+
+    const setPopup: any = useContext(PopupContext)
 
     return (
         <aside className="aside">
@@ -125,15 +128,15 @@ export const Aside: React.FC<IAsideProps> = () => {
                             </nav>
                             <div className="aside__add">
                                 <div className="aside__add--row">
-                                    <a href="#profile-popup" className="aside__user open-popup"
+                                    <button onClick={_ => setPopup({popup: "profile-popup"})} className="aside__user"
                                        aria-label={`${userData?.first_name} ${userData?.last_name}`}>
-                                        <div className="aside__user--avatar">
+                                        <div className="aside__user--avatar" style={{background: "#EF3129"}}>
                                             {userData?.first_name && (userData?.first_name[0] + userData?.last_name[0])}
                                         </div>
                                         <strong className="aside__user--name">
                                             {userData?.first_name} {userData?.last_name}
                                         </strong>
-                                    </a>
+                                    </button>
                                     <a onClick={handleExit} className="aside__log-out visible-on-mob">
                                         <svg width="16" height="17" viewBox="0 0 16 17">
                                             <use xlinkHref="#logout"></use>

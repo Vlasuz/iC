@@ -1,6 +1,7 @@
 import React, {Dispatch, SetStateAction, useContext, useEffect, useState} from 'react'
 import {HeaderSearch} from "../../../contexts";
 import {PopupContext} from "../../../App";
+import {EmployeesItem} from "./EmployeesItem";
 
 interface IEmployeesHeaderProps {
 
@@ -16,6 +17,52 @@ export const EmployeesHeader: React.FC<IEmployeesHeaderProps> = () => {
         e.preventDefault()
         setSearchValueContext(searchValue)
     }
+
+
+    const tableToExcel = (function() {
+        // Базовая строка для создания Excel-файла
+        const uri = 'data:application/vnd.ms-excel;base64,';
+        const template = `
+        <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
+        <head>
+            <!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]-->
+        </head>
+        <body>
+            <table>{table}</table>
+        </body>
+        </html>`;
+
+        // Функция для кодирования строки в base64
+        // @ts-ignore
+        const base64 = function(s) {
+            return window.btoa(unescape(encodeURIComponent(s)));
+        };
+
+        // Функция для замены переменных в шаблоне
+        // @ts-ignore
+        const format = function(s, c) {
+        // @ts-ignore
+            return s.replace(/{(\w+)}/g, function(m, p) {
+                return c[p];
+            });
+        };
+
+        // Функция, доступная снаружи, для создания Excel из таблицы
+        // @ts-ignore
+        return function(table, name) {
+            // Проверяем, передана ли нода таблицы, если нет - ищем по ID
+            if (!table.nodeType) table = document.getElementById(table);
+
+            const ctx = {
+                worksheet: name || 'Worksheet',
+                table: table.innerHTML
+            };
+
+            // Создаем Excel-файл, переходя по ссылке
+            window.location.href = uri + base64(format(template, ctx));
+        };
+    })();
+
 
     return (
         <div className="section-table__header">
@@ -111,7 +158,7 @@ export const EmployeesHeader: React.FC<IEmployeesHeaderProps> = () => {
                         <div className="section-table__export--block drop-down__block">
                             <ul className="drop-down__list">
                                 <li>
-                                    <a href="#">
+                                    <a href="#" onClick={e => tableToExcel('my-table', e)}>
                                         Export as .xlsx
                                     </a>
                                 </li>

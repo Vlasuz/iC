@@ -1,21 +1,16 @@
-import React, {useContext, useEffect, useRef} from 'react'
-import {useDispatch, useSelector} from 'react-redux'
+import React, {useContext, useEffect} from 'react'
+import {IsPopupActiveContext} from "../PopupList";
+import {useDispatch} from "react-redux";
+import {getBearer} from "../../../functions/getBearer";
 import axios from "axios";
 import {getApiLink} from "../../../functions/getApiLink";
-import {log} from "util";
-import {getBearer} from "../../../functions/getBearer";
-import {IEmployee} from "../../../models";
-import {Simulate} from "react-dom/test-utils";
-import click = Simulate.click;
-import { removeEmployee } from '../../../storage/toolkit';
-import {PopupContext} from "../../../App";
-import {IsPopupActiveContext} from "../PopupList";
+import {removeEmployee, removeProject} from "../../../storage/toolkit";
 
-interface IPopupDeleteEmployeeProps {
-    data: IEmployee
+interface IPopupRemoveProjectProps {
+    data: any
 }
 
-export const PopupDeleteEmployee: React.FC<IPopupDeleteEmployeeProps> = ({data}) => {
+export const PopupRemoveProject: React.FC<IPopupRemoveProjectProps> = ({data}) => {
 
     const setIsPopupActive: any = useContext(IsPopupActiveContext)
     const dispatch = useDispatch()
@@ -26,12 +21,12 @@ export const PopupDeleteEmployee: React.FC<IPopupDeleteEmployeeProps> = ({data})
         e.preventDefault()
 
         getBearer('delete')
-        axios.delete(getApiLink('/api/admin/employee/delete/?employee_id=' + data.id)).then((res) => {
+        axios.delete(getApiLink('/api/admin/project/delete/?project_id=' + data.id)).then((res) => {
             const dataItem = res.data
             if (!dataItem.status) return;
 
             setIsPopupActive(false)
-            dispatch(removeEmployee(data))
+            dispatch(removeProject(data))
 
         }).catch(er => console.log(getApiLink('/api/admin/employee/delete/'), er))
 

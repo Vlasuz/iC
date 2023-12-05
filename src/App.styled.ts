@@ -38,4 +38,42 @@ export const AppStyled = styled.div`
     position: absolute;
     opacity: 0;
   }
+
+  .css-15lsz6c-indicatorContainer svg {
+    color: #EF3129;
+    transform: scaleY(-1);
+    transition: all .3s ease;
+  }
+  .css-1xc3v61-indicatorContainer svg {
+    transition: all .3s ease;
+  }
+
+
+  
+  .section-table__row-per-page .css-b62m3t-container {
+    width: 100%;
+    max-width: 88px;
+  }
+  .section-table__row-per-page {
+    width: 220px;
+    justify-content: flex-end;
+    margin-left: auto;
+  }
+
+  .css-b62m3t-container *[aria-disabled='true'] {
+    opacity: 0.5; /* Пример изменения прозрачности */
+    cursor: not-allowed;
+  }
+
+
+  .aside__user {
+    background: transparent;
+    border: none;
+  }
+  
+  
+  .table-to-download-excel {
+    display: none;
+  }
+  
 `

@@ -1,4 +1,5 @@
 import React, {useEffect} from 'react'
+import {VacationsStyled} from "./Vacations.styled";
 
 interface IVacationsProps {
 
@@ -7,7 +8,7 @@ interface IVacationsProps {
 export const Vacations: React.FC<IVacationsProps> = () => {
 
     return (
-        <section className="section-table">
+        <VacationsStyled className="section-table">
             <div className="section-table__header">
                 <div className="section-table__header--row is-always-row">
                     <div className="section-table__header--col">
@@ -846,6 +847,6 @@ export const Vacations: React.FC<IVacationsProps> = () => {
                     </select>
                 </div>
             </div>
-        </section>
+        </VacationsStyled>
     )
 }

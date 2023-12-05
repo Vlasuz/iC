@@ -3,7 +3,7 @@ import {IProject} from "../../../models";
 import axios from "axios";
 import {getApiLink} from "../../../functions/getApiLink";
 import {getBearer} from "../../../functions/getBearer";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {addEmployee} from "../../../storage/toolkit";
 import {IsPopupActiveContext} from "../PopupList";
 import {PopupContext} from "../../../App";
@@ -14,13 +14,15 @@ import {CustomSelect} from "../../select/CustomSelect";
 interface IPopupAddNewEmployeeProps {
     setIsOpenProjects: any
     isOpenProjects: boolean
+    chosenProjects: IProject[]
 }
 
-export const PopupAddEmployee: React.FC<IPopupAddNewEmployeeProps> = ({setIsOpenProjects, isOpenProjects}) => {
+export const PopupAddEmployee: React.FC<IPopupAddNewEmployeeProps> = ({setIsOpenProjects, chosenProjects}) => {
 
+    const projects: IProject[] = useSelector((state: any) => state.toolkit.projects)
     const setIsPopupActive: any = useContext(IsPopupActiveContext)
 
-    const statuses = [
+    const statusList = [
         {
             value: "team_manager",
             label: "Team manager"
@@ -49,12 +51,12 @@ export const PopupAddEmployee: React.FC<IPopupAddNewEmployeeProps> = ({setIsOpen
     const [firstNameValue, setFirstNameValue] = useState<string>('')
     const [lastNameValue, setLastNameValue] = useState<string>('')
     const [roleValue, setRoleValue] = useState<string>('')
-    const [statusValue, setStatusValue] = useState<string>(statuses[0].value)
+    const [statusValue, setStatusValue] = useState<string>(statusList[0].value)
     const [emailValue, setEmailValue] = useState<string>('')
     const [passwordValue, setPasswordValue] = useState<string>('')
     const [phoneValue, setPhoneValue] = useState<string>('')
     const [holidaysValue, setHolidaysValue] = useState<string>('')
-    const [projectsList, setProjectsList] = useState<IProject[]>([])
+    const [projectsList, setProjectsList] = useState<string[]>([])
 
     const dispatch = useDispatch()
 
@@ -72,13 +74,18 @@ export const PopupAddEmployee: React.FC<IPopupAddNewEmployeeProps> = ({setIsOpen
             "holidays": +holidaysValue,
             "password": passwordValue,
             "projects": projectsList,
-            "all_projects": false
+            "all_projects": chosenProjects.length === projects.length
         }).then(({data}) => {
             // if (!data.status) return;
             setIsPopupActive(false)
             dispatch(addEmployee(data))
         }).catch(er => console.log(getApiLink("/api/admin/employee/add/"), er))
     }
+
+
+    useEffect(() => {
+        setProjectsList(chosenProjects?.map(item => item.id))
+    }, [chosenProjects])
 
     return (
         <div className="add-new-employee__body popup-body">
@@ -114,7 +121,7 @@ export const PopupAddEmployee: React.FC<IPopupAddNewEmployeeProps> = ({setIsOpen
                         </label>
                         <label className="popup-form__label">
                             <span>Status on the web-site</span>
-                            <CustomSelect list={statuses} />
+                            <CustomSelect onChange={(e: any) => setStatusValue(e.value)} list={statusList}/>
                         </label>
                     </div>
                     <div className="popup-form__row">
@@ -145,7 +152,7 @@ export const PopupAddEmployee: React.FC<IPopupAddNewEmployeeProps> = ({setIsOpen
                         <label className="popup-form__item">
                             <span>Phone number</span>
                             <div className="popup-form__item--row tel-parent">
-                                <CustomSelect list={numberCodes} />
+                                <CustomSelect list={numberCodes}/>
                                 <input onChange={e => setPhoneValue(e.target.value)} value={phoneValue} type="tel"
                                        name="tel" required className="input"/>
                             </div>
@@ -160,9 +167,11 @@ export const PopupAddEmployee: React.FC<IPopupAddNewEmployeeProps> = ({setIsOpen
                         <label className="popup-form__label is-full">
                             <span>Projects</span>
                             <a onClick={_ => setIsOpenProjects((prev: any) => !prev)}
-                               className={"popup-form__open-sub-popup" + (isOpenProjects ? " is-active-popup" : "")}>
-                                <span id="checked-projects" data-none-text="None" data-text-1="project"
-                                      data-text-2="projects" data-all-text="All projects"></span>
+                               className="popup-form__open-sub-popup open-popup">
+                                                <span id="checked-projects" data-none-text="None" data-text-1="project"
+                                                      data-text-2="projects" data-all-text="All projects">
+                                                    {projectsList?.length} projects
+                                                </span>
                                 <svg width="10" height="7" viewBox="0 0 10 7">
                                     <use xlinkHref="#drop-down-arrow"></use>
                                 </svg>

@@ -1,21 +1,26 @@
-import React, {useEffect, useRef, useState} from 'react'
+import React, {useContext, useEffect, useRef, useState} from 'react'
 import {useDispatch, useSelector } from 'react-redux'
 import {IEmployee, IProject} from "../../../models";
 import {getBearer} from "../../../functions/getBearer";
 import axios from "axios";
 import {getApiLink} from "../../../functions/getApiLink";
-import {addEmployee, changeEmployee} from "../../../storage/toolkit";
+import {addEmployee, editEmployee} from "../../../storage/toolkit";
 import {CustomSelect} from "../../select/CustomSelect";
+import {IsPopupActiveContext} from "../PopupList";
 
 interface IPopupEditEmployeeProps {
     setIsOpenProjects: any
     isOpenProjects: boolean
     data: any
+    chosenProjects: IProject[]
 }
 
-export const PopupEditEmployee: React.FC<IPopupEditEmployeeProps> = ({setIsOpenProjects, isOpenProjects, data}) => {
+export const PopupEditEmployee: React.FC<IPopupEditEmployeeProps> = ({setIsOpenProjects, data, chosenProjects}) => {
 
-    const statuses = [
+    const projects: IProject[] = useSelector((state: any) => state.toolkit.projects)
+    const setIsPopupActive: any = useContext(IsPopupActiveContext)
+
+    const statusList = [
         {
             value: "team_manager",
             label: "Team manager"
@@ -41,9 +46,7 @@ export const PopupEditEmployee: React.FC<IPopupEditEmployeeProps> = ({setIsOpenP
         }
     ]
 
-    const selectedEmployee: IEmployee = useSelector((state: any) => state.toolkit.selectedEmployee)
     const dispatch = useDispatch()
-    const clickBlock: any = useRef(null)
 
     const [firstNameValue, setFirstNameValue] = useState<string>('')
     const [lastNameValue, setLastNameValue] = useState<string>('')
@@ -60,11 +63,14 @@ export const PopupEditEmployee: React.FC<IPopupEditEmployeeProps> = ({setIsOpenP
         setRoleValue(data.role)
         setEmailValue(data.email)
         setPhoneValue(data.phone)
+        setStatusValue(data.status)
         setHolidaysValue(String(data.holidays))
         setProjectsList(data.projects?.map((item: any) => item.id))
     }, [data])
 
-    console.log(holidaysValue)
+    useEffect(() => {
+        setProjectsList(chosenProjects?.map(item => item.id))
+    }, [chosenProjects])
 
     const handleChange = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -78,20 +84,19 @@ export const PopupEditEmployee: React.FC<IPopupEditEmployeeProps> = ({setIsOpenP
             "phone": phoneValue,
             "holidays": +holidaysValue,
             "projects": projectsList,
-            "all_projects": false
+            "all_projects": chosenProjects.length === projects.length
         }
 
         getBearer('patch')
-        axios.patch(getApiLink("/api/admin/employee/edit/?employee_id=" + selectedEmployee.id), newDataEmployee).then(({data}) => {
-            console.log(getApiLink("/api/admin/employee/edit/?employee_id=" + selectedEmployee.id), data)
+        axios.patch(getApiLink("/api/admin/employee/edit/?employee_id=" + data.id), newDataEmployee).then(({data}) => {
+            console.log(getApiLink("/api/admin/employee/edit/?employee_id=" + data.id), data)
             if (!data.status) return;
 
-            clickBlock.current.click()
-
             // @ts-ignore
-            newDataEmployee['id'] = selectedEmployee.id;
+            newDataEmployee['id'] = data.id;
 
-            dispatch(changeEmployee({selectedEmployee, newDataEmployee}))
+            setIsPopupActive(false)
+            dispatch(editEmployee({data, newDataEmployee}))
         }).catch(er => console.log(getApiLink("/api/admin/employee/edit/"), er))
     }
 
@@ -128,7 +133,7 @@ export const PopupEditEmployee: React.FC<IPopupEditEmployeeProps> = ({setIsOpenP
                         </label>
                         <label className="popup-form__label">
                             <span>Status on the web-site</span>
-                            <CustomSelect list={statuses} defaultValue={statuses.filter(item => item.value === data.status)[0]} />
+                            <CustomSelect onChange={(e: any) => setStatusValue(e.value)} list={statusList} defaultValue={statusList.filter(item => item.value === data.status)[0]} />
                         </label>
                     </div>
                     <div className="popup-form__row">
@@ -158,7 +163,7 @@ export const PopupEditEmployee: React.FC<IPopupEditEmployeeProps> = ({setIsOpenP
                             <a onClick={_ => setIsOpenProjects((prev: any) => !prev)} className="popup-form__open-sub-popup open-popup">
                                                 <span id="checked-projects" data-none-text="None" data-text-1="project"
                                                       data-text-2="projects" data-all-text="All projects">
-                                                    {projectsList.length} projects
+                                                    {projectsList?.length} projects
                                                 </span>
                                 <svg width="10" height="7" viewBox="0 0 10 7">
                                     <use xlinkHref="#drop-down-arrow"></use>

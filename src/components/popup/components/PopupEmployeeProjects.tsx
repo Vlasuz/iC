@@ -1,60 +1,67 @@
 import React, {useContext, useEffect, useState} from 'react'
-import { useSelector } from 'react-redux';
+import {useSelector} from 'react-redux';
 import {IsPopupActiveContext} from "../PopupList";
 import {IProject} from "../../../models";
 
 interface IPopupEmployeeProjectsProps {
     isOpenProjects: boolean
     setIsOpenProjects: any
+    data: any
+    setChosenProjects: any
+    chosenProjects: IProject[]
 }
 
-export const PopupEmployeeProjects: React.FC<IPopupEmployeeProjectsProps> = ({isOpenProjects, setIsOpenProjects}) => {
+export const PopupEmployeeProjects: React.FC<IPopupEmployeeProjectsProps> = ({isOpenProjects, setIsOpenProjects, data, setChosenProjects, chosenProjects}) => {
 
     const projects: IProject[] = useSelector((state: any) => state.toolkit.projects)
-    const [selectedProjects, setSelectedProjects] = useState<IProject[]>([])
 
     const handleSelectProject = (proj: IProject) => {
-        if(selectedProjects.some(item => item.id === proj.id)) {
-            setSelectedProjects(selectedProjects.filter(item => item.id !== proj.id))
+        if (chosenProjects?.some(item => item.id === proj.id)) {
+            setChosenProjects(chosenProjects.filter(item => item.id !== proj.id))
         } else {
-            setSelectedProjects(prev => [...prev, proj])
+            setChosenProjects((prev: any) => [...prev, proj])
         }
     }
 
     const handleCheckedAll = () => {
-        if(projects.length === selectedProjects.length) {
-            setSelectedProjects([])
-        } else {
-            setSelectedProjects(projects)
-        }
+        setChosenProjects(projects)
     }
-    useEffect(() => {
-        if(isOpenProjects) return;
 
-        setTimeout(() => setSelectedProjects([]), 500)
-    }, [isOpenProjects])
+    useEffect(() => {
+        if(data?.all_projects) {
+            setChosenProjects(projects)
+        } else {
+            setChosenProjects(data?.projects ?? [])
+        }
+    }, [data])
 
     return (
-        <div className={"sub-popup-employee popup is-sub" + (isOpenProjects ? " is-active" : "")} id="edit-sub-popup-employee" style={{display: "flex"}}>
+        <div className={"sub-popup-employee popup is-sub" + (isOpenProjects ? " is-active" : "")}
+             id="edit-sub-popup-employee" style={{display: "flex"}}>
             <div className="sub-popup-employee__wrapper popup-wrapper">
                 <div className="sub-popup-employee__bg popup-bg" onClick={_ => setIsOpenProjects(false)}></div>
                 <div className="sub-popup-employee__body popup-body">
-                    <button type="button" className="sub-popup-employee__close-btn popup-close-btn" onClick={_ => setIsOpenProjects(false)} title="Close">
+                    <button type="button" className="sub-popup-employee__close-btn popup-close-btn"
+                            onClick={_ => setIsOpenProjects(false)} title="Close">
                         <svg width="15" height="15" viewBox="0 0 15 15">
                             <use xlinkHref="#close"></use>
                         </svg>
                     </button>
                     <div className="sub-popup-employee__body--wrapper">
-                        <button type="button" className="sub-popup-employee__close-btn popup-close-btn" onClick={_ => setIsOpenProjects(false)} title="Close">
+                        <button type="button" className="sub-popup-employee__close-btn popup-close-btn"
+                                onClick={_ => setIsOpenProjects(false)} title="Close">
                             <svg width="15" height="15" viewBox="0 0 15 15">
                                 <use xlinkHref="#close"></use>
                             </svg>
                         </button>
-                        <div className="sub-popup-employee__container popup-container" data-simplebar data-simplebar-auto-hide="false">
+                        <div className="sub-popup-employee__container popup-container" data-simplebar
+                             data-simplebar-auto-hide="false">
                             <ul className="popup-checkbox-list">
                                 <li>
                                     <label className="popup-checkbox">
-                                        <input type="checkbox" onChange={handleCheckedAll} checked={projects?.length === selectedProjects?.length} name="All projects" className="popup-checkbox__input all-check"/>
+                                        <input type="checkbox" onChange={handleCheckedAll}
+                                               checked={projects?.length === chosenProjects?.length}
+                                               name="All projects" className="popup-checkbox__input all-check"/>
                                         <span className="popup-checkbox__element">
                                                 <svg width="11" height="8" viewBox="0 0 11 8">
                                                     <use xlinkHref="#check"></use>
@@ -70,7 +77,10 @@ export const PopupEmployeeProjects: React.FC<IPopupEmployeeProjectsProps> = ({is
                                     projects.length && projects?.map(project =>
                                         <li key={project.id}>
                                             <label className="popup-checkbox">
-                                                <input onChange={_ => handleSelectProject(project)} checked={selectedProjects?.some(item => item.id === project.id)} type="checkbox" name={project.name} className="popup-checkbox__input"/>
+                                                <input onChange={_ => handleSelectProject(project)}
+                                                       checked={chosenProjects?.some(item => item.id === project.id)}
+                                                       type="checkbox" name={project.name}
+                                                       className="popup-checkbox__input"/>
                                                 <span className="popup-checkbox__element">
                                                 <svg width="11" height="8" viewBox="0 0 11 8">
                                                     <use xlinkHref="#check"></use>

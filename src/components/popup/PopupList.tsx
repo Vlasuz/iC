@@ -7,6 +7,10 @@ import {PopupEditProject} from "./components/PopupEditProject";
 import {PopupForgotPassword} from "./components/PopupForgotPassword";
 import {PopupContext} from "../../App";
 import {PopupEmployeeProjects} from "./components/PopupEmployeeProjects";
+import {PopupRemoveProject} from "./components/PopupRemoveProject";
+import {IProject} from "../../models";
+import {PopupProfile} from "./components/PopupProfile";
+import {PopupEditProfile} from "./components/PopupEditProfile";
 
 interface IPopupListProps {
     popup: any
@@ -18,13 +22,19 @@ export const PopupList: React.FC<IPopupListProps> = ({popup}) => {
 
     const [isPopupActive, setIsPopupActive] = useState(false)
     const [isOpenProjects, setIsOpenProjects] = useState(false)
+    const [chosenProjects, setChosenProjects] = useState<IProject[]>([])
 
     const popupList: {[key: string]: React.ReactNode} = {
         "forgot-password-popup": <PopupForgotPassword/>,
-        "add-new-employee-popup": <PopupAddEmployee isOpenProjects={isOpenProjects} setIsOpenProjects={setIsOpenProjects} />,
-        "edit-employee-popup": <PopupEditEmployee data={popup.data} isOpenProjects={isOpenProjects} setIsOpenProjects={setIsOpenProjects} />,
+        "add-new-employee-popup": <PopupAddEmployee chosenProjects={chosenProjects} isOpenProjects={isOpenProjects} setIsOpenProjects={setIsOpenProjects} />,
+        "edit-employee-popup": <PopupEditEmployee data={popup.data} chosenProjects={chosenProjects} isOpenProjects={isOpenProjects} setIsOpenProjects={setIsOpenProjects} />,
+        "edit-project-popup": <PopupEditProject data={popup.data} />,
         "add-project-popup": <PopupAddProject/>,
-        "remove-table-item-popup": <PopupDeleteEmployee data={popup.data} />
+        "remove-employee-popup": <PopupDeleteEmployee data={popup.data} />,
+        "remove-project-popup": <PopupRemoveProject data={popup.data} />,
+
+        "profile-popup": <PopupProfile/>,
+        "edit-profile-popup": <PopupEditProfile/>,
     }
 
     const setPopup: any = useContext(PopupContext)
@@ -43,9 +53,17 @@ export const PopupList: React.FC<IPopupListProps> = ({popup}) => {
         }, 500)
     }, [isPopupActive])
 
+    useEffect(() => {
+        if (isPopupActive) return;
+
+        setTimeout(() => setChosenProjects([]), 500)
+    }, [isPopupActive])
+
+    const sidePopup = ["profile-popup", "edit-profile-popup"]
+
     return (
         <IsPopupActiveContext.Provider value={setIsPopupActive}>
-            <div className={"popup" + (isPopupActive ? " is-active" : "")} style={{display: "flex"}}>
+            <div className={"popup" + (isPopupActive ? " is-active" : "") + (sidePopup.includes(popup.popup) ? " side-popup" : "")} style={{display: "flex"}}>
                 <div className="popup-wrapper">
                     <div className="add-project__bg popup-bg" onClick={_ => setIsPopupActive(false)} />
 
@@ -53,6 +71,8 @@ export const PopupList: React.FC<IPopupListProps> = ({popup}) => {
 
                 </div>
             </div>
+
+            <PopupEmployeeProjects data={popup.data} setChosenProjects={setChosenProjects} chosenProjects={chosenProjects} isOpenProjects={isOpenProjects} setIsOpenProjects={setIsOpenProjects} />
 
             <div className="forgot-password-2 popup" id="thanks-popup" style={{display: "none"}}>
                 <div className="forgot-password-2__wrapper popup-wrapper">
@@ -117,8 +137,6 @@ export const PopupList: React.FC<IPopupListProps> = ({popup}) => {
                     </div>
                 </div>
             </div>
-
-            <PopupEmployeeProjects isOpenProjects={isOpenProjects} setIsOpenProjects={setIsOpenProjects} />
 
 
         </IsPopupActiveContext.Provider>

@@ -18,8 +18,8 @@ const toolkit = createSlice({
         addEmployee(state, action) {
             state.employees = [...state.employees, action.payload]
         },
-        changeEmployee(state, action) {
-            state.employees = state.employees.filter(item => item.id !== action.payload.selectedEmployee.id)
+        editEmployee(state, action) {
+            state.employees = state.employees.filter(item => item.id !== action.payload.data.id)
             state.employees = [...state.employees, action.payload.newDataEmployee]
         },
         removeEmployee(state, action) {
@@ -33,13 +33,15 @@ const toolkit = createSlice({
         setProjects(state, action) {
             state.projects = action.payload
         },
-        addProjects(state, action) {
+        addProject(state, action) {
             state.projects = [...state.projects, action.payload]
         },
-        editProjects(state, action) {
-            state.projects = action.payload
+        editProject(state, action) {
+            console.log(action.payload)
+            state.projects = state.projects.filter(item => item.id !== action.payload.data.id)
+            state.projects = [...state.projects, action.payload.newData]
         },
-        removeProjects(state, action) {
+        removeProject(state, action) {
             state.projects = state.projects.filter(item => item.id !== action.payload.id)
         },
     },
@@ -53,13 +55,13 @@ export const {
 
     setEmployeesList,
     addEmployee,
-    changeEmployee,
+    editEmployee,
     removeEmployee,
     setSelectedEmployee,
 
     setProjects,
-    addProjects,
-    editProjects,
-    removeProjects,
+    addProject,
+    editProject,
+    removeProject,
 
 } = toolkit.actions;

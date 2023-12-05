@@ -4,14 +4,17 @@ import Select from "react-select";
 interface ICustomSelectProps {
     list: any
     defaultValue?: any
+    onChange?: any
+    value?: any
 }
 
-export const CustomSelect: React.FC<ICustomSelectProps> = ({list, defaultValue}) => {
+export const CustomSelect: React.FC<ICustomSelectProps> = ({list, defaultValue, onChange, value}) => {
 
     return (
         <Select
             options={list}
-            defaultValue={defaultValue ?? list[0]}
+            defaultValue={defaultValue}
+            value={value}
             styles={{
                 control: (baseStyles, state) => ({
                     border: "1px solid rgba(174, 182, 206, 0.3)",
@@ -19,6 +22,7 @@ export const CustomSelect: React.FC<ICustomSelectProps> = ({list, defaultValue})
                     display: "flex",
                     paddingLeft: "2px",
                     cursor: "pointer",
+                    background: "#fff"
                 }),
                 option: (baseStyles, state) => ({
                     ...baseStyles,
@@ -32,6 +36,7 @@ export const CustomSelect: React.FC<ICustomSelectProps> = ({list, defaultValue})
                     color: "#5f6472",
                 }),
             }}
+            onChange={onChange}
             theme={(theme) => ({
                 ...theme,
                 borderRadius: 0,
