@@ -1,7 +1,7 @@
-import React, {useContext, useEffect} from 'react'
+import React, {useContext, useEffect, useState} from 'react'
 import {useDispatch, useSelector} from 'react-redux';
 import {IUser} from "../../models";
-import {NavLink, useNavigate} from "react-router-dom";
+import {NavLink, useLocation, useNavigate} from "react-router-dom";
 
 import logo_avif from './../../assets/html/img/logo.avif'
 import logo_webp from './../../assets/html/img/logo.webp'
@@ -9,6 +9,8 @@ import logo_png from './../../assets/html/img/logo.png'
 import setCookie from "../../functions/setCookie";
 import {AsideLanguages} from "./components/AsideLanguages";
 import {PopupContext} from "../../App";
+import {AsideStyled} from "./Aside.styled";
+import {getApiLink} from "../../functions/getApiLink";
 
 interface IAsideProps {
 
@@ -29,11 +31,12 @@ export const Aside: React.FC<IAsideProps> = () => {
 
     const userData: IUser = useSelector((state: any) => state.toolkit.user)
     const navigate = useNavigate()
+    const location = useLocation()
 
     const handleExit = (e: React.MouseEvent<HTMLAnchorElement>) => {
         e.preventDefault()
 
-        setCookie("access_token", "")
+        setCookie("access_token_ic", "")
         navigate("/login")
     }
 
@@ -42,44 +45,50 @@ export const Aside: React.FC<IAsideProps> = () => {
             label: "Employees",
             link: "/employees",
             icon: "#members",
-            isActive: !!Object.keys(userData).length && userData.role?.includes("admin")
+            isActive: userData.status?.includes("admin") || userData.status?.includes("top_manager") || userData.status?.includes("team_manager")
         },
         {
             label: "Vacations",
             link: "/vacations",
             icon: "#calendar-check",
-            isActive: !!Object.keys(userData).length && userData.role?.includes("admin")
+            isActive: userData.status?.includes("admin") || userData.status?.includes("top_manager") || userData.status?.includes("team_manager")
         },
         {
             label: "Projects",
             link: "/projects",
             icon: "#calendar-selected",
-            isActive: !!Object.keys(userData).length && userData.role?.includes("admin")
+            isActive: userData.status?.includes("admin") || userData.status?.includes("top_manager") || userData.status?.includes("team_manager")
         },
         {
             label: "Timesheet",
             link: "/",
             icon: "#timesheet",
-            isActive: !!Object.keys(userData).length
+            isActive: !userData.status?.includes("admin")
         },
         {
             label: "Costs",
             link: "/costs",
             icon: "#costs",
-            isActive: !!Object.keys(userData).length
+            isActive: !userData.status?.includes("admin")
         },
         {
             label: "Summary",
             link: "/summary",
             icon: "#calendar-table",
-            isActive: !!Object.keys(userData).length
+            isActive: !userData.status?.includes("admin")
         },
     ]
 
     const setPopup: any = useContext(PopupContext)
 
+    useEffect(() => {
+        setIsActiveBurger(false)
+    }, [location.pathname])
+
+    const [isActiveBurger, setIsActiveBurger] = useState(false)
+
     return (
-        <aside className="aside">
+        <AsideStyled className={isActiveBurger ? "aside is-mobile-menu-active" : "aside"}>
             <button className="aside__slide-toggle" type="button">
                 <svg width="10" height="7" viewBox="0 0 10 7">
                     <use xlinkHref="#drop-down-arrow"></use>
@@ -99,7 +108,7 @@ export const Aside: React.FC<IAsideProps> = () => {
                                 </picture>
                             </NavLink>
                         </div>
-                        <button className="aside__burger" type="button" aria-label="Menu">
+                        <button className={isActiveBurger ? "aside__burger is-mobile-menu-active" : "aside__burger"} onClick={_ => setIsActiveBurger(prev => !prev)} type="button" aria-label="Menu">
                             <span></span>
                             <span></span>
                             <span></span>
@@ -112,7 +121,7 @@ export const Aside: React.FC<IAsideProps> = () => {
                                 <ul>
 
                                     {
-                                        menuList.map(item => item.isActive &&
+                                        menuList.map(item => (item.isActive && !!Object.keys(userData).length) &&
                                             <li key={item.link}>
                                                 <NavLink to={item.link} className={({isActive}) => isActive ? "is-current" : ""} aria-label="Employees">
                                                     <svg width="25" height="25" viewBox="0 0 25 25">
@@ -131,7 +140,7 @@ export const Aside: React.FC<IAsideProps> = () => {
                                     <button onClick={_ => setPopup({popup: "profile-popup"})} className="aside__user"
                                        aria-label={`${userData?.first_name} ${userData?.last_name}`}>
                                         <div className="aside__user--avatar" style={{background: "#EF3129"}}>
-                                            {userData?.first_name && (userData?.first_name[0] + userData?.last_name[0])}
+                                            {userData.avatar ? <img src={getApiLink(`/${userData.avatar}`)} alt="" width="80" height="80" loading="lazy"/> : userData?.first_name && (userData?.first_name[0] + userData?.last_name[0])}
                                         </div>
                                         <strong className="aside__user--name">
                                             {userData?.first_name} {userData?.last_name}
@@ -168,6 +177,6 @@ export const Aside: React.FC<IAsideProps> = () => {
                     </div>
                 </div>
             </div>
-        </aside>
+        </AsideStyled>
     )
 }

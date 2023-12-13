@@ -1,18 +1,16 @@
 import styled from "styled-components";
 
-export const EmployeesStyled = styled.div`
-  .drop-down-2__block {
-    position: fixed;
-    display: block;
-    
-    opacity: 0;
-    visibility: hidden;
-    transition: all .3s ease;
+export const EmployeesStyled = styled.section`
 
-    &.active {
-      opacity: 1;
-      visibility: visible;
-    }
+  .section-table {
+    padding-bottom: 0;
+    //height: 100%;
+    //display: flex;
+    //flex-direction: column;
+  }
+  .section-table__footer {
+    //margin-top: auto;
+    margin-top: 20px;
   }
 
   .table-employees {
@@ -29,9 +27,13 @@ export const EmployeesStyled = styled.div`
       color: var(--accent);
     }
   }
+  
+  .drop-down__list li a {
+    justify-content: flex-start;
+  }
 
   .simplebar-content-wrapper {
-    height: 100% !important;
+    //height: 100% !important;
   }
   .section-table__main--container {
     overflow: visible;

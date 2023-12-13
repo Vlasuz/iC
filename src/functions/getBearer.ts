@@ -2,7 +2,7 @@ import axios from "axios";
 import getCookies from "./getCookie";
 
 export const getBearer = (type: string) => {
-    const access_token = getCookies('access_token');
+    const access_token = getCookies('access_token_ic');
 
     const types: any = {
         'get': axios.defaults.headers.get['Authorization'] = `Bearer ${access_token}`,

@@ -5,6 +5,8 @@ import {getBearer} from "../../../functions/getBearer";
 import axios from "axios";
 import {getApiLink} from "../../../functions/getApiLink";
 import {removeEmployee, removeProject} from "../../../storage/toolkit";
+import {PopupCloseCancel} from "./PopupCloseCancel";
+import {PopupClose} from "./PopupClose";
 
 interface IPopupRemoveProjectProps {
     data: any
@@ -14,8 +16,6 @@ export const PopupRemoveProject: React.FC<IPopupRemoveProjectProps> = ({data}) =
 
     const setIsPopupActive: any = useContext(IsPopupActiveContext)
     const dispatch = useDispatch()
-
-    console.log(data)
 
     const handleDelete = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -34,12 +34,7 @@ export const PopupRemoveProject: React.FC<IPopupRemoveProjectProps> = ({data}) =
 
     return (
         <div className="remove-table-item__body popup-body">
-            <button type="button" className="remove-table-item__close-btn popup-close-btn popup-close"
-                    title="Close">
-                <svg width="15" height="15" viewBox="0 0 15 15">
-                    <use xlinkHref="#close"></use>
-                </svg>
-            </button>
+            <PopupClose/>
             <div className="remove-table-item__container popup-container" data-simplebar
                  data-simplebar-auto-hide="false">
                 <h2 className="remove-table-item__title popup-title title is-center">
@@ -47,9 +42,7 @@ export const PopupRemoveProject: React.FC<IPopupRemoveProjectProps> = ({data}) =
                 </h2>
                 <form onSubmit={handleDelete} className="popup-form">
                     <div className="popup-form__row is-min-gap">
-                        <button className="popup-form__cancel btn is-transparent popup-close" type="button">
-                            Cancel
-                        </button>
+                        <PopupCloseCancel/>
                         <button className="popup-form__submit btn" type="submit">
                             Delete
                         </button>

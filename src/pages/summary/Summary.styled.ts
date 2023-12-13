@@ -12,4 +12,9 @@ export const SummaryStyled = styled.section`
       opacity: .5;
     }
   }
+  
+  .summary-item__total-element--link {
+    background: transparent;
+    text-align: left;
+  }
 `

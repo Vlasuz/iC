@@ -2,6 +2,7 @@ import React, {useContext, useEffect, useState} from 'react'
 import {useSelector} from 'react-redux';
 import {IsPopupActiveContext} from "../PopupList";
 import {IProject} from "../../../models";
+import {PopupClose} from "./PopupClose";
 
 interface IPopupEmployeeProjectsProps {
     isOpenProjects: boolean
@@ -24,12 +25,13 @@ export const PopupEmployeeProjects: React.FC<IPopupEmployeeProjectsProps> = ({is
     }
 
     const handleCheckedAll = () => {
-        setChosenProjects(projects)
+        setChosenProjects(projects.length !== chosenProjects.length ? projects : [])
     }
 
     useEffect(() => {
         if(data?.all_projects) {
-            setChosenProjects(projects)
+            console.log(projects.map(item => item.id))
+            setChosenProjects(projects.map(item => item.id))
         } else {
             setChosenProjects(data?.projects ?? [])
         }
@@ -41,12 +43,7 @@ export const PopupEmployeeProjects: React.FC<IPopupEmployeeProjectsProps> = ({is
             <div className="sub-popup-employee__wrapper popup-wrapper">
                 <div className="sub-popup-employee__bg popup-bg" onClick={_ => setIsOpenProjects(false)}></div>
                 <div className="sub-popup-employee__body popup-body">
-                    <button type="button" className="sub-popup-employee__close-btn popup-close-btn"
-                            onClick={_ => setIsOpenProjects(false)} title="Close">
-                        <svg width="15" height="15" viewBox="0 0 15 15">
-                            <use xlinkHref="#close"></use>
-                        </svg>
-                    </button>
+                    <PopupClose/>
                     <div className="sub-popup-employee__body--wrapper">
                         <button type="button" className="sub-popup-employee__close-btn popup-close-btn"
                                 onClick={_ => setIsOpenProjects(false)} title="Close">

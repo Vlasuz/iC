@@ -11,6 +11,12 @@ import {PopupRemoveProject} from "./components/PopupRemoveProject";
 import {IProject} from "../../models";
 import {PopupProfile} from "./components/PopupProfile";
 import {PopupEditProfile} from "./components/PopupEditProfile";
+import {PopupDeleteTask} from "./components/PopupDeleteTask";
+import {PopupDeleteExpense} from "./components/PopupDeleteExpense";
+import { PopupApproveTimesheet } from './components/PopupApproveTimesheet';
+import {PopupApproveEmployeeTimesheet} from "./components/PopupApproveEmployeeTimesheet";
+import {PopupResetPasswordThankYou} from "./components/PopupResetPasswordThankYou";
+import {PopupResetPassword} from "./components/PopupResetPassword";
 
 interface IPopupListProps {
     popup: any
@@ -26,15 +32,23 @@ export const PopupList: React.FC<IPopupListProps> = ({popup}) => {
 
     const popupList: {[key: string]: React.ReactNode} = {
         "forgot-password-popup": <PopupForgotPassword/>,
-        "add-new-employee-popup": <PopupAddEmployee chosenProjects={chosenProjects} isOpenProjects={isOpenProjects} setIsOpenProjects={setIsOpenProjects} />,
-        "edit-employee-popup": <PopupEditEmployee data={popup.data} chosenProjects={chosenProjects} isOpenProjects={isOpenProjects} setIsOpenProjects={setIsOpenProjects} />,
+        "add-new-employee-popup": <PopupAddEmployee data={popup.data} chosenProjects={chosenProjects} setIsOpenProjects={setIsOpenProjects} />,
+        "edit-employee-popup": <PopupEditEmployee data={popup.data} chosenProjects={chosenProjects} setIsOpenProjects={setIsOpenProjects} />,
         "edit-project-popup": <PopupEditProject data={popup.data} />,
         "add-project-popup": <PopupAddProject/>,
         "remove-employee-popup": <PopupDeleteEmployee data={popup.data} />,
+        "remove-task-popup": <PopupDeleteTask data={popup.data} />,
+        "remove-expense-popup": <PopupDeleteExpense data={popup.data} />,
         "remove-project-popup": <PopupRemoveProject data={popup.data} />,
+
+        "approve-timesheet-popup": <PopupApproveTimesheet data={popup.data} />,
+        "approve-employee-timesheet-popup": <PopupApproveEmployeeTimesheet data={popup.data}/>,
 
         "profile-popup": <PopupProfile/>,
         "edit-profile-popup": <PopupEditProfile/>,
+
+        "reset-password-popup": <PopupResetPassword/>,
+        "reset-password-thanks-popup": <PopupResetPasswordThankYou/>,
     }
 
     const setPopup: any = useContext(PopupContext)
@@ -49,6 +63,8 @@ export const PopupList: React.FC<IPopupListProps> = ({popup}) => {
         if(isPopupActive) return;
 
         setTimeout(() => {
+            if(popup.popup === "profile-popup") return;
+
             setPopup("")
         }, 500)
     }, [isPopupActive])
@@ -74,67 +90,12 @@ export const PopupList: React.FC<IPopupListProps> = ({popup}) => {
 
             <PopupEmployeeProjects data={popup.data} setChosenProjects={setChosenProjects} chosenProjects={chosenProjects} isOpenProjects={isOpenProjects} setIsOpenProjects={setIsOpenProjects} />
 
-            <div className="forgot-password-2 popup" id="thanks-popup" style={{display: "none"}}>
-                <div className="forgot-password-2__wrapper popup-wrapper">
-                    <div className="forgot-password-2__bg popup-bg popup-close"></div>
-                    <div className="forgot-password-2__body popup-body">
-                        <button type="button" className="forgot-password__close-btn popup-close-btn popup-close"
-                                title="Close">
-                            <svg width="15" height="15" viewBox="0 0 15 15">
-                                <use xlinkHref="img/sprites.svg#close"></use>
-                            </svg>
-                        </button>
-                        <div className="forgot-password-2__container popup-container" data-simplebar
-                             data-simplebar-auto-hide="false">
-                            <h2 className="forgot-password-2__title popup-title title is-center">
-                                Thank you!
-                            </h2>
-                            <div className="forgot-password-2__text popup-text is-center">
-                                We have sent the letter with instructions <br/> to the
-                                e-mail: <u>o.rybak@ic-group.org</u>
-                            </div>
-                            <form className="popup-form">
-                                <div className="popup-form__row-2">
-                                    <button className="popup-form__submit btn popup-close" type="button">
-                                        Continue
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <div className={"popup" + ((popup.secondPopup && isPopupActive) ? " is-active" : "") + (sidePopup.includes(popup.secondPopup) ? " side-popup" : "")} style={{display: "flex"}}>
+                <div className="popup-wrapper">
+                    <div className="add-project__bg popup-bg" onClick={_ => setIsPopupActive(false)} />
 
-            <div className="forgot-password popup" id="reset-password-popup" style={{display: "none"}}>
-                <div className="forgot-password__wrapper popup-wrapper">
-                    <div className="forgot-password__bg popup-bg popup-close"></div>
-                    <div className="forgot-password__body popup-body">
-                        <button type="button" className="forgot-password__close-btn popup-close-btn popup-close"
-                                title="Close">
-                            <svg width="15" height="15" viewBox="0 0 15 15">
-                                <use xlinkHref="img/sprites.svg#close"></use>
-                            </svg>
-                        </button>
-                        <div className="forgot-password__container popup-container" data-simplebar
-                             data-simplebar-auto-hide="false">
-                            <h2 className="forgot-password__title popup-title title is-center">
-                                Reset the password?
-                            </h2>
-                            <div className="forgot-password__text popup-text is-center">
-                                We will send instructions on how to do it <br/> to Olena Rybak.
-                            </div>
-                            <form className="popup-form">
-                                <div className="popup-form__row is-min-gap">
-                                    <button className="popup-form__cancel btn is-transparent popup-close" type="button">
-                                        Cancel
-                                    </button>
-                                    <button className="popup-form__submit btn" type="submit">
-                                        Reset password
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
+                    {popup.secondPopup && popupList[popup.secondPopup]}
+
                 </div>
             </div>
 

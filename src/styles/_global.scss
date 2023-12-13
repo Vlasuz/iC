@@ -68,9 +68,9 @@ body {
 		overflow: hidden;
 	}
 	
-	&:not(.is-init) .ss-content, &:not(.is-init) .drop-down-2__block {
-		display: none !important;
-	}
+	//&:not(.is-init) .ss-content, &:not(.is-init) .drop-down-2__block {
+	//	display: none !important;
+	//}
 }
 
 @keyframes fadeIn {

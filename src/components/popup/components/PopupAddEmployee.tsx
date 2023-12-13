@@ -9,95 +9,78 @@ import {IsPopupActiveContext} from "../PopupList";
 import {PopupContext} from "../../../App";
 import SimpleBar from 'simplebar-react';
 import Select from 'react-select'
-import {CustomSelect} from "../../select/CustomSelect";
+import {CustomSelect1} from "../../select/CustomSelect1";
+import {CustomSelect} from "../../customSelect/CustomSelect";
+import { PhoneCodes } from '../../../constants/PhoneCodes';
+import { EmployeesStatus } from '../../../constants/EmployeesStatus';
+import {PopupClose} from "./PopupClose";
+import {PopupCloseCancel} from "./PopupCloseCancel";
 
 interface IPopupAddNewEmployeeProps {
     setIsOpenProjects: any
-    isOpenProjects: boolean
+    data: any
     chosenProjects: IProject[]
 }
 
-export const PopupAddEmployee: React.FC<IPopupAddNewEmployeeProps> = ({setIsOpenProjects, chosenProjects}) => {
+export const PopupAddEmployee: React.FC<IPopupAddNewEmployeeProps> = ({data, setIsOpenProjects, chosenProjects}) => {
 
     const projects: IProject[] = useSelector((state: any) => state.toolkit.projects)
     const setIsPopupActive: any = useContext(IsPopupActiveContext)
 
-    const statusList = [
-        {
-            value: "team_manager",
-            label: "Team manager"
-        },
-        {
-            value: "top_manager",
-            label: "Top manager"
-        },
-        {
-            value: "employee",
-            label: "Employee"
-        },
-    ]
-
-    const numberCodes = [
-        {
-            value: "+380",
-            label: "+380"
-        },
-        {
-            value: "+1",
-            label: "+1"
-        }
-    ]
+    const dispatch = useDispatch()
 
     const [firstNameValue, setFirstNameValue] = useState<string>('')
     const [lastNameValue, setLastNameValue] = useState<string>('')
     const [roleValue, setRoleValue] = useState<string>('')
-    const [statusValue, setStatusValue] = useState<string>(statusList[0].value)
+    const [statusValue, setStatusValue] = useState<string>(EmployeesStatus()[0].value)
     const [emailValue, setEmailValue] = useState<string>('')
     const [passwordValue, setPasswordValue] = useState<string>('')
     const [phoneValue, setPhoneValue] = useState<string>('')
     const [holidaysValue, setHolidaysValue] = useState<string>('')
     const [projectsList, setProjectsList] = useState<string[]>([])
-
-    const dispatch = useDispatch()
+    const [phoneCode, setPhoneCode]: any = useState(PhoneCodes()[0])
 
     const handleCreateNewEmployee = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
 
-        getBearer('post')
-        axios.post(getApiLink("/api/admin/employee/add/"), {
+        const newDataEmployee = {
             "first_name": firstNameValue,
             "last_name": lastNameValue,
             "role": roleValue,
             "status": statusValue,
             "email": emailValue,
-            "phone": phoneValue,
+            "phone": `${phoneCode.label} ${phoneValue}`,
             "holidays": +holidaysValue,
             "password": passwordValue,
             "projects": projectsList,
-            "all_projects": chosenProjects.length === projects.length
-        }).then(({data}) => {
-            // if (!data.status) return;
+            "all_projects": chosenProjects?.length === projects.length
+        }
+
+        getBearer('post')
+        axios.post(getApiLink("/api/admin/employee/add/"), newDataEmployee).then(({data}) => {
+            if (!data?.status) {
+                return console.log(data.message);
+            }
+
             setIsPopupActive(false)
             dispatch(addEmployee(data))
         }).catch(er => console.log(getApiLink("/api/admin/employee/add/"), er))
     }
 
+    useEffect(() => {
+        setProjectsList(chosenProjects.map(item => item.id))
+    }, [chosenProjects])
 
     useEffect(() => {
-        setProjectsList(chosenProjects?.map(item => item.id))
-    }, [chosenProjects])
+        setProjectsList(data?.projects.map((item: IProject) => item.id))
+    }, [data?.projects])
 
     return (
         <div className="add-new-employee__body popup-body">
             <h2 className="popup-title title">
                 Add employee
             </h2>
-            <button type="button" className="add-new-employee__close-btn popup-close-btn"
-                    onClick={_ => setIsPopupActive(false)} title="Close">
-                <svg width="15" height="15" viewBox="0 0 15 15">
-                    <use xlinkHref="#close"></use>
-                </svg>
-            </button>
+            <PopupClose/>
             <div className="add-new-employee__container popup-container" data-simplebar
                  data-simplebar-auto-hide="false">
                 <form onSubmit={handleCreateNewEmployee} className="popup-form">
@@ -121,7 +104,7 @@ export const PopupAddEmployee: React.FC<IPopupAddNewEmployeeProps> = ({setIsOpen
                         </label>
                         <label className="popup-form__label">
                             <span>Status on the web-site</span>
-                            <CustomSelect onChange={(e: any) => setStatusValue(e.value)} list={statusList}/>
+                            <CustomSelect1 onChange={(e: any) => setStatusValue(e.value)} list={EmployeesStatus()}/>
                         </label>
                     </div>
                     <div className="popup-form__row">
@@ -152,15 +135,22 @@ export const PopupAddEmployee: React.FC<IPopupAddNewEmployeeProps> = ({setIsOpen
                         <label className="popup-form__item">
                             <span>Phone number</span>
                             <div className="popup-form__item--row tel-parent">
-                                <CustomSelect list={numberCodes}/>
-                                <input onChange={e => setPhoneValue(e.target.value)} value={phoneValue} type="tel"
-                                       name="tel" required className="input"/>
+                                <CustomSelect list={PhoneCodes()} setSelectedItem={setPhoneCode} selectValue={phoneCode}/>
+                                <input
+                                    onChange={e => setPhoneValue(e.target.value.length <= 9 ? e.target.value : phoneValue)}
+                                    value={phoneValue} minLength={9} type="number" name="tel" required
+                                    className="input"/>
                             </div>
                         </label>
                         <label className="popup-form__label">
                             <span>Holidays</span>
-                            <input type="text" className={"input"} onChange={e => setHolidaysValue(e.target.value)}
-                                   value={holidaysValue}/>
+                            <input type="number" className={"input"}
+                                   onChange={e => setHolidaysValue(+e.target.value > 99 ? "99" : e.target.value)}
+                                   value={+holidaysValue > 99 ? 99 : holidaysValue}/>
+                            {!!holidaysValue.length &&
+                                <span className={"input-title"} style={{left: +holidaysValue < 10 ? "34px" : "42px"}}>
+                                days/year
+                            </span>}
                         </label>
                     </div>
                     <div className="popup-form__row">
@@ -168,10 +158,10 @@ export const PopupAddEmployee: React.FC<IPopupAddNewEmployeeProps> = ({setIsOpen
                             <span>Projects</span>
                             <a onClick={_ => setIsOpenProjects((prev: any) => !prev)}
                                className="popup-form__open-sub-popup open-popup">
-                                                <span id="checked-projects" data-none-text="None" data-text-1="project"
-                                                      data-text-2="projects" data-all-text="All projects">
-                                                    {projectsList?.length} projects
-                                                </span>
+                                <span id="checked-projects" data-none-text="None" data-text-1="project"
+                                      data-text-2="projects" data-all-text="All projects">
+                                    {projectsList?.length} projects
+                                </span>
                                 <svg width="10" height="7" viewBox="0 0 10 7">
                                     <use xlinkHref="#drop-down-arrow"></use>
                                 </svg>
@@ -179,10 +169,7 @@ export const PopupAddEmployee: React.FC<IPopupAddNewEmployeeProps> = ({setIsOpen
                         </label>
                     </div>
                     <div className="popup-form__row is-min-gap">
-                        <button className="popup-form__cancel btn is-transparent" onClick={_ => setIsPopupActive(false)}
-                                type="button">
-                            Cancel
-                        </button>
+                        <PopupCloseCancel/>
                         <button className="popup-form__submit btn" type="submit">
                             Save
                         </button>

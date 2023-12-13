@@ -49,8 +49,8 @@ export const ProjectItem: React.FC<IProjectItemProps> = ({data, index}) => {
     }, [isOpenContextMenu])
 
     useEffect(() => {
-        const onClick = (e: any) => modalBlock.current.contains(e.target) || setIsOpenContextMenu(false);
-        const onContext = (e: any) => rowBlock.current.contains(e.target) || setIsOpenContextMenu(false);
+        const onClick = (e: any) => modalBlock.current?.contains(e.target) || setIsOpenContextMenu(false);
+        const onContext = (e: any) => rowBlock.current?.contains(e.target) || setIsOpenContextMenu(false);
 
         document.addEventListener('click', onClick);
         document.addEventListener('contextmenu', onContext);

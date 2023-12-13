@@ -11,7 +11,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {getBearer} from "./functions/getBearer";
 import axios from "axios";
 import {getApiLink} from "./functions/getApiLink";
-import {setProjects, setUser} from "./storage/toolkit";
+import {setChosenTimesheet, setExpenses, setProjects, setTasks, setTimesheet, setUser} from "./storage/toolkit";
 import {Projects} from "./pages/projects/Projects";
 import {AppStyled} from "./App.styled";
 import {Vacations} from "./pages/vacations/Vacations";
@@ -24,26 +24,41 @@ export const PopupContext: any = createContext(null)
 
 function App() {
 
-    const userData = useSelector((state: any) => state.toolkit.user)
-
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const location = useLocation()
 
+    const userData = useSelector((state: any) => state.toolkit.user)
+
     useEffect(() => {
-        if(!getCookies('access_token')) {
+        if(!getCookies('access_token_ic')) {
             return navigate("/login");
         } else if (location.pathname.includes("login")) {
             navigate("/");
         }
 
 
+
+        getBearer("get")
+        axios.get(getApiLink("/api/timesheet/my/expenses/")).then(({data}) => {
+            dispatch(setExpenses(data))
+        }).catch(er => console.log(getApiLink("api/timesheet/my/expenses/"), er))
+
+        getBearer("get")
+        axios.get(getApiLink("/api/timesheet/my/tasks/")).then(({data}) => {
+            dispatch(setTasks(data))
+        }).catch(er => console.log(getApiLink("api/timesheet/my/tasks/"), er))
+
+        getBearer("get")
+        axios.get(getApiLink("/api/timesheet/my/")).then(({data}) => {
+            dispatch(setTimesheet(data))
+            dispatch(setChosenTimesheet(data[0]))
+        }).catch(er => console.log(getApiLink("api/timesheet/my/"), er))
+
         getBearer('get')
         axios.get(getApiLink("/api/admin/project/")).then(({data}) => {
             dispatch(setProjects(data))
-            console.log(data)
         }).catch(er => console.log(getApiLink("api/admin/project/"), er))
-
 
         getBearer('get')
         axios.get(getApiLink("/api/user/profile/")).then(({data}) => {
@@ -66,14 +81,21 @@ function App() {
                 <Wrapper>
 
                     <Routes location={location}>
+
+                        {!userData.status?.includes("admin") &&
+                            <>
+                                <Route path={'/costs'} element={<Costs/>}/>
+                                <Route path={'/summary'} element={<Summary/>}/>
+                                <Route path={'/'} element={<Timesheet/>}/>
+                            </>
+                        }
+
+
                         <Route path={'/summary/employees'} element={<SummaryEmployees/>}/>
-                        <Route path={'/summary'} element={<Summary/>}/>
-                        <Route path={'/costs'} element={<Costs/>}/>
                         <Route path={'/vacations'} element={<Vacations/>}/>
                         <Route path={'/projects'} element={<Projects/>}/>
                         <Route path={'/employees'} element={<Employees/>}/>
                         <Route path={'/login'} element={<Login/>}/>
-                        <Route path={'/'} element={<Timesheet/>}/>
                     </Routes>
 
                 </Wrapper>

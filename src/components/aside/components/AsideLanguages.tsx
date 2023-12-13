@@ -1,4 +1,6 @@
 import React, {useEffect, useState} from 'react'
+import {useLanguage} from "../../../hooks/Language";
+import {useClickOutside} from "../../../hooks/ClickOutside";
 
 interface IAsideLanguagesProps {
 
@@ -6,26 +8,23 @@ interface IAsideLanguagesProps {
 
 export const AsideLanguages: React.FC<IAsideLanguagesProps> = () => {
 
-    const languages = ['English', 'Ukrainian', 'Russian']
+    const {languages, handleSwitch, langSelected} = useLanguage()
 
-    const [activeLanguage, setActiveLanguage] = useState<string>(languages[0])
-
-    const handeSwitch = (lang: string) => {
-        setActiveLanguage(lang)
-    }
+    const [isOpenLanguages, setIsOpenLanguages] = useState(false)
+    const {rootEl} = useClickOutside(setIsOpenLanguages)
 
     return (
-        <div className="aside__change-on-min">
+        <div ref={rootEl} className="aside__change-on-min">
             <div>
-                <div className="aside__language drop-down is-dark is-bottom">
-                    <button className="aside__language--target drop-down__target" type="button">
+                <div className={`aside__language drop-down is-dark is-bottom ${isOpenLanguages && "is-active"}`}>
+                    <button onClick={_ => setIsOpenLanguages(prev => !prev)} className="aside__language--target drop-down__target" type="button">
                         <i>
                             <svg width="15" height="15" viewBox="0 0 15 15">
                                 <use xlinkHref="#language"></use>
                             </svg>
                         </i>
                         <span>
-                            {activeLanguage}
+                            {languages.filter(item => item.slug === langSelected)[0]?.titleBig}
                         </span>
                         <svg width="10" height="7" viewBox="0 0 10 7"
                              className="drop-down__target--arrow">
@@ -36,10 +35,13 @@ export const AsideLanguages: React.FC<IAsideLanguagesProps> = () => {
                         <ul className="drop-down__list">
 
                             {
-                                languages.filter(lang => lang !== activeLanguage).map(lang =>
-                                    <li key={lang} onClick={_ => handeSwitch(lang)}>
-                                        <a href="#" aria-label={lang}>
-                                            {lang}
+                                languages?.filter(lang => lang.slug !== langSelected).map(lang =>
+                                    <li key={lang.slug} onClick={_ => {
+                                        handleSwitch(lang.slug)
+                                        setIsOpenLanguages(false)
+                                    }}>
+                                        <a>
+                                            {lang.titleBig}
                                         </a>
                                     </li>
                                 )
@@ -53,7 +55,7 @@ export const AsideLanguages: React.FC<IAsideLanguagesProps> = () => {
                 <div className="aside__language drop-down is-dark is-bottom is-min">
                     <button className="aside__language--target drop-down__target" type="button">
 												<span>
-													En
+													{languages.filter(item => item.slug === langSelected)[0]?.titleBig}
 												</span>
                         <svg width="10" height="7" viewBox="0 0 10 7"
                              className="drop-down__target--arrow">
@@ -62,11 +64,18 @@ export const AsideLanguages: React.FC<IAsideLanguagesProps> = () => {
                     </button>
                     <div className="aside__language--block drop-down__block">
                         <ul className="drop-down__list">
-                            <li>
-                                <a href="#" aria-label="Ua">
-                                    Ua
-                                </a>
-                            </li>
+                            {
+                                languages?.filter(lang => lang.slug !== langSelected).map(lang =>
+                                    <li key={lang.slug} onClick={_ => {
+                                        handleSwitch(lang.slug)
+                                        setIsOpenLanguages(false)
+                                    }}>
+                                        <a>
+                                            {lang.titleBig}
+                                        </a>
+                                    </li>
+                                )
+                            }
                         </ul>
                     </div>
                 </div>

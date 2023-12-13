@@ -9,7 +9,11 @@ import {ProjectItem} from "./components/ProjectItem";
 import {PopupContext} from "../../App";
 import {ProjectStyled} from "./Project.styled";
 import SimpleBar from "simplebar-react";
-import {CustomSelect} from "../../components/select/CustomSelect";
+import {CustomSelect1} from "../../components/select/CustomSelect1";
+import {RowsPerPage} from "../../constants/RowsPerPage";
+import {CustomSelect} from "../../components/customSelect/CustomSelect";
+import {TableSelectYear} from "../../components/table/TableSelectYear";
+import {TableExport} from "../../components/table/TableExport";
 
 interface IProjectsProps {
 
@@ -35,86 +39,61 @@ export const Projects: React.FC<IProjectsProps> = () => {
 
 
 
-
-
-
-    const listOfNumbers = [
-        {
-            value: 2,
-            label: "2"
-        },
-        {
-            value: 3,
-            label: "3"
-        },
-        {
-            value: 6,
-            label: "6"
-        },
-        {
-            value: 8,
-            label: "8"
-        },
-        {
-            value: 99,
-            label: "All"
-        },
-    ]
-
-
     const handleChangeRows = (e: any) => {
         setPaginationCountFrom(0)
-        setPaginationCountStep(e.value)
-        setPaginationCountTo(e.value)
-        setPaginationMaximumPages(Math.ceil(projects.length / e.value))
-        const arrayCount = Array.from({length: Math.ceil(projects.length / e.value)}, (_, i) => i + 1)
+        setPaginationCountStep(e)
+        setPaginationCountTo(e)
+        setPaginationMaximumPages(e.value === 0 ? 0 : Math.ceil(projects.length / e.value))
+        const arrayCount = Array?.from({length: Math.ceil(projects?.length / e.value)}, (_, i) => i + 1)
+
         setPaginationNavigation(arrayCount)
+        setPaginationCountTo(paginationCountStep.value)
     }
 
 
 
     // PAGINATION
-    const [paginationCountStep, setPaginationCountStep] = useState(listOfNumbers[3].value)
+    const [paginationCountStep, setPaginationCountStep] = useState(RowsPerPage()[0])
     const [paginationCountOfMaximumNavigation] = useState(3)
-    const [paginationMaximumPages, setPaginationMaximumPages] = useState(Math.ceil(projects.length / paginationCountStep))
+    const [paginationMaximumPages, setPaginationMaximumPages] = useState(Math.ceil(projects.length / paginationCountStep.value))
     const [paginationCountFrom, setPaginationCountFrom] = useState<number>(0)
-    const [paginationCountTo, setPaginationCountTo] = useState<number>(paginationCountStep)
+    const [paginationCountTo, setPaginationCountTo] = useState<number>(paginationCountStep.value)
     const [paginationNavigation, setPaginationNavigation] = useState<number[]>([])
 
     const paginationCountOfEndingNavigation = paginationMaximumPages - 5 <= 0 ? 0 : paginationMaximumPages - 5
-    const isNearEnd = paginationNavigation?.slice(paginationCountFrom / paginationCountStep, (paginationCountOfMaximumNavigation + paginationCountFrom / paginationCountStep))[0] + 3 >= paginationNavigation.slice(paginationMaximumPages - 1)[0]
+    const isNearEnd = paginationNavigation?.slice(paginationCountFrom / paginationCountStep.value, (paginationCountOfMaximumNavigation + paginationCountFrom / paginationCountStep.value))[0] + 3 >= paginationNavigation.slice(paginationMaximumPages - 1)[0]
 
     useEffect(() => {
-        const arrayCount = Array.from({length: Math.ceil(projects.length / paginationCountStep)}, (_, i) => i + 1)
+        const arrayCount = Array?.from({length: Math.ceil(projects?.length / paginationCountStep.value)}, (_, i) => i + 1)
 
         setPaginationNavigation(arrayCount)
-        setPaginationCountTo(paginationCountStep)
+        setPaginationCountTo(paginationCountStep.value)
     }, [projects, paginationMaximumPages])
 
     useEffect(() => {
 
         setPaginationCountFrom(0)
-        setPaginationMaximumPages(Math.ceil(projects.length / paginationCountStep))
+        setPaginationMaximumPages(Math.ceil(projects.length / paginationCountStep.value))
 
     }, [projects])
 
     const changeNumberPagination = (e: React.MouseEvent<HTMLAnchorElement>, number: number) => {
         e.preventDefault()
 
-        setPaginationCountFrom((paginationCountStep * number) - paginationCountStep)
-        setPaginationCountTo(paginationCountStep * number)
+        setPaginationCountFrom((paginationCountStep.value * number) - paginationCountStep.value)
+        setPaginationCountTo(paginationCountStep.value * number)
     }
     const nextNumberPagination = () => {
-        if(paginationCountTo / paginationCountStep === paginationMaximumPages) return;
+        if(paginationCountTo / paginationCountStep.value === paginationMaximumPages) return;
 
-        setPaginationCountFrom(prev => prev + paginationCountStep)
-        setPaginationCountTo(prev => prev + paginationCountStep)
+        setPaginationCountFrom(prev => prev + paginationCountStep.value)
+        setPaginationCountTo(prev => prev + paginationCountStep.value)
     }
     const prevNumberPagination = () => {
-        if(paginationCountTo / paginationCountStep === 1) return;
+        if(paginationCountTo / paginationCountStep.value === 1) return;
 
-        setPaginationCountFrom(prev => prev - paginationCountStep)
-        setPaginationCountTo(prev => prev - paginationCountStep)
+        setPaginationCountFrom(prev => prev - paginationCountStep.value)
+        setPaginationCountTo(prev => prev - paginationCountStep.value)
     }
     // PAGINATION
 
@@ -153,81 +132,11 @@ export const Projects: React.FC<IProjectsProps> = () => {
                         </form>
                     </div>
                     <div className="section-table__header--col">
-                        <div className="section-table__change-date drop-down">
-                            <button className="section-table__change-date--target drop-down__target" type="button">
-                                2023
-                                <svg width="10" height="7" viewBox="0 0 10 7"
-                                     className="section-table__change-date--target-arrow drop-down__target--arrow">
-                                    <use xlinkHref="#drop-down-arrow"></use>
-                                </svg>
-                            </button>
-                            <div className="section-table__change-date--block drop-down__block">
-                                <div className="section-table__change-date--slider splide">
-                                    <div className="splide__track">
-                                        <ul className="splide__list">
-                                            <li className="splide__slide">
-                                                <label>
-                                                    <input type="radio" name="year" value="2021"/>
-                                                    <span>2021</span>
-                                                </label>
-                                            </li>
-                                            <li className="splide__slide">
-                                                <label>
-                                                    <input type="radio" name="year" value="2022"/>
-                                                    <span>2022</span>
-                                                </label>
-                                            </li>
-                                            <li className="splide__slide">
-                                                <label>
-                                                    <input type="radio" name="year" value="2023" checked readOnly/>
-                                                    <span>2023</span>
-                                                </label>
-                                            </li>
-                                            <li className="splide__slide is-disabled">
-                                                <label>
-                                                    <input type="radio" name="year" value="2024" disabled/>
-                                                    <span>2024</span>
-                                                </label>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div className="splide__arrows">
-                                        <button className="splide__arrow splide__arrow--prev" type="button">
-                                            <svg width="7" height="10" viewBox="0 0 7 10">
-                                                <use xlinkHref="#arrow-prev"></use>
-                                            </svg>
-                                        </button>
-                                        <button className="splide__arrow splide__arrow--next" type="button">
-                                            <svg width="7" height="10" viewBox="0 0 7 10">
-                                                <use xlinkHref="#arrow-next"></use>
-                                            </svg>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="section-table__export drop-down is-right-default">
-                            <button className="section-table__export--target drop-down__target" type="button">
-                                Export
-                                <svg width="16" height="17" viewBox="0 0 16 17">
-                                    <use xlinkHref="#download"></use>
-                                </svg>
-                            </button>
-                            <div className="section-table__export--block drop-down__block">
-                                <ul className="drop-down__list">
-                                    <li>
-                                        <a href="#">
-                                            Export as .xlsx
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            Export as .pdf
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
+
+                        <TableSelectYear/>
+
+                        <TableExport/>
+
                     </div>
                 </div>
             </div>
@@ -265,7 +174,7 @@ export const Projects: React.FC<IProjectsProps> = () => {
                                 {
                                     !!projects.length && projects
                                         ?.slice(paginationCountFrom, paginationCountTo)
-                                        ?.filter((item, index) => index < Math.ceil(paginationCountStep / 2))
+                                        ?.filter((item, index) => index < Math.ceil(paginationCountStep.value / 2))
                                         ?.map((project: IProject, index: number) =>
                                         <ProjectItem key={project.id} data={project} index={paginationCountFrom + index}/>
                                     )
@@ -305,9 +214,9 @@ export const Projects: React.FC<IProjectsProps> = () => {
                                 {
                                     !!projects.length && projects
                                         ?.slice(paginationCountFrom, paginationCountTo)
-                                        ?.filter((item, index) => index >= Math.ceil(paginationCountStep / 2))
+                                        ?.filter((item, index) => index >= Math.ceil(paginationCountStep.value / 2))
                                         ?.map((project: IProject, index: number) =>
-                                        <ProjectItem key={project.id} data={project} index={Math.ceil((paginationCountFrom + index) + paginationCountStep / 2)}/>
+                                        <ProjectItem key={project.id} data={project} index={Math.ceil((paginationCountFrom + index) + paginationCountStep.value / 2)}/>
                                     )
                                 }
 
@@ -360,7 +269,7 @@ export const Projects: React.FC<IProjectsProps> = () => {
                                 {
                                     !!projects.length && projects
                                         ?.map((project: IProject, index: number) =>
-                                            <ProjectItem key={project.id} data={project} index={paginationCountFrom / paginationCountStep + 1}/>
+                                            <ProjectItem key={project.id} data={project} index={paginationCountFrom / paginationCountStep.value + 1}/>
                                         )
                                 }
                             </div>
@@ -389,9 +298,9 @@ export const Projects: React.FC<IProjectsProps> = () => {
 
                         {
                             paginationNavigation
-                                ?.slice(!isNearEnd ? (paginationCountFrom - 1) / paginationCountStep : paginationCountOfEndingNavigation, !isNearEnd ? ((paginationCountFrom === 0 ? paginationCountOfMaximumNavigation : paginationCountOfMaximumNavigation - 1) + paginationCountFrom / (paginationCountFrom === 0 ? (paginationCountStep - 1) : paginationCountStep)) : 99)
+                                ?.slice(!isNearEnd ? (paginationCountFrom - 1) / paginationCountStep.value : paginationCountOfEndingNavigation, !isNearEnd ? ((paginationCountFrom === 0 ? paginationCountOfMaximumNavigation : paginationCountOfMaximumNavigation - 1) + paginationCountFrom / (paginationCountFrom === 0 ? (paginationCountStep.value - 1) : paginationCountStep.value)) : 99)
                                 ?.map(item =>
-                                    <a href="" className={(paginationCountTo / paginationCountStep) === item ? "is-current" : ""} key={item} onClick={e => changeNumberPagination(e, item)}>
+                                    <a href="" className={(paginationCountTo / paginationCountStep.value) === item ? "is-current" : ""} key={item} onClick={e => changeNumberPagination(e, item)}>
                                         {item}
                                     </a>
                                 )
@@ -401,7 +310,7 @@ export const Projects: React.FC<IProjectsProps> = () => {
                             !isNearEnd && paginationNavigation
                                 ?.slice(paginationMaximumPages - 1)
                                 ?.map(item =>
-                                    <a href="" className={(paginationCountTo / paginationCountStep) === item ? "is-current" : ""} key={item} onClick={e => changeNumberPagination(e, item)}>
+                                    <a href="" className={(paginationCountTo / paginationCountStep.value) === item ? "is-current" : ""} key={item} onClick={e => changeNumberPagination(e, item)}>
                                         {item}
                                     </a>
                                 )
@@ -422,7 +331,8 @@ export const Projects: React.FC<IProjectsProps> = () => {
                 </button>
                 <div className="section-table__row-per-page visible-on-desktop">
                     <span>Rows per page:</span>
-                    <CustomSelect onChange={handleChangeRows} defaultValue={listOfNumbers[3]}  list={listOfNumbers} />
+                    {/*<CustomSelect1 onChange={handleChangeRows} defaultValue={listOfNumbers[3]} list={listOfNumbers} />*/}
+                    <CustomSelect list={RowsPerPage()} onChange={handleChangeRows} selectValue={paginationCountStep} setSelectedItem={setPaginationCountStep} defaultValue={RowsPerPage()[0]}/>
                 </div>
             </div>
         </ProjectStyled>

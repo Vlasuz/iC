@@ -4,6 +4,7 @@ import {IUser} from "../../../models";
 import {PopupContext} from "../../../App";
 import {IsPopupActiveContext} from "../PopupList";
 import {useCopyElement} from "../../../hooks/CopyElement";
+import {getApiLink} from "../../../functions/getApiLink";
 
 interface IPopupProfileProps {
 
@@ -21,7 +22,7 @@ export const PopupProfile: React.FC<IPopupProfileProps> = () => {
 
         setTimeout(() => {
             setPopup({popup: "edit-profile-popup"})
-        }, 600)
+        }, 250)
     }
 
     // const {setCopyElement, isCopied} = useCopyElement()
@@ -40,7 +41,7 @@ export const PopupProfile: React.FC<IPopupProfileProps> = () => {
             <form className="profile__container popup-container">
                 <div className="profile__user">
                     <div className="profile__user--avatar" style={{background: "#EF3129"}}>
-                        {userData?.first_name && (userData?.first_name[0] + userData?.last_name[0])}
+                        {userData.avatar ? <img src={getApiLink(`/${userData.avatar}`)} alt="" width="80" height="80" loading="lazy"/> : userData?.first_name && (userData?.first_name[0] + userData?.last_name[0])}
                     </div>
                     <h2 className="profile__user--name title">
                         {userData?.first_name} {userData?.last_name}

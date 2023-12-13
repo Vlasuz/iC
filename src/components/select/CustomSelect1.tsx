@@ -8,7 +8,7 @@ interface ICustomSelectProps {
     value?: any
 }
 
-export const CustomSelect: React.FC<ICustomSelectProps> = ({list, defaultValue, onChange, value}) => {
+export const CustomSelect1: React.FC<ICustomSelectProps> = ({list, defaultValue, onChange, value}) => {
 
     return (
         <Select

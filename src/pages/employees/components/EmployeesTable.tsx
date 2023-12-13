@@ -7,6 +7,7 @@ import {EmployeesItem} from "./EmployeesItem";
 import {useDispatch, useSelector} from 'react-redux';
 import {setEmployeesList} from '../../../storage/toolkit';
 import SimpleBar from "simplebar-react";
+import {StatusesList} from "../../../constants/StatusesList";
 
 interface IEmployeesTableProps {
     searchValue: string
@@ -56,22 +57,6 @@ export const EmployeesTable: React.FC<IEmployeesTableProps> = ({searchValue, cou
         }
     }, []);
 
-
-    const statusList: IStatus[] = [
-        {
-            value: "team_manager",
-            label: "Team manager"
-        },
-        {
-            value: "top_manager",
-            label: "Top manager"
-        },
-        {
-            value: "employee",
-            label: "Employee"
-        },
-    ]
-
     const handleChooseStatus = (status: IStatus) => {
         setChosenStatus(status)
         setIsActiveStatusDropDown(false)
@@ -80,6 +65,21 @@ export const EmployeesTable: React.FC<IEmployeesTableProps> = ({searchValue, cou
             setChosenStatus({})
         }
     }
+
+
+    // default, sortUp, sortDown
+    const [sortByName, setSortByName] = useState("default")
+
+    const sortByNameList = [
+        {
+            value: "sortDown",
+            label: "A-Z"
+        },
+        {
+            value: "sortUp",
+            label: "Z-A"
+        }
+    ]
 
 
     return (
@@ -100,10 +100,7 @@ export const EmployeesTable: React.FC<IEmployeesTableProps> = ({searchValue, cou
                 </thead>
                 <tbody>
                 {
-                    employees
-                        ?.filter(item => chosenStatus?.value ? item.status === chosenStatus.value : item)
-                        ?.filter((item, index) => countOfShowRows === 0 ? item : index < countOfShowRows)
-                        ?.map((employee, index) =>
+                    employees?.map((employee, index) =>
                             <tr key={employee.id}>
                                 <td style={{padding: "10px 20px"}}>{index + 1}</td>
                                 <td style={{padding: "10px 20px"}}>{employee.first_name} {employee.last_name}</td>
@@ -131,7 +128,7 @@ export const EmployeesTable: React.FC<IEmployeesTableProps> = ({searchValue, cou
                                         <div ref={nameBlockRef}
                                              className="section-table__main--sort drop-down-absolute">
 													<button onClick={_ => setIsActiveNameDropDown(prev => !prev)}
-                                                            className="section-table__main--sort-target drop-down-absolute__target"
+                                                            className={`section-table__main--sort-target drop-down-absolute__target ${isActiveNameDropDown && "is-active"}`}
                                                             type="button">
 														<svg width="13" height="13" viewBox="0 0 13 13">
 															<use xlinkHref="#user"></use>
@@ -145,24 +142,25 @@ export const EmployeesTable: React.FC<IEmployeesTableProps> = ({searchValue, cou
                                                         className={"section-table__main--sort-block drop-down-absolute__block" + (isActiveNameDropDown ? " is-active" : "")}
                                                         id="name-sort">
 														<ul className="drop-down__list">
-															<li>
-																<a href="#">
-																	<svg width="15" height="16" viewBox="0 0 15 16">
-																		<use
-                                                                            xlinkHref="#sort-asc"></use>
-																	</svg>
-																	A-Z
-																</a>
-															</li>
-															<li>
-																<a href="#">
-																	<svg width="15" height="16" viewBox="0 0 15 16">
-																		<use
-                                                                            xlinkHref="#sort-asc"></use>
-																	</svg>
-																	Z-A
-																</a>
-															</li>
+
+                                                            {
+                                                                sortByNameList.map(item =>
+                                                                    <li className={item.value === sortByName ? "is-active" : ""}>
+                                                                        <a onClick={_ => {
+                                                                            setSortByName(item.value === sortByName ? "" : item.value)
+                                                                            setIsActiveNameDropDown(false)
+                                                                        }}>
+                                                                            <svg width="15" height="16" viewBox="0 0 15 16">
+                                                                                <use xlinkHref="#sort-asc"/>
+                                                                            </svg>
+                                                                            {
+                                                                                item.label
+                                                                            }
+                                                                        </a>
+                                                                    </li>
+                                                                )
+                                                            }
+
 														</ul>
 													</div>
 												</div>
@@ -177,7 +175,7 @@ export const EmployeesTable: React.FC<IEmployeesTableProps> = ({searchValue, cou
                                 <div className="section-table__head-th visible-on-desktop">
                                     <div ref={nameBlockRef} className="section-table__main--sort drop-down-absolute">
                                         <button onClick={_ => setIsActiveNameDropDown(prev => !prev)}
-                                                className="section-table__main--sort-target drop-down-absolute__target"
+                                                className={`section-table__main--sort-target drop-down-absolute__target ${isActiveNameDropDown && "is-active"}`}
                                                 type="button">
                                             <svg width="13" height="13" viewBox="0 0 13 13">
                                                 <use xlinkHref="#user"></use>
@@ -187,26 +185,25 @@ export const EmployeesTable: React.FC<IEmployeesTableProps> = ({searchValue, cou
                                                 <use xlinkHref="#sort-up-down"></use>
                                             </svg>
                                         </button>
-                                        <div
-                                            className={"section-table__main--sort-block drop-down-absolute__block" + (isActiveNameDropDown ? " is-active" : "")}
-                                            id="name-sort-2">
+                                        <div className={"section-table__main--sort-block drop-down-absolute__block" + (isActiveNameDropDown ? " is-active" : "")} >
                                             <ul className="drop-down__list">
-                                                <li>
-                                                    <a href="#">
-                                                        <svg width="15" height="16" viewBox="0 0 15 16">
-                                                            <use xlinkHref="#sort-asc"></use>
-                                                        </svg>
-                                                        A-Z
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="#">
-                                                        <svg width="15" height="16" viewBox="0 0 15 16">
-                                                            <use xlinkHref="#sort-asc"></use>
-                                                        </svg>
-                                                        Z-A
-                                                    </a>
-                                                </li>
+                                                {
+                                                    sortByNameList.map(item =>
+                                                        <li className={item.value === sortByName ? "is-active" : ""}>
+                                                            <a onClick={_ => {
+                                                                setSortByName(item.value === sortByName ? "" : item.value)
+                                                                setIsActiveNameDropDown(false)
+                                                            }}>
+                                                                <svg width="15" height="16" viewBox="0 0 15 16">
+                                                                    <use xlinkHref="#sort-asc"/>
+                                                                </svg>
+                                                                {
+                                                                    item.label
+                                                                }
+                                                            </a>
+                                                        </li>
+                                                    )
+                                                }
                                             </ul>
                                         </div>
                                     </div>
@@ -222,7 +219,7 @@ export const EmployeesTable: React.FC<IEmployeesTableProps> = ({searchValue, cou
                                 <div className="section-table__head-th">
                                     <div ref={statusBlockRef} className="section-table__main--sort drop-down-absolute">
                                         <button onClick={_ => setIsActiveStatusDropDown(prev => !prev)}
-                                                className="section-table__main--sort-target drop-down-absolute__target"
+                                                className={`section-table__main--sort-target drop-down-absolute__target ${isActiveStatusDropDown && "is-active"}`}
                                                 type="button">
                                             <svg width="13" height="13" viewBox="0 0 13 13">
                                                 <use xlinkHref="#flag"></use>
@@ -239,7 +236,7 @@ export const EmployeesTable: React.FC<IEmployeesTableProps> = ({searchValue, cou
                                             <ul className="drop-down__list">
 
                                                 {
-                                                    statusList.map(item =>
+                                                    StatusesList().map(item =>
                                                         <li key={item.value}
                                                             className={item.value === chosenStatus.value ? "is-active" : ""}>
                                                             <a onClick={_ => handleChooseStatus(item)}>
@@ -292,6 +289,7 @@ export const EmployeesTable: React.FC<IEmployeesTableProps> = ({searchValue, cou
                                 employees
                                     ?.filter(item => chosenStatus?.value ? item.status === chosenStatus.value : item)
                                     ?.filter((item, index) => countOfShowRows === 0 ? item : index < countOfShowRows)
+                                    ?.sort((a, b) => a.first_name < b.first_name ? sortByName === "sortUp" ? 1 : -1 : sortByName === "sortDown" ? 1 : -1)
                                     ?.map((employee, index) =>
                                         <EmployeesItem key={employee.id} index={index + 1} data={employee}/>)
                             }

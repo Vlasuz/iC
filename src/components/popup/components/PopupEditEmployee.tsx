@@ -5,12 +5,16 @@ import {getBearer} from "../../../functions/getBearer";
 import axios from "axios";
 import {getApiLink} from "../../../functions/getApiLink";
 import {addEmployee, editEmployee} from "../../../storage/toolkit";
-import {CustomSelect} from "../../select/CustomSelect";
+import {CustomSelect1} from "../../select/CustomSelect1";
 import {IsPopupActiveContext} from "../PopupList";
+import { CustomSelect } from '../../customSelect/CustomSelect';
+import {PhoneCodes} from "../../../constants/PhoneCodes";
+import {EmployeesStatus} from "../../../constants/EmployeesStatus";
+import {PopupCloseCancel} from "./PopupCloseCancel";
+import {PopupClose} from "./PopupClose";
 
 interface IPopupEditEmployeeProps {
     setIsOpenProjects: any
-    isOpenProjects: boolean
     data: any
     chosenProjects: IProject[]
 }
@@ -19,32 +23,6 @@ export const PopupEditEmployee: React.FC<IPopupEditEmployeeProps> = ({setIsOpenP
 
     const projects: IProject[] = useSelector((state: any) => state.toolkit.projects)
     const setIsPopupActive: any = useContext(IsPopupActiveContext)
-
-    const statusList = [
-        {
-            value: "team_manager",
-            label: "Team manager"
-        },
-        {
-            value: "top_manager",
-            label: "Top manager"
-        },
-        {
-            value: "employee",
-            label: "Employee"
-        },
-    ]
-
-    const numberCodes = [
-        {
-            value: "+380",
-            label: "+380"
-        },
-        {
-            value: "+1",
-            label: "+1"
-        }
-    ]
 
     const dispatch = useDispatch()
 
@@ -56,20 +34,23 @@ export const PopupEditEmployee: React.FC<IPopupEditEmployeeProps> = ({setIsOpenP
     const [phoneValue, setPhoneValue] = useState<string>('')
     const [holidaysValue, setHolidaysValue] = useState<string>('')
     const [projectsList, setProjectsList] = useState<string[]>([])
+    const [phoneCode, setPhoneCode]: any = useState({})
 
     useEffect(() => {
         setFirstNameValue(data.first_name)
         setLastNameValue(data.last_name)
         setRoleValue(data.role)
         setEmailValue(data.email)
-        setPhoneValue(data.phone)
+        setPhoneValue(data.phone.slice(data.phone.indexOf(" ") + 1))
         setStatusValue(data.status)
         setHolidaysValue(String(data.holidays))
         setProjectsList(data.projects?.map((item: any) => item.id))
+
+        setPhoneCode(PhoneCodes().filter(item => item.label === data.phone.slice(0, data.phone.indexOf(" ")))[0])
     }, [data])
 
     useEffect(() => {
-        setProjectsList(chosenProjects?.map(item => item.id))
+        setProjectsList(chosenProjects.map(item => item.id))
     }, [chosenProjects])
 
     const handleChange = (e: React.FormEvent<HTMLFormElement>) => {
@@ -81,10 +62,10 @@ export const PopupEditEmployee: React.FC<IPopupEditEmployeeProps> = ({setIsOpenP
             "role": roleValue,
             "status": statusValue,
             "email": emailValue,
-            "phone": phoneValue,
+            "phone": `${phoneCode.label} ${phoneValue}`,
             "holidays": +holidaysValue,
             "projects": projectsList,
-            "all_projects": chosenProjects.length === projects.length
+            "all_projects": chosenProjects?.length === projects.length
         }
 
         getBearer('patch')
@@ -105,12 +86,7 @@ export const PopupEditEmployee: React.FC<IPopupEditEmployeeProps> = ({setIsOpenP
             <h2 className="popup-title title">
                 Edit employee
             </h2>
-            <button type="button" className="add-new-employee__close-btn popup-close-btn popup-close"
-                    title="Close">
-                <svg width="15" height="15" viewBox="0 0 15 15">
-                    <use xlinkHref="#close"></use>
-                </svg>
-            </button>
+            <PopupClose/>
             <div className="add-new-employee__container popup-container" data-simplebar
                  data-simplebar-auto-hide="false">
                 <form onSubmit={handleChange} className="popup-form">
@@ -133,7 +109,7 @@ export const PopupEditEmployee: React.FC<IPopupEditEmployeeProps> = ({setIsOpenP
                         </label>
                         <label className="popup-form__label">
                             <span>Status on the web-site</span>
-                            <CustomSelect onChange={(e: any) => setStatusValue(e.value)} list={statusList} defaultValue={statusList.filter(item => item.value === data.status)[0]} />
+                            <CustomSelect1 onChange={(e: any) => setStatusValue(e.value)} list={EmployeesStatus()} defaultValue={EmployeesStatus().filter(item => item.value === data.status)[0]} />
                         </label>
                     </div>
                     <div className="popup-form__row">
@@ -146,25 +122,33 @@ export const PopupEditEmployee: React.FC<IPopupEditEmployeeProps> = ({setIsOpenP
                         <label className="popup-form__item">
                             <span>Phone number</span>
                             <div className="popup-form__item--row tel-parent">
-                                <CustomSelect list={numberCodes} />
-                                <input onChange={e => setPhoneValue(e.target.value)} value={phoneValue} type="tel" name="tel" required className="input"/>
+                                <CustomSelect list={PhoneCodes()} setSelectedItem={setPhoneCode} selectValue={phoneCode}
+                                              defaultValue={PhoneCodes()[0]}/>
+                                <input
+                                    onChange={e => setPhoneValue(e.target.value.length <= 9 ? e.target.value : phoneValue)}
+                                    value={phoneValue} minLength={9} type="number" name="tel" required
+                                    className="input"/>
                             </div>
                         </label>
                         <label className="popup-form__label">
                             <span>Holidays</span>
-                            {/*<input  type="text" name="days-year" required data-add-text="days/year"*/}
-                            {/*       data-max="99" className="input input-number"/>*/}
-                            <input type="text" className={"input"} onChange={e => setHolidaysValue(e.target.value)} value={holidaysValue}/>
+                            <input type="number" className={"input"}
+                                   onChange={e => setHolidaysValue(+e.target.value > 99 ? "99" : e.target.value)}
+                                   value={+holidaysValue > 99 ? 99 : holidaysValue}/>
+                            {!!holidaysValue.length &&
+                                <span className={"input-title"} style={{left: +holidaysValue < 10 ? "34px" : "42px"}}>
+                                days/year
+                            </span>}
                         </label>
                     </div>
                     <div className="popup-form__row">
                         <label className="popup-form__label is-full">
                             <span>Projects</span>
                             <a onClick={_ => setIsOpenProjects((prev: any) => !prev)} className="popup-form__open-sub-popup open-popup">
-                                                <span id="checked-projects" data-none-text="None" data-text-1="project"
-                                                      data-text-2="projects" data-all-text="All projects">
-                                                    {projectsList?.length} projects
-                                                </span>
+                                <span id="checked-projects" data-none-text="None" data-text-1="project"
+                                      data-text-2="projects" data-all-text="All projects">
+                                    {projectsList?.length} projects
+                                </span>
                                 <svg width="10" height="7" viewBox="0 0 10 7">
                                     <use xlinkHref="#drop-down-arrow"></use>
                                 </svg>
@@ -172,9 +156,7 @@ export const PopupEditEmployee: React.FC<IPopupEditEmployeeProps> = ({setIsOpenP
                         </label>
                     </div>
                     <div className="popup-form__row is-min-gap">
-                        <button className="popup-form__cancel btn is-transparent popup-close" type="button">
-                            Cancel
-                        </button>
+                        <PopupCloseCancel/>
                         <button className="popup-form__submit btn" type="submit">
                             Save
                         </button>
