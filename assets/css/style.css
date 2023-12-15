@@ -5655,7 +5655,7 @@ body {
     position: relative
 }
 
-.down-sidebar__total-item--progress-bar::before {
+.down-sidebar__total-item--progress-bar .line_done {
     content: "";
     position: absolute;
     left: 0;
@@ -7005,7 +7005,7 @@ body {
 
     .aside.is-min-2 .aside__change-on-min>:nth-child(2) {
         opacity: 1;
-        visibility: visible
+        visibility: visible;
     }
 
     .aside.is-min .aside__nav>ul>li>a span,.aside.is-min .aside__nav>ul>li>button span,.aside.is-min .aside__user--name {
