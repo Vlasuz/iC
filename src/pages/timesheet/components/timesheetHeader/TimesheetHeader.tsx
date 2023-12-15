@@ -61,7 +61,8 @@ export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({itemToEdit}) =
             getBearer("post")
             axios.post(getApiLink("/api/task/add/"), timesheetRequest).then(({data}) => {
                 dispatch(addTask(data))
-                setIsOpenCreatBlock(false)
+
+                resetFields()
             })
         }
     }
@@ -91,7 +92,7 @@ export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({itemToEdit}) =
         e.preventDefault()
 
         getBearer("get")
-        axios.get(getApiLink(`/api/timesheet/my/tasks/?search=${searchValueLocal}`)).then(({data}) => {
+        axios.get(getApiLink(`/api/timesheet/tasks/?search=${searchValueLocal}`)).then(({data}) => {
             dispatch(setTasks(data))
         })
     }
@@ -130,6 +131,10 @@ export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({itemToEdit}) =
     const handleOpenToCreate = () => {
         setIsOpenCreatBlock(true)
 
+        resetFields()
+    }
+
+    const resetFields = () => {
         setProjectData(undefined)
         setTaskData("")
         setDateData(`${lessThenTen(String(getMondayDate().getDate()))}.${lessThenTen(String(getMondayDate().getMonth() + 1))}.${getMondayDate().getFullYear()}`)

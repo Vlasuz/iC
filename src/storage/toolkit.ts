@@ -1,5 +1,6 @@
 import {createSlice} from "@reduxjs/toolkit";
 import {initialState} from "./initialState";
+import {ITimesheet} from "../models";
 
 
 const toolkit = createSlice({
@@ -79,10 +80,20 @@ const toolkit = createSlice({
 
         setTimesheet(state, action) {
             state.timesheet = action.payload
+
+            state.timesheetIdPerMonth = action.payload.map((item: ITimesheet) => {
+                return {
+                    month: `${item.date[3]}${item.date[4]}`,
+                    timesheet_id: item.id
+                }
+            })
         },
         setChosenTimesheet(state, action) {
             state.chosenTimesheet = action.payload
         },
+        setTimesheetStatistic(state, action) {
+            state.timesheetStatistic = action.payload
+        }
     },
 })
 
@@ -116,6 +127,7 @@ export const {
     editExpense,
 
     setTimesheet,
-    setChosenTimesheet
+    setChosenTimesheet,
+    setTimesheetStatistic
 
 } = toolkit.actions;

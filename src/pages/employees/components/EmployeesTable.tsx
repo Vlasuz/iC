@@ -289,7 +289,7 @@ export const EmployeesTable: React.FC<IEmployeesTableProps> = ({searchValue, cou
                                 employees
                                     ?.filter(item => chosenStatus?.value ? item.status === chosenStatus.value : item)
                                     ?.filter((item, index) => countOfShowRows === 0 ? item : index < countOfShowRows)
-                                    ?.sort((a, b) => a.first_name < b.first_name ? sortByName === "sortUp" ? 1 : -1 : sortByName === "sortDown" ? 1 : -1)
+                                    ?.sort((a, b) => a.last_name < b.last_name ? sortByName === "sortUp" ? 1 : -1 : sortByName === "sortDown" ? 1 : -1)
                                     ?.map((employee, index) =>
                                         <EmployeesItem key={employee.id} index={index + 1} data={employee}/>)
                             }

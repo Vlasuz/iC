@@ -15,6 +15,7 @@ import { PhoneCodes } from '../../../constants/PhoneCodes';
 import { EmployeesStatus } from '../../../constants/EmployeesStatus';
 import {PopupClose} from "./PopupClose";
 import {PopupCloseCancel} from "./PopupCloseCancel";
+import { useMask } from '@react-input/mask';
 
 interface IPopupAddNewEmployeeProps {
     setIsOpenProjects: any
@@ -32,7 +33,7 @@ export const PopupAddEmployee: React.FC<IPopupAddNewEmployeeProps> = ({data, set
     const [firstNameValue, setFirstNameValue] = useState<string>('')
     const [lastNameValue, setLastNameValue] = useState<string>('')
     const [roleValue, setRoleValue] = useState<string>('')
-    const [statusValue, setStatusValue] = useState<string>(EmployeesStatus()[0].value)
+    const [statusValue, setStatusValue] = useState(EmployeesStatus()[0])
     const [emailValue, setEmailValue] = useState<string>('')
     const [passwordValue, setPasswordValue] = useState<string>('')
     const [phoneValue, setPhoneValue] = useState<string>('')
@@ -75,6 +76,9 @@ export const PopupAddEmployee: React.FC<IPopupAddNewEmployeeProps> = ({data, set
         setProjectsList(data?.projects.map((item: IProject) => item.id))
     }, [data?.projects])
 
+    const inputRef = useMask({ mask: '(__) __ __ ___', replacement: { _: /\d/ } });
+
+
     return (
         <div className="add-new-employee__body popup-body">
             <h2 className="popup-title title">
@@ -104,7 +108,7 @@ export const PopupAddEmployee: React.FC<IPopupAddNewEmployeeProps> = ({data, set
                         </label>
                         <label className="popup-form__label">
                             <span>Status on the web-site</span>
-                            <CustomSelect1 onChange={(e: any) => setStatusValue(e.value)} list={EmployeesStatus()}/>
+                            <CustomSelect selectValue={statusValue} setSelectedItem={setStatusValue} list={EmployeesStatus()}/>
                         </label>
                     </div>
                     <div className="popup-form__row">
@@ -137,8 +141,8 @@ export const PopupAddEmployee: React.FC<IPopupAddNewEmployeeProps> = ({data, set
                             <div className="popup-form__item--row tel-parent">
                                 <CustomSelect list={PhoneCodes()} setSelectedItem={setPhoneCode} selectValue={phoneCode}/>
                                 <input
-                                    onChange={e => setPhoneValue(e.target.value.length <= 9 ? e.target.value : phoneValue)}
-                                    value={phoneValue} minLength={9} type="number" name="tel" required
+                                    onChange={e => setPhoneValue(e.target.value)}
+                                    value={phoneValue} ref={inputRef} type="text" name="tel" required
                                     className="input"/>
                             </div>
                         </label>

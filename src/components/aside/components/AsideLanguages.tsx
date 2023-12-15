@@ -55,7 +55,7 @@ export const AsideLanguages: React.FC<IAsideLanguagesProps> = () => {
                 <div className="aside__language drop-down is-dark is-bottom is-min">
                     <button className="aside__language--target drop-down__target" type="button">
 												<span>
-													{languages.filter(item => item.slug === langSelected)[0]?.titleBig}
+													{languages.filter(item => item.slug === langSelected)[0]?.title}
 												</span>
                         <svg width="10" height="7" viewBox="0 0 10 7"
                              className="drop-down__target--arrow">
@@ -71,7 +71,7 @@ export const AsideLanguages: React.FC<IAsideLanguagesProps> = () => {
                                         setIsOpenLanguages(false)
                                     }}>
                                         <a>
-                                            {lang.titleBig}
+                                            {lang.title}
                                         </a>
                                     </li>
                                 )

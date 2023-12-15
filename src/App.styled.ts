@@ -175,6 +175,14 @@ export const AppStyled = styled.div`
   
   .popup-form__label {
     position: relative;
+    .select {
+      width: 100%;
+      max-width: 100%;
+    }
+    .custom-select__head {
+      width: 100%;
+      justify-content: space-between;
+    }
   }
   .popup-form__label .input-title {
     position: absolute;
@@ -307,5 +315,66 @@ export const AppStyled = styled.div`
       background: var(--accent);
       color: var(--white);
     }
+  }
+  
+  
+  .profile__container.popup-container {
+    display: block;
+  }
+  .simplebar-content {
+    padding-bottom: 20px !important;
+  }
+
+
+  .section-table__main--container::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+    background: transparent;
+  }
+  .section-table__main--container::-webkit-scrollbar-thumb {
+    background: rgba(169, 169, 172, .5);
+  }
+
+  .aside__change-on-min > *:nth-child(2) {
+    display: block!important;
+  }
+
+  .down-sidebar__total-item {
+    gap: 10px;
+  }
+  .down-sidebar__total-item--progress-bar .line_done {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: var(--value,0%);
+    height: 100%;
+    background: rgba(151,160,187,.5)
+  }
+
+  .down-sidebar__total-item--progress-bar {
+    width: 100%;
+    max-width: 300px;
+    margin-left: auto;
+  }
+  .down-sidebar__total-item--name {
+    width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .down-sidebar__total-item--value {
+    b {
+      display: block;
+      width: 100%;
+      max-width: 60px;
+      white-space: nowrap;
+    }
+  }
+
+  
+  .react-datepicker__day--keyboard-selected {
+    color: #000;
+    font-weight: 400;
   }
 `

@@ -5,7 +5,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import {TimesheetHeader} from "./components/timesheetHeader/TimesheetHeader";
 import {TimesheetTable} from "./components/timesheetTable/TimesheetTable";
 import {TimesheetStyled} from "./Timesheet.styled";
-import {IEmployee, ITask, ITimesheet} from "../../models";
+import {IEmployee, IStatistic, ITask, ITimesheet} from "../../models";
 import {getBearer} from "../../functions/getBearer";
 import axios from "axios";
 import {getApiLink} from "../../functions/getApiLink";
@@ -28,22 +28,23 @@ export const Timesheet: React.FC<ITimesheetProps> = () => {
 
     const taskList: ITask[] = useSelector((state: any) => state.toolkit.tasks)
     const chosenTimesheet: ITimesheet = useSelector((state: any) => state.toolkit.chosenTimesheet)
+    const timesheetStatistic: IStatistic = useSelector((state: any) => state.toolkit.timesheetStatistic)
 
-    const [rowsSelectValue, setRowsSelectValue] = useState(RowsPerPage()[3])
+    const [rowsSelectValue, setRowsSelectValue] = useState(RowsPerPage()[0])
     const [itemToEdit, setItemToEdit] = useState<ITask>()
     const [isOpenDownSidebar, setIsOpenDownSidebar] = useState(false)
 
     useEffect(() => {
-        if(!Object.keys(chosenTimesheet)?.length) return;
+        if(!chosenTimesheet || !Object.keys(chosenTimesheet)?.length) return;
 
         getBearer("get")
-        axios.get(getApiLink(`/api/timesheet/my/tasks/?timesheet_id=${chosenTimesheet.id}`)).then(({data}) => {
+        axios.get(getApiLink(`/api/timesheet/tasks/?timesheet_id=${chosenTimesheet?.id}`)).then(({data}) => {
             dispatch(setTasks(data))
         })
     }, [chosenTimesheet])
 
     const handleAddRows = () => {
-        const plusCount = 1
+        const plusCount = window.innerWidth < 768 ? 10 : 20
         setRowsSelectValue({
             value: rowsSelectValue.value + plusCount,
             label: taskList.length === +rowsSelectValue.label + plusCount ? "All" : String(+rowsSelectValue.label + plusCount)
@@ -52,7 +53,7 @@ export const Timesheet: React.FC<ITimesheetProps> = () => {
 
     return (
         <BlockToEdit.Provider value={setItemToEdit}>
-            <TimesheetStyled style={{paddingBottom: isOpenDownSidebar ? "300px" : "100px"}} className="section-table">
+            <TimesheetStyled style={{paddingBottom: isOpenDownSidebar ? "270px" : "80px"}} className="section-table">
 
                 <TimesheetHeader itemToEdit={itemToEdit}/>
 
@@ -81,7 +82,7 @@ export const Timesheet: React.FC<ITimesheetProps> = () => {
                 </div>
             </TimesheetStyled>
 
-            <DownSidebar setIsOpenDownSidebar={setIsOpenDownSidebar}/>
+            <DownSidebar type={"timesheet"} statisticAllAmount={timesheetStatistic.all_hours} statisticAllElements={timesheetStatistic.tasks} setIsOpenDownSidebar={setIsOpenDownSidebar}/>
         </BlockToEdit.Provider>
     )
 }

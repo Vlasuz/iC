@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react'
+import React, {useContext, useEffect, useRef, useState} from 'react'
 import {useDispatch, useSelector} from 'react-redux';
 import {IUser} from "../../models";
 import {NavLink, useLocation, useNavigate} from "react-router-dom";
@@ -11,23 +11,13 @@ import {AsideLanguages} from "./components/AsideLanguages";
 import {PopupContext} from "../../App";
 import {AsideStyled} from "./Aside.styled";
 import {getApiLink} from "../../functions/getApiLink";
+import {Translate} from "../translate/Translate";
 
 interface IAsideProps {
 
 }
 
 export const Aside: React.FC<IAsideProps> = () => {
-
-    useEffect(() => {
-        if (localStorage.getItem('ic11-aside-min') == "true") {
-            // @ts-ignore
-            document.querySelector('.aside').classList.add('is-min');
-            // @ts-ignore
-            document.querySelector('.aside').classList.add('is-min-2');
-            // @ts-ignore
-            document.querySelector('html').style.setProperty('--aside-width', '65px');
-        }
-    }, [])
 
     const userData: IUser = useSelector((state: any) => state.toolkit.user)
     const navigate = useNavigate()
@@ -40,42 +30,52 @@ export const Aside: React.FC<IAsideProps> = () => {
         navigate("/login")
     }
 
+    const isAdmin = userData.status?.includes("admin")
+    const isEmployee = userData.status?.includes("employee")
+    const isManager = userData.status?.includes("top_manager") || userData.status?.includes("team_manager")
+
     const menuList = [
         {
             label: "Employees",
-            link: "/employees",
+            link: "/",
             icon: "#members",
-            isActive: userData.status?.includes("admin") || userData.status?.includes("top_manager") || userData.status?.includes("team_manager")
+            isActive: isAdmin
         },
         {
             label: "Vacations",
             link: "/vacations",
             icon: "#calendar-check",
-            isActive: userData.status?.includes("admin") || userData.status?.includes("top_manager") || userData.status?.includes("team_manager")
+            isActive: isAdmin
         },
         {
             label: "Projects",
             link: "/projects",
             icon: "#calendar-selected",
-            isActive: userData.status?.includes("admin") || userData.status?.includes("top_manager") || userData.status?.includes("team_manager")
+            isActive: isAdmin
         },
         {
             label: "Timesheet",
             link: "/",
             icon: "#timesheet",
-            isActive: !userData.status?.includes("admin")
+            isActive: isEmployee || isManager
         },
         {
             label: "Costs",
             link: "/costs",
             icon: "#costs",
-            isActive: !userData.status?.includes("admin")
+            isActive: isEmployee || isManager
         },
         {
             label: "Summary",
             link: "/summary",
             icon: "#calendar-table",
-            isActive: !userData.status?.includes("admin")
+            isActive: isEmployee || isManager
+        },
+        {
+            label: "Employees",
+            link: "/summary-employees",
+            icon: "#members",
+            isActive: isManager
         },
     ]
 
@@ -87,9 +87,35 @@ export const Aside: React.FC<IAsideProps> = () => {
 
     const [isActiveBurger, setIsActiveBurger] = useState(false)
 
+    const [isLowAside, setIsLowAside] = useState<boolean[]>([])
+
+    const mainBlockRef: any = useRef(null)
+
+    const handleActiveSidebar = () => {
+
+        if (isLowAside[0] || isLowAside[1]) {
+            setIsLowAside([false, true])
+            // @ts-ignore
+            document.querySelector('html').style.setProperty('--aside-width', '230px');
+            setTimeout(() => {
+                setIsLowAside([false, false])
+            }, 500)
+        } else {
+            setIsLowAside([true, true])
+            // @ts-ignore
+            document.querySelector('html').style.setProperty('--aside-width', '65px');
+        }
+
+
+        // @ts-ignore
+        document.querySelector('body').style.setProperty('--transition-width', 'max-width .5s ease, width .5s ease, left .5s ease');
+        // }
+    }
+
     return (
-        <AsideStyled className={isActiveBurger ? "aside is-mobile-menu-active" : "aside"}>
-            <button className="aside__slide-toggle" type="button">
+        <AsideStyled ref={mainBlockRef}
+                     className={isActiveBurger ? "aside is-mobile-menu-active" : `aside ${isLowAside[0] && "is-min"} ${isLowAside[1] && "is-min-2"}`}>
+            <button className="aside__slide-toggle" type="button" onClick={handleActiveSidebar}>
                 <svg width="10" height="7" viewBox="0 0 10 7">
                     <use xlinkHref="#drop-down-arrow"></use>
                 </svg>
@@ -108,12 +134,14 @@ export const Aside: React.FC<IAsideProps> = () => {
                                 </picture>
                             </NavLink>
                         </div>
-                        <button className={isActiveBurger ? "aside__burger is-mobile-menu-active" : "aside__burger"} onClick={_ => setIsActiveBurger(prev => !prev)} type="button" aria-label="Menu">
+                        <button className={isActiveBurger ? "aside__burger is-mobile-menu-active" : "aside__burger"}
+                                onClick={_ => setIsActiveBurger(prev => !prev)} type="button" aria-label="Menu">
                             <span></span>
                             <span></span>
                             <span></span>
                         </button>
                     </div>
+
                     <div className="aside__block">
                         <div className="aside__block--background"></div>
                         <div className="aside__block--body">
@@ -123,7 +151,9 @@ export const Aside: React.FC<IAsideProps> = () => {
                                     {
                                         menuList.map(item => (item.isActive && !!Object.keys(userData).length) &&
                                             <li key={item.link}>
-                                                <NavLink to={item.link} className={({isActive}) => isActive ? "is-current" : ""} aria-label="Employees">
+                                                <NavLink to={item.link}
+                                                         className={({isActive}) => isActive ? "is-current" : ""}
+                                                         aria-label="Employees">
                                                     <svg width="25" height="25" viewBox="0 0 25 25">
                                                         <use xlinkHref={item.icon}></use>
                                                     </svg>
@@ -138,9 +168,12 @@ export const Aside: React.FC<IAsideProps> = () => {
                             <div className="aside__add">
                                 <div className="aside__add--row">
                                     <button onClick={_ => setPopup({popup: "profile-popup"})} className="aside__user"
-                                       aria-label={`${userData?.first_name} ${userData?.last_name}`}>
+                                            aria-label={`${userData?.first_name} ${userData?.last_name}`}>
                                         <div className="aside__user--avatar" style={{background: "#EF3129"}}>
-                                            {userData.avatar ? <img src={getApiLink(`/${userData.avatar}`)} alt="" width="80" height="80" loading="lazy"/> : userData?.first_name && (userData?.first_name[0] + userData?.last_name[0])}
+                                            {userData.avatar ?
+                                                <img src={getApiLink(`/${userData.avatar}`)} alt="" width="80"
+                                                     height="80"
+                                                     loading="lazy"/> : userData?.first_name && (userData?.first_name[0] + userData?.last_name[0])}
                                         </div>
                                         <strong className="aside__user--name">
                                             {userData?.first_name} {userData?.last_name}
@@ -150,7 +183,7 @@ export const Aside: React.FC<IAsideProps> = () => {
                                         <svg width="16" height="17" viewBox="0 0 16 17">
                                             <use xlinkHref="#logout"></use>
                                         </svg>
-                                        Log out
+                                        <Translate>logout</Translate>
                                     </a>
                                 </div>
                                 <div className="aside__change-on-min visible-on-desktop">
@@ -159,7 +192,7 @@ export const Aside: React.FC<IAsideProps> = () => {
                                             <svg width="16" height="17" viewBox="0 0 16 17">
                                                 <use xlinkHref="#logout"></use>
                                             </svg>
-                                            Log out
+                                            <Translate>logout</Translate>
                                         </a>
                                     </div>
                                     <div>

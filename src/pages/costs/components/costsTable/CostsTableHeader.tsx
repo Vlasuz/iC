@@ -137,7 +137,7 @@ export const CostsTableHeader: React.FC<ICostsTableHeaderProps> = ({setFilterByP
                             <svg width="13" height="13" viewBox="0 0 13 13">
                                 <use xlinkHref="#project"></use>
                             </svg>
-                            Project name
+                            Project num.
                             <svg width="10" height="7" viewBox="0 0 10 7"
                                  className="drop-down-absolute__target--arrow">
                                 <use xlinkHref="#drop-down-arrow"></use>

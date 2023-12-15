@@ -1,6 +1,8 @@
 import styled from "styled-components";
 
 export const ProjectStyled = styled.section`
+  min-height: calc(95vh - 4px);
+  
   .section-table__main--container {
     display: flex;
     max-width: 100%;
@@ -29,5 +31,9 @@ export const ProjectStyled = styled.section`
 
   .section-table__main.is-row-mode {
     z-index: 2;
+  }
+
+  .section-table__footer {
+    padding-top: 0 !important; 
   }
 `

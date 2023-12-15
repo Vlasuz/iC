@@ -5,7 +5,7 @@ export const TimeMinutesList = () => {
             label: "00"
         },
         {
-            value: 30,
+            value: 0.5,
             label: "30"
         },
     ]

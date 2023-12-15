@@ -20,7 +20,7 @@ export const Employees: React.FC<IEmployeesProps> = () => {
     const [selectValue, setSelectValue] = useState(RowsPerPage()[0])
 
     const handleAddRows = () => {
-        const plusCount = 1
+        const plusCount = window.innerWidth < 768 ? 10 : 20
         setSelectValue({
             value: selectValue.value + plusCount,
             label: employees.length === +selectValue.label + plusCount ? "All" : String(+selectValue.label + plusCount)

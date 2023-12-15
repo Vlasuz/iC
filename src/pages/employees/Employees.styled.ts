@@ -1,12 +1,10 @@
 import styled from "styled-components";
 
 export const EmployeesStyled = styled.section`
-
+  min-height: calc(95vh - 4px);
+  
   .section-table {
     padding-bottom: 0;
-    //height: 100%;
-    //display: flex;
-    //flex-direction: column;
   }
   .section-table__footer {
     //margin-top: auto;

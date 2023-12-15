@@ -2,11 +2,11 @@ export const StatusesList = () => {
     return [
         {
             value: "team_manager",
-            label: "Team manager"
+            label: "Team Manager"
         },
         {
             value: "top_manager",
-            label: "Top manager"
+            label: "Top Manager"
         },
         {
             value: "employee",

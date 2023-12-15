@@ -30,6 +30,7 @@ export const CostsTable: React.FC<ICostsTableProps> = ({rowsSelectValue}) => {
 
                     <CostsTableBody
                         list={expenseList}
+                        rowsSelectValue={rowsSelectValue}
                         filterByProjectName={filterByProjectName}
                         filterByProjectDescription={filterByProjectDescription}
                         sortByDate={sortByDate}

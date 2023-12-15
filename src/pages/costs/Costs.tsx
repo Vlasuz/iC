@@ -4,7 +4,7 @@ import {CostsTable} from "./components/costsTable/CostsTable";
 import {RowsPerPage} from "../../constants/RowsPerPage";
 import {CustomSelect} from "../../components/customSelect/CustomSelect";
 import {useDispatch, useSelector} from "react-redux";
-import {IExpense, ITask, ITimesheet} from "../../models";
+import {IExpense, IStatistic, ITask, ITimesheet} from "../../models";
 import {getBearer} from "../../functions/getBearer";
 import axios from "axios";
 import {getApiLink} from "../../functions/getApiLink";
@@ -24,22 +24,23 @@ export const Costs: React.FC<ICostsProps> = () => {
 
     const expenseList: IExpense[] = useSelector((state: any) => state.toolkit.expenses)
     const chosenTimesheet: ITimesheet = useSelector((state: any) => state.toolkit.chosenTimesheet)
+    const timesheetStatistic: IStatistic = useSelector((state: any) => state.toolkit.timesheetStatistic)
 
-    const [rowsSelectValue, setRowsSelectValue] = useState(RowsPerPage()[3])
+    const [rowsSelectValue, setRowsSelectValue] = useState(RowsPerPage()[0])
     const [itemToEdit, setItemToEdit] = useState<IExpense>()
     const [isOpenDownSidebar, setIsOpenDownSidebar] = useState(false)
 
     useEffect(() => {
-        if(!Object.keys(chosenTimesheet).length) return;
+        if(!chosenTimesheet || !Object.keys(chosenTimesheet).length) return;
 
         getBearer("get")
-        axios.get(getApiLink(`/api/timesheet/my/expenses/?timesheet_id=${chosenTimesheet.id}`)).then(({data}) => {
+        axios.get(getApiLink(`/api/timesheet/expenses/?timesheet_id=${chosenTimesheet.id}`)).then(({data}) => {
             dispatch(setExpenses(data))
         })
     }, [chosenTimesheet])
 
     const handleAddRows = () => {
-        const plusCount = 1
+        const plusCount = window.innerWidth < 768 ? 10 : 20
         setRowsSelectValue({
             value: rowsSelectValue.value + plusCount,
             label: expenseList.length === +rowsSelectValue.label + plusCount ? "All" : String(+rowsSelectValue.label + plusCount)
@@ -48,7 +49,7 @@ export const Costs: React.FC<ICostsProps> = () => {
 
     return (
         <BlockToEdit.Provider value={setItemToEdit}>
-            <CostsStyles style={{paddingBottom: isOpenDownSidebar ? "300px" : "100px"}} className="section-table">
+            <CostsStyles style={{paddingBottom: isOpenDownSidebar ? "270px" : "80px"}} className="section-table">
 
             <CostsHeader itemToEdit={itemToEdit} />
 
@@ -75,7 +76,7 @@ export const Costs: React.FC<ICostsProps> = () => {
             </div>
             </CostsStyles>
 
-            <DownSidebar setIsOpenDownSidebar={setIsOpenDownSidebar}/>
+            <DownSidebar type={"cost"} statisticAllAmount={timesheetStatistic.all_sum} statisticAllElements={timesheetStatistic.expenses} setIsOpenDownSidebar={setIsOpenDownSidebar}/>
         </BlockToEdit.Provider>
     )
 }

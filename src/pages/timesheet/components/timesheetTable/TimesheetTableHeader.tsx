@@ -60,6 +60,8 @@ export const TimesheetTableHeader: React.FC<ITimesheetTableHeaderProps> = ({setF
                                             <a onClick={_ => {
                                                 setSortByDate("ASC")
                                                 setChosenSortDate("ASC")
+                                                setSortByTotal("")
+                                                setChosenSortTotal("")
                                             }}>
                                                 Oldest first
                                             </a>
@@ -68,6 +70,8 @@ export const TimesheetTableHeader: React.FC<ITimesheetTableHeaderProps> = ({setF
                                             <a onClick={_ => {
                                                 setSortByDate("DESC")
                                                 setChosenSortDate("DESC")
+                                                setSortByTotal("")
+                                                setChosenSortTotal("")
                                             }}>
                                                 Newest first
                                             </a>
@@ -105,6 +109,8 @@ export const TimesheetTableHeader: React.FC<ITimesheetTableHeaderProps> = ({setF
                                     <a onClick={_ => {
                                         setSortByDate("ASC")
                                         setChosenSortDate("ASC")
+                                        setSortByTotal("")
+                                        setChosenSortTotal("")
                                     }}>
                                         Oldest first
                                     </a>
@@ -113,6 +119,8 @@ export const TimesheetTableHeader: React.FC<ITimesheetTableHeaderProps> = ({setF
                                     <a onClick={_ => {
                                         setSortByDate("DESC")
                                         setChosenSortDate("DESC")
+                                        setSortByTotal("")
+                                        setChosenSortTotal("")
                                     }}>
                                         Newest first
                                     </a>
@@ -131,7 +139,7 @@ export const TimesheetTableHeader: React.FC<ITimesheetTableHeaderProps> = ({setF
                             <svg width="13" height="13" viewBox="0 0 13 13">
                                 <use xlinkHref="#project"></use>
                             </svg>
-                            Project name
+                            Project num.
                             <svg width="10" height="7" viewBox="0 0 10 7"
                                  className="drop-down-absolute__target--arrow">
                                 <use xlinkHref="#drop-down-arrow"></use>
@@ -306,6 +314,8 @@ export const TimesheetTableHeader: React.FC<ITimesheetTableHeaderProps> = ({setF
                                     <a onClick={_ => {
                                         setSortByTotal("ASC")
                                         setChosenSortTotal("ASC")
+                                        setSortByDate("")
+                                        setChosenSortDate("")
                                     }}>
                                         Uncompleted first
                                     </a>
@@ -314,6 +324,8 @@ export const TimesheetTableHeader: React.FC<ITimesheetTableHeaderProps> = ({setF
                                     <a onClick={_ => {
                                         setSortByTotal("DESC")
                                         setChosenSortTotal("DESC")
+                                        setSortByDate("")
+                                        setChosenSortDate("")
                                     }}>
                                         Completed first
                                     </a>

@@ -16,24 +16,25 @@ export interface ITask {
     project: IProject
     task: string
     time: string
+    percent?: number
 }
 
 export interface IExpense {
-    "id": string,
-    "description": string,
-    "date": string,
-    "sum": number,
-    "project": IProject
+    id: string
+    description: string
+    date: string
+    sum: number
+    project: IProject
 }
 
 export interface IComment {
-    "user": {
-        "first_name": "string",
-        "last_name": "string",
-        "avatar": "string",
-        "status": "string"
-    },
-    "text": 'string'
+    user: {
+        first_name: string
+        last_name: string
+        avatar: string
+        status: string
+    }
+    text: string
 }
 
 export interface ITimesheet {
@@ -73,4 +74,28 @@ export interface IEmployee {
     projects: IProject[]
     role: string
     status: string
+}
+
+interface IElement {
+    project: {
+        id: string
+        name: string
+        description: string
+    }
+    hours?: number
+    sum?: number
+    percent: number
+}
+
+export interface IStatistic {
+    all_hours: number
+    all_sum: number
+    expenses: IElement[]
+    tasks: IElement[]
+}
+
+export interface ISummaryEmployee {
+
+    // all:
+    //     favourite:
 }

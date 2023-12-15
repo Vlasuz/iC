@@ -21,4 +21,8 @@ export const CostsStyles = styled.section`
       opacity: 1;
     }
   }
+
+  .section-table__row:nth-child(even) .section-table__param:first-child::after {
+    background: rgba(150,159,186,.07);
+  }
 `

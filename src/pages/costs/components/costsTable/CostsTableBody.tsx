@@ -8,9 +8,12 @@ interface ICostsTableBodyProps {
     filterByProjectDescription: string
     sortByDate: string
     sortByCost: string
+    rowsSelectValue: any
 }
 
-export const CostsTableBody: React.FC<ICostsTableBodyProps> = ({list, filterByProjectName, filterByProjectDescription, sortByDate, sortByCost}) => {
+export const CostsTableBody: React.FC<ICostsTableBodyProps> = ({list, filterByProjectName, filterByProjectDescription, sortByDate, sortByCost, rowsSelectValue}) => {
+
+    let numberOfRow = 0
 
     return (
         <div className="section-table__body">
@@ -29,7 +32,13 @@ export const CostsTableBody: React.FC<ICostsTableBodyProps> = ({list, filterByPr
                         const d = +b.sum;
                         return sortByCost !== "" ? sortByCost === "ASC" ? c - d : d - c : c;
                     })
-                    ?.map((item, index) => <CostsTableItem key={item.id} item={item} index={index} />)
+                    ?.map((item, index) => {
+                        numberOfRow += 1
+
+                        if (rowsSelectValue?.value && rowsSelectValue?.value < numberOfRow) return "";
+
+                        return <CostsTableItem key={item.id} item={item} index={index}/>
+                    })
             }
 
         </div>

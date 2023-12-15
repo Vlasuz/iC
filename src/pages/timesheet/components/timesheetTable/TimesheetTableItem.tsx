@@ -90,17 +90,17 @@ export const TimesheetTableItem: React.FC<ITimesheetTableItemProps> = ({taskItem
     return (
         <div ref={rowBlock} onContextMenu={handleOpenContextMenu}
              className={`section-table__row drop-down-2 ${numberOfRow % 2 ? " even" : " odd"}` + (isOpenContextMenu ? " is-active-drop-down" : "")}>
-            <div className="section-table__param is-center">
+            <div className={`section-table__param is-center ${numberOfRow % 2 ? " even" : " odd"}`}>
                 <span>
                     {numberOfRow}
                 </span>
             </div>
             <div className="section-table__param">
-                {taskItem.project.name}
+                {taskItem.project?.name}
             </div>
             <div className="section-table__param">
                 <p style={{whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis"}}>
-                    {taskItem.project.description}
+                    {taskItem.project?.description}
                 </p>
             </div>
             <div className="section-table__param">

@@ -113,7 +113,7 @@ export const EmployeesItem: React.FC<IEmployeesItemProps> = ({data, index}) => {
             <div className="section-table__param">
                 {data.role}
             </div>
-            <div className="section-table__param">
+            <div className="section-table__param" style={{textTransform: "capitalize"}}>
                 {statusList.filter(item => item.value === data.status)[0].label}
             </div>
             <div className="section-table__param">

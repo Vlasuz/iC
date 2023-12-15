@@ -92,14 +92,15 @@ export const CostsTableItem: React.FC<ICostsTableItemProps> = ({item, index}) =>
                     {index + 1}
                 </span>
                 <span>
-                    {item.date}
+                    {/*{item.date}*/}
+                    {item.date.substring(3, 5)}/{item.date.substring(0, 2)}/{item.date.substring(6)}
                 </span>
             </div>
             <div className="section-table__param visible-on-desktop is-center">
                 {index + 1}
             </div>
             <div className="section-table__param visible-on-desktop is-center">
-                {item.date.replaceAll(".", "/")}
+                {item.date.substring(3, 5)}/{item.date.substring(0, 2)}/{item.date.substring(6)}
             </div>
             <div className="section-table__param is-center">
                 {item.project.name}

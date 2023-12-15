@@ -1,6 +1,8 @@
 import styled from "styled-components";
 
 export const AsideStyled = styled.aside`
+  z-index: 3;
+  
   .aside__body--wrapper {
     width: 100%;
   }

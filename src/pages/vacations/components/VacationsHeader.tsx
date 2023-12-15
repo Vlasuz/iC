@@ -44,7 +44,7 @@ export const VacationsHeader: React.FC<IVacationsHeaderProps> = ({sortByName, se
 
                                                             {
 																sortByNameList.map(item =>
-																	<li className={item.value === sortByName ? "is-active" : ""}>
+																	<li key={item.value} className={item.value === sortByName ? "is-active" : ""}>
 																		<a onClick={_ => {
 																			setSortByName(item.value === sortByName ? "" : item.value)
 																			setIsOpenSortByName(false)
@@ -90,7 +90,7 @@ export const VacationsHeader: React.FC<IVacationsHeaderProps> = ({sortByName, se
 
 								{
 									sortByNameList.map(item =>
-										<li className={item.value === sortByName ? "is-active" : ""}>
+										<li key={item.value} className={item.value === sortByName ? "is-active" : ""}>
 											<a onClick={_ => {
 												setSortByName(item.value === sortByName ? "" : item.value)
 												setIsOpenSortByName(false)

@@ -27,8 +27,8 @@ export const LoginForm: React.FC<ILoginFormProps> = () => {
     const [isShowPassword, setIsShowPassword] = useState(false)
 
     const errorCodes: ICodes = {
-        "incorrect_username_or_password": "Неверный логин или пароль",
-        "user_not_found": "Такой пользователь не найден",
+        "incorrect_username_or_password": "Incorrect email or password",
+        "user_not_found": "No such user was found",
     }
 
     const dispatch = useDispatch()
@@ -102,9 +102,6 @@ export const LoginForm: React.FC<ILoginFormProps> = () => {
                     <span className="checkbox__text">Stay logged in</span>
                 </label>
             </div>
-            <p className="error">
-                {errorCodes[errorMessage]}
-            </p>
             <div className="login__form-row">
                 <button disabled={isLoading} className="login__submit btn" type="submit">
                     Log in
@@ -117,6 +114,9 @@ export const LoginForm: React.FC<ILoginFormProps> = () => {
                     Forgot password
                 </a>
             </div>
+            <p className="error">
+                {errorCodes[errorMessage]}
+            </p>
         </LoginStyled>
     )
 }

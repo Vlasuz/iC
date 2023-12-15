@@ -280,13 +280,7 @@ export const Projects: React.FC<IProjectsProps> = () => {
             <div className="section-table__footer">
                 <div className="section-table__row-per-page visible-on-mob">
                     <span>Rows per page:</span>
-                    <select name="row-per-page"
-                            className="section-table__row-per-page--select custom-select is-center">
-                        <option value="10">10</option>
-                        <option value="20">20</option>
-                        <option value="40">40</option>
-                        <option value="all">All</option>
-                    </select>
+                    <CustomSelect list={RowsPerPage()} onChange={handleChangeRows} selectValue={paginationCountStep} setSelectedItem={setPaginationCountStep} defaultValue={RowsPerPage()[0]}/>
                 </div>
                 <div className="section-table__pagination pagination visible-on-desktop">
                     <button onClick={prevNumberPagination} className="pagination__arrow is-prev" type="button" title="Prev page">
@@ -331,7 +325,6 @@ export const Projects: React.FC<IProjectsProps> = () => {
                 </button>
                 <div className="section-table__row-per-page visible-on-desktop">
                     <span>Rows per page:</span>
-                    {/*<CustomSelect1 onChange={handleChangeRows} defaultValue={listOfNumbers[3]} list={listOfNumbers} />*/}
                     <CustomSelect list={RowsPerPage()} onChange={handleChangeRows} selectValue={paginationCountStep} setSelectedItem={setPaginationCountStep} defaultValue={RowsPerPage()[0]}/>
                 </div>
             </div>

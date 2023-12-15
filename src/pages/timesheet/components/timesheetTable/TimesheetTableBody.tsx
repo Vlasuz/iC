@@ -21,57 +21,97 @@ export const TimesheetTableBody: React.FC<ITimesheetTableBodyProps> = ({
                                                                            sortByTotal
                                                                        }) => {
 
-    const [allDates, setAllDates] = useState<string[]>([])
+    const [allDates, setAllDates] = useState<any>([])
 
     useEffect(() => {
 
-        const uniqueObjects: ITask[] = Object.values(taskList.reduce((acc: any, obj) => {
-            acc[obj.date] = obj;
-            return acc;
-        }, {}));
+        console.log(taskList)
+        // const uniqueObjects: ITask[] = Object.values(taskList.reduce((acc: any, obj) => {
+        //     acc[obj.date] = obj;
+        //     return acc;
+        // }, {}));
 
-        setAllDates(uniqueObjects.map(item => item.date))
+        const summarizedData = taskList.reduce((acc, item) => {
+            const date = item.date;
+            // @ts-ignore
+            const existingItem = acc.find(entry => entry.date === date);
+
+            if (existingItem) {
+                // @ts-ignore
+                existingItem.hours += item.hours;
+            } else {
+                // @ts-ignore
+                acc.push({ ...item });
+            }
+
+            return acc;
+        }, []);
+
+
+        setAllDates(summarizedData.map((item: any) => {
+            return {
+                date: item.date,
+                hours: item.hours
+            }
+        }))
 
     }, [taskList])
 
     let numberOfRow = 0
-    const [arr, setArr]: any = useState([])
-
-    useEffect(() => {
-        for(let i = 0; i < allDates.length; i++) {
-            let allHoursAmount1 = 0
-
-            setArr((prev: any) => [...prev, taskList.filter(item => item.date === allDates[i]).map(item => allHoursAmount1 += +item.hours).reverse()[0]])
-
-        }
-    }, [taskList])
+    // const [arr, setArr]: any = useState([])
+    //
+    // useEffect(() => {
+    //     for(let i = 0; i < allDates.length; i++) {
+    //         let allHoursAmount1 = 0
+    //
+    //         setArr((prev: any) => [...prev, taskList.filter(item => item.date === allDates[i]).map(item => allHoursAmount1 += +item.hours).reverse()[0]])
+    //
+    //     }
+    // }, [taskList])
 
     return (
         <div className="section-table__body">
 
             {
                 allDates
-                    ?.sort((a, b) => {
-                        const c = new Date(`${a[3]}${a[4]}.${a[0]}${a[1]}.${a[6]}${a[7]}`).getTime();
-                        const d = new Date(`${b[3]}${b[4]}.${b[0]}${b[1]}.${b[6]}${b[7]}`).getTime();
-                        return sortByDate === "ASC" ? c - d : d - c;
+                    ?.sort((a: any, b: any) => {
+                        const c = new Date(`${a.date[3]}${a.date[4]}.${a.date[0]}${a.date[1]}.${a.date[6]}${a.date[7]}`).getTime();
+                        const d = new Date(`${b.date[3]}${b.date[4]}.${b.date[0]}${b.date[1]}.${b.date[6]}${b.date[7]}`).getTime();
+                        if(sortByDate === "ASC") {
+                            return c - d;
+                        } else if (sortByDate === "DESC") {
+                            return d - c
+                        } else {
+                            return a
+                        }
                     })
-                    .map(dateItem => {
+                    ?.sort((a: any, b: any) => {
+                        const c = a.hours
+                        const d = b.hours
+                        if(sortByTotal === "ASC") {
+                            return c - d;
+                        } else if (sortByTotal === "DESC") {
+                            return d - c
+                        } else {
+                            return a
+                        }
+                    })
+                    .map((dateItem: any) => {
                         let allHoursAmount = 0
                         let mobileDateHeight = 0;
 
-                        taskList.filter(item => item.date === dateItem).map(item => allHoursAmount += +item.hours)
+                        taskList.filter(item => item.date === dateItem.date).map(item => allHoursAmount += +item.hours)
 
-                        mobileDateHeight = taskList?.filter(item => item.date === dateItem).length * 48.8
+                        mobileDateHeight = taskList?.filter(item => item.date === dateItem.date).length * 48.8
 
                         return (
-                            <div key={dateItem} className="section-table__row-block">
+                            <div key={dateItem.date} className="section-table__row-block">
                                 <div className="section-table__row-block--span-params">
                                     <div className="section-table__param" style={{
                                         height: window.innerWidth < 992 ? `${mobileDateHeight}px` : "",
                                         marginBottom: window.innerWidth < 992 ? `-${mobileDateHeight}px` : ""
                                     }}>
-                                        {dateItem.replaceAll(".", "/")}
+                                        {dateItem.date.substring(3, 5)}/{dateItem.date.substring(0, 2)}/{dateItem.date.substring(6)}
                                     </div>
                                     <div className={`section-table__param ${allHoursAmount !== 8 && "is-accent"}`}>
                                         {allHoursAmount} h
@@ -81,7 +121,7 @@ export const TimesheetTableBody: React.FC<ITimesheetTableBodyProps> = ({
 
                                     {
                                         taskList
-                                            ?.filter(item => item.date === dateItem)
+                                            ?.filter(item => item.date === dateItem.date)
                                             ?.filter(item => filterByProjectName ? item.project.name === filterByProjectName : item)
                                             ?.filter(item => filterByProjectDescription ? item.project.description === filterByProjectDescription : item)
                                             ?.sort((a, b) => {
@@ -95,10 +135,10 @@ export const TimesheetTableBody: React.FC<ITimesheetTableBodyProps> = ({
                                             ?.map(taskItem => {
                                                 numberOfRow += 1
 
-                                                if (rowsSelectValue.value && rowsSelectValue.value < numberOfRow) return "";
+                                                if (rowsSelectValue?.value && rowsSelectValue?.value < numberOfRow) return "";
 
                                                 return (
-                                                    <TimesheetTableItem key={taskItem.id} taskItem={taskItem}
+                                                    <TimesheetTableItem key={taskItem?.id} taskItem={taskItem}
                                                                         numberOfRow={numberOfRow}/>
                                                 )
                                             })

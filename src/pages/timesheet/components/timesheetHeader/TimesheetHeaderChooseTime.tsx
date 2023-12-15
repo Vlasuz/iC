@@ -23,7 +23,7 @@ export const TimesheetHeaderChooseTime: React.FC<ITimesheetHeaderChooseTimeProps
     const [isActiveSelectTime, setIsActiveSelectTime] = useState(false)
     const {rootEl} = useClickOutside(setIsActiveSelectTime)
 
-    const hoursAmount = +timeToHours.value !== +timeFromHours.value ? +timeToHours.value - +timeFromHours.value > 0 ? +timeToHours.value - +timeFromHours.value : +timeToHours.value - +timeFromHours.value + 24 : "0"
+    const hoursAmount = timeFromHours.value > timeToHours.value ? 24 + Math.floor((+timeToHours.value - +timeFromHours.value - (+timeFromMinutes.value - +timeToMinutes.value))) : Math.floor((+timeToHours.value - +timeFromHours.value - (+timeFromMinutes.value - +timeToMinutes.value)))
 
     const lessThenTen = (num: string | number) => +num < 10 ? "0" + num : num
 
@@ -32,14 +32,13 @@ export const TimesheetHeaderChooseTime: React.FC<ITimesheetHeaderChooseTimeProps
     }
 
     useEffect(() => {
-        setTimeData(`${lessThenTen(timeFromHours.value)}:${lessThenTen(timeFromMinutes.value)} – ${lessThenTen(timeToHours.value)}:${lessThenTen(timeToMinutes.value)}`)
+        setTimeData(`${lessThenTen(+timeFromHours.label)}:${lessThenTen(+timeFromMinutes.label)} – ${lessThenTen(+timeToHours.label)}:${lessThenTen(+timeToMinutes.label)}`)
         setHoursData(hoursAmount)
     }, [timeFromHours, timeFromMinutes, timeToHours, timeToMinutes])
 
 
     // EDIT POINT
     useEffect(() => {
-        console.log(timeData, hoursData)
 
         if(+hoursData === 0) return;
         setIsChosenDate(true)
@@ -50,6 +49,11 @@ export const TimesheetHeaderChooseTime: React.FC<ITimesheetHeaderChooseTimeProps
         const hourTo = timeData[8] + timeData[9]
         const minuteTo = timeData[11] + timeData[12]
 
+        const minuteValue: any = {
+            "30": 0.5,
+            "00": 0
+        }
+
         setTimeFromHours(
             {
                 value: Number(hourFrom),
@@ -58,7 +62,7 @@ export const TimesheetHeaderChooseTime: React.FC<ITimesheetHeaderChooseTimeProps
         )
         setTimeFromMinutes(
             {
-                value: Number(minuteFrom),
+                value: minuteValue[minuteFrom.toString()],
                 label: minuteFrom
             }
         )
@@ -70,20 +74,13 @@ export const TimesheetHeaderChooseTime: React.FC<ITimesheetHeaderChooseTimeProps
         )
         setTimeToMinutes(
             {
-                value: Number(minuteTo),
+                value: minuteValue[minuteTo.toString()],
                 label: minuteTo
             }
         )
 
     }, [timeData, hoursData])
 
-
-    // РАЗОБРАТЬСЯ ТУТ!!!!
-    // РАЗОБРАТЬСЯ ТУТ!!!!
-    // РАЗОБРАТЬСЯ ТУТ!!!!
-    // РАЗОБРАТЬСЯ ТУТ!!!!
-    // РАЗОБРАТЬСЯ ТУТ!!!!
-    // РАЗОБРАТЬСЯ ТУТ!!!!
 
     useEffect(() => {
         if(+timeData === 0) {
@@ -103,7 +100,7 @@ export const TimesheetHeaderChooseTime: React.FC<ITimesheetHeaderChooseTimeProps
                 <button onClick={_ => setIsActiveSelectTime(prev => !prev)}
                         className="section-table__time--target drop-down__target" type="button">
                     <span>
-                        {isChosenDate ? `${lessThenTen(timeFromHours.value)}:${lessThenTen(timeFromMinutes.value)} – ${lessThenTen(timeToHours.value)}:${lessThenTen(timeToMinutes.value)}` : "Choose time"}
+                        {isChosenDate ? `${timeFromHours.label}:${timeFromMinutes.label} – ${timeToHours.label}:${timeToMinutes.label}` : "Choose time"}
                     </span>
                     <svg width="10" height="7" viewBox="0 0 10 7"
                          className="drop-down__target--arrow">

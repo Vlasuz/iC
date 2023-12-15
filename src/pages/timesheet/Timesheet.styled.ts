@@ -8,6 +8,10 @@ export const TimesheetStyled = styled.section`
       }
     }
   }
+
+  .section-table__main.table-timesheet .section-table__row-block--list .section-table__row.drop-down-2:hover .section-table__param {
+    background: rgb(235 236 242);
+  }
   
   .section-table__row.drop-down-2.odd {
     background: #f8f8fa;
@@ -38,6 +42,19 @@ export const TimesheetStyled = styled.section`
       background: rgba(151, 160, 187, 0.15);
       opacity: 1;
     }
+  }
+
+  .section-table__row:nth-child(even) .section-table__param:first-child::before {
+    background: transparent;
+  }
+
+  .section-table__main--container::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+    background: transparent;
+  }
+  .section-table__main--container::-webkit-scrollbar-thumb {
+    background: rgba(169, 169, 172, .5);
   }
   
 `

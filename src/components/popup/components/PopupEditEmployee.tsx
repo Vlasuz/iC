@@ -12,6 +12,7 @@ import {PhoneCodes} from "../../../constants/PhoneCodes";
 import {EmployeesStatus} from "../../../constants/EmployeesStatus";
 import {PopupCloseCancel} from "./PopupCloseCancel";
 import {PopupClose} from "./PopupClose";
+import {useMask} from "@react-input/mask";
 
 interface IPopupEditEmployeeProps {
     setIsOpenProjects: any
@@ -81,6 +82,8 @@ export const PopupEditEmployee: React.FC<IPopupEditEmployeeProps> = ({setIsOpenP
         }).catch(er => console.log(getApiLink("/api/admin/employee/edit/"), er))
     }
 
+    const inputRef = useMask({ mask: '(__) __ __ ___', replacement: { _: /\d/ } });
+
     return (
         <div className="add-new-employee__body popup-body">
             <h2 className="popup-title title">
@@ -125,8 +128,8 @@ export const PopupEditEmployee: React.FC<IPopupEditEmployeeProps> = ({setIsOpenP
                                 <CustomSelect list={PhoneCodes()} setSelectedItem={setPhoneCode} selectValue={phoneCode}
                                               defaultValue={PhoneCodes()[0]}/>
                                 <input
-                                    onChange={e => setPhoneValue(e.target.value.length <= 9 ? e.target.value : phoneValue)}
-                                    value={phoneValue} minLength={9} type="number" name="tel" required
+                                    onChange={e => setPhoneValue(e.target.value)}
+                                    value={phoneValue} ref={inputRef} type="text" name="tel" required
                                     className="input"/>
                             </div>
                         </label>
