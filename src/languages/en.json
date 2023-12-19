@@ -1,3 +1,288 @@
 {
-  "logout": "Log out"
+  "page_login": {
+    "login": "Login",
+    "password": "Password",
+    "stay_log": "Stay logged in",
+    "log_in": "Log in",
+    "forgot": "Forgot password",
+    "legal": "Legal notice",
+    "compliance": "Compliance policy",
+    "copyright_ic": "Copyright © iC consulenten 2013 — 2023. All rights reserved."
+  },
+
+  "navigation_all": {
+    "employees": "Employees",
+    "vacations": "Vacations",
+    "projects": "Projects",
+    "timesheet": "Timesheet",
+    "costs": "Costs",
+    "summary": "Summary",
+    "log_out": "Log out"
+  },
+
+  "employees_admin": {
+
+    "table": {
+      "employees": "Employees",
+      "add_new_employee": "Add new employee",
+      "search_an_employee": "Search an employee",
+      "search": "Search",
+      "export": "Export",
+      "name": "Name",
+      "position_in_company": "Position",
+      "category": "Category",
+      "projects": "Projects",
+      "phone_number": "Phone number",
+      "vacations": "Vacations",
+      "team_lead": "Team Lead",
+      "project_lead": "Project Lead",
+      "employee": "Employee",
+      "all_projects": "All projects",
+      "days_per_year": "Days/year",
+      "show_more": "Show more",
+      "rows_per_page": "Rows per page:",
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+
+    "others": {
+      "add_new_employee": "Add new employee",
+      "first_name": "First name",
+      "last_name": "Last name",
+      "position": "Position",
+      "category": "Category",
+      "project_lead": "Project Lead",
+      "password": "Password",
+      "phone_number": "Phone number",
+      "vacation": "Vacation",
+      "days_per_year": "Days/year",
+      "projects": "Projects",
+      "all_projects": "All projects",
+      "save": "Save",
+      "cancel": "Cancel",
+      "edit_employee": "Edit employee",
+      "click_to_reset_password": "Click to reset password",
+      "search_a_project": "Search a project",
+      "search": "Search",
+      "confirm_delete_row": "Are you sure you want to delete this row?",
+      "delete": "Delete"
+    }
+  },
+
+  "vacations_admin": {
+    "vacations": "Vacations",
+    "search_an_employee": "Search an employee",
+    "search": "Search",
+    "export": "Export",
+    "name": "Name",
+    "remain": "Remain",
+    "extra": "Extra",
+    "days_per_year": "D/y",
+    "total": "Total",
+    "jan": "Jan",
+    "feb": "Feb",
+    "mar": "Mar",
+    "apr": "Apr",
+    "may": "May",
+    "jun": "Jun",
+    "jul": "Jul",
+    "aug": "Aug",
+    "sep": "Sep",
+    "oct": "Oct",
+    "nov": "Nov",
+    "dec": "Dec",
+    "remain_days": "Remain days",
+    "show_more": "Show more",
+    "rows_per_page": "Rows per page:",
+    "edit_extra_days": "Edit extra days",
+    "a_z": "A-Z",
+    "z_a": "Z-A"
+  },
+
+  "projects_admin": {
+    "projects": "Projects",
+    "add_new_project": "Add new project",
+    "search_a_project": "Search a project",
+    "search": "Search",
+    "export": "Export",
+    "project_name": "№ name",
+    "project_description": "Project description",
+    "rows_per_page": "Rows per page",
+    "save": "Save",
+    "cancel": "Cancel"
+  },
+
+  "timesheet_page": {
+    "table": {
+      "timesheet": "Timesheet",
+      "date": "Date",
+      "project_num": "Project Num",
+      "project_description": "Project description",
+      "task": "Task",
+      "time": "Time",
+      "hours": "Hours",
+      "total": "Total",
+      "h": "h",
+      "show_more": "Show more",
+      "rows_per_page": "Rows per page"
+    },
+    "top_part": {
+      "add_task": "Add task",
+      "search_a_project": "Search a project",
+      "search": "Search",
+      "export": "Export",
+      "tell_us_your_secrets": "Tell us your secrets - what did you do?",
+      "choose_project": "Choose project",
+      "choose_time": "Choose time"
+    },
+    "popups": {
+      "january": "January",
+      "february": "February",
+      "march": "March",
+      "april": "April",
+      "may": "May",
+      "june": "June",
+      "july": "July",
+      "august": "August",
+      "september": "September",
+      "october": "October",
+      "november": "November",
+      "december": "December",
+      "edit": "Edit",
+      "duplicate": "Duplicate",
+      "delete": "Delete",
+      "commonly_used": "Commonly used",
+      "all_projects": "All projects",
+      "s": "S",
+      "m": "M",
+      "t": "T",
+      "w": "W",
+      "t": "T",
+      "f": "F",
+      "s": "S",
+      "today": "Today",
+      "from": "From",
+      "to": "To"
+    },
+    "notifications": {
+      "please_keep_in_mind": "Please, keep in mind, that the end of the month is in 5 days.",
+      "your_notifications": "Your notifications",
+      "you_have_a_new_comment_from": "You have a new comment from",
+      "your_timesheet_approved": "Your timesheet for [month] was successfully approved!",
+      "your_timesheet_rejected": "Your timesheet for [month] was rejected!"
+    },
+    "down_sidebar": {
+      "hours": "hours",
+      "total_for_month": "Total for month",
+      "comments": "Comments",
+      "add_new_comment": "Add new comment",
+      "there_is_no_data_for_a_report": "There is no data for a report"
+    }
+  },
+
+  "costs_page": {
+    "table": {
+      "date": "Date",
+      "project_num": "Project Num",
+      "project_description": "Project description",
+      "expense_description": "Description of the expense",
+      "cost": "Cost",
+      "show_more": "Show more",
+      "rows_per_page": "Rows per page"
+    },
+
+    "top_part": {
+      "costs": "Costs",
+      "cost": "Cost",
+      "add_expense": "Add expense",
+      "add_expense_2": "Add expense",
+      "search_a_project": "Search a project",
+      "search": "Search",
+      "export": "Export",
+      "write_short_description": "Write short description of the expense",
+      "choose_project": "Choose project",
+      "go_back": "Go back"
+    }
+  },  
+
+  "summary_page": {
+    "main": {
+      "summary": "Summary",
+      "export_all": "Export all",
+      "in_progress": "In progress",
+      "sent_for_approval": "Sent for approval",
+      "time_spent_for_projects": "Time spent for projects",
+      "show_full_data": "Show full data",
+      "total": "Total",
+      "money_spent_for_projects": "Money spent for projects",
+      "export_monthly_summary": "Export monthly summary",
+      "send_timesheet_for_approval": "Send timesheet for approval",
+      "hours": "hours"
+    },
+    "other": {
+      "already_sent_for_approval": "You already sent this timesheet for approval. Please, wait for the answer.",
+      "summary_approved": "Your summary was approved! (by [Name])",
+      "timesheet_rejected": "Your timesheet was rejected. Please, correct and send for reapproval. (by [Name])",
+      "send_request_for_reapproval": "Send request for reapproval",
+      "confirm_send_timesheet": "You are going to send the timesheet for approving, continue?",
+      "continue": "Continue",
+      "cancel": "Cancel",
+      "thank_you": "Thank you!",
+      "success_sent_for_approval": "You successfully sent your timesheet for approval. Please, wait for the answer."
+    }
+  },
+
+  "employees_page": {
+    "table": {
+      "employees": "Employees",
+      "choose_project": "Choose project",
+      "search_an_employee": "Search an employee",
+      "search": "Search",
+      "pending_first": "Pending first",
+      "total": "Total",
+      "export_monthly_summary": "Export monthly summary",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "rejected_first": "Rejected first",
+      "approved_first": "Approved first",
+      "change_decision": "Change decision",
+      "summary_already_rejected": "This summary already rejected by [Name] on [date]",
+      "export_all": "Export all"
+    },
+    "other": {
+      "confirm_approve_timesheet": "You are going to approve the timesheet, continue?",
+      "continue": "Continue",
+      "cancel": "Cancel",
+      "thank_you": "Thank you!",
+      "timesheet_successfully_approved": "This timesheet is successfully approved. Olena will get the notification on her e-mail."
+    }
+  },
+
+  "reset_password": {
+    "forgot_password": "Forgot your password?",
+    "dont_worry_enter_email": "Don’t worry, please, enter your e-mail below and we will send you instructions on how to reset your password.",
+    "reset_password": "Reset password",
+    "cancel": "Cancel",
+    "enter_email": "Enter your e-mail",
+    "reset_the_password": "Reset the password?",
+    "instructions_will_be_sent": "We will send you instructions on how to do it.",
+    "continue": "Continue",
+    "thank_you": "Thank you!",
+    "password_successfully_changed": "Your password was successfully changed!",
+    "account_registered": "If an account with this e-mail is registered, you will soon get a letter with instructions.",
+    "instructions_sent_to_employee": "We will send instructions to [Name of employee].",
+    "instructions_sent_to_email": "We have sent the letter with instructions to the e-mail: o.rybak@ic-group.org",
+    "enter_new_password": "Enter your new password",
+    "confirm_new_password": "Confirm your new password",
+    "save_new_password": "Save new password"
+  },
+
+  "profile": {
+    "position": "Position",
+    "phone_number": "Phone number",
+    "edit_my_profile": "Edit my profile",
+    "close_editing": "Close editing",
+    "save_my_profile": "Save my profile",
+    "click_to_reset_password": "Click to reset password"
+  }
 }

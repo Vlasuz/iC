@@ -1,6 +1,8 @@
 import styled from "styled-components";
 
 export const TimesheetStyled = styled.section`
+  min-height: calc(95vh - 4px);
+  
   .section-table__row-block:hover {
     .section-table__row-block--span-params {
       .section-table__param {

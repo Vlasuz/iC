@@ -52,8 +52,8 @@ export const AsideLanguages: React.FC<IAsideLanguagesProps> = () => {
                 </div>
             </div>
             <div>
-                <div className="aside__language drop-down is-dark is-bottom is-min">
-                    <button className="aside__language--target drop-down__target" type="button">
+                <div className={`aside__language drop-down is-dark is-bottom is-min ${isOpenLanguages && "is-active"}`}>
+                    <button onClick={_ => setIsOpenLanguages(prev => !prev)} className="aside__language--target drop-down__target" type="button">
 												<span>
 													{languages.filter(item => item.slug === langSelected)[0]?.title}
 												</span>

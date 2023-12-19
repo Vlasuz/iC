@@ -2,14 +2,10 @@ import React, {useContext, useEffect, useRef} from 'react'
 import {useDispatch, useSelector} from 'react-redux'
 import axios from "axios";
 import {getApiLink} from "../../../functions/getApiLink";
-import {log} from "util";
 import {getBearer} from "../../../functions/getBearer";
 import {IEmployee} from "../../../models";
-import {Simulate} from "react-dom/test-utils";
-import click = Simulate.click;
-import { removeEmployee } from '../../../storage/toolkit';
-import {PopupContext} from "../../../App";
 import {IsPopupActiveContext} from "../PopupList";
+import {SetEmployees} from "../../../api/SetEmployees";
 
 interface IPopupDeleteEmployeeProps {
     data: IEmployee
@@ -31,7 +27,9 @@ export const PopupDeleteEmployee: React.FC<IPopupDeleteEmployeeProps> = ({data})
             if (!dataItem.status) return;
 
             setIsPopupActive(false)
-            dispatch(removeEmployee(data))
+            // dispatch(removeEmployee(data))
+
+            SetEmployees(dispatch)
 
         }).catch(er => console.log(getApiLink('/api/admin/employee/delete/'), er))
 

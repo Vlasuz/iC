@@ -1,7 +1,7 @@
 export const EmployeesStatus = () => {
     return [
-        {value: "team_manager", label: "Team manager"},
-        {value: "top_manager", label: "Top manager"},
+        {value: "team_lead", label: "Team Lead"},
+        {value: "project_lead", label: "Project Lead"},
         {value: "employee", label: "Employee"},
     ]
 }

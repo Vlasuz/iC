@@ -1,5 +1,8 @@
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 import React, {useEffect, useState} from 'react'
 import {useClickOutside} from "../../hooks/ClickOutside";
+import {Translate} from "../translate/Translate";
 
 interface ITableExportProps {
     title?: string
@@ -51,13 +54,42 @@ export const TableExport: React.FC<ITableExportProps> = ({title}) => {
         };
     })();
 
+
+
+    const exportToPdf = async () => {
+        const doc = new jsPDF({
+            orientation: "landscape",
+        });
+        const table = document.getElementById('my-table'); // Замените 'my-table' на ID вашей таблицы
+
+        const fontUrl = '"https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap';
+        const fontData = await fetch(fontUrl).then(res => res.arrayBuffer());
+        // @ts-ignore
+        doc.addFileToVFS('FontName.ttf', fontData);
+        doc.addFont('FontName.ttf', 'FontName', 'normal');
+
+        // Использование загруженного шрифта
+        doc.setFont('FontName');
+
+
+        // Генерация PDF из HTML элемента
+        // @ts-ignore
+        doc.autoTable({ html: table });
+
+        console.log(table)
+
+        // Сохранение PDF
+        doc.save('table.pdf');
+    };
+
+
     const [isExportSelectOpen, setIsExportSelectOpen] = useState(false)
     const {rootEl} = useClickOutside(setIsExportSelectOpen)
 
     return (
         <div ref={rootEl} className={isExportSelectOpen ? "section-table__export drop-down is-right-default is-active" : "section-table__export drop-down is-right-default"}>
             <button onClick={_ => setIsExportSelectOpen(prev => !prev)} className="section-table__export--target drop-down__target" type="button">
-                {title ?? "Export"}
+                {title ?? <Translate>employees_admin.table.export</Translate>}
                 <svg width="16" height="17" viewBox="0 0 16 17">
                     <use xlinkHref="#download"></use>
                 </svg>
@@ -65,12 +97,12 @@ export const TableExport: React.FC<ITableExportProps> = ({title}) => {
             <div className="section-table__export--block drop-down__block">
                 <ul className="drop-down__list">
                     <li>
-                        <a href="#" onClick={e => tableToExcel('my-table', e)}>
+                        <a onClick={e => tableToExcel('my-table', e)}>
                             Export as .xlsx
                         </a>
                     </li>
                     <li>
-                        <a href="#">
+                        <a onClick={e => exportToPdf()}>
                             Export as .pdf
                         </a>
                     </li>

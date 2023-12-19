@@ -11,6 +11,9 @@ import {getApiLink} from "../../functions/getApiLink";
 import {setExpenses, setTasks} from "../../storage/toolkit";
 import {CostsStyles} from "./Costs.styles";
 import {DownSidebar} from "../../components/downSidebar/DownSidebar";
+import {useParams} from "react-router-dom";
+import {SetStatistic} from "../../api/SetStatistic";
+import {Translate} from "../../components/translate/Translate";
 
 interface ICostsProps {
 
@@ -21,6 +24,8 @@ export const BlockToEdit: any = createContext(null)
 export const Costs: React.FC<ICostsProps> = () => {
 
     const dispatch = useDispatch()
+
+    const {timesheetId}: any = useParams()
 
     const expenseList: IExpense[] = useSelector((state: any) => state.toolkit.expenses)
     const chosenTimesheet: ITimesheet = useSelector((state: any) => state.toolkit.chosenTimesheet)
@@ -34,10 +39,16 @@ export const Costs: React.FC<ICostsProps> = () => {
         if(!chosenTimesheet || !Object.keys(chosenTimesheet).length) return;
 
         getBearer("get")
-        axios.get(getApiLink(`/api/timesheet/expenses/?timesheet_id=${chosenTimesheet.id}`)).then(({data}) => {
+        axios.get(getApiLink(`/api/timesheet/expenses/?timesheet_id=${timesheetId ?? chosenTimesheet.id}`)).then(({data}) => {
             dispatch(setExpenses(data))
+            SetStatistic(dispatch, timesheetId)
+            // setRowsSelectValue()
         })
-    }, [chosenTimesheet])
+    }, [chosenTimesheet, timesheetId])
+
+    useEffect(() => {
+        setRowsSelectValue(expenseList.length > +RowsPerPage()[0].value ? RowsPerPage()[0] : RowsPerPage()[3])
+    }, [expenseList])
 
     const handleAddRows = () => {
         const plusCount = window.innerWidth < 768 ? 10 : 20
@@ -57,19 +68,23 @@ export const Costs: React.FC<ICostsProps> = () => {
 
             <div className="section-table__footer">
                 <div className="section-table__row-per-page visible-on-mob">
-                    <span>Rows per page:</span>
+                    <span>
+                        <Translate>costs_page.table.rows_per_page</Translate>
+                    </span>
 
                     <CustomSelect list={RowsPerPage()} defaultValue={RowsPerPage()[3]} selectValue={rowsSelectValue} setSelectedItem={setRowsSelectValue}/>
                 </div>
                 {rowsSelectValue.value !== 0 && expenseList.length > rowsSelectValue.value &&
                     <button onClick={handleAddRows} className="section-table__see-more btn" type="button">
-                        Show more
+                        <Translate>costs_page.table.show_more</Translate>
                         <svg width="15" height="15" viewBox="0 0 15 15">
                             <use xlinkHref="#arrow-down"></use>
                         </svg>
                     </button>}
                 <div className="section-table__row-per-page visible-on-desktop">
-                    <span>Rows per page:</span>
+                    <span>
+                        <Translate>costs_page.table.rows_per_page</Translate>
+                    </span>
 
                     <CustomSelect list={RowsPerPage()} defaultValue={RowsPerPage()[3]} selectValue={rowsSelectValue} setSelectedItem={setRowsSelectValue}/>
                 </div>

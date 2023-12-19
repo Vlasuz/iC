@@ -4,6 +4,8 @@ import {PopupClose} from "./PopupClose";
 import { useSelector } from 'react-redux';
 import {IUser} from "../../../models";
 import {PopupContext} from "../../../App";
+import axios from "axios";
+import {getApiLink} from "../../../functions/getApiLink";
 
 interface IPopupResetPasswordProps {
 
@@ -13,13 +15,18 @@ export const PopupResetPassword: React.FC<IPopupResetPasswordProps> = () => {
 
     const setPopup: any = useContext(PopupContext)
 
+    const userData: IUser = useSelector((state: any) => state.toolkit.user)
+
     const handleResetPassword = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
 
-        setPopup({popup: "edit-profile-popup", secondPopup: "reset-password-thanks-popup"})
-    }
+        axios.post(getApiLink(`/api/auth/reset_password/?email=${userData.email}`)).then(({data}) => {
+            if(!data.status) return;
 
-    const userData: IUser = useSelector((state: any) => state.toolkit.user)
+            setPopup({popup: "edit-profile-popup", secondPopup: "reset-password-thanks-popup"})
+        })
+
+    }
 
     return (
         <div className="forgot-password__body popup-body">

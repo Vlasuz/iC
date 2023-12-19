@@ -1,12 +1,15 @@
 import React, {useContext, useEffect, useRef, useState} from 'react'
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {PopupContext} from "../../../../App";
-import {ITask} from "../../../../models";
+import {ITask, ITimesheet} from "../../../../models";
 import {addTask} from "../../../../storage/toolkit";
 import axios from "axios";
 import {getApiLink} from "../../../../functions/getApiLink";
 import {getBearer} from "../../../../functions/getBearer";
 import {BlockToEdit} from "../../Timesheet";
+import {SetTasks} from "../../../../api/SetTasks";
+import {SetStatistic} from "../../../../api/SetStatistic";
+import {Translate} from "../../../../components/translate/Translate";
 
 interface ITimesheetTableItemProps {
     taskItem: ITask
@@ -17,6 +20,8 @@ export const TimesheetTableItem: React.FC<ITimesheetTableItemProps> = ({taskItem
 
     const [isOpenContextMenu, setIsOpenContextMenu] = useState(false)
     const [menuPosition, setMenuPosition] = useState({})
+
+    const chosenTimesheet: ITimesheet = useSelector((state: any) => state.toolkit.chosenTimesheet)
 
     const dispatch = useDispatch()
 
@@ -82,7 +87,10 @@ export const TimesheetTableItem: React.FC<ITimesheetTableItemProps> = ({taskItem
     const handleDuplicateTask = (data: ITask) => {
         getBearer("post")
         axios.post(getApiLink(`/api/task/duplicate/?task_id=${taskItem.id}`)).then(({data}) => {
-            dispatch(addTask(data))
+            // dispatch(addTask(data))
+
+            SetStatistic(dispatch, chosenTimesheet.id)
+            SetTasks(dispatch, chosenTimesheet.id)
         })
         setIsOpenContextMenu(false)
     }
@@ -110,7 +118,7 @@ export const TimesheetTableItem: React.FC<ITimesheetTableItemProps> = ({taskItem
                 {taskItem.time}
             </div>
             <div className="section-table__param">
-                {taskItem.hours} h
+                {taskItem.hours} <Translate>timesheet_page.table.h</Translate>
             </div>
 
             <div className={"drop-down-2__block" + (isOpenContextMenu ? " active" : "")} ref={modalBlock}
@@ -121,7 +129,7 @@ export const TimesheetTableItem: React.FC<ITimesheetTableItemProps> = ({taskItem
                             <svg width="15" height="16" viewBox="0 0 15 16">
                                 <use xlinkHref="#edit"></use>
                             </svg>
-                            Edit
+                            <Translate>timesheet_page.popups.edit</Translate>
                         </a>
                     </li>
                     <li>
@@ -129,7 +137,7 @@ export const TimesheetTableItem: React.FC<ITimesheetTableItemProps> = ({taskItem
                             <svg width="24" height="24" viewBox="0 0 24 24">
                                 <use xlinkHref="#copy"></use>
                             </svg>
-                            Dublicate
+                            <Translate>timesheet_page.popups.duplicate</Translate>
                         </a>
                     </li>
                     <li>
@@ -137,7 +145,7 @@ export const TimesheetTableItem: React.FC<ITimesheetTableItemProps> = ({taskItem
                             <svg width="15" height="16" viewBox="0 0 15 16">
                                 <use xlinkHref="#trash"></use>
                             </svg>
-                            Delete
+                            <Translate>timesheet_page.popups.delete</Translate>
                         </a>
                     </li>
                 </ul>

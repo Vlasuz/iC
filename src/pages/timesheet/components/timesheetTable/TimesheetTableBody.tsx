@@ -1,7 +1,10 @@
 import React, {useContext, useEffect, useRef, useState} from 'react'
-import {ITask} from "../../../../models";
+import {ITask, ITimesheet} from "../../../../models";
 import {PopupContext} from "../../../../App";
 import {TimesheetTableItem} from "./TimesheetTableItem";
+import {MonthNumber} from "../../../../constants/MonthNumber";
+import { useSelector } from 'react-redux';
+import {Translate} from "../../../../components/translate/Translate";
 
 interface ITimesheetTableBodyProps {
     taskList: ITask[]
@@ -23,24 +26,19 @@ export const TimesheetTableBody: React.FC<ITimesheetTableBodyProps> = ({
 
     const [allDates, setAllDates] = useState<any>([])
 
+    const chosenTimesheet: ITimesheet = useSelector((state: any) => state.toolkit.chosenTimesheet)
+
     useEffect(() => {
+        if(!taskList.length) return;
 
-        console.log(taskList)
-        // const uniqueObjects: ITask[] = Object.values(taskList.reduce((acc: any, obj) => {
-        //     acc[obj.date] = obj;
-        //     return acc;
-        // }, {}));
-
-        const summarizedData = taskList.reduce((acc, item) => {
+        const summarizedData = taskList?.reduce((acc: any, item) => {
             const date = item.date;
-            // @ts-ignore
-            const existingItem = acc.find(entry => entry.date === date);
+
+            const existingItem: any = acc.find((entry: any) => entry.date === date);
 
             if (existingItem) {
-                // @ts-ignore
                 existingItem.hours += item.hours;
             } else {
-                // @ts-ignore
                 acc.push({ ...item });
             }
 
@@ -58,16 +56,6 @@ export const TimesheetTableBody: React.FC<ITimesheetTableBodyProps> = ({
     }, [taskList])
 
     let numberOfRow = 0
-    // const [arr, setArr]: any = useState([])
-    //
-    // useEffect(() => {
-    //     for(let i = 0; i < allDates.length; i++) {
-    //         let allHoursAmount1 = 0
-    //
-    //         setArr((prev: any) => [...prev, taskList.filter(item => item.date === allDates[i]).map(item => allHoursAmount1 += +item.hours).reverse()[0]])
-    //
-    //     }
-    // }, [taskList])
 
     return (
         <div className="section-table__body">
@@ -100,7 +88,7 @@ export const TimesheetTableBody: React.FC<ITimesheetTableBodyProps> = ({
                         let allHoursAmount = 0
                         let mobileDateHeight = 0;
 
-                        taskList.filter(item => item.date === dateItem.date).map(item => allHoursAmount += +item.hours)
+                        taskList?.filter(item => item.date === dateItem.date)?.map(item => allHoursAmount += +item.hours)
 
                         mobileDateHeight = taskList?.filter(item => item.date === dateItem.date).length * 48.8
 
@@ -114,7 +102,7 @@ export const TimesheetTableBody: React.FC<ITimesheetTableBodyProps> = ({
                                         {dateItem.date.substring(3, 5)}/{dateItem.date.substring(0, 2)}/{dateItem.date.substring(6)}
                                     </div>
                                     <div className={`section-table__param ${allHoursAmount !== 8 && "is-accent"}`}>
-                                        {allHoursAmount} h
+                                        {allHoursAmount} <Translate>timesheet_page.table.h</Translate>
                                     </div>
                                 </div>
                                 <div className="section-table__row-block--list">
@@ -124,6 +112,7 @@ export const TimesheetTableBody: React.FC<ITimesheetTableBodyProps> = ({
                                             ?.filter(item => item.date === dateItem.date)
                                             ?.filter(item => filterByProjectName ? item.project.name === filterByProjectName : item)
                                             ?.filter(item => filterByProjectDescription ? item.project.description === filterByProjectDescription : item)
+                                            ?.filter(item => chosenTimesheet?.date && MonthNumber()[`${item?.date[3]}${item?.date[4]}`] === MonthNumber()[`${chosenTimesheet.date[3]}${chosenTimesheet.date[4]}`])
                                             ?.sort((a, b) => {
                                                 return b.hours - a.hours;
                                             })

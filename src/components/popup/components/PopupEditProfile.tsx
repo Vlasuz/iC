@@ -9,6 +9,9 @@ import axios from "axios";
 import {getApiLink} from "../../../functions/getApiLink";
 import {getBearer} from "../../../functions/getBearer";
 import {setUser} from "../../../storage/toolkit";
+import {useMask} from "@react-input/mask";
+import { PopupClose } from './PopupClose';
+import {Translate} from "../../translate/Translate";
 
 interface IPopupEditProfileProps {
 
@@ -26,7 +29,7 @@ export const PopupEditProfile: React.FC<IPopupEditProfileProps> = () => {
     const [phoneValue, setPhoneValue] = useState("")
 
     useEffect(() => {
-        setPhoneValue(userData.phone)
+        setPhoneValue(userData.phone.slice(userData.phone.indexOf(" ") + 1))
     }, [userData])
 
     const handleChangeProfile = (e: React.FormEvent<HTMLFormElement>) => {
@@ -34,8 +37,9 @@ export const PopupEditProfile: React.FC<IPopupEditProfileProps> = () => {
 
         getBearer("patch")
         axios.patch(getApiLink("/api/user/update/"), {
-            "phone": phoneValue
+            "phone": `${selectedPhoneCode.label} ${phoneValue}`
         }).then(({data}) => {
+            setIsPopupActiveContext(false)
             dispatch(setUser(data))
         })
     }
@@ -51,13 +55,13 @@ export const PopupEditProfile: React.FC<IPopupEditProfileProps> = () => {
 
     const setPopup: any = useContext(PopupContext)
 
+    const inputRef = useMask({ mask: '(__) ___ __ __', replacement: { _: /\d/ } });
+
+    console.log(userData.phone)
+
     return (
         <div className="profile__body popup-body">
-            <button type="button" className="profile__close-btn popup-close-btn" title="Close">
-                <svg width="15" height="15" viewBox="0 0 15 15">
-                    <use xlinkHref="#close"></use>
-                </svg>
-            </button>
+            <PopupClose/>
             <form onSubmit={handleChangeProfile} className="profile__container popup-container" data-simplebar data-simplebar-auto-hide="false">
                 <div className="profile__user">
                     <label className="profile__user--avatar">
@@ -77,7 +81,9 @@ export const PopupEditProfile: React.FC<IPopupEditProfileProps> = () => {
                 </div>
                 <div className="profile__info">
                     <div className="profile__info--item">
-                        <span>Position</span>
+                        <span>
+                            <Translate>profile.position</Translate>
+                        </span>
                         <label>
                             <input type="text" name="position" value={userData.status} readOnly className="input"/>
                         </label>
@@ -90,15 +96,19 @@ export const PopupEditProfile: React.FC<IPopupEditProfileProps> = () => {
                     </div>
                     <div className="profile__info--row tel-parent">
                         <div className="profile__info--item">
-                            <span>Phone number</span>
+                            <span>
+                                <Translate>profile.phone_number</Translate>
+                            </span>
 
-                            <CustomSelect setSelectedItem={setSelectedPhoneCode} selectValue={selectedPhoneCode} list={PhoneCodes()} defaultValue={"+380"}/>
+                            <CustomSelect setSelectedItem={setSelectedPhoneCode} selectValue={selectedPhoneCode} list={PhoneCodes()} defaultValue={{"label": userData.phone.slice(0, userData.phone.indexOf(" ")), "value": userData.phone.slice(0, userData.phone.indexOf(" "))}} />
 
                         </div>
                         <div className="profile__info--item">
-                            <span>Phone number</span>
+                            <span>
+                                <Translate>profile.phone_number</Translate>
+                            </span>
                             <label>
-                                <input type="tel" name="tel" onChange={e => setPhoneValue(e.target.value)} value={phoneValue} className="input"/>
+                                <input type="text" ref={inputRef} name="tel" onChange={e => setPhoneValue(e.target.value)} value={phoneValue} className="input"/>
                             </label>
                         </div>
                     </div>
@@ -106,17 +116,17 @@ export const PopupEditProfile: React.FC<IPopupEditProfileProps> = () => {
                         <span>Password</span>
                         <label>
                             <a onClick={_ => setPopup({popup: "edit-profile-popup", secondPopup: "reset-password-popup"})} className="profile__info--button open-popup">
-                                Click to reset password
+                                <Translate>profile.click_to_reset_password</Translate>
                             </a>
                         </label>
                     </div>
                 </div>
                 <div className="profile__footer">
                     <button type="button" onClick={_ => setIsPopupActiveContext(false)} className="profile__close btn is-transparent">
-                        Close editing
+                        <Translate>profile.close_editing</Translate>
                     </button>
                     <button type="submit" className="profile__submit btn open-popup">
-                        Save my profile
+                        <Translate>profile.save_my_profile</Translate>
                     </button>
                 </div>
             </form>

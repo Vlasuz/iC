@@ -10,6 +10,9 @@ import logo_png from './../../assets/html/img/logo.png'
 
 import {LoginForm} from "./components/LoginForm";
 import {LoginLang} from "./components/LoginLang";
+import {Translate} from "../../components/translate/Translate";
+import { useDispatch } from 'react-redux'
+import { resetState } from '../../storage/toolkit'
 
 interface ILoginProps {
 
@@ -40,17 +43,17 @@ export const Login: React.FC<ILoginProps> = () => {
                         <ul className="login__privacy">
                             <li>
                                 <a href="https://ic-consulenten.com.ua/about-ic/legal-notice/" target={"_blank"}>
-                                    Legal notice
+                                    <Translate>page_login.legal</Translate>
                                 </a>
                             </li>
                             <li>
                                 <a href="https://ic-consulenten.com.ua/about-ic/policy-statement/" target={"_blank"}>
-                                    Compliance policy
+                                    <Translate>page_login.compliance</Translate>
                                 </a>
                             </li>
                         </ul>
                         <div className="login__copyright">
-                            Copyright © iC consulenten 2013 — 2023. All rights reserved.
+                            <Translate>page_login.copyright_ic</Translate>
                         </div>
                     </div>
                 </div>

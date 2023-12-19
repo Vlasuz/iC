@@ -40,6 +40,14 @@ export const TableSelectYearMonth: React.FC<ITableSelectYearMonthProps> = ({setM
         dispatch(setChosenTimesheet(selectedTimesheet))
     }
 
+
+    const [isHaveMonth, setIsHaveMonth] = useState<string[]>([])
+    useEffect(() => {
+        timesheet.map(item => {
+            setIsHaveMonth(prev => [...prev, `${item.date[3]}${item.date[4]}`])
+        })
+    }, [timesheet])
+
     return (
         <div ref={rootEl} className={isSelectActive ? "section-table__change-full-date drop-down is-active" : "section-table__change-full-date drop-down"}>
             <button
@@ -59,7 +67,7 @@ export const TableSelectYearMonth: React.FC<ITableSelectYearMonthProps> = ({setM
 
                         {
                             Object.keys(MonthNumber()).map((item, index) =>
-                                <li key={item}>
+                                <li key={item} className={!isHaveMonth.some(m => m === item) ? "is-disabled" : ""}>
                                     <label>
                                         <input type="radio" name="month" defaultValue={item} onChange={_ => handleChooseMonth(+item)} checked={+item === filedMonth}/>
                                         <span>{MonthNumber()[index + 1]}</span>

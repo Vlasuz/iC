@@ -1,14 +1,18 @@
 import React, {useContext, useEffect, useRef, useState} from 'react'
 import {NavLink, useNavigate} from "react-router-dom";
 import {useClickOutside} from "../../../hooks/ClickOutside";
-import {ITimesheet} from "../../../models";
+import {IStatistic, ITimesheet} from "../../../models";
 import {MonthNumber} from "../../../constants/MonthNumber";
 import axios from "axios";
 import {getApiLink} from "../../../functions/getApiLink";
 import {PopupContext} from "../../../App";
 import {getBearer} from "../../../functions/getBearer";
-import {setChosenTimesheet, setExpenses, setTasks} from "../../../storage/toolkit";
+import {setChosenTimesheet, setExpenses, setTasks, setTimesheetStatistic} from "../../../storage/toolkit";
 import { useDispatch } from 'react-redux';
+import {SetStatistic} from "../../../api/SetStatistic";
+import {mergeAndSum} from "../../../functions/mergeAndSumStatistic";
+import {Translate} from "../../../components/translate/Translate";
+import {useTranslation} from "react-i18next";
 
 interface ISummaryItemProps {
     dataItem: ITimesheet
@@ -16,23 +20,28 @@ interface ISummaryItemProps {
 
 export const SummaryItem: React.FC<ISummaryItemProps> = ({dataItem}) => {
 
+    const [statisticList, setStatisticList]: any = useState()
     const [isActive, setIsActive] = useState(false)
+    const [statistic, setStatistic] = useState<IStatistic | undefined>()
+
     const {rootEl} = useClickOutside(setIsActive)
 
     const setPopup: any = useContext(PopupContext)
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
-    const itemDate = dataItem.date;
+    const itemDate = dataItem.updated_at;
     const dateForStatus = `${itemDate[0] + itemDate[1]} / ${itemDate[3] + itemDate[4]} / 20${itemDate[6] + itemDate[7]}`
+
+    const { t } = useTranslation();
 
     const timesheetStatus: any = {
         "progress": {
-            title: "In progress",
+            title: <Translate>summary_page.main.in_progress</Translate>,
             icon: "#attention"
         },
         "waiting": {
-            title: `Sent for approval ${dateForStatus}`,
+            title: `${t('summary_page.main.sent_for_approval')} ${dateForStatus}`,
             icon: "#time"
         },
         "reject": {
@@ -49,7 +58,7 @@ export const SummaryItem: React.FC<ISummaryItemProps> = ({dataItem}) => {
         dispatch(setChosenTimesheet(dataItem))
 
         getBearer("get")
-        axios.get(getApiLink(`/api/timesheet/my/expenses/?timesheet_id=${dataItem.id}`)).then(({data}) => {
+        axios.get(getApiLink(`/api/timesheet/expenses/?timesheet_id=${dataItem.id}`)).then(({data}) => {
             navigate('/costs')
             dispatch(setExpenses(data))
         })
@@ -59,11 +68,22 @@ export const SummaryItem: React.FC<ISummaryItemProps> = ({dataItem}) => {
         dispatch(setChosenTimesheet(dataItem))
 
         getBearer("get")
-        axios.get(getApiLink(`/api/timesheet/my/tasks/?timesheet_id=${dataItem.id}`)).then(({data}) => {
+        axios.get(getApiLink(`/api/timesheet/tasks/?timesheet_id=${dataItem.id}`)).then(({data}) => {
             navigate('/')
             dispatch(setTasks(data))
         })
     }
+
+    useEffect(() => {
+        setStatisticList(mergeAndSum(statistic?.expenses, statistic?.tasks).statistic)
+    }, [statistic])
+
+    useEffect(() => {
+        getBearer('get')
+        axios.get(getApiLink(`/api/timesheet/statistics/?timesheet_id=${dataItem.id}`)).then(({data}) => {
+            setStatistic(data)
+        }).catch(er => console.log(getApiLink("/api/timesheet/statistics/?timesheet_id"), er))
+    }, [])
 
     return (
         <div ref={rootEl} className={`summary-item ${isActive && "is-active"}`}>
@@ -91,42 +111,33 @@ export const SummaryItem: React.FC<ISummaryItemProps> = ({dataItem}) => {
             <div className="summary-item__block">
                 <div>
                     <div className="summary-item__elements-list">
-                        <div className="summary-item__element">
-                            <h3 className="summary-item__element--name">61xA210739_Kremenchuk Bridge
-                                supervision</h3>
-                            <div className="summary-item__element--progress">
-                                <span>18 h</span>
-                                <span data-value="9%">
-                                            <span className="line" style={{width: "9%"}}></span>
+
+                        {
+                            statisticList?.map((item: any, index: number) =>
+                                <div key={index} className="summary-item__element">
+                                    <h3 className="summary-item__element--name">
+                                        {item.project.name}_{item.project.description}
+                                    </h3>
+                                    <div className="summary-item__element--progress">
+                                        <span>{item.task.hours} h</span>
+                                        <span data-value={`${item.task.percent}%`}>
+                                            <div className="line_done" style={{width: `${item.task.percent}%`}}/>
                                         </span>
-                            </div>
-                            <div className="summary-item__element--progress">
-                                <span>5 000 UAH</span>
-                                <span data-value="2%">
-                                            <span className="line" style={{width: "2%"}}></span>
+                                    </div>
+                                    <div className="summary-item__element--progress">
+                                        <span>{item.expense.sum} UAH</span>
+                                        <span data-value={`${item.expense.percent}%`}>
+                                            <div className="line_done" style={{width: `${item.expense.percent}%`}}/>
                                         </span>
-                            </div>
-                        </div>
-                        <div className="summary-item__element">
-                            <h3 className="summary-item__element--name">61xA210739_Kremenchuk Bridge
-                                supervision</h3>
-                            <div className="summary-item__element--progress">
-                                <span>8 h</span>
-                                <span data-value="9%">
-                                            <span className="line" style={{width: "9%"}}></span>
-                                        </span>
-                            </div>
-                            <div className="summary-item__element--progress">
-                                <span>522 000 UAH</span>
-                                <span data-value="2%">
-                                    <span className="line" style={{width: "2%"}}></span>
-                                </span>
-                            </div>
-                        </div>
+                                    </div>
+                                </div>
+                            )
+                        }
+
                     </div>
                     <div className="summary-item__total">
                         <b className="summary-item__total--title">
-                            Total
+                            <Translate>summary_page.main.total</Translate>
                         </b>
                         <div className="summary-item__total--element summary-item__total-element">
                             <div className="summary-item__total-element--icon">
@@ -135,16 +146,16 @@ export const SummaryItem: React.FC<ISummaryItemProps> = ({dataItem}) => {
                                 </svg>
                             </div>
                             <b className="summary-item__total-element--name">
-                                Time spent for projects
+                                <Translate>summary_page.main.time_spent_for_projects</Translate>
                             </b>
                             <button onClick={handleEntryTask} className="summary-item__total-element--link">
-                                Show full data
+                                <Translate>summary_page.main.show_full_data</Translate>
                                 <svg width="7" height="10" viewBox="0 0 7 10">
                                     <use xlinkHref="#arrow-next"></use>
                                 </svg>
                             </button>
                             <div className="summary-item__total-element--value">
-                                90 hours
+                                {statistic?.all_hours} <Translate>summary_page.main.hours</Translate>
                             </div>
                         </div>
                         <div className="summary-item__total--element summary-item__total-element">
@@ -154,16 +165,16 @@ export const SummaryItem: React.FC<ISummaryItemProps> = ({dataItem}) => {
                                 </svg>
                             </div>
                             <b className="summary-item__total-element--name">
-                                Time spent for projects
+                                <Translate>summary_page.main.time_spent_for_projects</Translate>
                             </b>
                             <button onClick={handleEntryCost} className="summary-item__total-element--link">
-                                Show full data
+                                <Translate>summary_page.main.show_full_data</Translate>
                                 <svg width="7" height="10" viewBox="0 0 7 10">
                                     <use xlinkHref="#arrow-next"></use>
                                 </svg>
                             </button>
                             <div className="summary-item__total-element--value">
-                                210 000 UAH
+                                {statistic?.all_sum} UAH
                             </div>
                         </div>
                     </div>
@@ -175,8 +186,9 @@ export const SummaryItem: React.FC<ISummaryItemProps> = ({dataItem}) => {
                                     <svg width="20" height="20" viewBox="0 0 13 13">
                                         <use xlinkHref="#time"></use>
                                     </svg>
-                                    <p>You already sent this timesheet for reapproval. Please, wait for the
-                                        answer.</p>
+                                    <p>
+                                        <Translate>summary_page.other.already_sent_for_approval</Translate>
+                                    </p>
                                 </div>
                             }
 
@@ -185,8 +197,9 @@ export const SummaryItem: React.FC<ISummaryItemProps> = ({dataItem}) => {
                                     <svg width="20" height="20" viewBox="0 0 13 13">
                                         <use xlinkHref="#round-error"></use>
                                     </svg>
-                                    <p>Your timesheet was rejected. Please, correct and send for reapproval.
-                                        (by {dataItem.manager.first_name} {dataItem.manager.last_name})</p>
+                                    <p>
+                                        <Translate>summary_page.other.timesheet_rejected</Translate> (by {dataItem.manager.first_name} {dataItem.manager.last_name})
+                                    </p>
                                 </div>
                             }
 
@@ -195,14 +208,16 @@ export const SummaryItem: React.FC<ISummaryItemProps> = ({dataItem}) => {
                                     <svg width="20" height="20" viewBox="0 0 13 13">
                                         <use xlinkHref="#round-check"></use>
                                     </svg>
-                                    <p>Your summary was approved! (by {dataItem.manager.first_name} {dataItem.manager.last_name})</p>
+                                    <p>
+                                        <Translate>summary_page.other.summary_approved</Translate> (by {dataItem.manager.first_name} {dataItem.manager.last_name})
+                                    </p>
                                 </div>
                             }
 
                         </div>
                         <div className="summary-item__footer--col">
                             <button className="summary-item__button btn is-grey is-transparent" type="button">
-                                Export monthly summary
+                                <Translate>summary_page.main.export_monthly_summary</Translate>
                                 <svg width="16" height="17" viewBox="0 0 16 17">
                                     <use xlinkHref="#download"></use>
                                 </svg>
@@ -210,7 +225,7 @@ export const SummaryItem: React.FC<ISummaryItemProps> = ({dataItem}) => {
                             <a onClick={_ => setPopup({popup: "approve-timesheet-popup", data: dataItem})}
                                className={`summary-item__button btn open-popup ${(dataItem.status === "waiting" || dataItem.status === "approve") && "is-disabled"}`}
                                type="button">
-                                Send timesheet for approval
+                                <Translate>summary_page.main.send_timesheet_for_approval</Translate>
                             </a>
                         </div>
                     </div>

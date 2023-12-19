@@ -32,7 +32,7 @@ export const LoginLang: React.FC<ILoginLangProps> = () => {
 
                     {
                         languages?.filter(item => item.slug !== langSelected).map(lang =>
-                            <li>
+                            <li key={lang.slug}>
                                 <a href="#" onClick={e => handleSwitch(lang.slug)}>
                                     {lang.title}
                                 </a>

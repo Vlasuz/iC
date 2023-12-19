@@ -2,13 +2,15 @@ import React, {useEffect, useState} from 'react'
 import {IProject, IUser} from "../../models";
 import {useSelector} from "react-redux";
 import {useClickOutside} from "../../hooks/ClickOutside";
+import SimpleBar from "simplebar-react";
 
 interface ITableProjectsForUserProps {
     setProjectData: any
     projectData: any
+    projectList?: IProject[]
 }
 
-export const TableProjectsForUser: React.FC<ITableProjectsForUserProps> = ({setProjectData, projectData}) => {
+export const TableProjectsForUser: React.FC<ITableProjectsForUserProps> = ({setProjectData, projectData, projectList}) => {
 
     const userData: IUser = useSelector((state: any) => state.toolkit.user)
 
@@ -47,42 +49,48 @@ export const TableProjectsForUser: React.FC<ITableProjectsForUserProps> = ({setP
             </button>
             <div className="section-table__main--project-name-block drop-down__block">
                 <div className="project-popup">
-                    <div className="project-popup__body" data-simplebar
-                         data-simplebar-auto-hide="false">
-                        <div className="project-popup__block">
-                            <h2>Сommonly used</h2>
+                    <SimpleBar className="project-popup__body" autoHide={false}>
+                        {!projectList?.length && !!userData?.recent_projects.length && <div className="project-popup__block">
+                            <h2>Recently used</h2>
                             <ul className="project-popup__list">
 
                                 {
-                                    userData?.projects?.filter(item => searchValue ? item.name.toLowerCase().includes(searchValue) : item).map(item =>
-                                        <li key={item.id} className="project-popup__item">
-                                            <a href="#" onClick={e => handleChooseProject(e, item)}>
-                                                {item.name}
+                                    userData?.recent_projects?.filter(item => searchValue ? item.project.name.toLowerCase().includes(searchValue) : item).map(item =>
+                                        <li key={item.project.id} className="project-popup__item">
+                                            <a href="#" onClick={e => handleChooseProject(e, item.project)}>
+                                                {item.project.name}_{item.project.description}
                                             </a>
                                         </li>
                                     )
                                 }
 
                             </ul>
+                        </div>}
+                        <div className="project-popup__block">
+                            <h2>All projects</h2>
+                            <ul className="project-popup__list">
+
+                                {
+                                    !projectList?.length ? userData?.projects_list?.filter(item => searchValue ? item.name.toLowerCase().includes(searchValue) : item).map(item =>
+                                        <li key={item.id} className="project-popup__item">
+                                            <a href="#" onClick={e => handleChooseProject(e, item)}>
+                                                {item.name}_{item.description}
+                                            </a>
+                                        </li>
+                                    ) :
+                                        projectList?.filter(item => searchValue ? item.name.toLowerCase().includes(searchValue) : item).map(item =>
+                                            <li key={item.id} className="project-popup__item">
+                                                <a href="#" onClick={e => handleChooseProject(e, item)}>
+                                                    {item.name}_{item.description}
+                                                </a>
+                                            </li>
+                                        )
+                                }
+
+                            </ul>
                         </div>
-                        {/*<div className="project-popup__block">*/}
-                        {/*    <h2>All projects</h2>*/}
-                        {/*    <ul className="project-popup__list">*/}
-
-                        {/*        {*/}
-                        {/*            allProjects?.map(item =>*/}
-                        {/*                <li className="project-popup__item">*/}
-                        {/*                    <a href="#">*/}
-                        {/*                        {item.name}*/}
-                        {/*                    </a>*/}
-                        {/*                </li>*/}
-                        {/*            )*/}
-                        {/*        }*/}
-
-                        {/*    </ul>*/}
-                        {/*</div>*/}
-                    </div>
-                    <form className="project-popup__search">
+                    </SimpleBar>
+                    <div className="project-popup__search">
                         <label>
                             <input type="search" name="search" className="input" onChange={e => setSearchValue(e.target.value)} value={searchValue} placeholder="Search a project" required/>
                         </label>
@@ -92,7 +100,7 @@ export const TableProjectsForUser: React.FC<ITableProjectsForUserProps> = ({setP
                                 <use xlinkHref="#search"></use>
                             </svg>
                         </button>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>

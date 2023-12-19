@@ -5,6 +5,8 @@ import {PopupContext} from "../../../App";
 import {IsPopupActiveContext} from "../PopupList";
 import {useCopyElement} from "../../../hooks/CopyElement";
 import {getApiLink} from "../../../functions/getApiLink";
+import {PopupClose} from "./PopupClose";
+import {Translate} from "../../translate/Translate";
 
 interface IPopupProfileProps {
 
@@ -33,11 +35,7 @@ export const PopupProfile: React.FC<IPopupProfileProps> = () => {
 
     return (
         <div className="profile__body popup-body">
-            <button type="button" className="profile__close-btn popup-close-btn" title="Close">
-                <svg width="15" height="15" viewBox="0 0 15 15">
-                    <use xlinkHref="#close"></use>
-                </svg>
-            </button>
+            <PopupClose/>
             <form className="profile__container popup-container">
                 <div className="profile__user">
                     <div className="profile__user--avatar" style={{background: "#EF3129"}}>
@@ -49,7 +47,9 @@ export const PopupProfile: React.FC<IPopupProfileProps> = () => {
                 </div>
                 <div className="profile__info">
                     <div className="profile__info--item">
-                        <span>Position</span>
+                        <span>
+                            <Translate>profile.position</Translate>
+                        </span>
                         <label>
                             <button onClick={_ => navigator.clipboard.writeText(`${userData.role}`)} className="copy-btn" type="button" data-clipboard-text="Managing director"
                                     data-copied-text="Text copied to the clipboard">
@@ -76,7 +76,9 @@ export const PopupProfile: React.FC<IPopupProfileProps> = () => {
                         </label>
                     </div>
                     <div className="profile__info--item">
-                        <span>Phone number</span>
+                        <span>
+                            <Translate>profile.phone_number</Translate>
+                        </span>
                         <label>
                             <button onClick={_ => navigator.clipboard.writeText(`${userData.phone}`)} className="copy-btn" type="button" data-clipboard-text="(012)345-67-89"
                                     data-copied-text="Text copied to the clipboard">
@@ -91,7 +93,7 @@ export const PopupProfile: React.FC<IPopupProfileProps> = () => {
                 </div>
                 <div className="profile__footer">
                     <button onClick={handleOpenEditor} className="profile__edit btn">
-                        Edit my profile
+                        <Translate>profile.edit_my_profile</Translate>
                     </button>
                 </div>
             </form>

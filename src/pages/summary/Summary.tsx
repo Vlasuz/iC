@@ -9,6 +9,8 @@ import axios from "axios";
 import {getApiLink} from "../../functions/getApiLink";
 import {getBearer} from "../../functions/getBearer";
 import { ITimesheet } from '../../models';
+import {SetTimesheet} from "../../api/SetTimesheet";
+import { useDispatch, useSelector } from 'react-redux';
 
 interface ISummaryProps {
 
@@ -16,14 +18,12 @@ interface ISummaryProps {
 
 export const Summary: React.FC<ISummaryProps> = () => {
 
-    const [timesheet, setTimesheet] = useState([])
+    const dispatch = useDispatch()
+
+    const timesheet = useSelector((state: any) => state.toolkit.timesheet)
 
     useEffect(() => {
-        getBearer("get")
-        axios.get(getApiLink("/api/timesheet/my/")).then(({data}) => {
-            console.log(data)
-            setTimesheet(data)
-        })
+        SetTimesheet(dispatch)
     }, [])
 
     return (

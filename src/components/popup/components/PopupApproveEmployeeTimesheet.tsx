@@ -25,7 +25,7 @@ export const PopupApproveEmployeeTimesheet: React.FC<IPopupApproveThankYouTimesh
                         Thank you!
                     </h2>
                     <p className={"text popup-text"}>
-                        This timesheet is successfully approved. <br />{data.manager.first_name} will get the notification on her mail.
+                        This timesheet is successfully approved. <br />{data.user.first_name} will get the notification on her mail.
                     </p>
                     <div className="approve-timesheet__buttons">
                         <PopupCloseCancel/>

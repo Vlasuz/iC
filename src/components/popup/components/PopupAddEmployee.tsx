@@ -16,6 +16,8 @@ import { EmployeesStatus } from '../../../constants/EmployeesStatus';
 import {PopupClose} from "./PopupClose";
 import {PopupCloseCancel} from "./PopupCloseCancel";
 import { useMask } from '@react-input/mask';
+import {SetEmployees} from "../../../api/SetEmployees";
+import {Translate} from "../../translate/Translate";
 
 interface IPopupAddNewEmployeeProps {
     setIsOpenProjects: any
@@ -48,7 +50,7 @@ export const PopupAddEmployee: React.FC<IPopupAddNewEmployeeProps> = ({data, set
             "first_name": firstNameValue,
             "last_name": lastNameValue,
             "role": roleValue,
-            "status": statusValue,
+            "status": statusValue.value,
             "email": emailValue,
             "phone": `${phoneCode.label} ${phoneValue}`,
             "holidays": +holidaysValue,
@@ -57,32 +59,37 @@ export const PopupAddEmployee: React.FC<IPopupAddNewEmployeeProps> = ({data, set
             "all_projects": chosenProjects?.length === projects.length
         }
 
+        console.log(newDataEmployee)
+
         getBearer('post')
         axios.post(getApiLink("/api/admin/employee/add/"), newDataEmployee).then(({data}) => {
             if (!data?.status) {
                 return console.log(data.message);
             }
 
+            // dispatch(addEmployee(data))
+
             setIsPopupActive(false)
-            dispatch(addEmployee(data))
+            SetEmployees(dispatch)
         }).catch(er => console.log(getApiLink("/api/admin/employee/add/"), er))
     }
 
     useEffect(() => {
+        if(!chosenProjects.length) return;
         setProjectsList(chosenProjects.map(item => item.id))
     }, [chosenProjects])
 
     useEffect(() => {
+        if(!data?.projects.length) return;
         setProjectsList(data?.projects.map((item: IProject) => item.id))
     }, [data?.projects])
 
-    const inputRef = useMask({ mask: '(__) __ __ ___', replacement: { _: /\d/ } });
-
+    const inputRef = useMask({ mask: '(__) ___ __ __', replacement: { _: /\d/ } });
 
     return (
         <div className="add-new-employee__body popup-body">
             <h2 className="popup-title title">
-                Add employee
+                <Translate>employees_admin.others.add_new_employee</Translate>
             </h2>
             <PopupClose/>
             <div className="add-new-employee__container popup-container" data-simplebar
@@ -90,24 +97,32 @@ export const PopupAddEmployee: React.FC<IPopupAddNewEmployeeProps> = ({data, set
                 <form onSubmit={handleCreateNewEmployee} className="popup-form">
                     <div className="popup-form__row">
                         <label className="popup-form__label">
-                            <span>First name</span>
+                            <span>
+                                <Translate>employees_admin.others.first_name</Translate>
+                            </span>
                             <input onChange={e => setFirstNameValue(e.target.value)} value={firstNameValue} type="text"
                                    name="first-name" required className="input"/>
                         </label>
                         <label className="popup-form__label">
-                            <span>Second name</span>
+                            <span>
+                                <Translate>employees_admin.others.last_name</Translate>
+                            </span>
                             <input onChange={e => setLastNameValue(e.target.value)} value={lastNameValue} type="text"
                                    name="last-name" required className="input"/>
                         </label>
                     </div>
                     <div className="popup-form__row">
                         <label className="popup-form__label">
-                            <span>Role</span>
+                            <span>
+                                <Translate>employees_admin.others.position</Translate>
+                            </span>
                             <input onChange={e => setRoleValue(e.target.value)} value={roleValue} type="text"
                                    name="role" required className="input"/>
                         </label>
                         <label className="popup-form__label">
-                            <span>Status on the web-site</span>
+                            <span>
+                                <Translate>employees_admin.others.category</Translate>
+                            </span>
                             <CustomSelect selectValue={statusValue} setSelectedItem={setStatusValue} list={EmployeesStatus()}/>
                         </label>
                     </div>
@@ -118,7 +133,9 @@ export const PopupAddEmployee: React.FC<IPopupAddNewEmployeeProps> = ({data, set
                                    name="email" required className="input"/>
                         </label>
                         <label className="popup-form__label">
-                            <span>Password</span>
+                            <span>
+                                <Translate>employees_admin.others.password</Translate>
+                            </span>
                             <span>
                                 <input onChange={e => setPasswordValue(e.target.value)}
                                        value={passwordValue} type="password" name="password" required
@@ -137,7 +154,9 @@ export const PopupAddEmployee: React.FC<IPopupAddNewEmployeeProps> = ({data, set
                     </div>
                     <div className="popup-form__row">
                         <label className="popup-form__item">
-                            <span>Phone number</span>
+                            <span>
+                                <Translate>employees_admin.others.phone_number</Translate>
+                            </span>
                             <div className="popup-form__item--row tel-parent">
                                 <CustomSelect list={PhoneCodes()} setSelectedItem={setPhoneCode} selectValue={phoneCode}/>
                                 <input
@@ -147,24 +166,28 @@ export const PopupAddEmployee: React.FC<IPopupAddNewEmployeeProps> = ({data, set
                             </div>
                         </label>
                         <label className="popup-form__label">
-                            <span>Holidays</span>
+                            <span>
+                                <Translate>employees_admin.others.vacation</Translate>
+                            </span>
                             <input type="number" className={"input"}
                                    onChange={e => setHolidaysValue(+e.target.value > 99 ? "99" : e.target.value)}
                                    value={+holidaysValue > 99 ? 99 : holidaysValue}/>
                             {!!holidaysValue.length &&
                                 <span className={"input-title"} style={{left: +holidaysValue < 10 ? "34px" : "42px"}}>
-                                days/year
+                                <Translate>employees_admin.others.days_per_year</Translate>
                             </span>}
                         </label>
                     </div>
                     <div className="popup-form__row">
                         <label className="popup-form__label is-full">
-                            <span>Projects</span>
+                            <span>
+                                <Translate>employees_admin.others.projects</Translate>
+                            </span>
                             <a onClick={_ => setIsOpenProjects((prev: any) => !prev)}
                                className="popup-form__open-sub-popup open-popup">
                                 <span id="checked-projects" data-none-text="None" data-text-1="project"
                                       data-text-2="projects" data-all-text="All projects">
-                                    {projectsList?.length} projects
+                                    {chosenProjects?.length === projects.length ? <Translate>employees_admin.others.all_projects</Translate> : `${projectsList?.length} projects`}
                                 </span>
                                 <svg width="10" height="7" viewBox="0 0 10 7">
                                     <use xlinkHref="#drop-down-arrow"></use>
@@ -175,7 +198,7 @@ export const PopupAddEmployee: React.FC<IPopupAddNewEmployeeProps> = ({data, set
                     <div className="popup-form__row is-min-gap">
                         <PopupCloseCancel/>
                         <button className="popup-form__submit btn" type="submit">
-                            Save
+                            <Translate>employees_admin.others.save</Translate>
                         </button>
                     </div>
                 </form>

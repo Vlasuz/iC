@@ -182,12 +182,12 @@
 		}
 		
 		&.is-alternative &--label {
-			position: static;
+			//position: static;
 			opacity: 1; visibility: visible;
 			width: auto;
 			
 			@include _992 {
-				position: static;
+				//position: static;
 				opacity: 1; visibility: visible;
 				width: auto;
 			}

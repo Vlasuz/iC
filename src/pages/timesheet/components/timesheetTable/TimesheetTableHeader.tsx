@@ -1,7 +1,11 @@
 import React, {useEffect, useState} from 'react'
-import { useSelector } from 'react-redux';
+import {useSelector} from 'react-redux';
 import {useClickOutside} from "../../../../hooks/ClickOutside";
 import {IUser} from "../../../../models";
+import {useScrollTopValue} from "../../../../hooks/ScrollTopValue";
+import SimpleBar from "simplebar-react";
+import {Translate} from "../../../../components/translate/Translate";
+import {TableHeaderProjects} from "../../../../components/table/TableHeaderProjects";
 
 interface ITimesheetTableHeaderProps {
     setFilterByProjectName: any
@@ -10,28 +14,25 @@ interface ITimesheetTableHeaderProps {
     setSortByTotal: any
 }
 
-export const TimesheetTableHeader: React.FC<ITimesheetTableHeaderProps> = ({setFilterByProjectName, setFilterByProjectDescription, setSortByDate, setSortByTotal}) => {
+export const TimesheetTableHeader: React.FC<ITimesheetTableHeaderProps> = ({
+                                                                               setFilterByProjectName,
+                                                                               setSortByDate,
+                                                                               setSortByTotal
+                                                                           }) => {
 
     const [isActiveDate, setIsActiveDate] = useState(false)
     const activeDate = useClickOutside(setIsActiveDate)
 
     const [isActiveProjectName, setIsActiveProjectName] = useState(false)
-    const activeProjectName = useClickOutside(setIsActiveProjectName)
-
     const [isActiveProjectDescription, setIsActiveProjectDescription] = useState(false)
-    const activeProjectDescription = useClickOutside(setIsActiveProjectDescription)
 
     const [isActiveTotal, setIsActiveTotal] = useState(false)
     const activeTotal = useClickOutside(setIsActiveTotal)
 
-    const userData: IUser = useSelector((state: any) => state.toolkit.user)
-
-    const [searchProjectName, setSearchProjectName] = useState("")
-    const [searchProjectDescription, setSearchProjectDescription] = useState("")
-    const [chosenProjectName, setChosenProjectName]: any = useState<string>("")
-    const [chosenProjectDescription, setChosenProjectDescription]: any = useState("")
     const [chosenSortDate, setChosenSortDate] = useState("ASC")
-    const [chosenSortTotal, setChosenSortTotal] = useState("ASC")
+    const [chosenSortTotal, setChosenSortTotal] = useState("")
+
+    const {scrollY} = useScrollTopValue()
 
     return (
         <div className="section-table__head">
@@ -42,19 +43,20 @@ export const TimesheetTableHeader: React.FC<ITimesheetTableHeaderProps> = ({setF
                         <span>
                             <div className="section-table__main--sort drop-down-absolute">
                                 <button
+                                    onClick={_ => setIsActiveDate(prev => !prev)}
                                     className="section-table__main--sort-target drop-down-absolute__target"
                                     data-drop-down-target="date-sort" type="button">
                                     <svg width="13" height="13" viewBox="0 0 13 13">
                                         <use xlinkHref="#calendar-selected"></use>
                                     </svg>
-                                    Date
+                                    <Translate>timesheet_page.table.date</Translate>
                                     <svg width="10" height="15" viewBox="0 0 11 15">
                                         <use xlinkHref="#sort-up-down"></use>
                                     </svg>
                                 </button>
                                 <div
                                     className="section-table__main--sort-block drop-down-absolute__block"
-                                    id="date-sort" style={{minWidth: "150px"}}>
+                                    id="date-sort" style={{minWidth: "150px", transform: `translateY(${-scrollY}px)`}}>
                                     <ul className="drop-down__list drop-down__list-date">
                                         <li className={` ${chosenSortDate === "ASC" && "is-active"}`}>
                                             <a onClick={_ => {
@@ -96,14 +98,14 @@ export const TimesheetTableHeader: React.FC<ITimesheetTableHeaderProps> = ({setF
                             <svg width="13" height="13" viewBox="0 0 13 13">
                                 <use xlinkHref="#calendar-selected"></use>
                             </svg>
-                            Date
+                            <Translate>timesheet_page.table.date</Translate>
                             <svg width="10" height="15" viewBox="0 0 11 15">
                                 <use xlinkHref="#sort-up-down"></use>
                             </svg>
                         </button>
                         <div
                             className={isActiveDate ? "section-table__main--sort-block drop-down-absolute__block is-active" : "section-table__main--sort-block drop-down-absolute__block"}
-                            id="date-sort-2" style={{minWidth: "150px"}}>
+                            id="date-sort-2" style={{minWidth: "150px", transform: `translateY(${-scrollY}px)`}}>
                             <ul className="drop-down__list drop-down__list-date">
                                 <li className={` ${chosenSortDate === "ASC" && "is-active"}`}>
                                     <a onClick={_ => {
@@ -111,6 +113,7 @@ export const TimesheetTableHeader: React.FC<ITimesheetTableHeaderProps> = ({setF
                                         setChosenSortDate("ASC")
                                         setSortByTotal("")
                                         setChosenSortTotal("")
+                                        setIsActiveDate(false)
                                     }}>
                                         Oldest first
                                     </a>
@@ -121,6 +124,7 @@ export const TimesheetTableHeader: React.FC<ITimesheetTableHeaderProps> = ({setF
                                         setChosenSortDate("DESC")
                                         setSortByTotal("")
                                         setChosenSortTotal("")
+                                        setIsActiveDate(false)
                                     }}>
                                         Newest first
                                     </a>
@@ -130,150 +134,19 @@ export const TimesheetTableHeader: React.FC<ITimesheetTableHeaderProps> = ({setF
                     </div>
                 </div>
                 <div className="section-table__head-th">
-                    <div ref={activeProjectName.rootEl}
-                         className={isActiveProjectName ? "section-table__main--project-name drop-down-absolute is-active" : "section-table__main--project-name drop-down-absolute"}>
-                        <button
-                            className="section-table__main--project-name-target drop-down-absolute__target"
-                            data-drop-down-target="project-name" type="button"
-                            onClick={_ => setIsActiveProjectName(prev => !prev)}>
-                            <svg width="13" height="13" viewBox="0 0 13 13">
-                                <use xlinkHref="#project"></use>
-                            </svg>
-                            Project num.
-                            <svg width="10" height="7" viewBox="0 0 10 7"
-                                 className="drop-down-absolute__target--arrow">
-                                <use xlinkHref="#drop-down-arrow"></use>
-                            </svg>
-                        </button>
-                        <div className={isActiveProjectName ? "section-table__main--project-name-block drop-down-absolute__block is-active" : "section-table__main--project-name-block drop-down-absolute__block"}
-                            id="project-name">
-                            <div className="project-popup">
-                                <div className="project-popup__body" data-simplebar
-                                     data-simplebar-auto-hide="false">
-                                    <div className="project-popup__block">
-                                        <h2>Сommonly used</h2>
-                                        <ul className="project-popup__list">
-
-                                            {
-                                                userData.projects
-                                                    ?.filter(item => item.name.toLowerCase().includes(searchProjectName.toLowerCase()))
-                                                    ?.map(item =>
-                                                    <li key={item.id} className={`project-popup__item ${chosenProjectName === item.name ? " is-active" : ""}`}>
-                                                        <a onClick={_ => {
-                                                            setChosenProjectName((prev: string) => prev === item.name ? "" : item.name)
-                                                            setFilterByProjectName((prev: string) => prev === item.name ? "" : item.name)
-                                                        }}>
-                                                            {item.name}_{item.description}
-                                                        </a>
-                                                    </li>
-                                                )
-                                            }
-
-                                        </ul>
-                                    </div>
-                                    {/*<div className="project-popup__block">*/}
-                                    {/*    <h2>All projects</h2>*/}
-                                    {/*    <ul className="project-popup__list">*/}
-                                    {/*        <li className="project-popup__item">*/}
-                                    {/*            <a href="#">*/}
-                                    {/*                61xA210739_Kremenchuk Bridge supervision*/}
-                                    {/*            </a>*/}
-                                    {/*        </li>*/}
-                                    {/*    </ul>*/}
-                                    {/*</div>*/}
-                                </div>
-                                <div className="project-popup__search">
-                                    <label>
-                                        <input onChange={e => setSearchProjectName(e.target.value)} value={searchProjectName} type="search" name="search" className="input"
-                                               placeholder="Search a project" required/>
-                                    </label>
-                                    <button className="btn is-grey">
-                                        Search
-                                        <svg width="15" height="15" viewBox="0 0 15 15">
-                                            <use xlinkHref="#search"></use>
-                                        </svg>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <TableHeaderProjects title={"timesheet_page.table.project_num"} setFilterByProjectName={setFilterByProjectName}
+                                         isActiveBlock={isActiveProjectName} setIsActiveBlock={setIsActiveProjectName} icon={"#project"}/>
                 </div>
                 <div className="section-table__head-th">
-                    <div ref={activeProjectDescription.rootEl}
-                         className={isActiveProjectDescription ? "section-table__main--project-name drop-down-absolute is-active" : "section-table__main--project-name drop-down-absolute"}>
-                        <button
-                            onClick={_ => setIsActiveProjectDescription(prev => !prev)}
-                            className="section-table__main--project-name-target drop-down-absolute__target"
-                            data-drop-down-target="project-description" type="button">
-                            <svg width="13" height="13" viewBox="0 0 13 13">
-                                <use xlinkHref="#comments"></use>
-                            </svg>
-                            Project description
-                            <svg width="10" height="7" viewBox="0 0 10 7"
-                                 className="drop-down-absolute__target--arrow">
-                                <use xlinkHref="#drop-down-arrow"></use>
-                            </svg>
-                        </button>
-                        <div
-                            className={isActiveProjectDescription ? "section-table__main--project-name-block drop-down-absolute__block is-active" : "section-table__main--project-name-block drop-down-absolute__block"}
-                            id="project-description">
-                            <div className="project-popup">
-                                <div className="project-popup__body" data-simplebar
-                                     data-simplebar-auto-hide="false">
-                                    <div className="project-popup__block">
-                                        <h2>Сommonly used</h2>
-                                        <ul className="project-popup__list">
-
-                                            {
-                                                userData.projects
-                                                    ?.filter(item => item.description.toLowerCase().includes(searchProjectDescription.toLowerCase()))
-                                                    ?.map(item =>
-                                                    <li key={item.id} className={`project-popup__item ${chosenProjectDescription === item.description ? " is-active" : ""}`}>
-                                                        <a onClick={_ => {
-                                                            setChosenProjectDescription((prev: string) => prev === item.description ? "" : item.description)
-                                                            setFilterByProjectDescription((prev: string) => prev === item.description ? "" : item.description)
-                                                        }}>
-                                                            {item.name}_{item.description}
-                                                        </a>
-                                                    </li>
-                                                )
-                                            }
-
-                                        </ul>
-                                    </div>
-                                    {/*<div className="project-popup__block">*/}
-                                    {/*    <h2>All projects</h2>*/}
-                                    {/*    <ul className="project-popup__list">*/}
-                                    {/*        <li className="project-popup__item">*/}
-                                    {/*            <a href="#">*/}
-                                    {/*                61xA210739_Kremenchuk Bridge supervision*/}
-                                    {/*            </a>*/}
-                                    {/*        </li>*/}
-                                    {/*    </ul>*/}
-                                    {/*</div>*/}
-                                </div>
-                                <div className="project-popup__search">
-                                    <label>
-                                        <input onChange={e => setSearchProjectDescription(e.target.value)} value={searchProjectDescription} type="search" name="search" className="input"
-                                               placeholder="Search a project" required/>
-                                    </label>
-                                    <button className="btn is-grey">
-                                        Search
-                                        <svg width="15" height="15" viewBox="0 0 15 15">
-                                            <use xlinkHref="#search"></use>
-                                        </svg>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <TableHeaderProjects title={"timesheet_page.table.project_description"} setFilterByProjectName={setFilterByProjectName}
+                                         isActiveBlock={isActiveProjectDescription} setIsActiveBlock={setIsActiveProjectDescription} icon={"#comments"}/>
                 </div>
                 <div className="section-table__head-th">
                     <span className="section-table__main--param is-center">
                         <svg width="13" height="13" viewBox="0 0 13 13">
                             <use xlinkHref="#pin"></use>
                         </svg>
-                        Task
+                        <Translate>timesheet_page.table.task</Translate>
                     </span>
                 </div>
                 <div className="section-table__head-th">
@@ -281,7 +154,7 @@ export const TimesheetTableHeader: React.FC<ITimesheetTableHeaderProps> = ({setF
                         <svg width="13" height="13" viewBox="0 0 13 13">
                             <use xlinkHref="#time"></use>
                         </svg>
-                        Time
+                        <Translate>timesheet_page.table.time</Translate>
                     </span>
                 </div>
                 <div className="section-table__head-th">
@@ -289,7 +162,7 @@ export const TimesheetTableHeader: React.FC<ITimesheetTableHeaderProps> = ({setF
                         <svg width="13" height="13" viewBox="0 0 13 13">
                             <use xlinkHref="#hours"></use>
                         </svg>
-                        Hours
+                        <Translate>timesheet_page.table.hours</Translate>
                     </span>
                 </div>
                 <div className="section-table__head-th">
@@ -301,14 +174,14 @@ export const TimesheetTableHeader: React.FC<ITimesheetTableHeaderProps> = ({setF
                             <svg width="13" height="13" viewBox="0 0 13 13">
                                 <use xlinkHref="#total"></use>
                             </svg>
-                            Total
+                            <Translate>timesheet_page.table.total</Translate>
                             <svg width="10" height="15" viewBox="0 0 11 15">
                                 <use xlinkHref="#sort-up-down"></use>
                             </svg>
                         </button>
                         <div
                             className={isActiveTotal ? "section-table__main--func-block drop-down-absolute__block is-right-default is-active" : "section-table__main--func-block drop-down-absolute__block is-right-default"}
-                            id="total-sort" style={{minWidth: "170px"}}>
+                            id="total-sort" style={{minWidth: "170px", transform: `translateY(${-scrollY}px)`}}>
                             <ul className="drop-down__list drop-down__list-date">
                                 <li className={chosenSortTotal === "ASC" ? "is-active" : ""}>
                                     <a onClick={_ => {
@@ -316,6 +189,7 @@ export const TimesheetTableHeader: React.FC<ITimesheetTableHeaderProps> = ({setF
                                         setChosenSortTotal("ASC")
                                         setSortByDate("")
                                         setChosenSortDate("")
+                                        setIsActiveTotal(false)
                                     }}>
                                         Uncompleted first
                                     </a>
@@ -326,6 +200,7 @@ export const TimesheetTableHeader: React.FC<ITimesheetTableHeaderProps> = ({setF
                                         setChosenSortTotal("DESC")
                                         setSortByDate("")
                                         setChosenSortDate("")
+                                        setIsActiveTotal(false)
                                     }}>
                                         Completed first
                                     </a>

@@ -28,4 +28,14 @@ export const SummaryEmployeesStyled = styled.section`
     padding-top: 20px;
     width: 100%;
   }
+  
+  .summary-item__user--avatar img {
+    -webkit-border-radius: 50%;-moz-border-radius: 50%;border-radius: 50%;
+  }
+
+  .summary-item__element--name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 `

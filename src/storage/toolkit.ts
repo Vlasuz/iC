@@ -1,6 +1,6 @@
 import {createSlice} from "@reduxjs/toolkit";
 import {initialState} from "./initialState";
-import {ITimesheet} from "../models";
+import {IEmployee, IExpense, IProject, IStatistic, ISummaryEmployee, ITask, ITimesheet, IUser} from "../models";
 
 
 const toolkit = createSlice({
@@ -93,6 +93,26 @@ const toolkit = createSlice({
         },
         setTimesheetStatistic(state, action) {
             state.timesheetStatistic = action.payload
+        },
+
+        setSummaryEmployees(state, action) {
+            state.summaryEmployees = action.payload
+        },
+
+        resetState(state) {
+            state.user = <IUser>{}
+            state.accessToken = <string>""
+            state.employees = <IEmployee[]>[]
+            state.selectedEmployee = <IEmployee>{}
+            state.language = <string>""
+            state.tasks = <ITask[]>[]
+            state.expenses = <IExpense[]>[]
+            state.timesheet = <ITimesheet[]>[]
+            state.timesheetIdPerMonth = []
+            state.timesheetStatistic = <IStatistic[]>[]
+            state.chosenTimesheet = <ITimesheet>{}
+            state.summaryEmployees = <ISummaryEmployee[]>[]
+            state.projects = <IProject[]>[]
         }
     },
 })
@@ -128,6 +148,10 @@ export const {
 
     setTimesheet,
     setChosenTimesheet,
-    setTimesheetStatistic
+    setTimesheetStatistic,
+
+    setSummaryEmployees,
+
+    resetState,
 
 } = toolkit.actions;

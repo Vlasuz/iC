@@ -32,47 +32,47 @@ export const Aside: React.FC<IAsideProps> = () => {
 
     const isAdmin = userData.status?.includes("admin")
     const isEmployee = userData.status?.includes("employee")
-    const isManager = userData.status?.includes("top_manager") || userData.status?.includes("team_manager")
+    const isManager = userData.status?.includes("team_lead") || userData.status?.includes("project_lead")
 
     const menuList = [
         {
-            label: "Employees",
+            label: <Translate>navigation_all.employees</Translate>,
             link: "/",
             icon: "#members",
             isActive: isAdmin
         },
         {
-            label: "Vacations",
+            label: <Translate>navigation_all.vacations</Translate>,
             link: "/vacations",
             icon: "#calendar-check",
             isActive: isAdmin
         },
         {
-            label: "Projects",
+            label: <Translate>navigation_all.projects</Translate>,
             link: "/projects",
             icon: "#calendar-selected",
             isActive: isAdmin
         },
         {
-            label: "Timesheet",
+            label: <Translate>navigation_all.timesheet</Translate>,
             link: "/",
             icon: "#timesheet",
             isActive: isEmployee || isManager
         },
         {
-            label: "Costs",
+            label: <Translate>navigation_all.costs</Translate>,
             link: "/costs",
             icon: "#costs",
             isActive: isEmployee || isManager
         },
         {
-            label: "Summary",
+            label: <Translate>navigation_all.summary</Translate>,
             link: "/summary",
             icon: "#calendar-table",
             isActive: isEmployee || isManager
         },
         {
-            label: "Employees",
+            label: <Translate>navigation_all.employees</Translate>,
             link: "/summary-employees",
             icon: "#members",
             isActive: isManager
@@ -125,7 +125,7 @@ export const Aside: React.FC<IAsideProps> = () => {
                 <div className="aside__body--wrapper">
                     <div className="aside__header">
                         <div className="aside__logo">
-                            <NavLink to={"/employees"} className="aside__logo--link">
+                            <NavLink to={"/"} className="aside__logo--link">
                                 <picture>
                                     <source srcSet={logo_avif} type="image/avif"/>
                                     <source srcSet={logo_webp} type="image/webp"/>
@@ -170,7 +170,7 @@ export const Aside: React.FC<IAsideProps> = () => {
                                     <button onClick={_ => setPopup({popup: "profile-popup"})} className="aside__user"
                                             aria-label={`${userData?.first_name} ${userData?.last_name}`}>
                                         <div className="aside__user--avatar" style={{background: "#EF3129"}}>
-                                            {userData.avatar ?
+                                            {!!userData.avatar ?
                                                 <img src={getApiLink(`/${userData.avatar}`)} alt="" width="80"
                                                      height="80"
                                                      loading="lazy"/> : userData?.first_name && (userData?.first_name[0] + userData?.last_name[0])}
@@ -183,7 +183,7 @@ export const Aside: React.FC<IAsideProps> = () => {
                                         <svg width="16" height="17" viewBox="0 0 16 17">
                                             <use xlinkHref="#logout"></use>
                                         </svg>
-                                        <Translate>logout</Translate>
+                                        <Translate>navigation_all.log_out</Translate>
                                     </a>
                                 </div>
                                 <div className="aside__change-on-min visible-on-desktop">
@@ -192,7 +192,7 @@ export const Aside: React.FC<IAsideProps> = () => {
                                             <svg width="16" height="17" viewBox="0 0 16 17">
                                                 <use xlinkHref="#logout"></use>
                                             </svg>
-                                            <Translate>logout</Translate>
+                                            <Translate>navigation_all.log_out</Translate>
                                         </a>
                                     </div>
                                     <div>

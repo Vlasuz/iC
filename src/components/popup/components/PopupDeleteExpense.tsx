@@ -1,10 +1,12 @@
 import React, {useContext, useEffect} from 'react'
 import {IsPopupActiveContext} from "../PopupList";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {getBearer} from "../../../functions/getBearer";
 import axios from "axios";
 import {getApiLink} from "../../../functions/getApiLink";
-import {removeExpense} from "../../../storage/toolkit";
+import {SetExpenses} from "../../../api/SetExpenses";
+import {SetStatistic} from "../../../api/SetStatistic";
+import {ITimesheet} from "../../../models";
 
 interface IPopupDeleteExpenseProps {
     data: any
@@ -15,6 +17,8 @@ export const PopupDeleteExpense: React.FC<IPopupDeleteExpenseProps> = ({data}) =
     const setIsPopupActive: any = useContext(IsPopupActiveContext)
     const dispatch = useDispatch()
 
+    const chosenTimesheet: ITimesheet = useSelector((state: any) => state.toolkit.chosenTimesheet)
+
     const handleDelete = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
 
@@ -24,7 +28,9 @@ export const PopupDeleteExpense: React.FC<IPopupDeleteExpenseProps> = ({data}) =
             if (!dataItem.status) return;
 
             setIsPopupActive(false)
-            dispatch(removeExpense(data))
+
+            SetExpenses(dispatch, chosenTimesheet.id)
+            SetStatistic(dispatch, chosenTimesheet.id)
 
         }).catch(er => console.log(getApiLink('/api/admin/expense/delete/'), er))
 

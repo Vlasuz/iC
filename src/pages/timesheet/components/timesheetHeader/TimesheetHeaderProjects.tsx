@@ -48,7 +48,7 @@ export const TimesheetHeaderProjects: React.FC<ITimesheetHeaderProjectsProps> = 
                             <ul className="project-popup__list">
 
                                 {
-                                    userData?.projects?.filter(item => searchValue ? item.name.toLowerCase().includes(searchValue) : item).map(item =>
+                                    userData?.projects_list?.filter(item => searchValue ? item.name.toLowerCase().includes(searchValue) : item).map(item =>
                                         <li key={item.id} className="project-popup__item">
                                             <a href="#" onClick={e => handleChooseProject(e, item)}>
                                                 {item.name}

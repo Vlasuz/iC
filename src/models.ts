@@ -4,9 +4,15 @@ export interface IUser {
     first_name: string
     last_name: string
     phone: string
-    projects: IProject[]
+    projects_list: IProject[]
     role: string
     status: string
+    id?: string
+    holidays: number
+    recent_projects: {
+        count: number
+        project: IProject
+    }[]
 }
 
 export interface ITask {
@@ -54,6 +60,7 @@ export interface ITimesheet {
         first_name: string
         last_name: string
         status: string
+        id?: string
     }
 }
 
@@ -61,6 +68,7 @@ export interface IProject {
     description: string
     id: string
     name: string
+    archive: boolean
 }
 
 export interface IEmployee {
@@ -74,6 +82,7 @@ export interface IEmployee {
     projects: IProject[]
     role: string
     status: string
+    archive: boolean
 }
 
 interface IElement {
@@ -95,7 +104,77 @@ export interface IStatistic {
 }
 
 export interface ISummaryEmployee {
+    all: ITimesheet[]
+    favourite: ITimesheet[]
+}
 
-    // all:
-    //     favourite:
+export interface INotification {
+    id: string
+    comment: {
+        user: {
+            id: string
+            first_name: string
+            last_name: string
+            avatar: string
+            status: string
+        }
+        answer: {
+            id: string
+            first_name: string
+            last_name: string
+            avatar: string
+            status: string
+        }
+        text: string
+    }
+    timesheet: {
+        id: string
+        date: string
+        updated_at: string
+        status: string
+        user: {
+            id: string
+            first_name: string
+            last_name: string
+            avatar: string
+            status: string
+        }
+        manager: {
+            id: string
+            first_name: string
+            last_name: string
+            avatar: string
+            status: string
+        }
+        comments: [
+            {
+                user: {
+                    id: string
+                    first_name: string
+                    last_name: string
+                    avatar: string
+                    status: string
+                }
+                answer: {
+                    id: string
+                    first_name: string
+                    last_name: string
+                    avatar: string
+                    status: string
+                }
+                text: string
+            }
+        ]
+    }
+    type: string
+}
+
+export interface IVacation {
+    extra: number
+    months: {
+        month: number
+        days: number
+    }[]
+    remain: number
+    user: IUser
 }

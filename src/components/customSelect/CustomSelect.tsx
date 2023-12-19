@@ -1,6 +1,8 @@
 import React, {useEffect, useRef, useState} from 'react'
 import {CustomSelectStyled} from "./CustomSelect.styled";
 import {useClickOutside} from "../../hooks/ClickOutside";
+import SimpleBar from "simplebar-react";
+import {Translate} from "../translate/Translate";
 
 interface ICustomSelectProps {
     list: any[]
@@ -34,7 +36,8 @@ export const CustomSelect: React.FC<ICustomSelectProps> = ({
     }
 
     useEffect(() => {
-        selectBodyRef.current.scrollTo(0, countForScrollToSelected === 0 ? scrollNumber : countForScrollToSelected)
+        selectBodyRef.current.getScrollElement().scrollTop = countForScrollToSelected === 0 ? scrollNumber : countForScrollToSelected
+
     }, [isOpenSelect, selectedItemLocal])
 
     useEffect(() => {
@@ -62,6 +65,8 @@ export const CustomSelect: React.FC<ICustomSelectProps> = ({
             if (rootEl?.current?.getBoundingClientRect().bottom + 300 > window.innerHeight) setIsPositionTop(true)
         }, 1000)
 
+        setSelectedItemLocal((defaultValue && Object.keys(defaultValue).length) ? defaultValue : list[0])
+
     }, [])
 
     const handleOpenSelect = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -69,30 +74,39 @@ export const CustomSelect: React.FC<ICustomSelectProps> = ({
         setIsOpenSelect(prev => !prev)
     }
 
+    const whoHaveTranslate = ["team_lead", "project_lead", "employee"]
+    const isHaveTranslate = (item: string) => {
+        return whoHaveTranslate.some(item2 => item2 === item)
+    }
+
     return (
         <CustomSelectStyled ref={rootEl} className={`select ${isOpenSelect && "is-active"}`}>
             <button onClick={handleOpenSelect} className="custom-select__head">
                     <span>
-                        {selectedItemLocal?.label}
+                        {
+                            isHaveTranslate(selectedItemLocal?.value) ? <Translate>{`employees_admin.table.${selectedItemLocal?.value}`}</Translate> : selectedItemLocal?.label
+                        }
                     </span>
                 <svg className="ss-arrow" viewBox="0 0 100 100">
                     <path d="M10,30 L50,70 L90,30" fill={"transparent"}/>
                 </svg>
             </button>
-            <div ref={selectBodyRef} className={`custom-select__body ${isPositionTop && "custom-select__body_top"}`}>
+            <SimpleBar ref={selectBodyRef} className={`custom-select__body ${isPositionTop && "custom-select__body_top"}`}>
                 <ul>
 
                     {
                         list.map((item, index: number) =>
                             <li ref={liItemBlock} key={item.value} onClick={_ => handleSelectItem(item, index)}
                                 className={selectedItemLocal?.value === item.value ? "li-active" : ""}>
-                                {item.label}
+                                {
+                                    isHaveTranslate(item.value) ? <Translate>{`employees_admin.table.${item.value}`}</Translate> : item.label
+                                }
                             </li>
                         )
                     }
 
                 </ul>
-            </div>
+            </SimpleBar>
         </CustomSelectStyled>
     )
 }

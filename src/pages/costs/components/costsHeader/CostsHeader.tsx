@@ -11,7 +11,10 @@ import {TableSelectYearMonth} from "../../../../components/table/TableSelectYear
 import {TableCalendar} from "../../../../components/table/TableCalendar";
 import { BlockToEdit } from '../../Costs';
 import {TableProjectsForUser} from "../../../../components/table/TableProjectsForUser";
-import {scryRenderedComponentsWithType} from "react-dom/test-utils";
+import { SetExpenses } from '../../../../api/SetExpenses';
+import {SetTasks} from "../../../../api/SetTasks";
+import {SetStatistic} from "../../../../api/SetStatistic";
+import {Translate} from "../../../../components/translate/Translate";
 
 interface ICostsHeaderProps {
     itemToEdit: IExpense | undefined
@@ -26,7 +29,9 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit}) => {
     const [dateData, setDateData] = useState<string>("")
     const [descriptionData, setDescriptionData] = useState<string>("")
     const [costData, setCostData] = useState<number>(0)
+
     const timesheet: ITimesheet[] = useSelector((state: any) => state.toolkit.timesheet)
+    const chosenTimesheet: ITimesheet = useSelector((state: any) => state.toolkit.chosenTimesheet)
     
     const [searchValueLocal, setSearchValueLocal] = useState("")
 
@@ -45,15 +50,22 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit}) => {
 
             getBearer("patch")
             axios.patch(getApiLink("/api/expense/edit/?expense_id=" + itemToEdit.id), timesheetRequest).then(({data}) => {
-                data.id = itemToEdit.id;
-                dispatch(editExpense(data))
+                // data.id = itemToEdit.id;
+                // dispatch(editExpense(data))
+
+                SetStatistic(dispatch, chosenTimesheet.id)
+                SetExpenses(dispatch, chosenTimesheet.id)
                 setIsOpenCreatBlock(false)
             })
         } else {
             getBearer("post")
             axios.post(getApiLink("/api/expense/add/"), timesheetRequest).then(({data}) => {
-                dispatch(addExpense(data))
-                setIsOpenCreatBlock(false)
+                // dispatch(addExpense(data))
+
+
+                SetStatistic(dispatch, chosenTimesheet.id)
+                SetExpenses(dispatch, chosenTimesheet.id)
+                resetFields()
             })
         }
     }
@@ -61,13 +73,14 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit}) => {
     const lessThenTen = (num: string) =>  +num < 10 ? "0" + num : num
 
     useEffect(() => {
+        if (!chosenTimesheet?.date) return;
         if(isEditExpense) setIsOpenCreatBlock(true)
 
         const date = new Date()
 
         setProjectData(itemToEdit?.project ?? undefined)
         setDescriptionData(itemToEdit?.description ?? "")
-        setDateData(itemToEdit?.date ?? `${lessThenTen(String(date.getDate()))}.${lessThenTen(String(date.getMonth() + 1))}.${date.getFullYear()}`)
+        setDateData(itemToEdit?.date ?? `${lessThenTen(String(getMondayDate().getDate()))}.${chosenTimesheet?.date[3]}${chosenTimesheet?.date[4]}.${getMondayDate().getFullYear()}`)
         setCostData(itemToEdit?.sum ?? 0)
     }, [itemToEdit])
 
@@ -75,10 +88,16 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit}) => {
         e.preventDefault()
 
         getBearer("get")
-        axios.get(getApiLink(`/api/timesheet/my/expenses/?search=${searchValueLocal}`)).then(({data}) => {
+        axios.get(getApiLink(`/api/timesheet/expenses/?search=${searchValueLocal}`)).then(({data}) => {
             dispatch(setExpenses(data))
         })
     }
+
+    useEffect(() => {
+        if(searchValueLocal.length > 0) return;
+
+        SetExpenses(dispatch, chosenTimesheet?.id)
+    }, [searchValueLocal])
 
     const setItemEdit: any = useContext(BlockToEdit)
 
@@ -98,11 +117,41 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit}) => {
         if(!idTasksForMonth?.length) return;
 
         getBearer("get")
-        axios.get(getApiLink(`/api/timesheet/my/expenses/?timesheet_id=${idTasksForMonth}`)).then(({data}) => {
+        axios.get(getApiLink(`/api/timesheet/expenses/?timesheet_id=${idTasksForMonth}`)).then(({data}) => {
+
+            SetStatistic(dispatch, idTasksForMonth)
             dispatch(setExpenses(data))
         })
     }
 
+    const handleOpenToCreate = () => {
+        setIsOpenCreatBlock(true)
+
+        resetFields()
+    }
+
+    function getMondayDate() {
+        const today = new Date();
+        const dayOfWeek = today.getDay();
+        const difference = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+        const monday = new Date(today);
+        monday.setDate(today.getDate() + difference);
+
+        return monday;
+    }
+
+    const resetFields = () => {
+        setProjectData(undefined)
+        setDescriptionData("")
+        setCostData(0)
+        setDateData(`${lessThenTen(String(getMondayDate().getDate()))}.${chosenTimesheet?.date[3]}${chosenTimesheet?.date[4]}.${getMondayDate().getFullYear()}`)
+    }
+
+    useEffect(() => {
+        if (!chosenTimesheet?.date) return;
+
+        setDateData(`${lessThenTen(String(getMondayDate().getDate()))}.${chosenTimesheet?.date[3]}${chosenTimesheet?.date[4]}.${getMondayDate().getFullYear()}`)
+    }, [chosenTimesheet])
 
     return (
         <div className="section-table__header">
@@ -110,7 +159,16 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit}) => {
                 <div className="section-table__header--col">
                     <h1 className="section-table__title title change-title" id="main-title">
                         <span>
-                            {isOpenCreatBlock ? `Costs / ${isEditExpense ? "Edit costs" : "Add costs"}` : "Costs"}
+
+                            <Translate>costs_page.top_part.costs</Translate>
+
+                            {
+                                isOpenCreatBlock && " / "
+                            }
+                            {
+                                isOpenCreatBlock && (!isEditExpense ? <Translate>costs_page.top_part.add_expense_2</Translate> : "Edit cost")
+                            }
+
                         </span>
                     </h1>
                 </div>
@@ -123,9 +181,9 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit}) => {
                     <div>
                         <div className="section-table__header--row row-2">
                             <div className="section-table__header--col">
-                                <button onClick={_ => setIsOpenCreatBlock(true)} type="button" className="section-table__add btn add-is-active"
+                                <button onClick={handleOpenToCreate} type="button" className="section-table__add btn add-is-active"
                                         data-add-active-change-title="main-title">
-                                    Add expence
+                                    <Translate>costs_page.top_part.add_expense_2</Translate>
                                     <svg width="16" height="15" viewBox="0 0 16 15">
                                         <use xlinkHref="#plus"></use>
                                     </svg>
@@ -133,15 +191,17 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit}) => {
                                 <form onSubmit={handleSearchTimesheet} className="section-table__search">
                                     <label className="section-table__search--label">
                                         <input type="search" name="search"
-                                               placeholder="Search a project"
                                                className="section-table__search--input"
                                                onChange={e => setSearchValueLocal(e.target.value)}
                                                value={searchValueLocal}
                                         />
+                                        <span className="placeholder">
+                                            {!searchValueLocal && <Translate>costs_page.top_part.search_a_project</Translate>}
+                                        </span>
                                     </label>
                                     <button className="section-table__search--submit btn is-grey is-min-on-mob"
                                             type="submit">
-                                        Search
+                                        <Translate>costs_page.top_part.search</Translate>
                                         <svg width="15" height="15" viewBox="0 0 15 15">
                                             <use xlinkHref="#search"></use>
                                         </svg>
@@ -185,7 +245,7 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit}) => {
                                 <input type="number" name="cost" value={costData === 0 ? "" : costData} onChange={e => setCostData(+e.target.value)} placeholder="Cost" required className="input" />
                             </div>
                             <button onClick={handleCreateExpense} className="section-table__add-expense--submit btn" type="submit">
-                                {isEditExpense ? "Edit expence" : "Add expence"}
+                                {isEditExpense ? "Edit expence" : <Translate>costs_page.top_part.add_expense_2</Translate>}
                             </button>
                         </div>
                     </div>

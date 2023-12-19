@@ -3,6 +3,7 @@ import {useSelector} from 'react-redux';
 import {IsPopupActiveContext} from "../PopupList";
 import {IProject} from "../../../models";
 import {PopupClose} from "./PopupClose";
+import SimpleBar from "simplebar-react";
 
 interface IPopupEmployeeProjectsProps {
     isOpenProjects: boolean
@@ -12,9 +13,17 @@ interface IPopupEmployeeProjectsProps {
     chosenProjects: IProject[]
 }
 
-export const PopupEmployeeProjects: React.FC<IPopupEmployeeProjectsProps> = ({isOpenProjects, setIsOpenProjects, data, setChosenProjects, chosenProjects}) => {
+export const PopupEmployeeProjects: React.FC<IPopupEmployeeProjectsProps> = ({
+                                                                                 isOpenProjects,
+                                                                                 setIsOpenProjects,
+                                                                                 data,
+                                                                                 setChosenProjects,
+                                                                                 chosenProjects
+                                                                             }) => {
 
     const projects: IProject[] = useSelector((state: any) => state.toolkit.projects)
+
+    const [searchValue, setSearchValue] = useState("")
 
     const handleSelectProject = (proj: IProject) => {
         if (chosenProjects?.some(item => item.id === proj.id)) {
@@ -29,9 +38,8 @@ export const PopupEmployeeProjects: React.FC<IPopupEmployeeProjectsProps> = ({is
     }
 
     useEffect(() => {
-        if(data?.all_projects) {
-            console.log(projects.map(item => item.id))
-            setChosenProjects(projects.map(item => item.id))
+        if (data?.all_projects) {
+            setChosenProjects(projects)
         } else {
             setChosenProjects(data?.projects ?? [])
         }
@@ -51,8 +59,7 @@ export const PopupEmployeeProjects: React.FC<IPopupEmployeeProjectsProps> = ({is
                                 <use xlinkHref="#close"></use>
                             </svg>
                         </button>
-                        <div className="sub-popup-employee__container popup-container" data-simplebar
-                             data-simplebar-auto-hide="false">
+                        <SimpleBar autoHide={false} className="sub-popup-employee__container popup-container">
                             <ul className="popup-checkbox-list">
                                 <li>
                                     <label className="popup-checkbox">
@@ -71,33 +78,35 @@ export const PopupEmployeeProjects: React.FC<IPopupEmployeeProjectsProps> = ({is
                                 </li>
 
                                 {
-                                    projects.length && projects?.map(project =>
-                                        <li key={project.id}>
-                                            <label className="popup-checkbox">
-                                                <input onChange={_ => handleSelectProject(project)}
-                                                       checked={chosenProjects?.some(item => item.id === project.id)}
-                                                       type="checkbox" name={project.name}
-                                                       className="popup-checkbox__input"/>
-                                                <span className="popup-checkbox__element">
+                                    projects.length && projects
+                                        ?.filter(item => item.name.toLowerCase().includes(searchValue.toLowerCase()))
+                                        ?.map(project =>
+                                            <li key={project.id}>
+                                                <label className="popup-checkbox">
+                                                    <input onChange={_ => handleSelectProject(project)}
+                                                           checked={chosenProjects?.some(item => item.id === project.id)}
+                                                           type="checkbox" name={project.name}
+                                                           className="popup-checkbox__input"/>
+                                                    <span className="popup-checkbox__element">
                                                 <svg width="11" height="8" viewBox="0 0 11 8">
                                                     <use xlinkHref="#check"></use>
                                                 </svg>
                                             </span>
-                                                <span className="popup-checkbox__text">
-                                                    {project.name}
+                                                    <span className="popup-checkbox__text" style={{whiteSpace: "nowrap", textOverflow: "ellipsis", overflow: "hidden"}}>
+                                                    {project.name}_{project.description}
                                                 </span>
-                                            </label>
-                                        </li>
-                                    )
+                                                </label>
+                                            </li>
+                                        )
                                 }
 
 
                             </ul>
-                        </div>
+                        </SimpleBar>
                         <div className="sub-popup-employee__search">
                             <label>
                                 <input type="search" name="search" required placeholder="Search a project"
-                                       className="input"/>
+                                       onChange={e => setSearchValue(e.target.value)} className="input"/>
                             </label>
                             <button className="btn is-grey" type="submit">
                                 Search

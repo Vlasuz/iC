@@ -1,4 +1,4 @@
-import {IEmployee, IExpense, IProject, IStatistic, ITask, ITimesheet, IUser} from "../models";
+import {IEmployee, IExpense, IProject, IStatistic, ISummaryEmployee, ITask, ITimesheet, IUser} from "../models";
 
 export const initialState = () => {
     return {
@@ -13,6 +13,7 @@ export const initialState = () => {
         timesheetIdPerMonth: [],
         timesheetStatistic: <IStatistic[]>[],
         chosenTimesheet: <ITimesheet>{},
+        summaryEmployees: <ISummaryEmployee[]>[],
 
         projects: <IProject[]>[],
     }

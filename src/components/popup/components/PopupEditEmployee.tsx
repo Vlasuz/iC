@@ -13,6 +13,7 @@ import {EmployeesStatus} from "../../../constants/EmployeesStatus";
 import {PopupCloseCancel} from "./PopupCloseCancel";
 import {PopupClose} from "./PopupClose";
 import {useMask} from "@react-input/mask";
+import {SetEmployees} from "../../../api/SetEmployees";
 
 interface IPopupEditEmployeeProps {
     setIsOpenProjects: any
@@ -30,7 +31,7 @@ export const PopupEditEmployee: React.FC<IPopupEditEmployeeProps> = ({setIsOpenP
     const [firstNameValue, setFirstNameValue] = useState<string>('')
     const [lastNameValue, setLastNameValue] = useState<string>('')
     const [roleValue, setRoleValue] = useState<string>('')
-    const [statusValue, setStatusValue] = useState<string>('')
+    const [statusValue, setStatusValue] = useState(EmployeesStatus().filter(item => item.value === data.status)[0])
     const [emailValue, setEmailValue] = useState<string>('')
     const [phoneValue, setPhoneValue] = useState<string>('')
     const [holidaysValue, setHolidaysValue] = useState<string>('')
@@ -43,7 +44,8 @@ export const PopupEditEmployee: React.FC<IPopupEditEmployeeProps> = ({setIsOpenP
         setRoleValue(data.role)
         setEmailValue(data.email)
         setPhoneValue(data.phone.slice(data.phone.indexOf(" ") + 1))
-        setStatusValue(data.status)
+        console.log(data)
+        setStatusValue(EmployeesStatus().filter(item => item.value === data.status)[0])
         setHolidaysValue(String(data.holidays))
         setProjectsList(data.projects?.map((item: any) => item.id))
 
@@ -57,11 +59,13 @@ export const PopupEditEmployee: React.FC<IPopupEditEmployeeProps> = ({setIsOpenP
     const handleChange = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
 
+        console.log(statusValue)
+
         const newDataEmployee = {
             "first_name": firstNameValue,
             "last_name": lastNameValue,
             "role": roleValue,
-            "status": statusValue,
+            "status": statusValue.value,
             "email": emailValue,
             "phone": `${phoneCode.label} ${phoneValue}`,
             "holidays": +holidaysValue,
@@ -75,14 +79,16 @@ export const PopupEditEmployee: React.FC<IPopupEditEmployeeProps> = ({setIsOpenP
             if (!data.status) return;
 
             // @ts-ignore
-            newDataEmployee['id'] = data.id;
+            // newDataEmployee['id'] = data.id;
+
+            // dispatch(editEmployee({data, newDataEmployee}))
 
             setIsPopupActive(false)
-            dispatch(editEmployee({data, newDataEmployee}))
+            SetEmployees(dispatch)
         }).catch(er => console.log(getApiLink("/api/admin/employee/edit/"), er))
     }
 
-    const inputRef = useMask({ mask: '(__) __ __ ___', replacement: { _: /\d/ } });
+    const inputRef = useMask({ mask: '(__) ___ __ __', replacement: { _: /\d/ } });
 
     return (
         <div className="add-new-employee__body popup-body">
@@ -112,7 +118,8 @@ export const PopupEditEmployee: React.FC<IPopupEditEmployeeProps> = ({setIsOpenP
                         </label>
                         <label className="popup-form__label">
                             <span>Status on the web-site</span>
-                            <CustomSelect1 onChange={(e: any) => setStatusValue(e.value)} list={EmployeesStatus()} defaultValue={EmployeesStatus().filter(item => item.value === data.status)[0]} />
+                            <CustomSelect selectValue={statusValue} setSelectedItem={setStatusValue} list={EmployeesStatus()}/>
+                            {/*<CustomSelect1 onChange={(e: any) => setStatusValue(e.value)} list={EmployeesStatus()} defaultValue={EmployeesStatus().filter(item => item.value === data.status)[0]} />*/}
                         </label>
                     </div>
                     <div className="popup-form__row">

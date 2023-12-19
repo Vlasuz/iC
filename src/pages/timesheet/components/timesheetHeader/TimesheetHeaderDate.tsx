@@ -14,13 +14,9 @@ export const TimesheetHeaderDate: React.FC<ITimesheetHeaderDateProps> = ({setDat
         const date = new Date(e)
         setDate(e)
         setDateData(`${lessThenTen(String(date.getDate()))}.${lessThenTen(String(date.getMonth() + 1))}.${date.getFullYear()}`)
-
-        console.log(`${lessThenTen(String(date.getDate()))}.${lessThenTen(String(date.getMonth() + 1))}.${date.getFullYear()}`)
     }
 
     const [date, setDate] = useState(new Date());
-
-    console.log(date)
 
     useEffect(() => {
         if(!dateData) return;
@@ -39,7 +35,7 @@ export const TimesheetHeaderDate: React.FC<ITimesheetHeaderDateProps> = ({setDat
             {/*       data-prev-arrow-path="img/sprites.svg#arrow-prev"*/}
             {/*       data-next-arrow-path="img/sprites.svg#arrow-next"/>*/}
 
-            <DatePicker selected={date} className={"input date-input none-disabled-style"} autoComplete={"off"} required onChange={handleSetDate} />
+            {/*<DatePicker selected={date} className={"input date-input none-disabled-style"} autoComplete={"off"} required onChange={handleSetDate} />*/}
 
             <svg width="10" height="7" viewBox="0 0 10 7">
                 <use xlinkHref="#drop-down-arrow"></use>

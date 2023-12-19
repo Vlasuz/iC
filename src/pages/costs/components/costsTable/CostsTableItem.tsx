@@ -1,12 +1,14 @@
 import React, {useContext, useEffect, useRef, useState} from 'react'
-import {IExpense, ITask} from "../../../../models";
-import {useDispatch} from "react-redux";
+import {IExpense, ITask, ITimesheet} from "../../../../models";
+import {useDispatch, useSelector} from "react-redux";
 import {PopupContext} from "../../../../App";
 import { BlockToEdit } from '../../Costs';
 import {addExpense, addTask} from "../../../../storage/toolkit";
 import {getBearer} from "../../../../functions/getBearer";
 import axios from "axios";
 import {getApiLink} from "../../../../functions/getApiLink";
+import {SetExpenses} from "../../../../api/SetExpenses";
+import {SetStatistic} from "../../../../api/SetStatistic";
 
 interface ICostsTableItemProps {
     item: IExpense,
@@ -17,6 +19,8 @@ export const CostsTableItem: React.FC<ICostsTableItemProps> = ({item, index}) =>
 
     const [isOpenContextMenu, setIsOpenContextMenu] = useState(false)
     const [menuPosition, setMenuPosition] = useState({})
+
+    const chosenTimesheet: ITimesheet = useSelector((state: any) => state.toolkit.chosenTimesheet)
 
     const dispatch = useDispatch()
 
@@ -79,9 +83,14 @@ export const CostsTableItem: React.FC<ICostsTableItemProps> = ({item, index}) =>
         setIsOpenContextMenu(false)
     }
     const handleDuplicateTask = (data: IExpense) => {
-        dispatch(addExpense(data))
+        // dispatch(addExpense(data))
+
         getBearer("post")
-        axios.post(getApiLink(`/api/expense/duplicate/?expense_id=${item.id}`))
+        axios.post(getApiLink(`/api/expense/duplicate/?expense_id=${item.id}`)).then(({data}) => {
+
+            SetStatistic(dispatch, chosenTimesheet.id)
+            SetExpenses(dispatch, chosenTimesheet.id)
+        })
         setIsOpenContextMenu(false)
     }
 

@@ -17,4 +17,11 @@ export const SummaryStyled = styled.section`
     background: transparent;
     text-align: left;
   }
+  
+  
+  .summary-item__element--name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 `

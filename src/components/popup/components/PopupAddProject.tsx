@@ -5,6 +5,9 @@ import {getApiLink} from "../../../functions/getApiLink";
 import { useDispatch } from 'react-redux';
 import { addProject } from '../../../storage/toolkit';
 import {IsPopupActiveContext} from "../PopupList";
+import {Translate} from "../../translate/Translate";
+import {PopupCloseCancel} from "./PopupCloseCancel";
+import {PopupClose} from "./PopupClose";
 
 interface IPopupAddProjectProps {
 
@@ -34,36 +37,44 @@ export const PopupAddProject: React.FC<IPopupAddProjectProps> = () => {
     return (
         <div className="add-project__body popup-body">
             <h2 className="add-project__title popup-title title">
-                Add new project
+                <Translate>projects_admin.add_new_project</Translate>
             </h2>
-            <button type="button" className="add-project__close-btn popup-close-btn" onClick={_ => setIsPopupActive(false)} title="Close">
-                <svg width="15" height="15" viewBox="0 0 15 15">
-                    <use xlinkHref="#close"></use>
-                </svg>
-            </button>
+            <PopupClose/>
             <div className="add-project__container popup-container" data-simplebar
                  data-simplebar-auto-hide="false">
                 <form onSubmit={handleAddProject} className="add-project__form popup-form">
                     <div className="popup-form__row">
                         <label className="popup-form__label is-full">
-                            <span>Project name</span>
-                            <input type="text" name="project-name" required placeholder="Project name"
-                                   className="input" value={nameValue} onChange={e => setNameValue(e.target.value)}/>
+                            <span>
+                                <Translate>projects_admin.project_name</Translate>
+                            </span>
+                            <span className="input_placeholder">
+                                <input type="text" name="project-name" required
+                                       className="input" value={nameValue} onChange={e => setNameValue(e.target.value)}/>
+                                <span className="placeholder">
+                                    {!nameValue.length ? <Translate>projects_admin.project_name</Translate> : ""}
+                                </span>
+                            </span>
                         </label>
                     </div>
                     <div className="popup-form__row">
                         <label className="popup-form__label is-full">
-                            <span>Project description</span>
-                            <input type="text" name="project-description" required
-                                   placeholder="Project description" className="input" onChange={e => setDescriptionValue(e.target.value)} value={descriptionValue}/>
+                            <span>
+                                <Translate>projects_admin.project_description</Translate>
+                            </span>
+                            <span className="input_placeholder">
+                                <input type="text" name="project-description" required
+                                       className="input" onChange={e => setDescriptionValue(e.target.value)} value={descriptionValue}/>
+                                <span className="placeholder">
+                                    {!descriptionValue.length ? <Translate>projects_admin.project_description</Translate> : ""}
+                                </span>
+                            </span>
                         </label>
                     </div>
                     <div className="popup-form__row is-min-gap">
-                        <button className="popup-form__cancel btn is-transparent" onClick={_ => setIsPopupActive(false)} type="button">
-                            Cancel
-                        </button>
+                        <PopupCloseCancel/>
                         <button className="popup-form__submit btn" type="submit">
-                            Save
+                            <Translate>projects_admin.save</Translate>
                         </button>
                     </div>
                 </form>

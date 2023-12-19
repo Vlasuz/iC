@@ -8,6 +8,7 @@ import {IEmployee} from "../../models";
 import {useSelector} from "react-redux";
 import {CustomSelect} from "../../components/customSelect/CustomSelect";
 import {RowsPerPage} from "../../constants/RowsPerPage";
+import {Translate} from "../../components/translate/Translate";
 
 interface IEmployeesProps {
 
@@ -18,6 +19,10 @@ export const Employees: React.FC<IEmployeesProps> = () => {
     const employees: IEmployee[] = useSelector((state: any) => state.toolkit.employees)
     const [searchValue, setSearchValue] = useState<string>('')
     const [selectValue, setSelectValue] = useState(RowsPerPage()[0])
+
+    useEffect(() => {
+        setSelectValue(employees.length > +RowsPerPage()[0].value ? RowsPerPage()[0] : RowsPerPage()[3])
+    }, [employees])
 
     const handleAddRows = () => {
         const plusCount = window.innerWidth < 768 ? 10 : 20
@@ -37,21 +42,25 @@ export const Employees: React.FC<IEmployeesProps> = () => {
 
                     <div className="section-table__footer">
                         <div className="section-table__row-per-page visible-on-mob">
-                            <span>Rows per page:</span>
+                            <span>
+                                <Translate>employees_admin.table.rows_per_page</Translate>
+                            </span>
 
                             <CustomSelect list={RowsPerPage()} defaultValue={RowsPerPage()[0]} selectValue={selectValue} setSelectedItem={setSelectValue}/>
                         </div>
 
                         {selectValue.value !== 0 && employees.length > selectValue.value &&
                             <button onClick={handleAddRows} className="section-table__see-more btn" type="button">
-                                Show more
+                                <Translate>employees_admin.table.show_more</Translate>
                                 <svg width="15" height="15" viewBox="0 0 15 15">
                                     <use xlinkHref="#arrow-down"></use>
                                 </svg>
                             </button>}
 
                         <div className="section-table__row-per-page visible-on-desktop">
-                            <span>Rows per page:</span>
+                            <span>
+                                <Translate>employees_admin.table.rows_per_page</Translate>
+                            </span>
 
                             <CustomSelect list={RowsPerPage()} defaultValue={RowsPerPage()[0]} selectValue={selectValue} setSelectedItem={setSelectValue}/>
 

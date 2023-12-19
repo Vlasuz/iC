@@ -29,7 +29,7 @@ export const useLanguage = () => {
         },
         {
             title: "UA",
-            titleBig: "Ukrainian",
+            titleBig: "Українська",
             slug: "ua"
         },
     ]

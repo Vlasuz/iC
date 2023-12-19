@@ -1,5 +1,6 @@
 import React, {useContext, useEffect} from 'react'
 import {IsPopupActiveContext} from "../PopupList";
+import {Translate} from "../../translate/Translate";
 
 interface IPopupCloseCancelProps {
 
@@ -11,7 +12,7 @@ export const PopupCloseCancel: React.FC<IPopupCloseCancelProps> = () => {
 
     return (
         <button type="button" onClick={_ => setIsPopupActive(false)} className="btn is-transparent">
-            Cancel
+            <Translate>employees_admin.others.cancel</Translate>
         </button>
     )
 }

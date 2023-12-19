@@ -60,9 +60,13 @@ export const AppStyled = styled.div`
     max-width: 88px;
   }
   .section-table__row-per-page {
-    width: 220px;
+    width: 230px;
     justify-content: flex-end;
     margin-left: auto;
+    
+    @media screen and (max-width: 768px) {
+      margin-left: 0;
+    }
   }
   
   .section-table {
@@ -178,6 +182,9 @@ export const AppStyled = styled.div`
     .select {
       width: 100%;
       max-width: 100%;
+    }
+    .custom-select__body li {
+      text-align: left;
     }
     .custom-select__head {
       width: 100%;
@@ -342,6 +349,7 @@ export const AppStyled = styled.div`
   .down-sidebar__total-item {
     gap: 10px;
   }
+  .summary-item__element--progress .line_done,
   .down-sidebar__total-item--progress-bar .line_done {
     content: "";
     position: absolute;
@@ -367,7 +375,7 @@ export const AppStyled = styled.div`
     b {
       display: block;
       width: 100%;
-      max-width: 60px;
+      max-width: 80px;
       white-space: nowrap;
     }
   }
@@ -376,5 +384,61 @@ export const AppStyled = styled.div`
   .react-datepicker__day--keyboard-selected {
     color: #000;
     font-weight: 400;
+  }
+  
+  .react-datepicker__day--outside-month {
+    opacity: 0;
+    pointer-events: none;
+  }
+  
+  
+  .section-table__search--label,
+  .down-sidebar__chat-user-panel label,
+  .project-popup__search label,
+  .input_placeholder,
+  .section-table__search--label {
+    position: relative;
+    display: flex !important;
+    align-items: center;
+    input:focus + .placeholder {
+      opacity: 0;
+    }
+    .placeholder {
+      position: absolute;
+      left: 20px;
+      user-select: none;
+      pointer-events: none;
+      opacity: .5;
+      -webkit-transition: all .2s ease;-moz-transition: all .2s ease;-ms-transition: all .2s ease;-o-transition: all .2s ease;transition: all .2s ease;
+    }
+  }
+
+  .section-table__main--param {
+    justify-content: center;
+  }
+
+  .sub-popup-employee__container {
+    margin-top: 20px;
+  }
+  
+  .section-table__change-full-date--months .is-disabled {
+    opacity: .5;
+    pointer-events: none;
+  }
+
+  .react-datepicker__navigation {
+    opacity: 0;
+    pointer-events: none;
+  }
+  
+  
+  
+  
+  
+  
+  @media screen and (max-width: 992px) {
+    .section-table__search--label {
+      position: absolute;
+    }
   }
 `

@@ -20,6 +20,8 @@ import {Summary} from "./pages/summary/Summary";
 import {SummaryEmployees} from "./pages/summaryEmployees/SummaryEmployees";
 import getCookies from "./functions/getCookie";
 import {ITimesheet} from "./models";
+import {SetTimesheet} from "./api/SetTimesheet";
+import {SetStatistic} from "./api/SetStatistic";
 
 export const PopupContext: any = createContext(null)
 
@@ -39,31 +41,14 @@ function App() {
             navigate("/");
         }
 
-        getBearer("get")
-        axios.get(getApiLink("/api/timesheet/my/expenses/")).then(({data}) => {
-            dispatch(setExpenses(data))
-        }).catch(er => console.log(getApiLink("api/timesheet/my/expenses/"), er))
-
-        getBearer("get")
-        axios.get(getApiLink("/api/timesheet/my/tasks/")).then(({data}) => {
-            dispatch(setTasks(data))
-        }).catch(er => console.log(getApiLink("api/timesheet/my/tasks/"), er))
-
-        getBearer("get")
-        axios.get(getApiLink("/api/timesheet/my/")).then(({data}) => {
-            dispatch(setTimesheet(data))
-            dispatch(setChosenTimesheet(data[0]))
-        }).catch(er => console.log(getApiLink("api/timesheet/my/"), er))
+        setTasks(dispatch)
+        setExpenses(dispatch)
+        SetTimesheet(dispatch)
 
         getBearer('get')
         axios.get(getApiLink("/api/admin/project/")).then(({data}) => {
             dispatch(setProjects(data))
         }).catch(er => console.log(getApiLink("api/admin/project/"), er))
-
-        getBearer('get')
-        axios.get(getApiLink("/api/timesheet/employees/?month=12&year=2023")).then(({data}) => {
-            console.log('xxxxx', data)
-        }).catch(er => console.log(getApiLink("/api/timesheet/employees/?month=12&year=2023"), er))
 
     }, [userData])
 
@@ -76,13 +61,9 @@ function App() {
 
 
     useEffect(() => {
-        if (chosenTimesheet && Object.keys(chosenTimesheet).length)
+        if (chosenTimesheet && !Object.keys(chosenTimesheet).length) return;
 
-            getBearer('get')
-        axios.get(getApiLink(`/api/timesheet/statistics/?timesheet_id=${chosenTimesheet?.id}`)).then(({data}) => {
-            console.log('yyyyyy', data)
-            dispatch(setTimesheetStatistic(data))
-        }).catch(er => console.log(getApiLink("/api/timesheet/statistics/?timesheet_id"), er))
+        SetStatistic(dispatch, chosenTimesheet?.id)
     }, [chosenTimesheet])
 
 
@@ -93,7 +74,7 @@ function App() {
 
     const isAdmin = userData.status?.includes("admin")
     const isEmployee = userData.status?.includes("employee")
-    const isManager = userData.status?.includes("top_manager") || userData.status?.includes("team_manager")
+    const isManager = userData.status?.includes("team_lead") || userData.status?.includes("project_lead")
 
     return (
         <AppStyled>
@@ -106,11 +87,15 @@ function App() {
                     <Routes location={location}>
 
                         <Route path={'/costs'} element={<Costs/>}/>
+                        <Route path={'/costs/:timesheetId'} element={<Costs/>}/>
                         <Route path={isEmployee || isManager ? "/" : "/timesheet"} element={<Timesheet/>}/>
+                        <Route path={isEmployee || isManager ? "/iC" : "/timesheet"} element={<Timesheet/>}/>
+                        <Route path={"/timesheet/:timesheetId"} element={<Timesheet/>}/>
                         <Route path={'/summary-employees'} element={<SummaryEmployees/>}/>
                         <Route path={'/summary'} element={<Summary/>}/>
                         <Route path={'/vacations'} element={<Vacations/>}/>
                         <Route path={'/projects'} element={<Projects/>}/>
+                        <Route path={isAdmin ? "/iC" : "/employees"} element={<Employees/>}/>
                         <Route path={isAdmin ? "/" : "/employees"} element={<Employees/>}/>
                         <Route path={'/login'} element={<Login/>}/>
 

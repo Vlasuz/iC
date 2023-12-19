@@ -4,7 +4,7 @@ import {getApiLink} from "../../functions/getApiLink";
 import {IEmployee, IProject} from "../../models";
 import {getBearer} from "../../functions/getBearer";
 import {useDispatch, useSelector} from 'react-redux';
-import {setProjects, setSelectedEmployee} from "../../storage/toolkit";
+import {setEmployeesList, setProjects, setSelectedEmployee} from "../../storage/toolkit";
 import {ProjectItem} from "./components/ProjectItem";
 import {PopupContext} from "../../App";
 import {ProjectStyled} from "./Project.styled";
@@ -14,6 +14,7 @@ import {RowsPerPage} from "../../constants/RowsPerPage";
 import {CustomSelect} from "../../components/customSelect/CustomSelect";
 import {TableSelectYear} from "../../components/table/TableSelectYear";
 import {TableExport} from "../../components/table/TableExport";
+import {Translate} from "../../components/translate/Translate";
 
 interface IProjectsProps {
 
@@ -37,6 +38,14 @@ export const Projects: React.FC<IProjectsProps> = () => {
     const setPopup: any = useContext(PopupContext);
 
 
+    useEffect(() => {
+        if(searchValue.length > 0) return;
+
+        getBearer("get")
+        axios.get(getApiLink(`/api/admin/project/`)).then(({data}) => {
+            dispatch(setProjects(data))
+        }).catch(er => console.log(er))
+    }, [searchValue])
 
 
     const handleChangeRows = (e: any) => {
@@ -103,7 +112,7 @@ export const Projects: React.FC<IProjectsProps> = () => {
                 <div className="section-table__header--row is-always-row">
                     <div className="section-table__header--col">
                         <h1 className="section-table__title title">
-                            Projects
+                            <Translate>projects_admin.projects</Translate>
                         </h1>
                     </div>
                 </div>
@@ -111,20 +120,23 @@ export const Projects: React.FC<IProjectsProps> = () => {
                     <div className="section-table__header--col">
                         <a onClick={_ => setPopup({popup: "add-project-popup"})}
                            className="section-table__add btn open-popup">
-                            Add new project
+                            <Translate>projects_admin.add_new_project</Translate>
                             <svg width="16" height="15" viewBox="0 0 16 15">
                                 <use xlinkHref="#plus"></use>
                             </svg>
                         </a>
                         <form onSubmit={handleSearch} className="section-table__search">
                             <label className="section-table__search--label">
-                                <input type="search" name="search" placeholder="Search a project"
+                                <input type="search" name="search"
                                        className="section-table__search--input"
                                        onChange={e => setSearchValue(e.target.value)} value={searchValue}/>
+                                <span className="placeholder">
+                                    {!searchValue.length ? <Translate>employees_admin.others.search_a_project</Translate> : ""}
+                                </span>
                             </label>
                             <button className="section-table__search--submit btn is-grey is-min-on-mob"
                                     type="submit">
-                                Search
+                                <Translate>projects_admin.search</Translate>
                                 <svg width="15" height="15" viewBox="0 0 15 15">
                                     <use xlinkHref="#search"></use>
                                 </svg>
@@ -156,7 +168,7 @@ export const Projects: React.FC<IProjectsProps> = () => {
 											<svg width="13" height="13" viewBox="0 0 13 13">
 												<use xlinkHref="#project"></use>
 											</svg>
-											Project name
+											<Translate>projects_admin.project_name</Translate>
 										</span>
                                     </div>
                                     <div className="section-table__head-th">
@@ -164,7 +176,7 @@ export const Projects: React.FC<IProjectsProps> = () => {
 											<svg width="13" height="13" viewBox="0 0 13 13">
 												<use xlinkHref="#comments"></use>
 											</svg>
-											Project description
+											<Translate>projects_admin.project_description</Translate>
 										</span>
                                     </div>
                                 </div>
@@ -173,6 +185,7 @@ export const Projects: React.FC<IProjectsProps> = () => {
 
                                 {
                                     !!projects.length && projects
+                                        ?.filter(item => !item.archive)
                                         ?.slice(paginationCountFrom, paginationCountTo)
                                         ?.filter((item, index) => index < Math.ceil(paginationCountStep.value / 2))
                                         ?.map((project: IProject, index: number) =>
@@ -196,7 +209,7 @@ export const Projects: React.FC<IProjectsProps> = () => {
 											<svg width="13" height="13" viewBox="0 0 13 13">
 												<use xlinkHref="#project"></use>
 											</svg>
-											Project name
+											<Translate>projects_admin.project_name</Translate>
 										</span>
                                     </div>
                                     <div className="section-table__head-th">
@@ -204,7 +217,7 @@ export const Projects: React.FC<IProjectsProps> = () => {
 											<svg width="13" height="13" viewBox="0 0 13 13">
 												<use xlinkHref="#comments"></use>
 											</svg>
-											Project description
+											<Translate>projects_admin.project_description</Translate>
 										</span>
                                     </div>
                                 </div>
@@ -238,7 +251,7 @@ export const Projects: React.FC<IProjectsProps> = () => {
 												<svg width="13" height="13" viewBox="0 0 13 13">
 													<use xlinkHref="#project"></use>
 												</svg>
-												Project name
+												<Translate>projects_admin.project_name</Translate>
 											</span>
 										</span>
                                     </div>
@@ -252,7 +265,7 @@ export const Projects: React.FC<IProjectsProps> = () => {
 											<svg width="13" height="13" viewBox="0 0 13 13">
 												<use xlinkHref="#project"></use>
 											</svg>
-											Project name
+											<Translate>projects_admin.project_name</Translate>
 										</span>
                                     </div>
                                     <div className="section-table__head-th">
@@ -260,7 +273,7 @@ export const Projects: React.FC<IProjectsProps> = () => {
 											<svg width="13" height="13" viewBox="0 0 13 13">
 												<use xlinkHref="#comments"></use>
 											</svg>
-											Project description
+											<Translate>projects_admin.project_description</Translate>
 										</span>
                                     </div>
                                 </div>
@@ -279,7 +292,9 @@ export const Projects: React.FC<IProjectsProps> = () => {
             </div>
             <div className="section-table__footer">
                 <div className="section-table__row-per-page visible-on-mob">
-                    <span>Rows per page:</span>
+                    <span>
+                        <Translate>projects_admin.rows_per_page</Translate>
+                    </span>
                     <CustomSelect list={RowsPerPage()} onChange={handleChangeRows} selectValue={paginationCountStep} setSelectedItem={setPaginationCountStep} defaultValue={RowsPerPage()[0]}/>
                 </div>
                 <div className="section-table__pagination pagination visible-on-desktop">
@@ -318,13 +333,15 @@ export const Projects: React.FC<IProjectsProps> = () => {
                     </button>
                 </div>
                 <button className="section-table__see-more btn visible-on-mob" type="button">
-                    Show more
+                    <Translate>employees_admin.table.show_more</Translate>
                     <svg width="15" height="15" viewBox="0 0 15 15">
                         <use xlinkHref="#arrow-down"></use>
                     </svg>
                 </button>
                 <div className="section-table__row-per-page visible-on-desktop">
-                    <span>Rows per page:</span>
+                    <span>
+                        <Translate>projects_admin.rows_per_page</Translate>
+                    </span>
                     <CustomSelect list={RowsPerPage()} onChange={handleChangeRows} selectValue={paginationCountStep} setSelectedItem={setPaginationCountStep} defaultValue={RowsPerPage()[0]}/>
                 </div>
             </div>

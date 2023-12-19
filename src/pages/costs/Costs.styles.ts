@@ -1,6 +1,8 @@
 import styled from "styled-components";
 
 export const CostsStyles = styled.section`
+  min-height: calc(95vh - 4px);
+  
   .project-popup__item.is-active a {
     color: #EF3129;
   }

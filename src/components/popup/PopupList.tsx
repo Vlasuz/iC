@@ -17,6 +17,7 @@ import { PopupApproveTimesheet } from './components/PopupApproveTimesheet';
 import {PopupApproveEmployeeTimesheet} from "./components/PopupApproveEmployeeTimesheet";
 import {PopupResetPasswordThankYou} from "./components/PopupResetPasswordThankYou";
 import {PopupResetPassword} from "./components/PopupResetPassword";
+import {PopupReviewToTimesheet} from "./components/PopupReviewToTimesheet";
 
 interface IPopupListProps {
     popup: any
@@ -43,6 +44,7 @@ export const PopupList: React.FC<IPopupListProps> = ({popup}) => {
 
         "approve-timesheet-popup": <PopupApproveTimesheet data={popup.data} />,
         "approve-employee-timesheet-popup": <PopupApproveEmployeeTimesheet data={popup.data}/>,
+        "review-employee-timesheet-popup": <PopupReviewToTimesheet data={popup.data}/>,
 
         "profile-popup": <PopupProfile/>,
         "edit-profile-popup": <PopupEditProfile/>,

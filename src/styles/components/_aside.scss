@@ -1033,13 +1033,14 @@
 			color: var(--white);
 			display: inline-block;
 			padding-top: 2px;
-			display: -webkit-box;
-			text-overflow: ellipsis;
-			overflow: hidden;
-			-webkit-line-clamp: 1;
-			-webkit-box-orient: vertical;
-			line-clamp: 1;
-			box-orient: vertical;
+			//display: -webkit-box;
+			//text-overflow: ellipsis;
+			//overflow: hidden;
+			//-webkit-line-clamp: 1;
+			//-webkit-box-orient: vertical;
+			//line-clamp: 1;
+			//box-orient: vertical;
+			text-align: left;
 
 			transition: opacity .2s ease;
 		}

@@ -23,7 +23,8 @@ export const TimesheetHeaderChooseTime: React.FC<ITimesheetHeaderChooseTimeProps
     const [isActiveSelectTime, setIsActiveSelectTime] = useState(false)
     const {rootEl} = useClickOutside(setIsActiveSelectTime)
 
-    const hoursAmount = timeFromHours.value > timeToHours.value ? 24 + Math.floor((+timeToHours.value - +timeFromHours.value - (+timeFromMinutes.value - +timeToMinutes.value))) : Math.floor((+timeToHours.value - +timeFromHours.value - (+timeFromMinutes.value - +timeToMinutes.value)))
+    // const hoursAmount = timeFromHours.value > timeToHours.value ? 24 + Math.floor((+timeToHours.value - +timeFromHours.value - (+timeFromMinutes.value - +timeToMinutes.value))) : Math.floor((+timeToHours.value - +timeFromHours.value - (+timeFromMinutes.value - +timeToMinutes.value)))
+    const hoursAmount = timeFromHours.value > timeToHours.value ? 24 + (+timeToHours.value - +timeFromHours.value - (+timeFromMinutes.value - +timeToMinutes.value)) : (+timeToHours.value - +timeFromHours.value - (+timeFromMinutes.value - +timeToMinutes.value))
 
     const lessThenTen = (num: string | number) => +num < 10 ? "0" + num : num
 

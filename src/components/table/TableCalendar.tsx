@@ -1,7 +1,10 @@
 import React, {useEffect, useRef, useState} from 'react'
 import DatePicker from "react-datepicker";
+import { useSelector } from 'react-redux';
 import {log} from "util";
 import {useClickOutside} from "../../hooks/ClickOutside";
+import {ITimesheet} from "../../models";
+import {Translate} from "../translate/Translate";
 
 interface ITableCalendarProps {
     setDateData: any
@@ -21,16 +24,15 @@ export const TableCalendar: React.FC<ITableCalendarProps> = ({setDateData, dateD
     const [date, setDate] = useState(new Date());
 
     useEffect(() => {
-        setDateData(`${lessThenTen(String(date.getDate()))}.${lessThenTen(String(date.getMonth() + 1))}.${date.getFullYear()}`)
-    }, [date])
-
-    useEffect(() => {
         if (!dateData) return;
 
+        console.log('zzzz', dateData)
         const dateParts = dateData.split('.');
         const formattedDate = new Date(`${dateParts[1]}-${dateParts[0]}-${dateParts[2]}`);
 
         setDate(formattedDate)
+
+        setDateData(`${lessThenTen(String(formattedDate.getDate()))}.${lessThenTen(String(formattedDate.getMonth() + 1))}.${formattedDate.getFullYear()}`)
 
     }, [dateData])
 
@@ -57,6 +59,11 @@ export const TableCalendar: React.FC<ITableCalendarProps> = ({setDateData, dateD
         if(!calendarOpen) {
             calendarBlock.current.input.closest('.section-table__add-task--set-date').classList.remove('is-active')
         }
+
+        document.querySelectorAll(".react-datepicker__day-name").forEach(item => {
+            // @ts-ignore
+            item.textContent = item.textContent.slice(0, 1)
+        })
     }, [calendarOpen])
 
     const {rootEl} = useClickOutside(setCalendarOpen)
@@ -69,7 +76,7 @@ export const TableCalendar: React.FC<ITableCalendarProps> = ({setDateData, dateD
                 <DatePicker
                     ref={calendarBlock}
                     selected={date}
-                    todayButton={"Today"}
+                    todayButton={<Translate>timesheet_page.popups.today</Translate>}
                     className={"input date-input none-disabled-style"}
                     autoComplete={"off"}
                     required

@@ -2,6 +2,9 @@ import React, {useEffect, useState} from 'react'
 import {useClickOutside} from "../../../../hooks/ClickOutside";
 import {IUser} from "../../../../models";
 import {useSelector} from "react-redux";
+import {useScrollTopValue} from "../../../../hooks/ScrollTopValue";
+import {Translate} from "../../../../components/translate/Translate";
+import {TableHeaderProjects} from "../../../../components/table/TableHeaderProjects";
 
 interface ICostsTableHeaderProps {
     setFilterByProjectName: any
@@ -16,10 +19,7 @@ export const CostsTableHeader: React.FC<ICostsTableHeaderProps> = ({setFilterByP
     const activeDate = useClickOutside(setIsActiveDate)
 
     const [isActiveProjectName, setIsActiveProjectName] = useState(false)
-    const activeProjectName = useClickOutside(setIsActiveProjectName)
-
     const [isActiveProjectDescription, setIsActiveProjectDescription] = useState(false)
-    const activeProjectDescription = useClickOutside(setIsActiveProjectDescription)
 
     const [isActiveCost, setIsActiveCost] = useState(false)
     const activeCost = useClickOutside(setIsActiveCost)
@@ -28,8 +28,12 @@ export const CostsTableHeader: React.FC<ICostsTableHeaderProps> = ({setFilterByP
 
     const [chosenProjectName, setChosenProjectName]: any = useState<string>("")
     const [chosenProjectDescription, setChosenProjectDescription]: any = useState("")
+    const [searchProjectName, setSearchProjectName] = useState("")
+    const [searchProjectDescription, setSearchProjectDescription] = useState("")
     const [chosenSortDate, setChosenSortDate] = useState("ASC")
     const [chosenSortCost, setChosenSortCost] = useState("ASC")
+
+    const {scrollY} = useScrollTopValue()
 
     return (
         <div className="section-table__head">
@@ -45,14 +49,14 @@ export const CostsTableHeader: React.FC<ICostsTableHeaderProps> = ({setFilterByP
                                                 <svg width="13" height="13" viewBox="0 0 13 13">
                                                     <use xlinkHref="#calendar-selected"></use>
                                                 </svg>
-                                                Date
+                                                <Translate>costs_page.table.date</Translate>
                                                 <svg width="10" height="15" viewBox="0 0 11 15">
                                                     <use xlinkHref="#sort-up-down"></use>
                                                 </svg>
                                             </button>
                                             <div
                                                 className="section-table__main--sort-block drop-down-absolute__block"
-                                                id="date-sort" style={{minWidth: "150px"}}>
+                                                id="date-sort" style={{minWidth: "150px", transform: `translateY(${-scrollY}px)`}}>
                                     <ul className="drop-down__list drop-down__list-date">
                                         <li className={` ${chosenSortDate === "ASC" && "is-active"}`}>
                                             <a onClick={_ => {
@@ -94,14 +98,14 @@ export const CostsTableHeader: React.FC<ICostsTableHeaderProps> = ({setFilterByP
                             <svg width="13" height="13" viewBox="0 0 13 13">
                                 <use xlinkHref="#calendar-selected"></use>
                             </svg>
-                            Date
+                            <Translate>costs_page.table.date</Translate>
                             <svg width="10" height="15" viewBox="0 0 11 15">
                                 <use xlinkHref="#sort-up-down"></use>
                             </svg>
                         </button>
                         <div
                             className={isActiveDate ? "section-table__main--sort-block drop-down-absolute__block is-active" : "section-table__main--sort-block drop-down-absolute__block"}
-                            id="date-sort-2" style={{minWidth: "150px"}}>
+                            id="date-sort-2" style={{minWidth: "150px", transform: `translateY(${-scrollY}px)`}}>
                             <ul className="drop-down__list drop-down__list-date">
                                 <li className={` ${chosenSortDate === "ASC" && "is-active"}`}>
                                     <a onClick={_ => {
@@ -109,6 +113,7 @@ export const CostsTableHeader: React.FC<ICostsTableHeaderProps> = ({setFilterByP
                                         setChosenSortDate("ASC")
                                         setSortByCost("")
                                         setChosenSortCost("")
+                                        setIsActiveDate(false)
                                     }}>
                                         Oldest first
                                     </a>
@@ -119,6 +124,7 @@ export const CostsTableHeader: React.FC<ICostsTableHeaderProps> = ({setFilterByP
                                         setChosenSortDate("DESC")
                                         setSortByCost("")
                                         setChosenSortCost("")
+                                        setIsActiveDate(false)
                                     }}>
                                         Newest first
                                     </a>
@@ -128,146 +134,19 @@ export const CostsTableHeader: React.FC<ICostsTableHeaderProps> = ({setFilterByP
                     </div>
                 </div>
                 <div className="section-table__head-th">
-                    <div ref={activeProjectName.rootEl}
-                         className={isActiveProjectName ? "section-table__main--project-name drop-down-absolute is-active" : "section-table__main--project-name drop-down-absolute"}>
-                        <button
-                            className="section-table__main--project-name-target drop-down-absolute__target"
-                            data-drop-down-target="project-name" type="button"
-                            onClick={_ => setIsActiveProjectName(prev => !prev)}>
-                            <svg width="13" height="13" viewBox="0 0 13 13">
-                                <use xlinkHref="#project"></use>
-                            </svg>
-                            Project num.
-                            <svg width="10" height="7" viewBox="0 0 10 7"
-                                 className="drop-down-absolute__target--arrow">
-                                <use xlinkHref="#drop-down-arrow"></use>
-                            </svg>
-                        </button>
-                        <div className={isActiveProjectName ? "section-table__main--project-name-block drop-down-absolute__block is-active" : "section-table__main--project-name-block drop-down-absolute__block"}
-                             id="project-name">
-                            <div className="project-popup">
-                                <div className="project-popup__body" data-simplebar
-                                     data-simplebar-auto-hide="false">
-                                    <div className="project-popup__block">
-                                        <h2>Сommonly used</h2>
-                                        <ul className="project-popup__list">
-
-                                            {
-                                                userData.projects?.map(item =>
-                                                    <li key={item.id} className={`project-popup__item ${chosenProjectName === item.name ? " is-active" : ""}`}>
-                                                        <a onClick={_ => {
-                                                            setChosenProjectName((prev: string) => prev === item.name ? "" : item.name)
-                                                            setFilterByProjectName((prev: string) => prev === item.name ? "" : item.name)
-                                                        }}>
-                                                            {item.name}_{item.description}
-                                                        </a>
-                                                    </li>
-                                                )
-                                            }
-
-                                        </ul>
-                                    </div>
-                                    {/*<div className="project-popup__block">*/}
-                                    {/*    <h2>All projects</h2>*/}
-                                    {/*    <ul className="project-popup__list">*/}
-                                    {/*        <li className="project-popup__item">*/}
-                                    {/*            <a href="#">*/}
-                                    {/*                61xA210739_Kremenchuk Bridge supervision*/}
-                                    {/*            </a>*/}
-                                    {/*        </li>*/}
-                                    {/*    </ul>*/}
-                                    {/*</div>*/}
-                                </div>
-                                <form className="project-popup__search">
-                                    <label>
-                                        <input type="search" name="search" className="input"
-                                               placeholder="Search a project" required/>
-                                    </label>
-                                    <button className="btn is-grey" type="submit">
-                                        Search
-                                        <svg width="15" height="15" viewBox="0 0 15 15">
-                                            <use xlinkHref="#search"></use>
-                                        </svg>
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
+                    <TableHeaderProjects title={"timesheet_page.table.project_num"} setFilterByProjectName={setFilterByProjectName}
+                                         isActiveBlock={isActiveProjectName} setIsActiveBlock={setIsActiveProjectName} icon={"#project"}/>
                 </div>
                 <div className="section-table__head-th">
-                    <div ref={activeProjectDescription.rootEl}
-                         className={isActiveProjectDescription ? "section-table__main--project-name drop-down-absolute is-active" : "section-table__main--project-name drop-down-absolute"}>
-                        <button
-                            onClick={_ => setIsActiveProjectDescription(prev => !prev)}
-                            className="section-table__main--project-name-target drop-down-absolute__target"
-                            data-drop-down-target="project-description" type="button">
-                            <svg width="13" height="13" viewBox="0 0 13 13">
-                                <use xlinkHref="#comments"></use>
-                            </svg>
-                            Project description
-                            <svg width="10" height="7" viewBox="0 0 10 7"
-                                 className="drop-down-absolute__target--arrow">
-                                <use xlinkHref="#drop-down-arrow"></use>
-                            </svg>
-                        </button>
-                        <div
-                            className={isActiveProjectDescription ? "section-table__main--project-name-block drop-down-absolute__block is-active" : "section-table__main--project-name-block drop-down-absolute__block"}
-                            id="project-description">
-                            <div className="project-popup">
-                                <div className="project-popup__body" data-simplebar
-                                     data-simplebar-auto-hide="false">
-                                    <div className="project-popup__block">
-                                        <h2>Сommonly used</h2>
-                                        <ul className="project-popup__list">
-
-                                            {
-                                                userData.projects?.map(item =>
-                                                    <li key={item.id} className={`project-popup__item ${chosenProjectDescription === item.description ? " is-active" : ""}`}>
-                                                        <a onClick={_ => {
-                                                            setChosenProjectDescription((prev: string) => prev === item.description ? "" : item.description)
-                                                            setFilterByProjectDescription((prev: string) => prev === item.description ? "" : item.description)
-                                                        }}>
-                                                            {item.name}_{item.description}
-                                                        </a>
-                                                    </li>
-                                                )
-                                            }
-
-                                        </ul>
-                                    </div>
-                                    {/*<div className="project-popup__block">*/}
-                                    {/*    <h2>All projects</h2>*/}
-                                    {/*    <ul className="project-popup__list">*/}
-                                    {/*        <li className="project-popup__item">*/}
-                                    {/*            <a href="#">*/}
-                                    {/*                61xA210739_Kremenchuk Bridge supervision*/}
-                                    {/*            </a>*/}
-                                    {/*        </li>*/}
-                                    {/*    </ul>*/}
-                                    {/*</div>*/}
-                                </div>
-                                <form className="project-popup__search">
-                                    <label>
-                                        <input type="search" name="search" className="input"
-                                               placeholder="Search a project" required/>
-                                    </label>
-                                    <button className="btn is-grey" type="submit">
-                                        Search
-                                        <svg width="15" height="15" viewBox="0 0 15 15">
-                                            <use xlinkHref="#search"></use>
-                                        </svg>
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
+                    <TableHeaderProjects title={"timesheet_page.table.project_description"} setFilterByProjectName={setFilterByProjectName}
+                                         isActiveBlock={isActiveProjectDescription} setIsActiveBlock={setIsActiveProjectDescription} icon={"#comments"}/>
                 </div>
                 <div className="section-table__head-th">
                     <span className="section-table__main--param">
                         <svg width="13" height="13" viewBox="0 0 13 13">
                             <use xlinkHref="#pin"></use>
                         </svg>
-                        Description of the expence
+                        <Translate>costs_page.table.expense_description</Translate>
                     </span>
                 </div>
                 <div ref={activeCost.rootEl} className="section-table__head-th">
@@ -277,14 +156,14 @@ export const CostsTableHeader: React.FC<ICostsTableHeaderProps> = ({setFilterByP
                             <svg width="13" height="13" viewBox="0 0 20 20">
                                 <use xlinkHref="#money"></use>
                             </svg>
-                            Cost (UAH)
+                            <Translate>costs_page.table.cost</Translate> (UAH)
                             <svg width="10" height="15" viewBox="0 0 11 15">
                                 <use xlinkHref="#sort-up-down"></use>
                             </svg>
                         </button>
                         <div
                             className={`section-table__main--func-block drop-down-absolute__block is-right-default ${isActiveCost && "is-active"}`}
-                            id="cost-sort" style={{minWidth: "150px"}}>
+                            id="cost-sort" style={{minWidth: "150px", transform: `translateY(${-scrollY}px)`, right: "20px"}}>
                             <ul className="drop-down__list drop-down__list-date">
                                 <li className={chosenSortCost === "ASC" ? "is-active" : ""}>
                                     <a onClick={_ => {
@@ -292,6 +171,7 @@ export const CostsTableHeader: React.FC<ICostsTableHeaderProps> = ({setFilterByP
                                         setChosenSortCost("ASC")
                                         setChosenSortDate("")
                                         setSortByDate("")
+                                        setIsActiveCost(false)
                                     }}>
                                         Ascending
                                     </a>
@@ -302,6 +182,7 @@ export const CostsTableHeader: React.FC<ICostsTableHeaderProps> = ({setFilterByP
                                         setChosenSortCost("DESC")
                                         setChosenSortDate("")
                                         setSortByDate("")
+                                        setIsActiveCost(false)
                                     }}>
                                         Descending
                                     </a>

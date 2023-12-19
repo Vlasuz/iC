@@ -5,6 +5,8 @@ import axios from "axios";
 import {getApiLink} from "../../functions/getApiLink";
 import {IComment, ITimesheet, IUser} from "../../models";
 import {useSelector} from "react-redux";
+import {mergeAndSum} from "../../functions/mergeAndSumStatistic";
+import {Translate} from "../translate/Translate";
 
 interface IDownSidebarProps {
     setIsOpenDownSidebar: any
@@ -26,6 +28,8 @@ interface IElement {
 
 export const DownSidebar: React.FC<IDownSidebarProps> = ({setIsOpenDownSidebar, statisticAllAmount, statisticAllElements, type}) => {
 
+
+    const [statisticList, setStatisticList]: any = useState([])
     const [isActive, setIsActive] = useState(false)
     const [textValue, setTextValue] = useState("")
     const [comments, setComments] = useState<IComment[]>([])
@@ -37,6 +41,8 @@ export const DownSidebar: React.FC<IDownSidebarProps> = ({setIsOpenDownSidebar, 
 
     useEffect(() => {
         setIsOpenDownSidebar(isActive)
+
+        setStatisticList(mergeAndSum(statisticAllElements, statisticAllElements).statistic)
 
         setComments(chosenTimesheet?.comments)
     }, [isActive])
@@ -62,7 +68,7 @@ export const DownSidebar: React.FC<IDownSidebarProps> = ({setIsOpenDownSidebar, 
                 "text": textValue
             }
 
-            setComments(prev => [comment, ...prev])
+            setComments(prev => [...prev, comment])
 
             setTextValue("")
         })
@@ -70,8 +76,15 @@ export const DownSidebar: React.FC<IDownSidebarProps> = ({setIsOpenDownSidebar, 
 
     const isCostPage = type === "cost"
 
+    const refCommentBody: any = useRef(null)
+
+    useEffect(() => {
+        refCommentBody.current.getScrollElement().scrollTop = 99999
+    }, [comments])
+
     return (
         <DownSidebarStyled className={`down-sidebar ${isActive && "is-active"}`}>
+
             <button onClick={_ => setIsActive(prev => !prev)} className="down-sidebar__arrow-target" type="button">
                 <svg width="10" height="7" viewBox="0 0 10 7">
                     <use xlinkHref="#drop-down-arrow"></use>
@@ -86,10 +99,13 @@ export const DownSidebar: React.FC<IDownSidebarProps> = ({setIsOpenDownSidebar, 
                             <svg width="13" height="13" viewBox="0 0 13 13">
                                 <use xlinkHref="#comments"></use>
                             </svg>
-                            Comments ({chosenTimesheet?.comments?.length})
+                            <Translate>timesheet_page.down_sidebar.comments</Translate> ({chosenTimesheet?.comments?.length})
+
                         </button>
                         <div onClick={_ => setIsActive(prev => !prev)} className="down-sidebar__total-target">
-                            <span>Total for month:</span>
+                            <span>
+                                <Translate>timesheet_page.down_sidebar.total_for_month</Translate>
+                            </span>
                             <div className="down-sidebar__total-target--value">
                                 {statisticAllAmount} {isCostPage ? "EUR" : "hours"}
                             </div>
@@ -102,21 +118,21 @@ export const DownSidebar: React.FC<IDownSidebarProps> = ({setIsOpenDownSidebar, 
                             <div className="down-sidebar__chat">
                                 <div
                                     className="down-sidebar__chat-block">
-                                    <SimpleBar autoHide={false} className={"simplebar-custom"}>
+                                    <SimpleBar ref={refCommentBody} autoHide={false} className={"simplebar-custom"}>
 
                                         {
-                                            comments?.map(com =>
-                                                <div key={com.text} className="down-sidebar__chat-item"
+                                            !!comments?.length ? comments?.map((com, index) =>
+                                                <div key={index} className="down-sidebar__chat-item"
                                                      data-author="Olena Rybak">
                                                     <div
                                                         className="down-sidebar__chat-item--text">
                                                         <p>
-                                                            <b>{com.user.first_name} {com.user.last_name}:</b>
+                                                            <b>{com.user.first_name} {com.user.last_name}: </b>
                                                             {com.text}
                                                         </p>
                                                     </div>
                                                     <button type="button" onClick={_ => {
-                                                        setTextValue("@Olena Rybak. ")
+                                                        setTextValue(`@${com.user.first_name} ${com.user.last_name}. `)
                                                         inputBlock.current.focus()
                                                     }} className="down-sidebar__chat-item--answer" title="Answer">
                                                         <svg width="20" height="20" viewBox="0 0 20 20">
@@ -124,7 +140,7 @@ export const DownSidebar: React.FC<IDownSidebarProps> = ({setIsOpenDownSidebar, 
                                                         </svg>
                                                     </button>
                                                 </div>
-                                            )
+                                            ) : <Translate>timesheet_page.down_sidebar.there_is_no_data_for_a_report</Translate>
                                         }
 
                                     </SimpleBar>
@@ -135,7 +151,10 @@ export const DownSidebar: React.FC<IDownSidebarProps> = ({setIsOpenDownSidebar, 
                                     <label>
                                         <input type="text" ref={inputBlock} name="comment"
                                                onChange={e => setTextValue(e.target.value)} value={textValue}
-                                               placeholder="Add new comment" required className="input"/>
+                                               required className="input"/>
+                                        <span className="placeholder">
+                                            {!textValue && <Translate>timesheet_page.down_sidebar.add_new_comment</Translate>}
+                                        </span>
                                     </label>
                                     <button type="submit" title="Send">
                                         <svg width="17" height="17" viewBox="0 0 17 17">
@@ -150,28 +169,29 @@ export const DownSidebar: React.FC<IDownSidebarProps> = ({setIsOpenDownSidebar, 
 
                                 <SimpleBar className="down-sidebar__total-block simplebar-scrollable-y" autoHide={false}>
                                     {
-                                        statisticAllElements?.map(item =>
-                                            <div className="down-sidebar__total-item">
+                                        statisticList?.length ? statisticList?.map((item: any, index: any) =>
+                                            <div key={index} className="down-sidebar__total-item">
                                                 <b className="down-sidebar__total-item--name" style={{width: isCostPage ? "300px" : "350px"}}>
                                                     {item.project.name}_{item.project.description}
                                                 </b>
-                                                <div
-                                                    className="down-sidebar__total-item--value">
-                                                    <b>{isCostPage ? item.sum : item.hours} {isCostPage ? "EUR" : "h"}</b>
+                                                <div className="down-sidebar__total-item--value">
+                                                    <b style={{maxWidth: isCostPage ? "80px" : "50px"}}>{isCostPage ? item?.expense.sum : item?.task.hours} {isCostPage ? "EUR" : "h"}</b>
                                                     <div
                                                         className="down-sidebar__total-item--progress-bar"
-                                                        data-value={`${item?.percent}%`}>
-                                                        <div className="line_done" style={{width: `${item?.percent}%`}}></div>
+                                                        data-value={`${item?.task?.percent}%`}>
+                                                        <div className="line_done" style={{width: `${item?.task?.percent}%`}}></div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        )
+                                        ) : <Translate>timesheet_page.down_sidebar.there_is_no_data_for_a_report</Translate>
                                     }
                                 </SimpleBar>
                                 <div className="down-sidebar__total-footer">
                                     <div className="down-sidebar__total-value">
-                                        <span>Total for month:</span>
-                                        <b>{statisticAllAmount} {isCostPage ? "hours" : "EUR"}</b>
+                                        <span>
+                                            <Translate>timesheet_page.down_sidebar.total_for_month</Translate>
+                                        </span>
+                                        <b>{statisticAllAmount ?? 0} {isCostPage ? "EUR" : <Translate>timesheet_page.down_sidebar.hours</Translate>}</b>
                                     </div>
                                 </div>
                             </div>
