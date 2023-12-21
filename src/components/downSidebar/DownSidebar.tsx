@@ -7,6 +7,7 @@ import {IComment, ITimesheet, IUser} from "../../models";
 import {useSelector} from "react-redux";
 import {mergeAndSum} from "../../functions/mergeAndSumStatistic";
 import {Translate} from "../translate/Translate";
+import {currency} from "../../constants/Currency";
 
 interface IDownSidebarProps {
     setIsOpenDownSidebar: any
@@ -33,6 +34,7 @@ export const DownSidebar: React.FC<IDownSidebarProps> = ({setIsOpenDownSidebar, 
     const [isActive, setIsActive] = useState(false)
     const [textValue, setTextValue] = useState("")
     const [comments, setComments] = useState<IComment[]>([])
+    const [answerCommentUserId, setAnswerCommentUserId] = useState("")
 
     const inputBlock: any = useRef(null)
 
@@ -54,7 +56,10 @@ export const DownSidebar: React.FC<IDownSidebarProps> = ({setIsOpenDownSidebar, 
     const handleSendComment = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
 
-        axios.post(getApiLink(`/api/timesheet/comment/?timesheet_id=${chosenTimesheet.id}`), {"text": textValue}).then(({data}) => {
+        axios.post(getApiLink(`/api/timesheet/comment/?timesheet_id=${chosenTimesheet.id}`), {
+            "text": textValue.slice(textValue.indexOf(".") + 1),
+            "answer_user_id": answerCommentUserId
+        }).then(({data}) => {
             if (data.status === false) return;
             console.log(data)
 
@@ -82,6 +87,8 @@ export const DownSidebar: React.FC<IDownSidebarProps> = ({setIsOpenDownSidebar, 
         refCommentBody.current.getScrollElement().scrollTop = 99999
     }, [comments])
 
+    console.log(comments)
+
     return (
         <DownSidebarStyled className={`down-sidebar ${isActive && "is-active"}`}>
 
@@ -107,7 +114,7 @@ export const DownSidebar: React.FC<IDownSidebarProps> = ({setIsOpenDownSidebar, 
                                 <Translate>timesheet_page.down_sidebar.total_for_month</Translate>
                             </span>
                             <div className="down-sidebar__total-target--value">
-                                {statisticAllAmount} {isCostPage ? "EUR" : "hours"}
+                                {statisticAllAmount} {isCostPage ? currency : "hours"}
                             </div>
                         </div>
                     </div>
@@ -133,6 +140,7 @@ export const DownSidebar: React.FC<IDownSidebarProps> = ({setIsOpenDownSidebar, 
                                                     </div>
                                                     <button type="button" onClick={_ => {
                                                         setTextValue(`@${com.user.first_name} ${com.user.last_name}. `)
+                                                        setAnswerCommentUserId(com.user.id)
                                                         inputBlock.current.focus()
                                                     }} className="down-sidebar__chat-item--answer" title="Answer">
                                                         <svg width="20" height="20" viewBox="0 0 20 20">
@@ -175,7 +183,7 @@ export const DownSidebar: React.FC<IDownSidebarProps> = ({setIsOpenDownSidebar, 
                                                     {item.project.name}_{item.project.description}
                                                 </b>
                                                 <div className="down-sidebar__total-item--value">
-                                                    <b style={{maxWidth: isCostPage ? "80px" : "50px"}}>{isCostPage ? item?.expense.sum : item?.task.hours} {isCostPage ? "EUR" : "h"}</b>
+                                                    <b style={{maxWidth: isCostPage ? "80px" : "50px"}}>{isCostPage ? item?.expense.sum : item?.task.hours} {isCostPage ? currency : "h"}</b>
                                                     <div
                                                         className="down-sidebar__total-item--progress-bar"
                                                         data-value={`${item?.task?.percent}%`}>
@@ -191,7 +199,7 @@ export const DownSidebar: React.FC<IDownSidebarProps> = ({setIsOpenDownSidebar, 
                                         <span>
                                             <Translate>timesheet_page.down_sidebar.total_for_month</Translate>
                                         </span>
-                                        <b>{statisticAllAmount ?? 0} {isCostPage ? "EUR" : <Translate>timesheet_page.down_sidebar.hours</Translate>}</b>
+                                        <b>{statisticAllAmount ?? 0} {isCostPage ? currency : <Translate>timesheet_page.down_sidebar.hours</Translate>}</b>
                                     </div>
                                 </div>
                             </div>

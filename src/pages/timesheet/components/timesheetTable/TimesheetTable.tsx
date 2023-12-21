@@ -18,7 +18,7 @@ export const TimesheetTable: React.FC<ITimesheetTableProps> = ({rowsSelectValue}
 
     const [filterByProjectName, setFilterByProjectName] = useState("")
     const [filterByProjectDescription, setFilterByProjectDescription] = useState("")
-    const [sortByDate, setSortByDate] = useState("DESC")
+    const [sortByDate, setSortByDate] = useState("ASC")
     const [sortByTotal, setSortByTotal] = useState("")
 
     return (

@@ -27,4 +27,16 @@ export const CostsStyles = styled.section`
   .section-table__row:nth-child(even) .section-table__param:first-child::after {
     background: rgba(150,159,186,.07);
   }
+  
+  .section-table__head-th {
+    justify-content: center;
+    
+    //&:nth-child(5) {
+    //  max-width: 323px;
+    //}
+  }
+  
+  //.section-table__param:nth-child(5) {
+  //  max-width: 323px;
+  //}
 `

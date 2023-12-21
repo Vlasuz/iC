@@ -30,7 +30,7 @@ export const CostsTableBody: React.FC<ICostsTableBodyProps> = ({list, filterByPr
                     ?.sort((a, b) => {
                         const c = new Date(`${a.date[3]}${a.date[4]}.${a.date[0]}${a.date[1]}.${a.date[6]}${a.date[7]}`).getTime();
                         const d = new Date(`${b.date[3]}${b.date[4]}.${b.date[0]}${b.date[1]}.${b.date[6]}${b.date[7]}`).getTime();
-                        return sortByDate !== "" ? sortByDate === "ASC" ? c - d : d - c : c;
+                        return sortByDate !== "" ? sortByDate === "ASC" ? d - c : c - d : c;
                     })
                     ?.sort((a, b) => {
                         const c = +a.sum;

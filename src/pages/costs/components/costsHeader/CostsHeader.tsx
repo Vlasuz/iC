@@ -153,6 +153,8 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit}) => {
         setDateData(`${lessThenTen(String(getMondayDate().getDate()))}.${chosenTimesheet?.date[3]}${chosenTimesheet?.date[4]}.${getMondayDate().getFullYear()}`)
     }, [chosenTimesheet])
 
+    const isApprove = chosenTimesheet.status === "approve"
+
     return (
         <div className="section-table__header">
             <div className="section-table__header--row is-always-row">
@@ -181,7 +183,7 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit}) => {
                     <div>
                         <div className="section-table__header--row row-2">
                             <div className="section-table__header--col">
-                                <button onClick={handleOpenToCreate} type="button" className="section-table__add btn add-is-active"
+                                <button disabled={isApprove} onClick={handleOpenToCreate} type="button" className="section-table__add btn add-is-active"
                                         data-add-active-change-title="main-title">
                                     <Translate>costs_page.top_part.add_expense_2</Translate>
                                     <svg width="16" height="15" viewBox="0 0 16 15">

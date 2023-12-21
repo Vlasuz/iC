@@ -12,6 +12,7 @@ import {PopupContext} from "../../App";
 import {AsideStyled} from "./Aside.styled";
 import {getApiLink} from "../../functions/getApiLink";
 import {Translate} from "../translate/Translate";
+import SimpleBar from "simplebar-react";
 
 interface IAsideProps {
 
@@ -121,7 +122,7 @@ export const Aside: React.FC<IAsideProps> = () => {
                 </svg>
             </button>
             <div className="aside__background" aria-hidden="true"></div>
-            <div className="aside__body" data-simplebar>
+            <SimpleBar className="aside__body">
                 <div className="aside__body--wrapper">
                     <div className="aside__header">
                         <div className="aside__logo">
@@ -209,7 +210,7 @@ export const Aside: React.FC<IAsideProps> = () => {
                         </div>
                     </div>
                 </div>
-            </div>
+            </SimpleBar>
         </AsideStyled>
     )
 }

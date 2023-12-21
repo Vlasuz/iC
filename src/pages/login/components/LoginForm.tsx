@@ -51,7 +51,7 @@ export const LoginForm: React.FC<ILoginFormProps> = () => {
 
             const date = new Date()
 
-            setCookie("access_token_ic", data.access_token, isStayLoggedIn ? undefined : 30000)
+            setCookie("access_token_ic", data.access_token, isStayLoggedIn ? undefined : 1800)
 
             dispatch(setUser(data.user))
             dispatch(setAccessToken(data.access_token))

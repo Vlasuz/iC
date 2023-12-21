@@ -40,7 +40,10 @@ export const CostsTableItem: React.FC<ICostsTableItemProps> = ({item, index}) =>
         }
     }, []);
 
+    const isApprove = chosenTimesheet.status === "approve"
+
     const handleOpenContextMenu = (e: React.MouseEvent<HTMLDivElement>) => {
+        if(isApprove) return;
         e.preventDefault()
 
         if (isOpenContextMenu) {
@@ -138,7 +141,7 @@ export const CostsTableItem: React.FC<ICostsTableItemProps> = ({item, index}) =>
                     <li>
                         <a onClick={_ => handleDuplicateTask(item)} className="open-popup">
                             <svg width="15" height="16" viewBox="0 0 15 16">
-                                <use xlinkHref="#trash"></use>
+                                <use xlinkHref="#copy"></use>
                             </svg>
                             Duplicate
                         </a>

@@ -250,8 +250,13 @@ export const AppStyled = styled.div`
     background: #fff;
     border: none;
     padding-bottom: 5px;
-    margin-bottom: 10px;
-    border-bottom: 1px solid rgba(95,100,114,.1);
+    margin-bottom: -5px;
+  }
+  
+  .react-datepicker__day-names {
+    border-top: 1px solid rgba(95,100,114,.1);
+    margin-top: 10px;
+    padding-top: 6px;
   }
 
   .react-datepicker__day:hover, .react-datepicker__month-text:hover, .react-datepicker__quarter-text:hover, .react-datepicker__year-text:hover {
@@ -330,6 +335,11 @@ export const AppStyled = styled.div`
   }
   .simplebar-content {
     padding-bottom: 20px !important;
+  }
+  
+  .select .simplebar-content,
+  .section-table__main .simplebar-content {
+    padding-bottom: 0px !important;
   }
 
 
@@ -431,7 +441,16 @@ export const AppStyled = styled.div`
     pointer-events: none;
   }
   
+  .section-table__add:disabled {
+    opacity: .5;
+    background: #EF3129;
+    cursor: default;
+  }
   
+  .section-table__row-per-page .custom-select__body {
+    top: auto;
+    bottom: calc(100% + 10px);
+  }
   
   
   

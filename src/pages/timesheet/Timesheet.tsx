@@ -71,9 +71,10 @@ export const Timesheet: React.FC<ITimesheetProps> = () => {
 
     const handleAddRows = () => {
         const plusCount = window.innerWidth < 768 ? 10 : 20
+
         setRowsSelectValue({
-            value: rowsSelectValue.value + plusCount,
-            label: taskList.length === +rowsSelectValue.label + plusCount ? "All" : String(+rowsSelectValue.label + plusCount)
+            value: taskList.length <= +rowsSelectValue.label + plusCount ? 0 : rowsSelectValue.value + plusCount,
+            label: taskList.length <= +rowsSelectValue.label + plusCount ? "All" : String(+rowsSelectValue.label + plusCount)
         })
     }
 

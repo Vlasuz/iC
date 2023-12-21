@@ -137,7 +137,7 @@ export const PopupAddEmployee: React.FC<IPopupAddNewEmployeeProps> = ({data, set
                                 <Translate>employees_admin.others.password</Translate>
                             </span>
                             <span>
-                                <input onChange={e => setPasswordValue(e.target.value)}
+                                <input onChange={e => setPasswordValue(e.target.value)} minLength={8}
                                        value={passwordValue} type="password" name="password" required
                                        className="input password-input"/>
                                 <button className="password-input__visible-toggle" type="button"
@@ -187,7 +187,7 @@ export const PopupAddEmployee: React.FC<IPopupAddNewEmployeeProps> = ({data, set
                                className="popup-form__open-sub-popup open-popup">
                                 <span id="checked-projects" data-none-text="None" data-text-1="project"
                                       data-text-2="projects" data-all-text="All projects">
-                                    {chosenProjects?.length === projects.length ? <Translate>employees_admin.others.all_projects</Translate> : `${projectsList?.length} projects`}
+                                    {chosenProjects?.length === projects.length ? <Translate>employees_admin.others.all_projects</Translate> : `${chosenProjects?.length} projects`}
                                 </span>
                                 <svg width="10" height="7" viewBox="0 0 10 7">
                                     <use xlinkHref="#drop-down-arrow"></use>

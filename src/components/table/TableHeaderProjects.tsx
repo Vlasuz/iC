@@ -61,7 +61,7 @@ export const TableHeaderProjects: React.FC<ITableHeaderProjectsProps> = ({setFil
                                                     setFilterByProjectName((prev: string) => prev === item.project.name ? "" : item.project.name)
                                                     setIsActiveBlock(false)
                                                 }}>
-                                                    {item.project.name}_{item.project.name}
+                                                    {item.project.name}_{item.project.description}
                                                 </a>
                                             </li>
                                         )
@@ -83,7 +83,7 @@ export const TableHeaderProjects: React.FC<ITableHeaderProjectsProps> = ({setFil
                                                     setFilterByProjectName((prev: string) => prev === item.name ? "" : item.name)
                                                     setIsActiveBlock(false)
                                                 }}>
-                                                    {item.name}_{item.name}
+                                                    {item.name}_{item.description}
                                                 </a>
                                             </li>
                                         )

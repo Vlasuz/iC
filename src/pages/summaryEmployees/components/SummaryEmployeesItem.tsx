@@ -19,6 +19,7 @@ import {mergeAndSum} from '../../../functions/mergeAndSumStatistic';
 import {EmployeesStatus} from "../../../constants/EmployeesStatus";
 import {useTranslation} from "react-i18next";
 import {Translate} from "../../../components/translate/Translate";
+import {currency} from "../../../constants/Currency";
 
 interface ISummaryEmployeesItemProps {
     itemData: ITimesheet
@@ -179,7 +180,7 @@ export const SummaryEmployeesItem: React.FC<ISummaryEmployeesItemProps> = ({item
                                         </span>
                                     </div>
                                     <div className="summary-item__element--progress">
-                                        <span>{item.expense.sum} UAH</span>
+                                        <span>{item.expense.sum} {currency}</span>
                                         <span data-value={`${item.expense.percent}%`}>
                                             <div className="line_done" style={{width: `${item.expense.percent}%`}}/>
                                         </span>
@@ -203,7 +204,7 @@ export const SummaryEmployeesItem: React.FC<ISummaryEmployeesItemProps> = ({item
                                 <Translate>summary_page.main.time_spent_for_projects</Translate>
                             </b>
                             <NavLink onClick={_ => dispatch(setChosenTimesheet(itemData))} to={`/timesheet/${itemData.id}`} className="summary-item__total-element--link">
-                                <Translate>summary_page.main.show_full_data</Translate>
+                                <Translate>summary_page.main.show_full_data_timesheet</Translate>
                                 <svg width="7" height="10" viewBox="0 0 7 10">
                                     <use xlinkHref="#arrow-next"></use>
                                 </svg>
@@ -219,16 +220,16 @@ export const SummaryEmployeesItem: React.FC<ISummaryEmployeesItemProps> = ({item
                                 </svg>
                             </div>
                             <b className="summary-item__total-element--name">
-                                <Translate>summary_page.main.time_spent_for_projects</Translate>
+                                <Translate>summary_page.main.money_spent_for_projects</Translate>
                             </b>
                             <NavLink onClick={_ => dispatch(setChosenTimesheet(itemData))} to={`/costs/${itemData.id}`} className="summary-item__total-element--link">
-                                <Translate>summary_page.main.show_full_data</Translate>
+                                <Translate>summary_page.main.show_full_data_costs</Translate>
                                 <svg width="7" height="10" viewBox="0 0 7 10">
                                     <use xlinkHref="#arrow-next"></use>
                                 </svg>
                             </NavLink>
                             <div className="summary-item__total-element--value">
-                                {statistic?.all_sum} UAH
+                                {statistic?.all_sum} {currency}
                             </div>
                         </div>
                     </div>

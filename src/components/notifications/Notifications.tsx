@@ -21,11 +21,14 @@ export const Notifications: React.FC<INotificationsProps> = () => {
     const [notifications, setNotifications] = useState<INotification[] | undefined>([])
 
     useEffect(() => {
-        if (!isActive) return;
 
-        setIsHaveNotice(false)
+        if(notifications?.some(item => !item.viewed)) {
+            setIsHaveNotice(true)
+        } else {
+            setIsHaveNotice(false)
+        }
 
-    }, [isActive])
+    }, [notifications])
 
     const {rootEl} = useClickOutside(setIsActive)
 
@@ -45,10 +48,21 @@ export const Notifications: React.FC<INotificationsProps> = () => {
         }
     }
 
+    const handleOpenNotifications = () => {
+        setIsActive(prev => !prev)
+
+        // console.log(notifications?.map(item => item.id))
+        // getBearer("post")
+        // axios.post(getApiLink("/api/user/notifications/view/"), notifications?.map(item => item.id)).then(({data}) => {
+        //     console.log(data)
+        //     setIsHaveNotice(false)
+        // }).catch(er => console.log(er))
+    }
+
     return (
         <NotificationsStyled ref={rootEl} className="section-table__header--col">
             <div className="section-table__notification notification drop-down-absolute">
-                <button onClick={_ => setIsActive(prev => !prev)}
+                <button onClick={handleOpenNotifications}
                         className={`notification__target drop-down-absolute__target ${isHaveNotice && "is-has-notice"} ${isActive && "is-active"}`}
                         data-drop-down-target="notification-block" type="button">
                     <svg width="17" height="20" viewBox="0 0 17 20">

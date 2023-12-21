@@ -14,6 +14,7 @@ import {PopupCloseCancel} from "./PopupCloseCancel";
 import {PopupClose} from "./PopupClose";
 import {useMask} from "@react-input/mask";
 import {SetEmployees} from "../../../api/SetEmployees";
+import {Translate} from "../../translate/Translate";
 
 interface IPopupEditEmployeeProps {
     setIsOpenProjects: any
@@ -157,7 +158,7 @@ export const PopupEditEmployee: React.FC<IPopupEditEmployeeProps> = ({setIsOpenP
                             <a onClick={_ => setIsOpenProjects((prev: any) => !prev)} className="popup-form__open-sub-popup open-popup">
                                 <span id="checked-projects" data-none-text="None" data-text-1="project"
                                       data-text-2="projects" data-all-text="All projects">
-                                    {projectsList?.length} projects
+                                    {chosenProjects?.length === projects.length ? <Translate>employees_admin.others.all_projects</Translate> : `${chosenProjects?.length} projects`}
                                 </span>
                                 <svg width="10" height="7" viewBox="0 0 10 7">
                                     <use xlinkHref="#drop-down-arrow"></use>

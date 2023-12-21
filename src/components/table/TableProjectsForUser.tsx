@@ -50,7 +50,7 @@ export const TableProjectsForUser: React.FC<ITableProjectsForUserProps> = ({setP
             <div className="section-table__main--project-name-block drop-down__block">
                 <div className="project-popup">
                     <SimpleBar className="project-popup__body" autoHide={false}>
-                        {!projectList?.length && !!userData?.recent_projects.length && <div className="project-popup__block">
+                        {!projectList?.length && !!userData?.recent_projects?.length && <div className="project-popup__block">
                             <h2>Recently used</h2>
                             <ul className="project-popup__list">
 

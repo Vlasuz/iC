@@ -71,7 +71,7 @@ export const EmployeesTable: React.FC<IEmployeesTableProps> = ({searchValue, cou
     }
 
 
-    const [sortByName, setSortByName] = useState("default")
+    const [sortByName, setSortByName] = useState("sortDown")
 
     const sortByNameList = [
         {

@@ -65,7 +65,7 @@ export const TimesheetTableHeader: React.FC<ITimesheetTableHeaderProps> = ({
                                                 setSortByTotal("")
                                                 setChosenSortTotal("")
                                             }}>
-                                                Oldest first
+                                                Newest first
                                             </a>
                                         </li>
                                         <li className={` ${chosenSortDate === "DESC" && "is-active"}`}>
@@ -75,7 +75,7 @@ export const TimesheetTableHeader: React.FC<ITimesheetTableHeaderProps> = ({
                                                 setSortByTotal("")
                                                 setChosenSortTotal("")
                                             }}>
-                                                Newest first
+                                                Oldest first
                                             </a>
                                         </li>
                                     </ul>
@@ -115,7 +115,7 @@ export const TimesheetTableHeader: React.FC<ITimesheetTableHeaderProps> = ({
                                         setChosenSortTotal("")
                                         setIsActiveDate(false)
                                     }}>
-                                        Oldest first
+                                        Newest first
                                     </a>
                                 </li>
                                 <li className={` ${chosenSortDate === "DESC" && "is-active"}`}>
@@ -126,7 +126,7 @@ export const TimesheetTableHeader: React.FC<ITimesheetTableHeaderProps> = ({
                                         setChosenSortTotal("")
                                         setIsActiveDate(false)
                                     }}>
-                                        Newest first
+                                        Oldest first
                                     </a>
                                 </li>
                             </ul>
@@ -183,10 +183,10 @@ export const TimesheetTableHeader: React.FC<ITimesheetTableHeaderProps> = ({
                             className={isActiveTotal ? "section-table__main--func-block drop-down-absolute__block is-right-default is-active" : "section-table__main--func-block drop-down-absolute__block is-right-default"}
                             id="total-sort" style={{minWidth: "170px", transform: `translateY(${-scrollY}px)`}}>
                             <ul className="drop-down__list drop-down__list-date">
-                                <li className={chosenSortTotal === "ASC" ? "is-active" : ""}>
+                                <li className={chosenSortTotal === "DESC" ? "is-active" : ""}>
                                     <a onClick={_ => {
-                                        setSortByTotal("ASC")
-                                        setChosenSortTotal("ASC")
+                                        setSortByTotal("DESC")
+                                        setChosenSortTotal("DESC")
                                         setSortByDate("")
                                         setChosenSortDate("")
                                         setIsActiveTotal(false)
@@ -194,10 +194,10 @@ export const TimesheetTableHeader: React.FC<ITimesheetTableHeaderProps> = ({
                                         Uncompleted first
                                     </a>
                                 </li>
-                                <li className={chosenSortTotal === "DESC" ? "is-active" : ""}>
+                                <li className={chosenSortTotal === "ASC" ? "is-active" : ""}>
                                     <a onClick={_ => {
-                                        setSortByTotal("DESC")
-                                        setChosenSortTotal("DESC")
+                                        setSortByTotal("ASC")
+                                        setChosenSortTotal("ASC")
                                         setSortByDate("")
                                         setChosenSortDate("")
                                         setIsActiveTotal(false)

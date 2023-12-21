@@ -39,6 +39,7 @@ export interface IComment {
         last_name: string
         avatar: string
         status: string
+        id: string
     }
     text: string
 }
@@ -167,6 +168,7 @@ export interface INotification {
         ]
     }
     type: string
+    viewed: boolean
 }
 
 export interface IVacation {

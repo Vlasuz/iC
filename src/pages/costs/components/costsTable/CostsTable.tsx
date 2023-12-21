@@ -14,7 +14,7 @@ export const CostsTable: React.FC<ICostsTableProps> = ({rowsSelectValue}) => {
     const [filterByProjectName, setFilterByProjectName] = useState("")
     const [filterByProjectDescription, setFilterByProjectDescription] = useState("")
     const [sortByDate, setSortByDate] = useState("ASC")
-    const [sortByCost, setSortByCost] = useState("ASC")
+    const [sortByCost, setSortByCost] = useState("")
 
     return (
         <div className="section-table__main table-costs add-border">

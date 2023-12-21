@@ -41,7 +41,11 @@ export const TimesheetTableItem: React.FC<ITimesheetTableItemProps> = ({taskItem
         }
     }, []);
 
+    const isApprove = chosenTimesheet.status === "approve"
+
     const handleOpenContextMenu = (e: React.MouseEvent<HTMLDivElement>) => {
+        if(isApprove) return;
+
         e.preventDefault()
 
         if (isOpenContextMenu) {

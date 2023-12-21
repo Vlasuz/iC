@@ -146,7 +146,7 @@ export const TimesheetHeaderChooseTime: React.FC<ITimesheetHeaderChooseTimeProps
                 </div>
             </div>
             <div className="section-table__add-task--hours">
-                <input type="text" readOnly name="hours" value={`${hoursAmount} hours`} placeholder="0 hours" required
+                <input type="text" readOnly name="hours" value={`${hoursAmount} h`} placeholder="0 hours" required
                        className="input hours-input none-disabled-style" data-add-text="hours"/>
             </div>
         </>

@@ -160,6 +160,8 @@ export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({itemToEdit}) =
         setDateData(`${lessThenTen(String(getMondayDate().getDate()))}.${chosenTimesheet?.date[3]}${chosenTimesheet?.date[4]}.${getMondayDate().getFullYear()}`)
     }, [chosenTimesheet])
 
+    const isApprove = chosenTimesheet.status === "approve"
+
     return (
         <div className="section-table__header">
             <div className="section-table__header--row is-always-row">
@@ -190,7 +192,7 @@ export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({itemToEdit}) =
                     <div>
                         <div className="section-table__header--row row-2">
                             <div className="section-table__header--col">
-                                <button onClick={handleOpenToCreate} type="button"
+                                <button disabled={isApprove} onClick={handleOpenToCreate} type="button"
                                         className="section-table__add btn add-is-active"
                                         data-add-active-change-title="main-title">
                                     <Translate>timesheet_page.top_part.add_task</Translate>

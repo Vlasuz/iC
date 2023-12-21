@@ -13,6 +13,7 @@ import {SetStatistic} from "../../../api/SetStatistic";
 import {mergeAndSum} from "../../../functions/mergeAndSumStatistic";
 import {Translate} from "../../../components/translate/Translate";
 import {useTranslation} from "react-i18next";
+import { currency } from '../../../constants/Currency';
 
 interface ISummaryItemProps {
     dataItem: ITimesheet
@@ -149,7 +150,7 @@ export const SummaryItem: React.FC<ISummaryItemProps> = ({dataItem}) => {
                                 <Translate>summary_page.main.time_spent_for_projects</Translate>
                             </b>
                             <button onClick={handleEntryTask} className="summary-item__total-element--link">
-                                <Translate>summary_page.main.show_full_data</Translate>
+                                <Translate>summary_page.main.show_full_data_timesheet</Translate>
                                 <svg width="7" height="10" viewBox="0 0 7 10">
                                     <use xlinkHref="#arrow-next"></use>
                                 </svg>
@@ -168,13 +169,13 @@ export const SummaryItem: React.FC<ISummaryItemProps> = ({dataItem}) => {
                                 <Translate>summary_page.main.time_spent_for_projects</Translate>
                             </b>
                             <button onClick={handleEntryCost} className="summary-item__total-element--link">
-                                <Translate>summary_page.main.show_full_data</Translate>
+                                <Translate>summary_page.main.show_full_data_costs</Translate>
                                 <svg width="7" height="10" viewBox="0 0 7 10">
                                     <use xlinkHref="#arrow-next"></use>
                                 </svg>
                             </button>
                             <div className="summary-item__total-element--value">
-                                {statistic?.all_sum} UAH
+                                {statistic?.all_sum} {currency}
                             </div>
                         </div>
                     </div>

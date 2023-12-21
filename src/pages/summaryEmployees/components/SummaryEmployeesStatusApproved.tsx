@@ -13,7 +13,7 @@ export const SummaryEmployeesStatusApproved: React.FC<ISummaryEmployeesStatusApp
                 <svg width="20" height="20" viewBox="0 0 13 13">
                     <use xlinkHref="#round-check"></use>
                 </svg>
-                <p>Your summary was approved! (by {itemData.manager.first_name} {itemData.manager.last_name})</p>
+                <p>This summary was approved! (by {itemData.manager.first_name} {itemData.manager.last_name})</p>
             </div>
         </div>
     )

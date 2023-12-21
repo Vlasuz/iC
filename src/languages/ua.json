@@ -6,7 +6,7 @@
     "log_in": "Увійти",
     "forgot": "Забули пароль",
     "legal": "Правова інформація",
-    "compliance": "Комплаєнс – політика відповідності",
+    "compliance": "Політика відповідності",
     "copyright_ic": "Авторське право © iC consulenten 2013 - 2023. Всі права захищені."
   },
 
@@ -210,10 +210,11 @@
       "export_all": "Експорт всіх",
       "in_progress": "В процесі",
       "sent_for_approval": "Відправлено на затвердження",
-      "time_spent_for_projects": "Час, витрачений на проекти",
-      "show_full_data": "Відкрити повний звіт",
+      "time_spent_for_projects": "Усього часу",
+      "money_spent_for_projects": "Усього витрат",
+      "show_full_data_timesheet": "Відкрити Таймшит",
+      "show_full_data_costs": "Відкрити Витрати",
       "total": "Усього",
-      "money_spent_for_projects": "Витрати на проекти",
       "export_monthly_summary": "Експортувати місячний звіт",
       "send_timesheet_for_approval": "Надіслати звіт на затвердження",
       "hours": "годин"

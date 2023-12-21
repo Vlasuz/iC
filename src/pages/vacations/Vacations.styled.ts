@@ -28,4 +28,23 @@ export const VacationsStyled = styled.section`
       }
     }
   }
+  
+  .section-table__param:hover {
+    &:before {
+      content: "";
+      position: absolute;
+      left: -1px;
+      top: -10000px;
+      width: calc(100% + 1px);
+      height: 20000px;
+      background: #97A0BB;
+      opacity: 0.2;
+      pointer-events: none;
+    }
+  }
+  .section-table__param.is-none-vertical-hover:hover {
+    &:before {
+      display: none;
+    }
+  }
 `

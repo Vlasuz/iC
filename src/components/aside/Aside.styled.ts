@@ -13,4 +13,8 @@ export const AsideStyled = styled.aside`
     height: 100%;
     object-fit: cover;
   }
+  
+  .aside__log-out {
+    cursor: pointer;
+  }
 `

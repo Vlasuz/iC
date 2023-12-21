@@ -23,7 +23,7 @@ export const Vacations: React.FC<IVacationsProps> = () => {
     const employees: IEmployee[] = useSelector((state: any) => state.toolkit.employees)
 
     const [valueSearch, setValueSearch] = useState<string>("")
-    const [sortByName, setSortByName] = useState<string>("default")
+    const [sortByName, setSortByName] = useState<string>("sortDown")
     const [selectValue, setSelectValue] = useState(RowsPerPage()[0])
     const [vacations, setVacations] = useState<IVacation[]>([])
 

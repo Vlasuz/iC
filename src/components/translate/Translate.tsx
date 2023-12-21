@@ -5,13 +5,6 @@ interface ITranslateProps {
     children: string
 }
 
-// export const Translate:React.FC<ITranslateProps> = ({children}) => {
-//     const {t} = useTranslation();
-//     return (
-//         <Trans t={t}>{children}</Trans>
-//     );
-// }
-
 export const Translate:React.FC<ITranslateProps> = ({children}) => {
     const { t } = useTranslation();
 

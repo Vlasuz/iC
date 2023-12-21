@@ -31,7 +31,7 @@ export const CostsTableHeader: React.FC<ICostsTableHeaderProps> = ({setFilterByP
     const [searchProjectName, setSearchProjectName] = useState("")
     const [searchProjectDescription, setSearchProjectDescription] = useState("")
     const [chosenSortDate, setChosenSortDate] = useState("ASC")
-    const [chosenSortCost, setChosenSortCost] = useState("ASC")
+    const [chosenSortCost, setChosenSortCost] = useState("")
 
     const {scrollY} = useScrollTopValue()
 
@@ -65,7 +65,7 @@ export const CostsTableHeader: React.FC<ICostsTableHeaderProps> = ({setFilterByP
                                                 setSortByCost("")
                                                 setChosenSortCost("")
                                             }}>
-                                                Oldest first
+                                                Newest first
                                             </a>
                                         </li>
                                         <li className={` ${chosenSortDate === "DESC" && "is-active"}`}>
@@ -75,7 +75,7 @@ export const CostsTableHeader: React.FC<ICostsTableHeaderProps> = ({setFilterByP
                                                 setSortByCost("")
                                                 setChosenSortCost("")
                                             }}>
-                                                Newest first
+                                                Oldest first
                                             </a>
                                         </li>
                                     </ul>
@@ -115,7 +115,7 @@ export const CostsTableHeader: React.FC<ICostsTableHeaderProps> = ({setFilterByP
                                         setChosenSortCost("")
                                         setIsActiveDate(false)
                                     }}>
-                                        Oldest first
+                                        Newest first
                                     </a>
                                 </li>
                                 <li className={` ${chosenSortDate === "DESC" && "is-active"}`}>
@@ -126,7 +126,7 @@ export const CostsTableHeader: React.FC<ICostsTableHeaderProps> = ({setFilterByP
                                         setChosenSortCost("")
                                         setIsActiveDate(false)
                                     }}>
-                                        Newest first
+                                        Oldest first
                                     </a>
                                 </li>
                             </ul>
@@ -165,10 +165,10 @@ export const CostsTableHeader: React.FC<ICostsTableHeaderProps> = ({setFilterByP
                             className={`section-table__main--func-block drop-down-absolute__block is-right-default ${isActiveCost && "is-active"}`}
                             id="cost-sort" style={{minWidth: "150px", transform: `translateY(${-scrollY}px)`, right: "20px"}}>
                             <ul className="drop-down__list drop-down__list-date">
-                                <li className={chosenSortCost === "ASC" ? "is-active" : ""}>
+                                <li className={chosenSortCost === "DESC" ? "is-active" : ""}>
                                     <a onClick={_ => {
-                                        setSortByCost("ASC")
-                                        setChosenSortCost("ASC")
+                                        setSortByCost("DESC")
+                                        setChosenSortCost("DESC")
                                         setChosenSortDate("")
                                         setSortByDate("")
                                         setIsActiveCost(false)
@@ -176,10 +176,10 @@ export const CostsTableHeader: React.FC<ICostsTableHeaderProps> = ({setFilterByP
                                         Ascending
                                     </a>
                                 </li>
-                                <li className={chosenSortCost === "DESC" ? "is-active" : ""}>
+                                <li className={chosenSortCost === "ASC" ? "is-active" : ""}>
                                     <a onClick={_ => {
-                                        setSortByCost("DESC")
-                                        setChosenSortCost("DESC")
+                                        setSortByCost("ASC")
+                                        setChosenSortCost("ASC")
                                         setChosenSortDate("")
                                         setSortByDate("")
                                         setIsActiveCost(false)

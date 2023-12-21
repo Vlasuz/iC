@@ -74,7 +74,7 @@ export const SummaryEmployees: React.FC<ISummaryEmployeesProps> = () => {
             <div className="summary__header page-header">
                 <div className="page-header__col">
                     <h1 className="page-header__title title">
-                        <Translate>summary_page.main.summary</Translate> / <Translate>employees_page.table.employees</Translate>
+                        <Translate>employees_page.table.employees</Translate>
                     </h1>
                 </div>
                 <div className="page-header__col">

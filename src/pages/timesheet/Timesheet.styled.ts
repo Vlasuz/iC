@@ -58,5 +58,10 @@ export const TimesheetStyled = styled.section`
   .section-table__main--container::-webkit-scrollbar-thumb {
     background: rgba(169, 169, 172, .5);
   }
+
+
+  .section-table__main.table-timesheet .section-table__row-block:hover .section-table__param:nth-child(1) {
+    border-right: 1px solid rgba(0, 0, 0, 0);
+  }
   
 `
