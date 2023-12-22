@@ -57,7 +57,7 @@ export const PopupProfile: React.FC<IPopupProfileProps> = () => {
                                     <use xlinkHref="#copy"></use>
                                 </svg>
                             </button>
-                            <input type="text" name="position" value={userData.role} readOnly
+                            <input style={{textTransform: "capitalize"}} type="text" name="position" value={userData.role} readOnly
                                    className="input copy-input"/>
                         </label>
                     </div>

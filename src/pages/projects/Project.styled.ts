@@ -31,6 +31,7 @@ export const ProjectStyled = styled.section`
 
   .section-table__main.is-row-mode {
     z-index: 2;
+    margin-bottom: 20px;
   }
 
   .section-table__footer {

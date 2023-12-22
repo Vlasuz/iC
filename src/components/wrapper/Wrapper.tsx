@@ -14,7 +14,7 @@ export const Wrapper: React.FC<IWrapperProps> = ({children}) => {
     return (
         <>
             {
-                window.location.href.includes('login') ? <WrapperLogin children={children}/> : <WrapperSidebar children={children}/>
+                window.location.href.includes('login') || window.location.href.includes('reset-password') ? <WrapperLogin children={children}/> : <WrapperSidebar children={children}/>
             }
         </>
     )

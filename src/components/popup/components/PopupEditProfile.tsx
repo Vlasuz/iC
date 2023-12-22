@@ -2,7 +2,7 @@ import React, {useContext, useEffect, useState} from 'react'
 import {useDispatch, useSelector } from 'react-redux';
 import {PopupContext} from "../../../App";
 import { IUser } from '../../../models';
-import {IsPopupActiveContext} from "../PopupList";
+import {IsPopupActiveContext, IsPopupActiveSecondContext} from "../PopupList";
 import {CustomSelect} from "../../customSelect/CustomSelect";
 import {PhoneCodes} from "../../../constants/PhoneCodes";
 import axios from "axios";
@@ -14,10 +14,10 @@ import { PopupClose } from './PopupClose';
 import {Translate} from "../../translate/Translate";
 
 interface IPopupEditProfileProps {
-
+    popup: any
 }
 
-export const PopupEditProfile: React.FC<IPopupEditProfileProps> = () => {
+export const PopupEditProfile: React.FC<IPopupEditProfileProps> = ({popup}) => {
 
     const setIsPopupActiveContext: any = useContext(IsPopupActiveContext)
 
@@ -54,10 +54,14 @@ export const PopupEditProfile: React.FC<IPopupEditProfileProps> = () => {
     }
 
     const setPopup: any = useContext(PopupContext)
+    const setIsPopupSecondActive: any = useContext(IsPopupActiveSecondContext)
 
     const inputRef = useMask({ mask: '(__) ___ __ __', replacement: { _: /\d/ } });
 
-    console.log(userData.phone)
+    const handleOpenChangePass = () => {
+        setIsPopupSecondActive(true)
+        setPopup({popup: popup.popup, secondPopup: "reset-password-popup"})
+    }
 
     return (
         <div className="profile__body popup-body">
@@ -115,7 +119,7 @@ export const PopupEditProfile: React.FC<IPopupEditProfileProps> = () => {
                     <div className="profile__info--item">
                         <span>Password</span>
                         <label>
-                            <a onClick={_ => setPopup({popup: "edit-profile-popup", secondPopup: "reset-password-popup"})} className="profile__info--button open-popup">
+                            <a onClick={handleOpenChangePass} className="profile__info--button open-popup">
                                 <Translate>profile.click_to_reset_password</Translate>
                             </a>
                         </label>

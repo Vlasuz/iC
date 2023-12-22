@@ -87,8 +87,6 @@ export const DownSidebar: React.FC<IDownSidebarProps> = ({setIsOpenDownSidebar, 
         refCommentBody.current.getScrollElement().scrollTop = 99999
     }, [comments])
 
-    console.log(comments)
-
     return (
         <DownSidebarStyled className={`down-sidebar ${isActive && "is-active"}`}>
 

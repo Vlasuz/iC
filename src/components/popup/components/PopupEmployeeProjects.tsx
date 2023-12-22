@@ -79,7 +79,7 @@ export const PopupEmployeeProjects: React.FC<IPopupEmployeeProjectsProps> = ({
 
                                 {
                                     projects.length && projects
-                                        ?.filter(item => item.name.toLowerCase().includes(searchValue.toLowerCase()))
+                                        ?.filter(item => item.name.toLowerCase().includes(searchValue.toLowerCase()) || item.description.toLowerCase().includes(searchValue.toLowerCase()))
                                         ?.map(project =>
                                             <li key={project.id}>
                                                 <label className="popup-checkbox">

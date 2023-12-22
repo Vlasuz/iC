@@ -7,6 +7,7 @@ import {getApiLink} from "../../../functions/getApiLink";
 import {SetExpenses} from "../../../api/SetExpenses";
 import {SetStatistic} from "../../../api/SetStatistic";
 import {ITimesheet} from "../../../models";
+import {removeExpense, removeTask} from "../../../storage/toolkit";
 
 interface IPopupDeleteExpenseProps {
     data: any
@@ -28,8 +29,9 @@ export const PopupDeleteExpense: React.FC<IPopupDeleteExpenseProps> = ({data}) =
             if (!dataItem.status) return;
 
             setIsPopupActive(false)
+            dispatch(removeExpense(data))
 
-            SetExpenses(dispatch, chosenTimesheet.id)
+            // SetExpenses(dispatch, chosenTimesheet.id)
             SetStatistic(dispatch, chosenTimesheet.id)
 
         }).catch(er => console.log(getApiLink('/api/admin/expense/delete/'), er))

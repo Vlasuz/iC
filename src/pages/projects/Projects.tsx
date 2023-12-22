@@ -39,7 +39,7 @@ export const Projects: React.FC<IProjectsProps> = () => {
 
 
     useEffect(() => {
-        if(searchValue.length > 0) return;
+        if (searchValue.length > 0) return;
 
         getBearer("get")
         axios.get(getApiLink(`/api/admin/project/`)).then(({data}) => {
@@ -49,6 +49,18 @@ export const Projects: React.FC<IProjectsProps> = () => {
 
 
     const handleChangeRows = (e: any) => {
+        console.log(e)
+        if (e.value === 0) {
+            const data = {
+                label: "All",
+                value: 999999999
+            }
+            setPaginationCountStep(data)
+            setPaginationCountTo(data.value)
+            setPaginationMaximumPages(0)
+            return;
+        }
+
         setPaginationCountFrom(0)
         setPaginationCountStep(e)
         setPaginationCountTo(e)
@@ -58,7 +70,6 @@ export const Projects: React.FC<IProjectsProps> = () => {
         setPaginationNavigation(arrayCount)
         setPaginationCountTo(paginationCountStep.value)
     }
-
 
 
     // PAGINATION
@@ -93,13 +104,13 @@ export const Projects: React.FC<IProjectsProps> = () => {
         setPaginationCountTo(paginationCountStep.value * number)
     }
     const nextNumberPagination = () => {
-        if(paginationCountTo / paginationCountStep.value === paginationMaximumPages) return;
+        if (paginationCountTo / paginationCountStep.value === paginationMaximumPages) return;
 
         setPaginationCountFrom(prev => prev + paginationCountStep.value)
         setPaginationCountTo(prev => prev + paginationCountStep.value)
     }
     const prevNumberPagination = () => {
-        if(paginationCountTo / paginationCountStep.value === 1) return;
+        if (paginationCountTo / paginationCountStep.value === 1) return;
 
         setPaginationCountFrom(prev => prev - paginationCountStep.value)
         setPaginationCountTo(prev => prev - paginationCountStep.value)
@@ -131,7 +142,8 @@ export const Projects: React.FC<IProjectsProps> = () => {
                                        className="section-table__search--input"
                                        onChange={e => setSearchValue(e.target.value)} value={searchValue}/>
                                 <span className="placeholder">
-                                    {!searchValue.length ? <Translate>employees_admin.others.search_a_project</Translate> : ""}
+                                    {!searchValue.length ?
+                                        <Translate>employees_admin.others.search_a_project</Translate> : ""}
                                 </span>
                             </label>
                             <button className="section-table__search--submit btn is-grey is-min-on-mob"
@@ -189,8 +201,9 @@ export const Projects: React.FC<IProjectsProps> = () => {
                                         ?.slice(paginationCountFrom, paginationCountTo)
                                         ?.filter((item, index) => index < Math.ceil(paginationCountStep.value / 2))
                                         ?.map((project: IProject, index: number) =>
-                                        <ProjectItem key={project.id} data={project} index={paginationCountFrom + index}/>
-                                    )
+                                            <ProjectItem key={project.id} data={project}
+                                                         index={paginationCountFrom + index}/>
+                                        )
                                 }
 
 
@@ -229,8 +242,9 @@ export const Projects: React.FC<IProjectsProps> = () => {
                                         ?.slice(paginationCountFrom, paginationCountTo)
                                         ?.filter((item, index) => index >= Math.ceil(paginationCountStep.value / 2))
                                         ?.map((project: IProject, index: number) =>
-                                        <ProjectItem key={project.id} data={project} index={Math.ceil((paginationCountFrom + index) + paginationCountStep.value / 2)}/>
-                                    )
+                                            <ProjectItem key={project.id} data={project}
+                                                         index={Math.ceil((paginationCountFrom + index) + paginationCountStep.value / 2)}/>
+                                        )
                                 }
 
                             </div>
@@ -282,7 +296,8 @@ export const Projects: React.FC<IProjectsProps> = () => {
                                 {
                                     !!projects.length && projects
                                         ?.map((project: IProject, index: number) =>
-                                            <ProjectItem key={project.id} data={project} index={paginationCountFrom / paginationCountStep.value + 1}/>
+                                            <ProjectItem key={project.id} data={project}
+                                                         index={paginationCountFrom / paginationCountStep.value + 1}/>
                                         )
                                 }
                             </div>
@@ -295,43 +310,53 @@ export const Projects: React.FC<IProjectsProps> = () => {
                     <span>
                         <Translate>projects_admin.rows_per_page</Translate>
                     </span>
-                    <CustomSelect list={RowsPerPage()} onChange={handleChangeRows} selectValue={paginationCountStep} setSelectedItem={setPaginationCountStep} defaultValue={RowsPerPage()[0]}/>
+                    <CustomSelect list={RowsPerPage()} onChange={handleChangeRows} selectValue={paginationCountStep}
+                                  setSelectedItem={setPaginationCountStep} defaultValue={RowsPerPage()[0]}/>
                 </div>
-                <div className="section-table__pagination pagination visible-on-desktop">
-                    <button onClick={prevNumberPagination} className="pagination__arrow is-prev" type="button" title="Prev page">
-                        <svg width="7" height="10" viewBox="0 0 7 10">
-                            <use xlinkHref="#arrow-prev"></use>
-                        </svg>
-                    </button>
-                    <div className="pagination__list">
+                {paginationNavigation.length > 1 &&
+                    <div className="section-table__pagination pagination visible-on-desktop">
+                        <button onClick={prevNumberPagination} className="pagination__arrow is-prev" type="button"
+                                title="Prev page">
+                            <svg width="7" height="10" viewBox="0 0 7 10">
+                                <use xlinkHref="#arrow-prev"></use>
+                            </svg>
+                        </button>
+                        <div className="pagination__list">
 
-                        {
-                            paginationNavigation
-                                ?.slice(!isNearEnd ? (paginationCountFrom - 1) / paginationCountStep.value : paginationCountOfEndingNavigation, !isNearEnd ? ((paginationCountFrom === 0 ? paginationCountOfMaximumNavigation : paginationCountOfMaximumNavigation - 1) + paginationCountFrom / (paginationCountFrom === 0 ? (paginationCountStep.value - 1) : paginationCountStep.value)) : 99)
-                                ?.map(item =>
-                                    <a href="" className={(paginationCountTo / paginationCountStep.value) === item ? "is-current" : ""} key={item} onClick={e => changeNumberPagination(e, item)}>
-                                        {item}
-                                    </a>
-                                )
-                        }
-                        {!isNearEnd && <span>...</span>}
-                        {
-                            !isNearEnd && paginationNavigation
-                                ?.slice(paginationMaximumPages - 1)
-                                ?.map(item =>
-                                    <a href="" className={(paginationCountTo / paginationCountStep.value) === item ? "is-current" : ""} key={item} onClick={e => changeNumberPagination(e, item)}>
-                                        {item}
-                                    </a>
-                                )
-                        }
 
-                    </div>
-                    <button onClick={nextNumberPagination} className="pagination__arrow is-next" type="button" title="Next page">
-                        <svg width="7" height="10" viewBox="0 0 7 10">
-                            <use xlinkHref="#arrow-next"></use>
-                        </svg>
-                    </button>
-                </div>
+                            {
+                                paginationNavigation
+                                    ?.slice(!isNearEnd ? (paginationCountFrom - 1) / paginationCountStep.value : paginationCountOfEndingNavigation, !isNearEnd ? ((paginationCountFrom === 0 ? paginationCountOfMaximumNavigation : paginationCountOfMaximumNavigation - 1) + paginationCountFrom / (paginationCountFrom === 0 ? (paginationCountStep.value - 1) : paginationCountStep.value)) : 99)
+                                    ?.map(item =>
+                                        <a href=""
+                                           className={(paginationCountTo / paginationCountStep.value) === item ? "is-current" : ""}
+                                           key={item} onClick={e => changeNumberPagination(e, item)}>
+                                            {item}
+                                        </a>
+                                    )
+                            }
+                            {!isNearEnd && <span>...</span>}
+                            {
+                                !isNearEnd && paginationNavigation
+                                    ?.slice(paginationMaximumPages - 1)
+                                    ?.map(item =>
+                                        <a href=""
+                                           className={(paginationCountTo / paginationCountStep.value) === item ? "is-current" : ""}
+                                           key={item} onClick={e => changeNumberPagination(e, item)}>
+                                            {item}
+                                        </a>
+                                    )
+                            }
+
+
+                        </div>
+                        <button onClick={nextNumberPagination} className="pagination__arrow is-next" type="button"
+                                title="Next page">
+                            <svg width="7" height="10" viewBox="0 0 7 10">
+                                <use xlinkHref="#arrow-next"></use>
+                            </svg>
+                        </button>
+                    </div>}
                 <button className="section-table__see-more btn visible-on-mob" type="button">
                     <Translate>employees_admin.table.show_more</Translate>
                     <svg width="15" height="15" viewBox="0 0 15 15">
@@ -342,7 +367,8 @@ export const Projects: React.FC<IProjectsProps> = () => {
                     <span>
                         <Translate>projects_admin.rows_per_page</Translate>
                     </span>
-                    <CustomSelect list={RowsPerPage()} onChange={handleChangeRows} selectValue={paginationCountStep} setSelectedItem={setPaginationCountStep} defaultValue={RowsPerPage()[0]}/>
+                    <CustomSelect list={RowsPerPage()} onChange={handleChangeRows} selectValue={paginationCountStep}
+                                  setSelectedItem={setPaginationCountStep} defaultValue={RowsPerPage()[0]}/>
                 </div>
             </div>
         </ProjectStyled>

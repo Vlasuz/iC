@@ -34,7 +34,11 @@ export const PopupReviewToTimesheet: React.FC<IPopupReviewToTimesheetProps> = ({
                  data-simplebar-auto-hide="false">
                 <div className="simplebar-content">
                     <h2 className="approve-timesheet__title title popup-title">
-                        <Translate>employees_page.other.confirm_approve_timesheet</Translate>
+
+                        {
+                            data.status === "approve" ? <Translate>employees_page.other.confirm_approve_timesheet</Translate> : <Translate>employees_page.other.confirm_reject_timesheet</Translate>
+                        }
+
                     </h2>
                     <div className="approve-timesheet__buttons">
                         <PopupCloseCancel/>

@@ -24,7 +24,7 @@
 
     "table": {
       "employees": "Employees",
-      "add_new_employee": "Add new employee",
+      "add_new_employee": "Add a new employee",
       "search_an_employee": "Search an employee",
       "search": "Search",
       "export": "Export",
@@ -46,7 +46,7 @@
     },
 
     "others": {
-      "add_new_employee": "Add new employee",
+      "add_new_employee": "Add a new employee",
       "first_name": "First name",
       "last_name": "Last name",
       "position": "Position",
@@ -101,7 +101,7 @@
 
   "projects_admin": {
     "projects": "Projects",
-    "add_new_project": "Add new project",
+    "add_new_project": "Add a new project",
     "search_a_project": "Search a project",
     "search": "Search",
     "export": "Export",
@@ -176,6 +176,7 @@
       "total_for_month": "Total for month",
       "comments": "Comments",
       "add_new_comment": "Add new comment",
+      "there_is_no_comments": "Your comments will be here",
       "there_is_no_data_for_a_report": "There is no data for a report"
     }
   },
@@ -252,6 +253,7 @@
     },
     "other": {
       "confirm_approve_timesheet": "You are going to approve the timesheet, continue?",
+      "confirm_reject_timesheet": "You are going to reject the timesheet, continue?",
       "continue": "Continue",
       "cancel": "Cancel",
       "thank_you": "Thank you!",

@@ -18,21 +18,6 @@ interface IStatus {
 
 export const EmployeesItem: React.FC<IEmployeesItemProps> = ({data, index}) => {
 
-    const statusList: IStatus[] = [
-        {
-            value: "team_manager",
-            label: "Team manager"
-        },
-        {
-            value: "top_manager",
-            label: "Top manager"
-        },
-        {
-            value: "employee",
-            label: "Employee"
-        },
-    ]
-
     const countOfProjects = data.projects?.length === 1 ? data.projects?.length + " project" : data.projects?.length + " projects"
 
     const [isOpenContextMenu, setIsOpenContextMenu] = useState(false)

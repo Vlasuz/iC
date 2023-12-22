@@ -46,9 +46,9 @@ export const Costs: React.FC<ICostsProps> = () => {
         })
     }, [chosenTimesheet, timesheetId])
 
-    useEffect(() => {
-        setRowsSelectValue(expenseList.length > +RowsPerPage()[0].value ? RowsPerPage()[0] : RowsPerPage()[3])
-    }, [expenseList])
+    // useEffect(() => {
+    //     setRowsSelectValue(expenseList.length > +RowsPerPage()[0].value ? RowsPerPage()[0] : RowsPerPage()[3])
+    // }, [expenseList])
 
     const handleAddRows = () => {
         const plusCount = window.innerWidth < 768 ? 10 : 20

@@ -24,8 +24,7 @@ export const PopupForgotPassword: React.FC<IPopupForgotPasswordProps> = () => {
                     Forgot your password?
                 </h2>
                 <div className="forgot-password__text popup-text is-center">
-                    Don’t worry, we will send you a new one! Just enter your e-mail below and check the
-                    Inbox.
+                    Don’t worry, We shall send you a new one to your email.
                 </div>
                 <form className="popup-form">
                     <div className="popup-form__row">

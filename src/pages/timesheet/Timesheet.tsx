@@ -61,9 +61,9 @@ export const Timesheet: React.FC<ITimesheetProps> = () => {
         }).catch(er => console.log(getApiLink("/api/timesheet/statistics/?timesheet_id"), er))
     }, [chosenTimesheet, timesheetId])
 
-    useEffect(() => {
-        setRowsSelectValue(taskList.length > +RowsPerPage()[0].value ? RowsPerPage()[0] : RowsPerPage()[3])
-    }, [taskList])
+    // useEffect(() => {
+    //     setRowsSelectValue(taskList.length > +RowsPerPage()[0].value ? RowsPerPage()[0] : RowsPerPage()[3])
+    // }, [taskList])
 
     useEffect(() => {
         setStatistic(timesheetStatistic)

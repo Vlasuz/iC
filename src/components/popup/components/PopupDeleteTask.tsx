@@ -31,9 +31,9 @@ export const PopupDeleteTask: React.FC<IPopupDeleteTaskProps> = ({data}) => {
             if (!dataItem.status) return;
 
             setIsPopupActive(false)
-            // dispatch(removeTask(data))
+            dispatch(removeTask(data))
 
-            SetTasks(dispatch, chosenTimesheet.id)
+            // SetTasks(dispatch, chosenTimesheet.id)
             SetStatistic(dispatch, chosenTimesheet.id)
 
         }).catch(er => console.log(getApiLink('/api/admin/employee/delete/'), er))

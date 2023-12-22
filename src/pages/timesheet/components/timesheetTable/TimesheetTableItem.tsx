@@ -80,9 +80,13 @@ export const TimesheetTableItem: React.FC<ITimesheetTableItemProps> = ({taskItem
     const editTask: any = useContext(BlockToEdit)
 
     const handleEditTask = (data: ITask) => {
-        // setPopup({popup: "edit-employee-popup", data})
         editTask(taskItem)
         setIsOpenContextMenu(false)
+
+        document.querySelector(".main__inner")?.closest(".simplebar-content-wrapper")?.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
     }
     const handleRemoveTask = (data: ITask) => {
         setPopup({popup: "remove-task-popup", data})

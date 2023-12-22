@@ -176,6 +176,7 @@
       "total_for_month": "Усього за місяць",
       "comments": "Коментарі",
       "add_new_comment": "Додати коментар",
+      "there_is_no_comments": "Тут ще немає коментарів",
       "there_is_no_data_for_a_report": "Інформація для звіту відсутня"
     }
   },
@@ -251,6 +252,7 @@
     },
     "other": {
       "confirm_approve_timesheet": "Ви збираєтеся затвердити таймшит, продовжити?",
+      "confirm_reject_timesheet": "Ви збираєтеся відхилити таймшит, продовжити?",
       "continue": "Продовжити",
       "cancel": "Скасувати",
       "thank_you": "Дякуємо!",

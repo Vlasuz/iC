@@ -451,6 +451,19 @@ export const AppStyled = styled.div`
     top: auto;
     bottom: calc(100% + 10px);
   }
+
+  .section-table__add-costs--text input,
+  .section-table__add-task--text input {
+    height: 100%;
+  }
+
+  .input.date-input,
+  //.section-table__add-task--submit.btn,
+  .section-table__add-costs--cost input,
+  .section-table__add-task--hours input,
+  .drop-down__target {
+    height: 45px;
+  }
   
   
   

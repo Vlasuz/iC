@@ -2,17 +2,18 @@ import React, {useContext, useEffect} from 'react'
 import { useSelector } from 'react-redux'
 import {IUser} from "../../../models";
 import {PopupClose} from "./PopupClose";
-import {IsPopupActiveContext} from "../PopupList";
+import {IsPopupActiveContext, IsPopupActiveSecondContext} from "../PopupList";
 
 interface IPopupForgotPasswordThankYouProps {
-
+    popup: any
+    data: any
 }
 
-export const PopupResetPasswordThankYou: React.FC<IPopupForgotPasswordThankYouProps> = () => {
+export const PopupResetPasswordThankYou: React.FC<IPopupForgotPasswordThankYouProps> = ({popup, data}) => {
 
     const userData: IUser = useSelector((state: any) => state.toolkit.user)
 
-    const setIsPopupClose: any = useContext(IsPopupActiveContext)
+    const setIsPopupSecondClose: any = useContext(IsPopupActiveSecondContext)
 
     return (
         <div className="forgot-password-2__body popup-body">
@@ -24,11 +25,11 @@ export const PopupResetPasswordThankYou: React.FC<IPopupForgotPasswordThankYouPr
                 </h2>
                 <div className="forgot-password-2__text popup-text is-center">
                     We have sent the letter with instructions <br/> to the
-                    e-mail: <u>{userData.email}</u>
+                    e-mail: <u>{data?.email ?? userData?.email}</u>
                 </div>
                 <form className="popup-form">
                     <div className="popup-form__row-2">
-                        <button onClick={_ => setIsPopupClose(false)} className="popup-form__submit btn" type="button">
+                        <button onClick={_ => setIsPopupSecondClose(false)} className="popup-form__submit btn" type="button">
                             Continue
                         </button>
                     </div>

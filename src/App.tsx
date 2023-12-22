@@ -22,6 +22,7 @@ import getCookies from "./functions/getCookie";
 import {ITimesheet} from "./models";
 import {SetTimesheet} from "./api/SetTimesheet";
 import {SetStatistic} from "./api/SetStatistic";
+import {ResetPassword} from "./pages/resetPassword/ResetPassword";
 
 export const PopupContext: any = createContext(null)
 
@@ -35,10 +36,12 @@ function App() {
     const userData = useSelector((state: any) => state.toolkit.user)
 
     useEffect(() => {
-        if (!getCookies('access_token_ic')) {
+        if (!getCookies('access_token_ic') && !location.pathname.includes("reset-password")) {
             return navigate("/login");
         } else if (location.pathname.includes("login")) {
             navigate("/");
+        } else if (location.pathname.includes("reset-password")) {
+            return ;
         }
 
         setTasks(dispatch)
@@ -98,6 +101,7 @@ function App() {
                         <Route path={isAdmin ? "/iC" : "/employees"} element={<Employees/>}/>
                         <Route path={isAdmin ? "/" : "/employees"} element={<Employees/>}/>
                         <Route path={'/login'} element={<Login/>}/>
+                        <Route path={'/reset-password/:userCode/:userEmail'} element={<ResetPassword/>}/>
 
                     </Routes>
 
