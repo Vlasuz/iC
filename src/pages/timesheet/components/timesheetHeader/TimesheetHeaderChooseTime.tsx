@@ -11,7 +11,12 @@ interface ITimesheetHeaderChooseTimeProps {
     timeData: string
 }
 
-export const TimesheetHeaderChooseTime: React.FC<ITimesheetHeaderChooseTimeProps> = ({setHoursData, setTimeData, hoursData, timeData}) => {
+export const TimesheetHeaderChooseTime: React.FC<ITimesheetHeaderChooseTimeProps> = ({
+                                                                                         setHoursData,
+                                                                                         setTimeData,
+                                                                                         hoursData,
+                                                                                         timeData
+                                                                                     }) => {
 
     const [isChosenDate, setIsChosenDate] = useState(false)
 
@@ -41,7 +46,7 @@ export const TimesheetHeaderChooseTime: React.FC<ITimesheetHeaderChooseTimeProps
     // EDIT POINT
     useEffect(() => {
 
-        if(+hoursData === 0) return;
+        if (+hoursData === 0) return;
         setIsChosenDate(true)
         setTimeData(timeData)
 
@@ -84,7 +89,7 @@ export const TimesheetHeaderChooseTime: React.FC<ITimesheetHeaderChooseTimeProps
 
 
     useEffect(() => {
-        if(+timeData === 0) {
+        if (+timeData === 0) {
             setIsChosenDate(false)
             setTimeFromHours(TimeHoursList()[7])
             setTimeFromMinutes(TimeMinutesList()[0])
@@ -116,13 +121,17 @@ export const TimesheetHeaderChooseTime: React.FC<ITimesheetHeaderChooseTimeProps
                         <div className="section-table__time--item-col">
                             <div className="section-table__time--select">
 
-                                <CustomSelect list={TimeHoursList()} onChange={handleTimeChange} defaultValue={timeFromHours} selectValue={timeFromHours} setSelectedItem={setTimeFromHours} scrollNumber={357}/>
+                                <CustomSelect tabIndex={1} list={TimeHoursList()} onChange={handleTimeChange}
+                                              defaultValue={timeFromHours} selectValue={timeFromHours}
+                                              setSelectedItem={setTimeFromHours} scrollNumber={357}/>
 
                             </div>
                             <span>:</span>
                             <div className="section-table__time--select">
 
-                                <CustomSelect list={TimeMinutesList()} onChange={handleTimeChange} defaultValue={timeFromMinutes} selectValue={timeFromMinutes} setSelectedItem={setTimeFromMinutes}/>
+                                <CustomSelect tabIndex={2} list={TimeMinutesList()} onChange={handleTimeChange}
+                                              defaultValue={timeFromMinutes} selectValue={timeFromMinutes}
+                                              setSelectedItem={setTimeFromMinutes}/>
 
                             </div>
                         </div>
@@ -134,12 +143,16 @@ export const TimesheetHeaderChooseTime: React.FC<ITimesheetHeaderChooseTimeProps
                         <div className="section-table__time--item-col">
                             <div className="section-table__time--select">
 
-                                <CustomSelect list={TimeHoursList()} onChange={handleTimeChange} defaultValue={timeToHours} selectValue={timeToHours} setSelectedItem={setTimeToHours} scrollNumber={357}/>
+                                <CustomSelect tabIndex={3} list={TimeHoursList()} onChange={handleTimeChange}
+                                              defaultValue={timeToHours} selectValue={timeToHours}
+                                              setSelectedItem={setTimeToHours} scrollNumber={357}/>
 
                             </div>
                             <span>:</span>
                             <div className="section-table__time--select">
-                                <CustomSelect list={TimeMinutesList()} onChange={handleTimeChange} defaultValue={timeToMinutes} selectValue={timeToMinutes} setSelectedItem={setTimeToMinutes}/>
+                                <CustomSelect tabIndex={4} list={TimeMinutesList()} onChange={handleTimeChange}
+                                              defaultValue={timeToMinutes} selectValue={timeToMinutes}
+                                              setSelectedItem={setTimeToMinutes}/>
                             </div>
                         </div>
                     </div>

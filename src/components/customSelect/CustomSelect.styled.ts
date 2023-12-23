@@ -16,8 +16,22 @@ export const CustomSelectStyled = styled.div`
     cursor: pointer;
     border: 1px solid rgba(174,182,206,.3);
     width: 100%;
+    position: relative;
     span {
       margin-right: 3px;
+    }
+
+    input {
+      background: transparent;
+      //color: transparent;
+      border: none;
+      cursor: pointer;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 0%;
+      max-width: 100%;
     }
   }
   

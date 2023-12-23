@@ -41,6 +41,7 @@ export interface IComment {
         status: string
         id: string
     }
+    answer: IUser
     text: string
 }
 

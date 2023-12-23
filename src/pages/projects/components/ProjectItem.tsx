@@ -7,9 +7,10 @@ import {PopupContext} from "../../../App";
 interface IProjectItemProps {
     data: IProject
     index: number
+    isArchive: boolean
 }
 
-export const ProjectItem: React.FC<IProjectItemProps> = ({data, index}) => {
+export const ProjectItem: React.FC<IProjectItemProps> = ({data, index, isArchive}) => {
 
     const [isOpenContextMenu, setIsOpenContextMenu] = useState(false)
     const [menuPosition, setMenuPosition] = useState({})
@@ -19,6 +20,8 @@ export const ProjectItem: React.FC<IProjectItemProps> = ({data, index}) => {
 
     const handleOpenContextMenu = (e: React.MouseEvent<HTMLDivElement>) => {
         e.preventDefault()
+
+        if(isArchive) return;
 
         if(isOpenContextMenu) {
             setTimeout(() => {
@@ -73,7 +76,7 @@ export const ProjectItem: React.FC<IProjectItemProps> = ({data, index}) => {
     }
 
     return (
-        <div ref={rowBlock} onContextMenu={handleOpenContextMenu} className={"section-table__row drop-down-2" + (isOpenContextMenu ? " is-active-drop-down" : "")}>
+        <div ref={rowBlock} onContextMenu={handleOpenContextMenu} className={`section-table__row drop-down-2 ${isArchive && "is-archive"} ${isOpenContextMenu && "is-active-drop-down"}`}>
             <div className="section-table__param visible-on-mob">
                 <span>{index + 1}</span>
                 <span>{data.name}</span>

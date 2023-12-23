@@ -464,6 +464,14 @@ export const AppStyled = styled.div`
   .drop-down__target {
     height: 45px;
   }
+
+
+  .section-table__row.is-archive {
+    opacity: .5;
+    &:hover {
+      background: transparent;
+    }
+  }
   
   
   

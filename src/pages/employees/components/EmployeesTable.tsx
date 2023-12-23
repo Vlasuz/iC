@@ -32,6 +32,7 @@ export const EmployeesTable: React.FC<IEmployeesTableProps> = ({searchValue, cou
 
         getBearer("get")
         axios.get(getApiLink(`/api/admin/employee/?search=${searchValue}`)).then(({data}) => {
+            console.log(data)
             dispatch(setEmployeesList(data))
         }).catch(er => console.log(er))
 
@@ -142,7 +143,7 @@ export const EmployeesTable: React.FC<IEmployeesTableProps> = ({searchValue, cou
 														<svg width="13" height="13" viewBox="0 0 13 13">
 															<use xlinkHref="#user"></use>
 														</svg>
-                                                        <Translate>employees_admin.table.employees_adminemployees_adminemployees_adminemployees_adminname</Translate>
+                                                        <Translate>employees_admin.table.name</Translate>
 														<svg width="10" height="15" viewBox="0 0 11 15">
 															<use xlinkHref="#sort-up-down"></use>
 														</svg>
@@ -299,12 +300,12 @@ export const EmployeesTable: React.FC<IEmployeesTableProps> = ({searchValue, cou
                         <div className="section-table__body">
                             {
                                 employees
-                                    ?.filter(item => !item.archive)
                                     ?.filter(item => chosenStatus?.value ? item.status === chosenStatus.value : item)
                                     ?.filter((item, index) => countOfShowRows === 0 ? item : index < countOfShowRows)
                                     ?.sort((a, b) => a.last_name < b.last_name ? sortByName === "sortUp" ? 1 : -1 : sortByName === "sortDown" ? 1 : -1)
-                                    ?.map((employee, index) =>
-                                        <EmployeesItem key={employee.id} index={index + 1} data={employee}/>)
+                                    ?.sort((a, b) => +a.archive - +b.archive)
+                                    ?.map((employee: IEmployee, index) =>
+                                        <EmployeesItem key={employee.id} isArchive={employee.archive} index={index + 1} data={employee}/>)
                             }
                         </div>
                     </div>

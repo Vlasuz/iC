@@ -4,7 +4,7 @@ export const useScrollTopValue = () => {
     const [scrollY, setScrollY] = useState(0);
 
     useEffect(() => {
-        const block: any = document.querySelector(".simplebar-content-wrapper")
+        const block: any = document.querySelector(".main__inner")?.closest(".simplebar-content-wrapper")
 
         const handleScroll = () => {
             setScrollY(block.scrollTop);

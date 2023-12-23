@@ -1,12 +1,26 @@
 import React, {useEffect, useState} from 'react'
 import {SummaryEmployeesButtons} from "./SummaryEmployeesButtons";
 import {Translate} from "../../../components/translate/Translate";
+import axios from "axios";
+import {getApiLink} from "../../../functions/getApiLink";
+import {SetSummaryEmployees} from "../../../api/SetSummaryEmployees";
+import { useDispatch } from 'react-redux';
 
 interface ISummaryEmployeesChangeDecisionProps {
-    setIsChangeDecision: any
+    itemData: any
 }
 
-export const SummaryEmployeesChangeDecision: React.FC<ISummaryEmployeesChangeDecisionProps> = ({setIsChangeDecision}) => {
+export const SummaryEmployeesChangeDecision: React.FC<ISummaryEmployeesChangeDecisionProps> = ({itemData}) => {
+
+    const dispatch = useDispatch()
+
+    const handleChangeDecision = () => {
+        axios.post(getApiLink(`/api/timesheet/employees/review/?timesheet_id=${itemData?.id}&status=progress`)).then(({data}) => {
+            if(!data?.status) return;
+
+            SetSummaryEmployees(dispatch)
+        })
+    }
 
     return (
         <div className="summary-item__footer--col">
@@ -16,7 +30,7 @@ export const SummaryEmployeesChangeDecision: React.FC<ISummaryEmployeesChangeDec
                     <use xlinkHref="#download"></use>
                 </svg>
             </button>
-            <a onClick={_ => setIsChangeDecision(true)} className="summary-item__button btn open-popup is-grey"
+            <a onClick={handleChangeDecision} className="summary-item__button btn open-popup is-grey"
                type="button">
                 <Translate>employees_page.table.change_decision</Translate>
             </a>

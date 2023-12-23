@@ -27,7 +27,12 @@ interface IElement {
     percent: number
 }
 
-export const DownSidebar: React.FC<IDownSidebarProps> = ({setIsOpenDownSidebar, statisticAllAmount, statisticAllElements, type}) => {
+export const DownSidebar: React.FC<IDownSidebarProps> = ({
+                                                             setIsOpenDownSidebar,
+                                                             statisticAllAmount,
+                                                             statisticAllElements,
+                                                             type
+                                                         }) => {
 
 
     const [statisticList, setStatisticList]: any = useState([])
@@ -47,6 +52,8 @@ export const DownSidebar: React.FC<IDownSidebarProps> = ({setIsOpenDownSidebar, 
         setStatisticList(mergeAndSum(statisticAllElements, statisticAllElements).statistic)
 
         setComments(chosenTimesheet?.comments)
+
+        console.log(chosenTimesheet?.comments)
     }, [isActive])
 
     useEffect(() => {
@@ -127,26 +134,30 @@ export const DownSidebar: React.FC<IDownSidebarProps> = ({setIsOpenDownSidebar, 
 
                                         {
                                             !!comments?.length ? comments?.map((com, index) =>
-                                                <div key={index} className="down-sidebar__chat-item"
-                                                     data-author="Olena Rybak">
-                                                    <div
-                                                        className="down-sidebar__chat-item--text">
-                                                        <p>
-                                                            <b>{com.user.first_name} {com.user.last_name}: </b>
-                                                            {com.text}
-                                                        </p>
+                                                    <div key={index} className="down-sidebar__chat-item"
+                                                         data-author="Olena Rybak">
+                                                        <div
+                                                            className="down-sidebar__chat-item--text">
+                                                            <p>
+                                                                {com?.answer &&
+                                                                    <span>@{com?.answer?.first_name} {com?.answer?.last_name}.</span>
+                                                                }
+                                                                <b>{com.user.first_name} {com.user.last_name}: </b>
+                                                                {com.text.slice(com.text?.indexOf(".") + 1)}
+                                                            </p>
+                                                        </div>
+                                                        <button type="button" onClick={_ => {
+                                                            setTextValue(`@${com.user.first_name} ${com.user.last_name}. `)
+                                                            setAnswerCommentUserId(com.user.id)
+                                                            inputBlock.current.focus()
+                                                        }} className="down-sidebar__chat-item--answer" title="Answer">
+                                                            <svg width="20" height="20" viewBox="0 0 20 20">
+                                                                <use xlinkHref="#answer"></use>
+                                                            </svg>
+                                                        </button>
                                                     </div>
-                                                    <button type="button" onClick={_ => {
-                                                        setTextValue(`@${com.user.first_name} ${com.user.last_name}. `)
-                                                        setAnswerCommentUserId(com.user.id)
-                                                        inputBlock.current.focus()
-                                                    }} className="down-sidebar__chat-item--answer" title="Answer">
-                                                        <svg width="20" height="20" viewBox="0 0 20 20">
-                                                            <use xlinkHref="#answer"></use>
-                                                        </svg>
-                                                    </button>
-                                                </div>
-                                            ) : <Translate>timesheet_page.down_sidebar.there_is_no_data_for_a_report</Translate>
+                                                ) :
+                                                <Translate>timesheet_page.down_sidebar.there_is_no_data_for_a_report</Translate>
                                         }
 
                                     </SimpleBar>
@@ -159,7 +170,8 @@ export const DownSidebar: React.FC<IDownSidebarProps> = ({setIsOpenDownSidebar, 
                                                onChange={e => setTextValue(e.target.value)} value={textValue}
                                                required className="input"/>
                                         <span className="placeholder">
-                                            {!textValue && <Translate>timesheet_page.down_sidebar.add_new_comment</Translate>}
+                                            {!textValue &&
+                                                <Translate>timesheet_page.down_sidebar.add_new_comment</Translate>}
                                         </span>
                                     </label>
                                     <button type="submit" title="Send">
@@ -173,23 +185,27 @@ export const DownSidebar: React.FC<IDownSidebarProps> = ({setIsOpenDownSidebar, 
                         <div className="down-sidebar__col">
                             <div className="down-sidebar__total">
 
-                                <SimpleBar className="down-sidebar__total-block simplebar-scrollable-y" autoHide={false}>
+                                <SimpleBar className="down-sidebar__total-block simplebar-scrollable-y"
+                                           autoHide={false}>
                                     {
                                         statisticList?.length ? statisticList?.map((item: any, index: any) =>
-                                            <div key={index} className="down-sidebar__total-item">
-                                                <b className="down-sidebar__total-item--name" style={{width: isCostPage ? "300px" : "350px"}}>
-                                                    {item.project.name}_{item.project.description}
-                                                </b>
-                                                <div className="down-sidebar__total-item--value">
-                                                    <b style={{maxWidth: isCostPage ? "80px" : "50px"}}>{isCostPage ? item?.expense.sum : item?.task.hours} {isCostPage ? currency : "h"}</b>
-                                                    <div
-                                                        className="down-sidebar__total-item--progress-bar"
-                                                        data-value={`${item?.task?.percent}%`}>
-                                                        <div className="line_done" style={{width: `${item?.task?.percent}%`}}></div>
+                                                <div key={index} className="down-sidebar__total-item">
+                                                    <b className="down-sidebar__total-item--name"
+                                                       style={{width: isCostPage ? "300px" : "350px"}}>
+                                                        {item.project.name}_{item.project.description}
+                                                    </b>
+                                                    <div className="down-sidebar__total-item--value">
+                                                        <b style={{maxWidth: isCostPage ? "80px" : "50px"}}>{isCostPage ? item?.expense.sum : item?.task.hours} {isCostPage ? currency : "h"}</b>
+                                                        <div
+                                                            className="down-sidebar__total-item--progress-bar"
+                                                            data-value={`${item?.task?.percent}%`}>
+                                                            <div className="line_done"
+                                                                 style={{width: `${item?.task?.percent}%`}}></div>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        ) : <Translate>timesheet_page.down_sidebar.there_is_no_data_for_a_report</Translate>
+                                            ) :
+                                            <Translate>timesheet_page.down_sidebar.there_is_no_data_for_a_report</Translate>
                                     }
                                 </SimpleBar>
                                 <div className="down-sidebar__total-footer">
@@ -197,7 +213,8 @@ export const DownSidebar: React.FC<IDownSidebarProps> = ({setIsOpenDownSidebar, 
                                         <span>
                                             <Translate>timesheet_page.down_sidebar.total_for_month</Translate>
                                         </span>
-                                        <b>{statisticAllAmount ?? 0} {isCostPage ? currency : <Translate>timesheet_page.down_sidebar.hours</Translate>}</b>
+                                        <b>{statisticAllAmount ?? 0} {isCostPage ? currency :
+                                            <Translate>timesheet_page.down_sidebar.hours</Translate>}</b>
                                     </div>
                                 </div>
                             </div>

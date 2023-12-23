@@ -104,8 +104,8 @@ export const SummaryEmployeesItem: React.FC<ISummaryEmployeesItemProps> = ({item
     const footerBlockByStatus: any = {
         "progress": "",
         "waiting": <SummaryEmployeesButtons timesheetId={itemData.id}/>,
-        "reject": <SummaryEmployeesChangeDecision setIsChangeDecision={setIsChangeDecision}/>,
-        "approve": <SummaryEmployeesChangeDecision setIsChangeDecision={setIsChangeDecision}/>,
+        "reject": <SummaryEmployeesChangeDecision itemData={itemData}/>,
+        "approve": <SummaryEmployeesChangeDecision itemData={itemData}/>,
     }
     const footerStatusesByStatus: any = {
         "progress": <div className="summary-item__footer--col"/>,

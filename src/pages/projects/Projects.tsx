@@ -197,11 +197,11 @@ export const Projects: React.FC<IProjectsProps> = () => {
 
                                 {
                                     !!projects.length && projects
-                                        ?.filter(item => !item.archive)
+                                        ?.slice()?.sort((a, b) => +a.archive - +b.archive)
                                         ?.slice(paginationCountFrom, paginationCountTo)
                                         ?.filter((item, index) => index < Math.ceil(paginationCountStep.value / 2))
                                         ?.map((project: IProject, index: number) =>
-                                            <ProjectItem key={project.id} data={project}
+                                            <ProjectItem isArchive={project.archive} key={project.id} data={project}
                                                          index={paginationCountFrom + index}/>
                                         )
                                 }
@@ -239,10 +239,11 @@ export const Projects: React.FC<IProjectsProps> = () => {
 
                                 {
                                     !!projects.length && projects
+                                        ?.slice()?.sort((a, b) => +a.archive - +b.archive)
                                         ?.slice(paginationCountFrom, paginationCountTo)
                                         ?.filter((item, index) => index >= Math.ceil(paginationCountStep.value / 2))
                                         ?.map((project: IProject, index: number) =>
-                                            <ProjectItem key={project.id} data={project}
+                                            <ProjectItem isArchive={project.archive} key={project.id} data={project}
                                                          index={Math.ceil((paginationCountFrom + index) + paginationCountStep.value / 2)}/>
                                         )
                                 }
@@ -296,7 +297,7 @@ export const Projects: React.FC<IProjectsProps> = () => {
                                 {
                                     !!projects.length && projects
                                         ?.map((project: IProject, index: number) =>
-                                            <ProjectItem key={project.id} data={project}
+                                            <ProjectItem isArchive={project.archive} key={project.id} data={project}
                                                          index={paginationCountFrom / paginationCountStep.value + 1}/>
                                         )
                                 }

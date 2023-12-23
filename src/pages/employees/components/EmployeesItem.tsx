@@ -9,6 +9,7 @@ import {Trans} from "react-i18next";
 interface IEmployeesItemProps {
     data: IEmployee
     index: number
+    isArchive: boolean
 }
 
 interface IStatus {
@@ -16,7 +17,7 @@ interface IStatus {
     label: string
 }
 
-export const EmployeesItem: React.FC<IEmployeesItemProps> = ({data, index}) => {
+export const EmployeesItem: React.FC<IEmployeesItemProps> = ({data, index, isArchive}) => {
 
     const countOfProjects = data.projects?.length === 1 ? data.projects?.length + " project" : data.projects?.length + " projects"
 
@@ -28,6 +29,7 @@ export const EmployeesItem: React.FC<IEmployeesItemProps> = ({data, index}) => {
 
     const handleOpenContextMenu = (e: React.MouseEvent<HTMLDivElement>) => {
         e.preventDefault()
+        if(isArchive) return;
 
         if (isOpenContextMenu) {
             setTimeout(() => {
@@ -83,7 +85,7 @@ export const EmployeesItem: React.FC<IEmployeesItemProps> = ({data, index}) => {
 
     return (
         <div ref={rowBlock} onContextMenu={handleOpenContextMenu}
-             className={"section-table__row drop-down-2" + (isOpenContextMenu ? " is-active-drop-down" : "")}>
+             className={`section-table__row drop-down-2 ${isArchive && "is-archive"} ${isOpenContextMenu && "is-active-drop-down"}`}>
             <div className="section-table__param visible-on-mob">
                 <span>
                     {index}

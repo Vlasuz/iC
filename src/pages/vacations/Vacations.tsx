@@ -120,7 +120,7 @@ export const Vacations: React.FC<IVacationsProps> = () => {
                                             } else if (sortByName === "sortDown") {
                                                 return a?.user?.last_name.localeCompare(b?.user?.last_name);
                                             } else {
-                                                return 0; // Не менять порядок
+                                                return 0;
                                             }
                                         })
                                         ?.map((item: IVacation, index: number) => (
