@@ -5127,7 +5127,7 @@ body {
 
 .section-table__add-task--hours .input {
     width: 100%;
-    font-size: .875rem
+    font-size: .875rem;
 }
 
 .section-table__time--target {
