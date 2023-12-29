@@ -17,4 +17,16 @@ export const AsideStyled = styled.aside`
   .aside__log-out {
     cursor: pointer;
   }
+
+  .drop-down__list a {
+    text-align: center;
+  }
+  
+  .aside__language--target > svg {
+    margin-top: -3px;
+  }
+
+  &.is-min .aside__user--avatar {
+    margin-left: 0;
+  }
 `

@@ -2,6 +2,10 @@ import styled from "styled-components";
 
 export const SummaryEmployeesStyled = styled.section`
   min-height: calc(95vh - 4px);
+
+  @media screen and (max-width: 992px) {
+    min-height: calc(100vh - 115px);
+  };
   display: flex;
   flex-direction: column;
   padding-bottom: 0;
@@ -32,10 +36,34 @@ export const SummaryEmployeesStyled = styled.section`
   .summary-item__user--avatar img {
     -webkit-border-radius: 50%;-moz-border-radius: 50%;border-radius: 50%;
   }
-
+  
   .summary-item__element--name {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+
+  .employees-row .select .custom-select__head {
+    justify-content: space-between;
+  }
+  .employees-row .select li {
+    text-align: left;
+  }
+  
+  .aside__user--avatar {
+    width: 100%;
+    height: 100%;
+    font-size: 20px;
+  }
+
+  @media screen and (max-width: 1440px) {
+    .section-table__add-task--project.drop-down .drop-down__block {
+      right: 0;
+      left: auto;
+    }
+  }
+  
+  .page-footer {
+    padding-top: 11px;
   }
 `

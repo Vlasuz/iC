@@ -3,6 +3,7 @@ import {useClickOutside} from "../../../../hooks/ClickOutside";
 import {CustomSelect} from "../../../../components/customSelect/CustomSelect";
 import {TimeHoursList} from "../../../../constants/TimeHoursList";
 import {TimeMinutesList} from "../../../../constants/TimeMinutesList";
+import { Translate } from '../../../../components/translate/Translate';
 
 interface ITimesheetHeaderChooseTimeProps {
     setHoursData: any
@@ -106,7 +107,7 @@ export const TimesheetHeaderChooseTime: React.FC<ITimesheetHeaderChooseTimeProps
                 <button onClick={_ => setIsActiveSelectTime(prev => !prev)}
                         className="section-table__time--target drop-down__target" type="button">
                     <span>
-                        {isChosenDate ? `${timeFromHours.label}:${timeFromMinutes.label} – ${timeToHours.label}:${timeToMinutes.label}` : "Choose time"}
+                        {isChosenDate ? `${timeFromHours.label}:${timeFromMinutes.label} – ${timeToHours.label}:${timeToMinutes.label}` : <Translate>timesheet_page.top_part.choose_time</Translate>}
                     </span>
                     <svg width="10" height="7" viewBox="0 0 10 7"
                          className="drop-down__target--arrow">
@@ -116,7 +117,7 @@ export const TimesheetHeaderChooseTime: React.FC<ITimesheetHeaderChooseTimeProps
                 <div className="section-table__time--block drop-down__block">
                     <div className="section-table__time--item">
                         <div className="section-table__time--item-col">
-                            <span>From:</span>
+                            <span><Translate>timesheet_page.popups.from</Translate>:</span>
                         </div>
                         <div className="section-table__time--item-col">
                             <div className="section-table__time--select">
@@ -138,7 +139,7 @@ export const TimesheetHeaderChooseTime: React.FC<ITimesheetHeaderChooseTimeProps
                     </div>
                     <div className="section-table__time--item">
                         <div className="section-table__time--item-col">
-                            <span>To:</span>
+                            <span><Translate>timesheet_page.popups.to</Translate>:</span>
                         </div>
                         <div className="section-table__time--item-col">
                             <div className="section-table__time--select">

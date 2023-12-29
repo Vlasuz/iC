@@ -2,6 +2,10 @@ import styled from "styled-components";
 
 export const ProjectStyled = styled.section`
   min-height: calc(95vh - 4px);
+
+  @media screen and (max-width: 992px) {
+    min-height: calc(100vh - 115px);
+  };
   
   .section-table__main--container {
     display: flex;
@@ -36,5 +40,15 @@ export const ProjectStyled = styled.section`
 
   .section-table__footer {
     padding-top: 0 !important; 
+  }
+
+  @media screen and (max-width: 992px) {
+    .section-table__search--label {
+      position: absolute !important;
+    }
+
+    .table-projects {
+      margin-bottom: 10px;
+    }
   }
 `

@@ -26,11 +26,12 @@ export const TableCalendar: React.FC<ITableCalendarProps> = ({setDateData, dateD
     useEffect(() => {
         if (!dateData) return;
 
-        console.log('zzzz', dateData)
         const dateParts = dateData.split('.');
         const formattedDate = new Date(`${dateParts[1]}-${dateParts[0]}-${dateParts[2]}`);
 
         setDate(formattedDate)
+
+        setCalendarOpen(false)
 
         setDateData(`${lessThenTen(String(formattedDate.getDate()))}.${lessThenTen(String(formattedDate.getMonth() + 1))}.${formattedDate.getFullYear()}`)
 

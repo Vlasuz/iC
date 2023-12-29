@@ -9,19 +9,19 @@ interface INotificationsCommentProps {
 
 export const NotificationsComment: React.FC<INotificationsCommentProps> = ({itemData}) => {
 
-    const user: IUser = useSelector((state: any) => state.toolkit?.user)
+    // const user: IUser = useSelector((state: any) => state.toolkit?.user)
 
-    const [isYourComment] = useState(itemData.comment?.user?.id === user?.id)
-
-    if(!isYourComment) return <></>;
+    // console.log(user)
+    //
+    // const [isYourComment] = useState(itemData.comment?.user?.id === user?.id)
+    //
+    // if(!isYourComment) return <></>;
 
     return (
         <div className="notification__item">
             <div className="notification__block--text">
                 <p>
-                    <b>
-                        <Translate>timesheet_page.notifications.you_have_a_new_comment_from</Translate> {itemData?.comment?.user?.first_name} {itemData?.comment?.user?.last_name}:</b>
-                    {itemData?.comment?.text}
+                    <b><Translate>timesheet_page.notifications.you_have_a_new_comment_from</Translate> {itemData?.comment?.user?.first_name} {itemData?.comment?.user?.last_name}:</b> {itemData?.comment?.text}
                 </p>
             </div>
         </div>

@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react'
 import {IProject, IUser} from "../../../../models";
 import {useClickOutside} from "../../../../hooks/ClickOutside";
 import {useSelector} from "react-redux";
+import { Translate } from '../../../../components/translate/Translate';
 
 interface ITimesheetHeaderProjectsProps {
     setProjectData: any
@@ -32,7 +33,7 @@ export const TimesheetHeaderProjects: React.FC<ITimesheetHeaderProjectsProps> = 
             <button onClick={_ => !isEditItem && setIsActiveSelectProjects(prev => !prev)} className="section-table__add-task--project-target drop-down__target"
                     type="button">
 
-                {isEditItem?.name ?? project?.name ?? "Choose project"}
+                {isEditItem?.name ?? project?.name ?? <Translate>timesheet_page.top_part.choose_project</Translate>}
 
                 {!isEditItem && <svg width="10" height="7" viewBox="0 0 10 7"
                       className="drop-down__target--arrow">

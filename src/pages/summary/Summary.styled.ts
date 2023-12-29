@@ -24,4 +24,10 @@ export const SummaryStyled = styled.section`
     overflow: hidden;
     text-overflow: ellipsis;
   }
+  
+  @media screen and (max-width: 768px) {
+    .summary-item__target--toggle {
+      margin-top: -25px;
+    }
+  }
 `

@@ -18,6 +18,7 @@ import {PopupApproveEmployeeTimesheet} from "./components/PopupApproveEmployeeTi
 import {PopupResetPasswordThankYou} from "./components/PopupResetPasswordThankYou";
 import {PopupResetPassword} from "./components/PopupResetPassword";
 import {PopupReviewToTimesheet} from "./components/PopupReviewToTimesheet";
+import {PopupListStyled} from "./PopupList.styled";
 
 interface IPopupListProps {
     popup: any
@@ -34,7 +35,8 @@ export const PopupList: React.FC<IPopupListProps> = ({popup}) => {
     const [chosenProjects, setChosenProjects] = useState<IProject[]>([])
 
     const popupList: { [key: string]: React.ReactNode } = {
-        "forgot-password-popup": <PopupForgotPassword/>,
+        "forgot-password-popup": <PopupForgotPassword popup={popup} data={popup.data}/>,
+
         "add-new-employee-popup": <PopupAddEmployee data={popup.data} chosenProjects={chosenProjects}
                                                     setIsOpenProjects={setIsOpenProjects}/>,
         "edit-employee-popup": <PopupEditEmployee popup={popup} data={popup.data} chosenProjects={chosenProjects}
@@ -50,7 +52,7 @@ export const PopupList: React.FC<IPopupListProps> = ({popup}) => {
         "approve-employee-timesheet-popup": <PopupApproveEmployeeTimesheet data={popup.data}/>,
         "review-employee-timesheet-popup": <PopupReviewToTimesheet data={popup.data}/>,
 
-        "profile-popup": <PopupProfile/>,
+        "profile-popup": <PopupProfile data={popup.data}/>,
         "edit-profile-popup": <PopupEditProfile popup={popup}/>,
 
         "reset-password-popup": <PopupResetPassword popup={popup} data={popup.data}/>,
@@ -78,7 +80,6 @@ export const PopupList: React.FC<IPopupListProps> = ({popup}) => {
     }, [isPopupActive])
 
 
-
     useEffect(() => {
         if (!popup.secondPopup) return;
 
@@ -90,45 +91,57 @@ export const PopupList: React.FC<IPopupListProps> = ({popup}) => {
 
         setTimeout(() => setChosenProjects([]), 500)
 
-        setTimeout(() => {
-            if (popup.secondPopup === "profile-popup") return;
+        // setTimeout(() => {
+            // if (popup.secondPopup === "profile-popup") return;
 
-        }, 500)
+        // }, 500)
     }, [isPopupSecondActive])
 
     const sidePopup = ["profile-popup", "edit-profile-popup"]
 
+    console.log(popup)
+
+    const handleClosePopup = () => {
+        setIsPopupActive(false)
+
+        setTimeout(() => {
+            setPopup("")
+        }, 500)
+    }
+
     return (
-        <IsPopupActiveSecondContext.Provider value={setIsPopupSecondActive}>
-            <IsPopupActiveContext.Provider value={setIsPopupActive}>
-                <div
-                    className={"popup" + (isPopupActive ? " is-active" : "") + (sidePopup.includes(popup.popup) ? " side-popup" : "")}
-                    style={{display: "flex"}}>
-                    <div className="popup-wrapper">
-                        <div className="add-project__bg popup-bg" onClick={_ => setIsPopupActive(false)}/>
+        <PopupListStyled>
+            <IsPopupActiveSecondContext.Provider value={setIsPopupSecondActive}>
+                <IsPopupActiveContext.Provider value={setIsPopupActive}>
+                    <div
+                        className={"popup" + (isPopupActive ? " is-active" : "") + (sidePopup.includes(popup.popup) ? " side-popup" : "")}
+                        style={{display: "flex"}}>
+                        <div className="popup-wrapper">
+                            <div className="add-project__bg popup-bg" onClick={handleClosePopup}/>
 
-                        {popupList[popup.popup]}
+                            {popupList[popup.popup]}
 
+                        </div>
                     </div>
-                </div>
 
-                <PopupEmployeeProjects data={popup.data} setChosenProjects={setChosenProjects}
-                                       chosenProjects={chosenProjects} isOpenProjects={isOpenProjects}
-                                       setIsOpenProjects={setIsOpenProjects}/>
+                    <PopupEmployeeProjects data={popup.data} setChosenProjects={setChosenProjects}
+                                           chosenProjects={chosenProjects} isOpenProjects={isOpenProjects}
+                                           setIsOpenProjects={setIsOpenProjects}/>
 
-                <div
-                    className={"popup" + ((popup.secondPopup && isPopupSecondActive) ? " is-active" : "") + (sidePopup.includes(popup.secondPopup) ? " side-popup" : "")}
-                    style={{display: "flex"}}>
-                    <div className="popup-wrapper">
-                        <div className="add-project__bg popup-bg" onClick={_ => setIsPopupSecondActive(false)}/>
+                    <div
+                        className={"popup" + ((popup.secondPopup && isPopupSecondActive) ? " is-active" : "") + (sidePopup.includes(popup.secondPopup) ? " side-popup" : "")}
+                        style={{display: "flex"}}>
+                        <div className="popup-wrapper">
+                            <div className="add-project__bg popup-bg" onClick={_ => setIsPopupSecondActive(false)}/>
 
-                        {popup.secondPopup && popupList[popup.secondPopup]}
+                            {popup.secondPopup && popupList[popup.secondPopup]}
 
+                        </div>
                     </div>
-                </div>
 
 
-            </IsPopupActiveContext.Provider>
-        </IsPopupActiveSecondContext.Provider>
+                </IsPopupActiveContext.Provider>
+            </IsPopupActiveSecondContext.Provider>
+        </PopupListStyled>
     )
 }

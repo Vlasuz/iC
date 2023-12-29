@@ -16,6 +16,7 @@ import {useMask} from "@react-input/mask";
 import {SetEmployees} from "../../../api/SetEmployees";
 import {Translate} from "../../translate/Translate";
 import {PopupContext} from "../../../App";
+import SimpleBar from "simplebar-react";
 
 interface IPopupEditEmployeeProps {
     setIsOpenProjects: any
@@ -70,7 +71,7 @@ export const PopupEditEmployee: React.FC<IPopupEditEmployeeProps> = ({setIsOpenP
             "role": roleValue,
             "status": statusValue.value,
             "email": emailValue,
-            "phone": `${phoneCode.label} ${phoneValue}`,
+            "phone": phoneValue ? `${phoneCode.label} ${phoneValue}` : "",
             "holidays": +holidaysValue,
             "projects": projectsList,
             "all_projects": chosenProjects?.length === projects.length
@@ -109,11 +110,10 @@ export const PopupEditEmployee: React.FC<IPopupEditEmployeeProps> = ({setIsOpenP
     return (
         <div className="add-new-employee__body popup-body">
             <h2 className="popup-title title">
-                Edit employee
+                <Translate>employees_admin.others.edit_employee</Translate>
             </h2>
             <PopupClose/>
-            <div className="add-new-employee__container popup-container" data-simplebar
-                 data-simplebar-auto-hide="false">
+            <SimpleBar autoHide={false} className="add-new-employee__container popup-container">
                 <form onSubmit={handleChange} className="popup-form">
                     <div className="popup-form__row">
                         <label className="popup-form__label">
@@ -160,7 +160,9 @@ export const PopupEditEmployee: React.FC<IPopupEditEmployeeProps> = ({setIsOpenP
                                 <Translate>employees_admin.others.password</Translate>
                             </span>
                             <span>
-                                <a onClick={handleChangePassword} className="profile__info--button open-popup">Зміна паролю</a>
+                                <a onClick={handleChangePassword} className="profile__info--button open-popup">
+                                    <Translate>reset_password.change_pass</Translate>
+                                </a>
                                 {/*<input type="password" name="password" required*/}
                                 {/*       className="input password-input"/>*/}
                                 {/*<button className="password-input__visible-toggle" type="button"*/}
@@ -185,7 +187,7 @@ export const PopupEditEmployee: React.FC<IPopupEditEmployeeProps> = ({setIsOpenP
                                               defaultValue={PhoneCodes()[0]}/>
                                 <input
                                     onChange={e => setPhoneValue(e.target.value)}
-                                    value={phoneValue} ref={inputRef} type="text" name="tel" required
+                                    value={phoneValue} ref={inputRef} type="text" name="tel"
                                     className="input"/>
                             </div>
                         </label>
@@ -227,7 +229,7 @@ export const PopupEditEmployee: React.FC<IPopupEditEmployeeProps> = ({setIsOpenP
                         </button>
                     </div>
                 </form>
-            </div>
+            </SimpleBar>
         </div>
     )
 }

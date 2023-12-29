@@ -44,6 +44,7 @@ export const Timesheet: React.FC<ITimesheetProps> = () => {
     const [itemToEdit, setItemToEdit] = useState<ITask>()
     const [isOpenDownSidebar, setIsOpenDownSidebar] = useState(false)
     const [statistic, setStatistic] = useState<IStatistic | undefined>()
+    const [isLoad, setIsLoad] = useState(false)
 
     useEffect(() => {
         if (!chosenTimesheet || !Object.keys(chosenTimesheet)?.length) return;
@@ -61,9 +62,14 @@ export const Timesheet: React.FC<ITimesheetProps> = () => {
         }).catch(er => console.log(getApiLink("/api/timesheet/statistics/?timesheet_id"), er))
     }, [chosenTimesheet, timesheetId])
 
-    // useEffect(() => {
-    //     setRowsSelectValue(taskList.length > +RowsPerPage()[0].value ? RowsPerPage()[0] : RowsPerPage()[3])
-    // }, [taskList])
+    useEffect(() => {
+        if (isLoad) return;
+
+        setRowsSelectValue(taskList.length > +RowsPerPage()[0].value ? RowsPerPage()[0] : RowsPerPage()[3])
+        setTimeout(() => {
+            setIsLoad(true)
+        }, 1000)
+    }, [taskList, isLoad])
 
     useEffect(() => {
         setStatistic(timesheetStatistic)
@@ -113,6 +119,12 @@ export const Timesheet: React.FC<ITimesheetProps> = () => {
         fontSize: "16px",
     }
 
+    const tdStyle = {
+        verticalAlign: "middle",
+        fontSize: "10px",
+        border: "1px solid rgba(208, 206, 206, 1)",
+    }
+
     return (
         <BlockToEdit.Provider value={setItemToEdit}>
             <TimesheetStyled style={{paddingBottom: isOpenDownSidebar ? "270px" : "80px"}} className="section-table">
@@ -122,9 +134,8 @@ export const Timesheet: React.FC<ITimesheetProps> = () => {
                     border={2}
                     style={{
                         borderCollapse: 'collapse',
-                        backgroundColor: '#eee',
-                        border: '2px solid black',
-                        fontFamily: 'Arial, sans-serif',
+                        backgroundColor: '#fff',
+                        fontFamily: 'Calibri',
                         width: '100%',
                     }}
                     id="my-table"
@@ -133,27 +144,21 @@ export const Timesheet: React.FC<ITimesheetProps> = () => {
 
                     <tbody>
                     <tr>
-                        <td colSpan={4} style={{
-                            color: "#EF3129",
-                            fontSize: "85px",
-                            fontWeight: "600",
-                            padding: "22px 0",
-                            textAlign: "right",
-                            whiteSpace: "nowrap",
-                            height: "80px",
-                            verticalAlign: "middle",
-                        }}>Timesheet
-                        </td>
-                        <td style={{
-                            fontSize: "18px",
-                            verticalAlign: "top",
-                            fontWeight: "600"
-                        }}>PRESENCE REPORT
-                        </td>
                         <td></td>
                         <td></td>
-                        <td style={{textAlign: "right", verticalAlign: "top"}}>
-                            <img src={logo} style={{width: "30px"}} alt=""/>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td style={{textAlign: "center", verticalAlign: "middle", background: "red", color: "#fff", fontSize: "22px", width: "43px"}}>
+                            <b>iC</b>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td colSpan={8} style={{textAlign: "center", fontSize: "24px"}}>
+                            <b>Timesheet (Presence Report)</b>
                         </td>
                     </tr>
 
@@ -166,8 +171,7 @@ export const Timesheet: React.FC<ITimesheetProps> = () => {
                             <b>Name:</b> {userData.first_name} {userData.last_name}</td>
                         <td></td>
                         <td></td>
-                        <td></td>
-                        <td style={{textAlign: "right", paddingBottom: "20px", ...styleForOtherText}} colSpan={2}>
+                        <td style={{textAlign: "right", paddingBottom: "20px", ...styleForOtherText}} colSpan={3}>
                             <b>{`${chosenTimesheet?.date && MonthNumber()[`${chosenTimesheet?.date[3]}${chosenTimesheet?.date[4]}`]}`},
                                 20{`${chosenTimesheet?.date && chosenTimesheet?.date[6]}${chosenTimesheet?.date && chosenTimesheet?.date[7]}`}</b>
                         </td>
@@ -176,14 +180,14 @@ export const Timesheet: React.FC<ITimesheetProps> = () => {
                     <tr></tr>
 
                     <tr>
-                        <th style={{padding: "5px 10px"}}>№</th>
-                        <th style={{padding: "5px 10px"}}>Date</th>
-                        <th style={{padding: "5px 10px"}}>Project Num</th>
-                        <th style={{padding: "5px 10px"}}>Project description</th>
-                        <th style={{padding: "5px 10px"}}>Task</th>
-                        <th style={{padding: "5px 10px"}}>Time</th>
-                        <th style={{padding: "5px 10px"}}>Hours</th>
-                        <th style={{padding: "5px 10px"}}>Total</th>
+                        <th style={{...tdStyle, padding: "5px 0",fontSize: "10px" , fontWeight: "400", color: "rgba(117, 113, 113, 1)", width: "25px"}}>No</th>
+                        <th style={{...tdStyle, padding: "5px 0",fontSize: "10px" , fontWeight: "400", color: "rgba(117, 113, 113, 1)", width: "65px"}}>Date</th>
+                        <th style={{...tdStyle, padding: "5px 0",fontSize: "10px" , fontWeight: "400", color: "rgba(117, 113, 113, 1)", width: "85px"}}>Project Num</th>
+                        <th style={{...tdStyle, padding: "5px 0",fontSize: "10px" , fontWeight: "400", color: "rgba(117, 113, 113, 1)", width: "245px"}}>Project description</th>
+                        <th style={{...tdStyle, padding: "5px 0",fontSize: "10px" , fontWeight: "400", color: "rgba(117, 113, 113, 1)", width: "210px"}}>Task</th>
+                        <th style={{...tdStyle, padding: "5px 0",fontSize: "10px" , fontWeight: "400", color: "rgba(117, 113, 113, 1)", width: "68px"}}>Time</th>
+                        <th style={{...tdStyle, padding: "5px 0",fontSize: "10px" , fontWeight: "400", color: "rgba(117, 113, 113, 1)", width: "41px"}}>Hours</th>
+                        <th style={{...tdStyle, padding: "5px 0",fontSize: "10px" , fontWeight: "400", color: "rgba(117, 113, 113, 1)", width: "43px"}}>Total</th>
                     </tr>
 
 
@@ -205,31 +209,47 @@ export const Timesheet: React.FC<ITimesheetProps> = () => {
                                             return (
                                                 <tr key={index}>
                                                     <td style={{
-                                                        textAlign: "center"
+                                                        textAlign: "center",
+                                                        ...tdStyle
                                                     }}>{numberOfRow}</td>
                                                     {dateItem.count === countAmount && <td style={{
                                                         textAlign: "center",
-                                                        verticalAlign: "middle"
-                                                    }}
-                                                                                           rowSpan={dateItem.count === countAmount && dateItem.count}>{dateItem.date.substring(3, 5)}/{dateItem.date.substring(0, 2)}/{dateItem.date.substring(6)}</td>}
+                                                        // verticalAlign: "middle",
+                                                        ...tdStyle
+                                                    }} rowSpan={dateItem.count === countAmount && dateItem.count}>
+                                                        {dateItem.date.substring(3, 5)}/{dateItem.date.substring(0, 2)}/{dateItem.date.substring(6)}
+                                                    </td>}
                                                     <td style={{
-                                                        textAlign: "center"
+                                                        textAlign: "center",
+                                                        ...tdStyle
                                                     }}>{taskItem.project.name}</td>
                                                     <td style={{
-                                                        textAlign: "center"
+                                                        textAlign: "left",
+                                                        width: "245px",
+                                                        padding: "10px",
+                                                        ...tdStyle
                                                     }}>{taskItem.project.description}</td>
-                                                    <td style={{textAlign: "left"}}>{taskItem.task}</td>
                                                     <td style={{
-                                                        textAlign: "center"
-                                                    }}>{taskItem.time}</td>
+                                                        textAlign: "left",
+                                                        padding: "10px",
+                                                        ...tdStyle
+                                                    }}>{taskItem.task}</td>
                                                     <td style={{
-                                                        textAlign: "center"
-                                                    }}>{taskItem.hours}</td>
+                                                        textAlign: "center",
+                                                        width: "75px",
+                                                        ...tdStyle
+                                                    }}>{taskItem.time.replace("–", "to")}</td>
+                                                    <td style={{
+                                                        textAlign: "center",
+                                                        ...tdStyle
+                                                    }}>{taskItem.hours} h</td>
                                                     {dateItem.count === countAmount && <td style={{
                                                         textAlign: "center",
-                                                        verticalAlign: "middle"
-                                                    }}
-                                                                                           rowSpan={dateItem.count === countAmount && dateItem.count}>{allHoursAmount}</td>}
+                                                        // verticalAlign: "middle",
+                                                        ...tdStyle
+                                                    }} rowSpan={dateItem.count === countAmount && dateItem.count}>
+                                                        {allHoursAmount} h
+                                                    </td>}
                                                 </tr>
                                             )
                                         })
@@ -245,9 +265,7 @@ export const Timesheet: React.FC<ITimesheetProps> = () => {
                         <td></td>
                         <td></td>
                         <td></td>
-                        <td></td>
-                        <td></td>
-                        <td style={{textAlign: "right", paddingTop: "20px", ...styleForOtherText}} colSpan={2}>
+                        <td style={{textAlign: "right", paddingTop: "20px", ...styleForOtherText}} colSpan={4}>
                             <b>Total: {timesheetStatistic.all_hours} hours</b></td>
                     </tr>
                     </tbody>

@@ -167,7 +167,7 @@
     "notifications": {
       "please_keep_in_mind": "Please, keep in mind, that the end of the month is in 5 days.",
       "your_notifications": "Your notifications",
-      "you_have_a_new_comment_from": "You have a new comment from",
+      "you_have_a_new_comment_from": "You have a new response from",
       "your_timesheet_approved": "Your timesheet for [month] was successfully approved!",
       "your_timesheet_rejected": "Your timesheet for [month] was rejected!"
     },
@@ -226,7 +226,7 @@
       "summary_approved": "Your summary was approved! (by [Name])",
       "timesheet_rejected": "Your timesheet was rejected. Please, correct and send for reapproval. (by [Name])",
       "send_request_for_reapproval": "Send request for reapproval",
-      "confirm_send_timesheet": "You are going to send the timesheet for approving, continue?",
+      "confirm_send_timesheet": "You are going to send the timesheet for approval, continue?",
       "continue": "Continue",
       "cancel": "Cancel",
       "thank_you": "Thank you!",
@@ -247,7 +247,7 @@
       "rejected": "Rejected",
       "rejected_first": "Rejected first",
       "approved_first": "Approved first",
-      "change_decision": "Change decision",
+      "change_decision": "Cancel decision",
       "summary_already_rejected": "This summary already rejected by [Name] on [date]",
       "export_all": "Export all"
     },
@@ -262,6 +262,7 @@
   },
 
   "reset_password": {
+    "change_pass": "Change password",
     "forgot_password": "Forgot your password?",
     "dont_worry_enter_email": "Don’t worry, please, enter your e-mail below and we will send you instructions on how to reset your password.",
     "reset_password": "Reset password",
@@ -273,8 +274,8 @@
     "thank_you": "Thank you!",
     "password_successfully_changed": "Your password was successfully changed!",
     "account_registered": "If an account with this e-mail is registered, you will soon get a letter with instructions.",
-    "instructions_sent_to_employee": "We will send instructions to [Name of employee].",
-    "instructions_sent_to_email": "We have sent the letter with instructions to the e-mail: o.rybak@ic-group.org",
+    "instructions_sent_to_employee": "No problems, we will send you instructions on how to do it.",
+    "instructions_sent_to_email": "We have sent the letter with instructions to the e-mail: ",
     "enter_new_password": "Enter your new password",
     "confirm_new_password": "Confirm your new password",
     "save_new_password": "Save new password"
@@ -287,5 +288,8 @@
     "close_editing": "Close editing",
     "save_my_profile": "Save my profile",
     "click_to_reset_password": "Click to reset password"
-  }
+  },
+
+  "user_exist": "This email already used",
+  "user_not_found": "User not found"
 }

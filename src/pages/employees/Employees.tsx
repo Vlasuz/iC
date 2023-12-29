@@ -26,9 +26,10 @@ export const Employees: React.FC<IEmployeesProps> = () => {
 
     const handleAddRows = () => {
         const plusCount = window.innerWidth < 768 ? 10 : 20
+
         setSelectValue({
-            value: selectValue.value + plusCount,
-            label: employees.length === +selectValue.label + plusCount ? "All" : String(+selectValue.label + plusCount)
+            value: employees.length <= +selectValue.label + plusCount ? 0 : selectValue.value + plusCount,
+            label: employees.length <= +selectValue.label + plusCount ? "All" : String(+selectValue.label + plusCount)
         })
     }
 

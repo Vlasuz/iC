@@ -40,6 +40,10 @@ export const AppStyled = styled.div`
   }
 
 
+  .section-table__head-th:last-child .drop-down-absolute__block.is-right-default {
+    left: auto;
+    width: fit-content;
+  }
   section .notification__block.drop-down-absolute__block.is-right-default {
     position: absolute;
   }
@@ -53,6 +57,10 @@ export const AppStyled = styled.div`
     transition: all .3s ease;
   }
 
+  .react-datepicker-wrapper,
+  .input-date {
+    width: 100%;
+  }
 
   
   .section-table__row-per-page .css-b62m3t-container {
@@ -76,7 +84,8 @@ export const AppStyled = styled.div`
   }
   .section-table__footer {
     margin-top: auto;
-    padding-top: 20px;
+    padding-top: 10px;
+    padding-bottom: 7px;
   }
 
   .css-b62m3t-container *[aria-disabled='true'] {
@@ -212,6 +221,11 @@ export const AppStyled = styled.div`
     color: #EF3129;
   }
 
+  .drop-down__list-date li a {
+    text-align: left;
+    justify-content: flex-start;
+  }
+
   
   
   .date-input {
@@ -334,7 +348,7 @@ export const AppStyled = styled.div`
     display: block;
   }
   .simplebar-content {
-    padding-bottom: 20px !important;
+    padding-bottom: 10px !important;
   }
   
   .select .simplebar-content,
@@ -354,6 +368,10 @@ export const AppStyled = styled.div`
 
   .aside__change-on-min > *:nth-child(2) {
     display: block!important;
+
+    @media screen and (max-width: 992px) {
+      display: none !important;
+    }
   }
 
   .down-sidebar__total-item {
@@ -367,7 +385,8 @@ export const AppStyled = styled.div`
     top: 0;
     width: var(--value,0%);
     height: 100%;
-    background: rgba(151,160,187,.5)
+    background: rgba(151,160,187,.5);
+    max-width: 100%;
   }
 
   .down-sidebar__total-item--progress-bar {
@@ -473,12 +492,33 @@ export const AppStyled = styled.div`
     }
   }
   
-  
+  .delete_photo {
+    position: absolute;
+    top: 0px;
+    right: -7px;
+    color: #FF0A00;
+    z-index: 2;
+    -webkit-border-radius: 50%;-moz-border-radius: 50%;border-radius: 50%;
+    border: 2px solid #FF0A00;
+    background: #fff;
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+      margin-left: 1.5px;
+      margin-top: 1.5px;
+    }
+  }
   
   
   @media screen and (max-width: 992px) {
-    .section-table__search--label {
-      position: absolute;
-    }
+    //.drop-down-absolute__block {
+    //  left: 16px;
+    //}
   }
 `

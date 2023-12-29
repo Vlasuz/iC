@@ -9,6 +9,10 @@ export const LoginStyled = styled.form`
   p.error {
     color: red;
     font-size: 17px;
+
+    @media screen and (max-width: 768px) {
+      font-size: 14px;
+    }
   }
   
   .login__checkbox {

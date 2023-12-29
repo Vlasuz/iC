@@ -55,7 +55,7 @@ export const CostsTableItem: React.FC<ICostsTableItemProps> = ({item, index}) =>
             }, 300)
         } else {
             setMenuPosition({
-                top: e.pageY + 10 + "px",
+                top: e.pageY > 600 ? e.pageY - 160 : e.pageY + 10 + "px",
                 left: e.pageX + 10 + "px"
             })
         }

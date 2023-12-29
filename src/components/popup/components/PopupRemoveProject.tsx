@@ -7,6 +7,7 @@ import {getApiLink} from "../../../functions/getApiLink";
 import {removeEmployee, removeProject} from "../../../storage/toolkit";
 import {PopupCloseCancel} from "./PopupCloseCancel";
 import {PopupClose} from "./PopupClose";
+import {Translate} from "../../translate/Translate";
 
 interface IPopupRemoveProjectProps {
     data: any
@@ -44,7 +45,7 @@ export const PopupRemoveProject: React.FC<IPopupRemoveProjectProps> = ({data}) =
                     <div className="popup-form__row is-min-gap">
                         <PopupCloseCancel/>
                         <button className="popup-form__submit btn" type="submit">
-                            Delete
+                            <Translate>timesheet_page.popups.delete</Translate>
                         </button>
                     </div>
                 </form>

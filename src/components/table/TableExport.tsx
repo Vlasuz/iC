@@ -3,6 +3,11 @@ import 'jspdf-autotable';
 import React, {useEffect, useState} from 'react'
 import {useClickOutside} from "../../hooks/ClickOutside";
 import {Translate} from "../translate/Translate";
+import html2pdf from 'html2pdf.js';
+import * as ExcelJS from 'exceljs';
+import { saveAs } from 'file-saver';
+
+
 
 interface ITableExportProps {
     title?: string
@@ -10,26 +15,23 @@ interface ITableExportProps {
 
 export const TableExport: React.FC<ITableExportProps> = ({title}) => {
 
-    const tableToExcel = (function() {
-        // Базовая строка для создания Excel-файла
+    const tableToExcel = function() {
         const uri = 'data:application/vnd.ms-excel;base64,';
         const template = `
-        <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
-        <head>
-            <!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]-->
-        </head>
-        <body>
-            <table>{table}</table>
-        </body>
-        </html>`;
+    <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
+    <head>
+        <!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]-->
+    </head>
+    <body>
+        <table>{table}</table>
+    </body>
+    </html>`;
 
-        // Функция для кодирования строки в base64
         // @ts-ignore
         const base64 = function(s) {
             return window.btoa(unescape(encodeURIComponent(s)));
         };
 
-        // Функция для замены переменных в шаблоне
         // @ts-ignore
         const format = function(s, c) {
             // @ts-ignore
@@ -38,49 +40,53 @@ export const TableExport: React.FC<ITableExportProps> = ({title}) => {
             });
         };
 
-        // Функция, доступная снаружи, для создания Excel из таблицы
         // @ts-ignore
-        return function(table, name) {
-            // Проверяем, передана ли нода таблицы, если нет - ищем по ID
+        return function(table, filename = 'excel-export') {
             if (!table.nodeType) table = document.getElementById(table);
 
             const ctx = {
-                worksheet: name || 'Worksheet',
+                worksheet: filename,
                 table: table.innerHTML
             };
 
-            // Создаем Excel-файл, переходя по ссылке
-            window.location.href = uri + base64(format(template, ctx));
+            const blob = new Blob([format(template, ctx)], {
+                type: 'application/vnd.ms-excel'
+            });
+
+            // @ts-ignore
+            if (navigator.msSaveBlob) {
+                // @ts-ignore
+                navigator.msSaveBlob(blob, filename + '.xls');
+            } else {
+                const link = document.createElement('a');
+                if (link.download !== undefined) {
+                    const url = URL.createObjectURL(blob);
+                    link.setAttribute('href', url);
+                    link.setAttribute('download', filename + '.xls');
+                    link.style.visibility = 'hidden';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                }
+            }
         };
-    })();
+    }();
 
 
+    const convertToPDF = () => {
+        const element = document.getElementById('my-table');
 
-    const exportToPdf = async () => {
-        const doc = new jsPDF({
-            orientation: "landscape",
-        });
-        const table = document.getElementById('my-table'); // Замените 'my-table' на ID вашей таблицы
+        const opt = {
+            margin: 0.5,
+            filename: 'timesheet.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 6 },
+            jsPDF: { unit: 'in', format: 'letter', } // Установка альбомной ориентации
+        };
 
-        const fontUrl = '"https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap';
-        const fontData = await fetch(fontUrl).then(res => res.arrayBuffer());
-        // @ts-ignore
-        doc.addFileToVFS('FontName.ttf', fontData);
-        doc.addFont('FontName.ttf', 'FontName', 'normal');
-
-        // Использование загруженного шрифта
-        doc.setFont('FontName');
-
-
-        // Генерация PDF из HTML элемента
-        // @ts-ignore
-        doc.autoTable({ html: table });
-
-        console.log(table)
-
-        // Сохранение PDF
-        doc.save('table.pdf');
+        html2pdf().from(element).set(opt).save();
     };
+
 
 
     const [isExportSelectOpen, setIsExportSelectOpen] = useState(false)
@@ -89,7 +95,7 @@ export const TableExport: React.FC<ITableExportProps> = ({title}) => {
     return (
         <div ref={rootEl} className={isExportSelectOpen ? "section-table__export drop-down is-right-default is-active" : "section-table__export drop-down is-right-default"}>
             <button onClick={_ => setIsExportSelectOpen(prev => !prev)} className="section-table__export--target drop-down__target" type="button">
-                {title ?? <Translate>employees_admin.table.export</Translate>}
+                {title === 'export all' ? <Translate>summary_page.main.export_all</Translate> : <Translate>employees_admin.table.export</Translate>}
                 <svg width="16" height="17" viewBox="0 0 16 17">
                     <use xlinkHref="#download"></use>
                 </svg>
@@ -97,12 +103,13 @@ export const TableExport: React.FC<ITableExportProps> = ({title}) => {
             <div className="section-table__export--block drop-down__block">
                 <ul className="drop-down__list">
                     <li>
-                        <a onClick={e => tableToExcel('my-table', e)}>
+                        <a onClick={e => tableToExcel('my-table', "timesheet")}>
                             Export as .xlsx
                         </a>
                     </li>
                     <li>
-                        <a onClick={e => exportToPdf()}>
+                        {/*<a onClick={e => exportToPdf()}>*/}
+                        <a onClick={e => convertToPDF()}>
                             Export as .pdf
                         </a>
                     </li>

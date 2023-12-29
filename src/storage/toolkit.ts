@@ -38,8 +38,11 @@ const toolkit = createSlice({
             state.projects = [action.payload, ...state.projects]
         },
         editProject(state, action) {
-            state.projects = state.projects.filter(item => item.id !== action.payload.data.id)
-            state.projects = [action.payload.newData, ...state.projects]
+
+            // state.projects = state.projects.filter(item => item.id !== action.payload.data.id)
+            const itemIndex = state.projects.findIndex(item => item.id === action.payload.newData.id)
+
+            state.projects = [...state.projects.slice(0, itemIndex), action.payload.newData, ...state.projects.slice(itemIndex + 1)]
         },
         removeProject(state, action) {
             state.projects = state.projects.filter(item => item.id !== action.payload.id)
@@ -113,6 +116,10 @@ const toolkit = createSlice({
             state.chosenTimesheet = <ITimesheet>{}
             state.summaryEmployees = <ISummaryEmployee[]>[]
             state.projects = <IProject[]>[]
+        },
+
+        setNotifications(state, action) {
+            state.notifications = action.payload
         }
     },
 })
@@ -153,5 +160,7 @@ export const {
     setSummaryEmployees,
 
     resetState,
+
+    setNotifications,
 
 } = toolkit.actions;

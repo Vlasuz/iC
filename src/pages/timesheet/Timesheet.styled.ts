@@ -2,6 +2,10 @@ import styled from "styled-components";
 
 export const TimesheetStyled = styled.section`
   min-height: calc(95vh - 4px);
+
+  @media screen and (max-width: 992px) {
+    min-height: calc(100vh - 115px);
+  }
   
   .section-table__row-block:hover {
     .section-table__row-block--span-params {
@@ -9,6 +13,10 @@ export const TimesheetStyled = styled.section`
         background: rgb(235 236 242);
       }
     }
+  }
+
+  .section-table__add-task--hours .input {
+    text-align: center;
   }
 
   .section-table__main.table-timesheet .section-table__row-block--list .section-table__row.drop-down-2:hover .section-table__param {
@@ -28,7 +36,11 @@ export const TimesheetStyled = styled.section`
   
   .section-table__head-th:last-child {
     .drop-down-absolute__block.is-right-default {
-      right: 0;
+      right: 51px;
+      
+      @media screen and (max-width: 1440px) {
+        right: 16px;
+      }
     }
   }
   
@@ -63,5 +75,10 @@ export const TimesheetStyled = styled.section`
   .section-table__main.table-timesheet .section-table__row-block:hover .section-table__param:nth-child(1) {
     border-right: 1px solid rgba(0, 0, 0, 0);
   }
-  
+
+  @media screen and (max-width: 992px) {
+    .section-table__search--label {
+      position: absolute !important;
+    }
+  }
 `

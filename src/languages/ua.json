@@ -187,7 +187,7 @@
       "project_num": "№ проекту",
       "project_description": "Опис проекту",
       "expense_description": "Опис витрат",
-      "cost": "Вартість",
+      "cost": "Ціна",
       "show_more": "Показати ще",
       "rows_per_page": "Рядків на сторінку"
     },
@@ -246,7 +246,7 @@
       "rejected": "Відхилити",
       "rejected_first": "Відхилені спочатку",
       "approved_first": "Затверджені спочатку",
-      "change_decision": "Змінити рішення",
+      "change_decision": "Скасувати рішення",
       "summary_already_rejected": "Цей таймшит вже відхилений [Ім'я] [дата]",
       "export_all": "Експорт усіх"
     },
@@ -260,7 +260,8 @@
     }
   },
 
-  "reset_passwords": {
+  "reset_password": {
+    "change_pass": "Зміна паролю",
     "forgot_password": "Забули пароль?",
     "dont_worry_enter_email": "Введіть свій email нижче, і ми надішлемо вам інструкції з відновлення паролю.",
     "reset_password": "Скинути пароль",
@@ -272,8 +273,8 @@
     "thank_you": "Дякуємо!",
     "password_successfully_changed": "Ваш пароль успішно змінено!",
     "account_registered": "Якщо обліковий запис з такою адресою зареєстровано, ви незабаром отримаєте лист з інструкцією.",
-    "instructions_sent_to_employee": "Ми надішлемо [Name] відповідні інструкції. ",
-    "instructions_sent_to_email": "Ми відправили лист з інструкціями на пошту: [email]",
+    "instructions_sent_to_employee": "Без проблем, ми надішлемо вам інструкції, як це зробити.",
+    "instructions_sent_to_email": "Ми відправили лист з інструкціями на пошту: ",
     "enter_new_password": "Введіть новий пароль",
     "confirm_new_password": "Підтвердьте новий пароль",
     "save_new_password": "Зберегти новий пароль"
@@ -286,5 +287,8 @@
     "close_editing": "Закрити редагування",
     "save_my_profile": "Зберегти мій профіль",
     "click_to_reset_password": "Натисніть, щоб змінити пароль"
-  }
+  },
+
+  "user_exist": "Цей email вже використовується",
+  "user_not_found": "Такого користувача не існує"
 }

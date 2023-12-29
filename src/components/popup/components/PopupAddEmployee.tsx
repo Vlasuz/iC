@@ -18,6 +18,7 @@ import {PopupCloseCancel} from "./PopupCloseCancel";
 import { useMask } from '@react-input/mask';
 import {SetEmployees} from "../../../api/SetEmployees";
 import {Translate} from "../../translate/Translate";
+import {toast} from 'react-toastify';
 
 interface IPopupAddNewEmployeeProps {
     setIsOpenProjects: any
@@ -52,7 +53,7 @@ export const PopupAddEmployee: React.FC<IPopupAddNewEmployeeProps> = ({data, set
             "role": roleValue,
             "status": statusValue.value,
             "email": emailValue,
-            "phone": `${phoneCode.label} ${phoneValue}`,
+            "phone": phoneValue ? `${phoneCode.label} ${phoneValue}` : "",
             "holidays": +holidaysValue,
             "password": passwordValue,
             "projects": projectsList,
@@ -64,6 +65,11 @@ export const PopupAddEmployee: React.FC<IPopupAddNewEmployeeProps> = ({data, set
         getBearer('post')
         axios.post(getApiLink("/api/admin/employee/add/"), newDataEmployee).then(({data}) => {
             if (!data?.status) {
+
+                if(data.message === "user_exist") {
+                    toast.error(<Translate>user_exist</Translate>)
+                }
+
                 return console.log(data.message);
             }
 
@@ -92,9 +98,8 @@ export const PopupAddEmployee: React.FC<IPopupAddNewEmployeeProps> = ({data, set
                 <Translate>employees_admin.others.add_new_employee</Translate>
             </h2>
             <PopupClose/>
-            <div className="add-new-employee__container popup-container" data-simplebar
-                 data-simplebar-auto-hide="false">
-                <form onSubmit={handleCreateNewEmployee} className="popup-form">
+            <SimpleBar autoHide={false} className="add-new-employee__container popup-container">
+                <form autoComplete="off" onSubmit={handleCreateNewEmployee} className="popup-form">
                     <div className="popup-form__row">
                         <label className="popup-form__label">
                             <span>
@@ -129,7 +134,7 @@ export const PopupAddEmployee: React.FC<IPopupAddNewEmployeeProps> = ({data, set
                     <div className="popup-form__row">
                         <label className="popup-form__label">
                             <span>Email</span>
-                            <input onChange={e => setEmailValue(e.target.value)} value={emailValue} type="email"
+                            <input autoComplete="off" onChange={e => setEmailValue(e.target.value)} value={emailValue} type="email"
                                    name="email" required className="input"/>
                         </label>
                         <label className="popup-form__label">
@@ -137,7 +142,7 @@ export const PopupAddEmployee: React.FC<IPopupAddNewEmployeeProps> = ({data, set
                                 <Translate>employees_admin.others.password</Translate>
                             </span>
                             <span>
-                                <input onChange={e => setPasswordValue(e.target.value)} minLength={8}
+                                <input autoComplete="off" onChange={e => setPasswordValue(e.target.value)} minLength={8}
                                        value={passwordValue} type="password" name="password" required
                                        className="input password-input"/>
                                 <button className="password-input__visible-toggle" type="button"
@@ -161,7 +166,7 @@ export const PopupAddEmployee: React.FC<IPopupAddNewEmployeeProps> = ({data, set
                                 <CustomSelect list={PhoneCodes()} setSelectedItem={setPhoneCode} selectValue={phoneCode}/>
                                 <input
                                     onChange={e => setPhoneValue(e.target.value)}
-                                    value={phoneValue} ref={inputRef} type="text" name="tel" required
+                                    value={phoneValue} ref={inputRef} type="text" name="tel"
                                     className="input"/>
                             </div>
                         </label>
@@ -202,7 +207,7 @@ export const PopupAddEmployee: React.FC<IPopupAddNewEmployeeProps> = ({data, set
                         </button>
                     </div>
                 </form>
-            </div>
+            </SimpleBar>
         </div>
     )
 }

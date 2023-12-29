@@ -2,6 +2,10 @@ import styled from "styled-components";
 
 export const VacationsStyled = styled.section`
   min-height: calc(95vh - 4px);
+
+  @media screen and (max-width: 992px) {
+    min-height: calc(100vh - 115px);
+  };
   
   .section-table__param:nth-child(20),
   .section-table__param:nth-child(7) {

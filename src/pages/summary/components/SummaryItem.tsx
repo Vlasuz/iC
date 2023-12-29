@@ -32,7 +32,7 @@ export const SummaryItem: React.FC<ISummaryItemProps> = ({dataItem}) => {
     const dispatch = useDispatch()
 
     const itemDate = dataItem.updated_at;
-    const dateForStatus = `${itemDate[0] + itemDate[1]} / ${itemDate[3] + itemDate[4]} / 20${itemDate[6] + itemDate[7]}`
+    const dateForStatus = `${itemDate[3] + itemDate[4]} / ${itemDate[0] + itemDate[1]} / 20${itemDate[6] + itemDate[7]}`
 
     const { t } = useTranslation();
 
@@ -121,13 +121,13 @@ export const SummaryItem: React.FC<ISummaryItemProps> = ({dataItem}) => {
                                     </h3>
                                     <div className="summary-item__element--progress">
                                         <span>{item.task.hours} h</span>
-                                        <span data-value={`${item.task.percent}%`}>
+                                        <span data-value={`${item.task.percent > 100 ? 100 : item.task.percent}%`}>
                                             <div className="line_done" style={{width: `${item.task.percent}%`}}/>
                                         </span>
                                     </div>
                                     <div className="summary-item__element--progress">
-                                        <span>{item.expense.sum} UAH</span>
-                                        <span data-value={`${item.expense.percent}%`}>
+                                        <span>{item.expense.sum} {currency}</span>
+                                        <span data-value={`${item.expense.percent > 100 ? 100 : item.expense.percent}%`}>
                                             <div className="line_done" style={{width: `${item.expense.percent}%`}}/>
                                         </span>
                                     </div>
@@ -166,7 +166,7 @@ export const SummaryItem: React.FC<ISummaryItemProps> = ({dataItem}) => {
                                 </svg>
                             </div>
                             <b className="summary-item__total-element--name">
-                                <Translate>summary_page.main.time_spent_for_projects</Translate>
+                                <Translate>summary_page.main.money_spent_for_projects</Translate>
                             </b>
                             <button onClick={handleEntryCost} className="summary-item__total-element--link">
                                 <Translate>summary_page.main.show_full_data_costs</Translate>
@@ -199,7 +199,7 @@ export const SummaryItem: React.FC<ISummaryItemProps> = ({dataItem}) => {
                                         <use xlinkHref="#round-error"></use>
                                     </svg>
                                     <p>
-                                        <Translate>summary_page.other.timesheet_rejected</Translate> (by {dataItem.manager.first_name} {dataItem.manager.last_name})
+                                        <Translate>summary_page.other.timesheet_rejected</Translate> (by {dataItem?.manager?.first_name} {dataItem?.manager?.last_name})
                                     </p>
                                 </div>
                             }
@@ -210,7 +210,7 @@ export const SummaryItem: React.FC<ISummaryItemProps> = ({dataItem}) => {
                                         <use xlinkHref="#round-check"></use>
                                     </svg>
                                     <p>
-                                        <Translate>summary_page.other.summary_approved</Translate> (by {dataItem.manager.first_name} {dataItem.manager.last_name})
+                                        <Translate>summary_page.other.summary_approved</Translate> (by {dataItem?.manager?.first_name} {dataItem?.manager?.last_name})
                                     </p>
                                 </div>
                             }

@@ -2,6 +2,14 @@ import styled from "styled-components";
 
 export const CostsStyles = styled.section`
   min-height: calc(95vh - 4px);
+
+  @media screen and (max-width: 992px) {
+    min-height: calc(100vh - 115px);
+  };
+
+  @media screen and (max-width: 992px) {
+    min-height: calc(100vh - 115px);
+  };
   
   .project-popup__item.is-active a {
     color: #EF3129;
@@ -11,6 +19,13 @@ export const CostsStyles = styled.section`
     background: rgba(151, 160, 187, 0.15);
   }
 
+  .section-table__main--wrapper {
+    min-width: 1105px;
+  }
+
+  .section-table__main.add-border .section-table__param {
+    word-break: normal;
+  }
 
   .drop-down__list-date li.is-active a {
     background: rgba(151, 160, 187, 0.15);
@@ -31,12 +46,22 @@ export const CostsStyles = styled.section`
   .section-table__head-th {
     justify-content: center;
     
-    //&:nth-child(5) {
-    //  max-width: 323px;
-    //}
   }
   
-  //.section-table__param:nth-child(5) {
-  //  max-width: 323px;
-  //}
+
+  @media screen and (min-width: 992px) {
+    .section-table__search {
+      width: 100%;
+    }
+  }
+  @media screen and (min-width: 1100px) {
+    .section-table__header--col {
+      flex-wrap: nowrap;
+    }
+  }
+  @media screen and (max-width: 992px) {
+    .section-table__search--label {
+      position: absolute !important;
+    }
+  }
 `

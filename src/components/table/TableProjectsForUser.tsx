@@ -3,6 +3,7 @@ import {IProject, IUser} from "../../models";
 import {useSelector} from "react-redux";
 import {useClickOutside} from "../../hooks/ClickOutside";
 import SimpleBar from "simplebar-react";
+import {Translate} from "../translate/Translate";
 
 interface ITableProjectsForUserProps {
     setProjectData: any
@@ -10,7 +11,11 @@ interface ITableProjectsForUserProps {
     projectList?: IProject[]
 }
 
-export const TableProjectsForUser: React.FC<ITableProjectsForUserProps> = ({setProjectData, projectData, projectList}) => {
+export const TableProjectsForUser: React.FC<ITableProjectsForUserProps> = ({
+                                                                               setProjectData,
+                                                                               projectData,
+                                                                               projectList
+                                                                           }) => {
 
     const userData: IUser = useSelector((state: any) => state.toolkit.user)
 
@@ -28,7 +33,7 @@ export const TableProjectsForUser: React.FC<ITableProjectsForUserProps> = ({setP
     }
 
     useEffect(() => {
-        if(projectData) return;
+        if (projectData) return;
 
         setProject(undefined)
     }, [projectData])
@@ -36,11 +41,13 @@ export const TableProjectsForUser: React.FC<ITableProjectsForUserProps> = ({setP
     const isEditItem = !project && projectData
 
     return (
-        <div ref={rootEl} className={`section-table__add-task--project drop-down ${isActiveSelectProjects && "is-active"} ${!isEditItem && "is-disabled"}`}>
-            <button onClick={_ => !isEditItem && setIsActiveSelectProjects(prev => !prev)} className="section-table__add-task--project-target drop-down__target"
+        <div ref={rootEl}
+             className={`section-table__add-task--project drop-down ${isActiveSelectProjects && "is-active"} ${!isEditItem && "is-disabled"}`}>
+            <button onClick={_ => !isEditItem && setIsActiveSelectProjects(prev => !prev)}
+                    className="section-table__add-task--project-target drop-down__target"
                     type="button">
 
-                {isEditItem?.name ?? project?.name ?? "Choose project"}
+                {isEditItem?.name ?? project?.name ?? <Translate>timesheet_page.top_part.choose_project</Translate>}
 
                 {!isEditItem && <svg width="10" height="7" viewBox="0 0 10 7"
                                      className="drop-down__target--arrow">
@@ -50,35 +57,42 @@ export const TableProjectsForUser: React.FC<ITableProjectsForUserProps> = ({setP
             <div className="section-table__main--project-name-block drop-down__block">
                 <div className="project-popup">
                     <SimpleBar className="project-popup__body" autoHide={false}>
-                        {!projectList?.length && !!userData?.recent_projects?.length && <div className="project-popup__block">
-                            <h2>Recently used</h2>
-                            <ul className="project-popup__list">
+                        {!projectList?.length && !!userData?.recent_projects?.length &&
+                            <div className="project-popup__block">
+                                <h2><Translate>timesheet_page.popups.commonly_used</Translate></h2>
+                                <ul className="project-popup__list">
 
-                                {
-                                    userData?.recent_projects?.filter(item => searchValue ? item.project.name.toLowerCase().includes(searchValue) : item).map(item =>
-                                        <li key={item.project.id} className="project-popup__item">
-                                            <a href="#" onClick={e => handleChooseProject(e, item.project)}>
-                                                {item.project.name}_{item.project.description}
-                                            </a>
-                                        </li>
-                                    )
-                                }
+                                    {
+                                        userData?.recent_projects
+                                            ?.filter(item => searchValue ? item.project.name.toLowerCase().includes(searchValue.toLowerCase()) || item.project.description.toLowerCase().includes(searchValue.toLowerCase()) : item)
+                                            ?.map(item =>
+                                                <li key={item.project.id} className="project-popup__item">
+                                                    <a href="#" onClick={e => handleChooseProject(e, item.project)}>
+                                                        {item.project.name}_{item.project.description}
+                                                    </a>
+                                                </li>
+                                            )
+                                    }
 
-                            </ul>
-                        </div>}
+                                </ul>
+                            </div>}
                         <div className="project-popup__block">
-                            <h2>All projects</h2>
+                            <h2><Translate>timesheet_page.popups.all_projects</Translate></h2>
                             <ul className="project-popup__list">
 
                                 {
-                                    !projectList?.length ? userData?.projects_list?.filter(item => searchValue ? item.name.toLowerCase().includes(searchValue) : item).map(item =>
-                                        <li key={item.id} className="project-popup__item">
-                                            <a href="#" onClick={e => handleChooseProject(e, item)}>
-                                                {item.name}_{item.description}
-                                            </a>
-                                        </li>
-                                    ) :
-                                        projectList?.filter(item => searchValue ? item.name.toLowerCase().includes(searchValue) : item).map(item =>
+                                    !projectList?.length ? userData?.projects_list
+                                            ?.filter(item => searchValue ? item.name.toLowerCase().includes(searchValue.toLowerCase()) || item.description.toLowerCase().includes(searchValue.toLowerCase()) : item)
+                                            ?.map(item =>
+                                            <li key={item.id} className="project-popup__item">
+                                                <a href="#" onClick={e => handleChooseProject(e, item)}>
+                                                    {item.name}_{item.description}
+                                                </a>
+                                            </li>
+                                        ) :
+                                        projectList
+                                            ?.filter(item => searchValue ? item.name.toLowerCase().includes(searchValue.toLowerCase()) || item.description.toLowerCase().includes(searchValue.toLowerCase()) : item)
+                                            ?.map(item =>
                                             <li key={item.id} className="project-popup__item">
                                                 <a href="#" onClick={e => handleChooseProject(e, item)}>
                                                     {item.name}_{item.description}
@@ -92,7 +106,9 @@ export const TableProjectsForUser: React.FC<ITableProjectsForUserProps> = ({setP
                     </SimpleBar>
                     <div className="project-popup__search">
                         <label>
-                            <input type="search" name="search" className="input" onChange={e => setSearchValue(e.target.value)} value={searchValue} placeholder="Search a project" required/>
+                            <input type="search" name="search" className="input"
+                                   onChange={e => setSearchValue(e.target.value)} value={searchValue}
+                                   placeholder="Search a project" required/>
                         </label>
                         <button className="btn is-grey" type="submit">
                             Search

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useContext, useEffect, useState} from 'react'
 
 import userPhoto from "./../../../assets/html/img/profile-avatar.jpg"
 import {IStatistic, ISummaryEmployee, ITimesheet} from "../../../models";
@@ -20,6 +20,7 @@ import {EmployeesStatus} from "../../../constants/EmployeesStatus";
 import {useTranslation} from "react-i18next";
 import {Translate} from "../../../components/translate/Translate";
 import {currency} from "../../../constants/Currency";
+import {PopupContext} from "../../../App";
 
 interface ISummaryEmployeesItemProps {
     itemData: ITimesheet
@@ -53,10 +54,12 @@ export const SummaryEmployeesItem: React.FC<ISummaryEmployeesItemProps> = ({item
 
     const dispatch = useDispatch()
 
-    const itemDate = itemData.updated_at;
-    const dateForStatus = `${itemDate[0] + itemDate[1]} / ${itemDate[3] + itemDate[4]} / 20${itemDate[6] + itemDate[7]}`
+    const setPopup: any = useContext(PopupContext)
 
-    const { t } = useTranslation();
+    const itemDate = itemData.updated_at;
+    const dateForStatus = `${itemDate[3] + itemDate[4]} / ${itemDate[0] + itemDate[1]} / 20${itemDate[6] + itemDate[7]}`
+
+    const {t} = useTranslation();
 
     const timesheetStatus: any = {
         "progress": {
@@ -123,22 +126,35 @@ export const SummaryEmployeesItem: React.FC<ISummaryEmployeesItemProps> = ({item
     }, [statistic])
 
 
+    const handleOpenProfile = () => {
+        console.log('123')
+
+        setPopup({popup: "profile-popup", data: itemData.user})
+    }
+
     return (
         <div className={`summary-item ${isOpen && "is-active"}`}>
             <div onClick={handleOpenItem} className="summary-item__target">
                 <div className="summary-item__target--user summary-item__user">
-                    <a href="index.html" className="summary-item__user--avatar">
-                        <picture>
-                            <img src={getApiLink(`/${itemData.user.avatar}`)} alt="" width="60" height="60"
-                                 loading="lazy"/>
-                        </picture>
-                    </a>
+                    <button onClick={handleOpenProfile} className="summary-item__user--avatar">
+                        {itemData.user.avatar ? <picture>
+                                <img src={getApiLink(`/${itemData.user.avatar}`)} alt="" width="60" height="60"
+                                     loading="lazy"/>
+                            </picture> :
+                            <div className="aside__user--avatar"
+                                 style={{background: itemData.user.avatar_color ? itemData.user.avatar_color : "#EF3129"}}>
+                                {itemData.user.first_name[0]}{itemData.user.last_name[0]}
+                            </div>
+                        }
+                    </button>
                     <div className="summary-item__user--info">
                         <h2 className="summary-item__user--name">
                             {itemData.user.first_name} {itemData.user.last_name}
                         </h2>
-                        <span className="summary-item__user--position">
-                            {EmployeesStatus().filter(item => item.value === itemData.user.status)[0]?.label}
+                        <span className="summary-item__user--position" style={{textTransform: "capitalize"}}>
+                            {/*{EmployeesStatus().filter(item => item.value === itemData.user.status)[0]?.label}*/}
+                            {itemData.user.role}
+                            {/*{itemData.user.id}*/}
                         </span>
                     </div>
                     <button onClick={handleFavorite} type="button"
@@ -175,13 +191,14 @@ export const SummaryEmployeesItem: React.FC<ISummaryEmployeesItemProps> = ({item
                                     </h3>
                                     <div className="summary-item__element--progress">
                                         <span>{item.task.hours} h</span>
-                                        <span data-value={`${item.task.percent}%`}>
+                                        <span data-value={`${item.task.percent > 100 ? 100 : item.task.percent}%`}>
                                             <div className="line_done" style={{width: `${item.task.percent}%`}}/>
                                         </span>
                                     </div>
                                     <div className="summary-item__element--progress">
                                         <span>{item.expense.sum} {currency}</span>
-                                        <span data-value={`${item.expense.percent}%`}>
+                                        <span
+                                            data-value={`${item.expense.percent > 100 ? 100 : item.expense.percent}%`}>
                                             <div className="line_done" style={{width: `${item.expense.percent}%`}}/>
                                         </span>
                                     </div>
@@ -203,7 +220,8 @@ export const SummaryEmployeesItem: React.FC<ISummaryEmployeesItemProps> = ({item
                             <b className="summary-item__total-element--name">
                                 <Translate>summary_page.main.time_spent_for_projects</Translate>
                             </b>
-                            <NavLink onClick={_ => dispatch(setChosenTimesheet(itemData))} to={`/timesheet/${itemData.id}`} className="summary-item__total-element--link">
+                            <NavLink onClick={_ => dispatch(setChosenTimesheet(itemData))}
+                                     to={`/timesheet/${itemData.id}`} className="summary-item__total-element--link">
                                 <Translate>summary_page.main.show_full_data_timesheet</Translate>
                                 <svg width="7" height="10" viewBox="0 0 7 10">
                                     <use xlinkHref="#arrow-next"></use>
@@ -222,7 +240,8 @@ export const SummaryEmployeesItem: React.FC<ISummaryEmployeesItemProps> = ({item
                             <b className="summary-item__total-element--name">
                                 <Translate>summary_page.main.money_spent_for_projects</Translate>
                             </b>
-                            <NavLink onClick={_ => dispatch(setChosenTimesheet(itemData))} to={`/costs/${itemData.id}`} className="summary-item__total-element--link">
+                            <NavLink onClick={_ => dispatch(setChosenTimesheet(itemData))} to={`/costs/${itemData.id}`}
+                                     className="summary-item__total-element--link">
                                 <Translate>summary_page.main.show_full_data_costs</Translate>
                                 <svg width="7" height="10" viewBox="0 0 7 10">
                                     <use xlinkHref="#arrow-next"></use>

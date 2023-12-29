@@ -1,6 +1,7 @@
 import React, {createContext, useEffect, useState} from 'react';
 import {Login} from "./pages/login/Login";
 import "./styles/style.scss"
+import "./styles/Calibri/stylesheet.css"
 import {PopupList} from "./components/popup/PopupList";
 import {Sprites} from "./components/sprites/Sprites";
 import {Wrapper} from "./components/wrapper/Wrapper";
@@ -11,7 +12,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {getBearer} from "./functions/getBearer";
 import axios from "axios";
 import {getApiLink} from "./functions/getApiLink";
-import {setChosenTimesheet, setExpenses, setProjects, setTasks, setTimesheet, setTimesheetStatistic, setUser} from "./storage/toolkit";
+import {setExpenses, setProjects, setTasks, setUser} from "./storage/toolkit";
 import {Projects} from "./pages/projects/Projects";
 import {AppStyled} from "./App.styled";
 import {Vacations} from "./pages/vacations/Vacations";
@@ -23,6 +24,9 @@ import {ITimesheet} from "./models";
 import {SetTimesheet} from "./api/SetTimesheet";
 import {SetStatistic} from "./api/SetStatistic";
 import {ResetPassword} from "./pages/resetPassword/ResetPassword";
+import {SetNotifications} from "./api/SetNotifications";
+import {ToastContainer} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const PopupContext: any = createContext(null)
 
@@ -47,6 +51,7 @@ function App() {
         setTasks(dispatch)
         setExpenses(dispatch)
         SetTimesheet(dispatch)
+        SetNotifications(dispatch)
 
         getBearer('get')
         axios.get(getApiLink("/api/admin/project/")).then(({data}) => {
@@ -106,6 +111,8 @@ function App() {
                     </Routes>
 
                 </Wrapper>
+
+                <ToastContainer/>
 
             </PopupContext.Provider>
         </AppStyled>

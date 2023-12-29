@@ -9,6 +9,8 @@ import {INotification} from "../../models";
 import {NotificationsComment} from "./components/NotificationsComment";
 import {NotificationsTimesheetStatus} from "./components/NotificationsTimesheetStatus";
 import {Translate} from "../translate/Translate";
+import {useDispatch, useSelector } from 'react-redux';
+import {SetNotifications} from "../../api/SetNotifications";
 
 interface INotificationsProps {
 
@@ -18,7 +20,9 @@ export const Notifications: React.FC<INotificationsProps> = () => {
 
     const [isHaveNotice, setIsHaveNotice] = useState(true)
     const [isActive, setIsActive] = useState(false)
-    const [notifications, setNotifications] = useState<INotification[] | undefined>([])
+    const dispatch = useDispatch()
+
+    const notifications: INotification[] = useSelector((state: any) => state.toolkit.notifications)
 
     useEffect(() => {
 
@@ -32,13 +36,6 @@ export const Notifications: React.FC<INotificationsProps> = () => {
 
     const {rootEl} = useClickOutside(setIsActive)
 
-    useEffect(() => {
-        getBearer("get")
-        axios.get(getApiLink(`/api/user/notifications/`)).then(({data}) => {
-            console.log(data)
-            setNotifications(data)
-        })
-    }, [])
 
     const notifyType: any = (data: INotification) => {
         return {
@@ -51,12 +48,13 @@ export const Notifications: React.FC<INotificationsProps> = () => {
     const handleOpenNotifications = () => {
         setIsActive(prev => !prev)
 
-        // console.log(notifications?.map(item => item.id))
-        // getBearer("post")
-        // axios.post(getApiLink("/api/user/notifications/view/"), notifications?.map(item => item.id)).then(({data}) => {
-        //     console.log(data)
-        //     setIsHaveNotice(false)
-        // }).catch(er => console.log(er))
+        getBearer("post")
+        axios.post(getApiLink("/api/user/notifications/view/"), notifications?.map(item => item.id)).then(({data}) => {
+            console.log(data)
+            setIsHaveNotice(false)
+
+            SetNotifications(dispatch)
+        }).catch(er => console.log(er))
     }
 
     return (

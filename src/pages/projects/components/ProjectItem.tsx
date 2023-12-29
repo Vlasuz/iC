@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import {IProject} from "../../../models";
 import {setSelectedEmployee} from "../../../storage/toolkit";
 import {PopupContext} from "../../../App";
+import {Translate} from "../../../components/translate/Translate";
 
 interface IProjectItemProps {
     data: IProject
@@ -32,7 +33,7 @@ export const ProjectItem: React.FC<IProjectItemProps> = ({data, index, isArchive
             }, 300)
         } else {
             setMenuPosition({
-                top: e.pageY + 10 + "px",
+                top: e.pageY > 600 ? e.pageY - 160 : e.pageY + 10 + "px",
                 left: e.pageX + 10 + "px"
             })
         }
@@ -97,7 +98,7 @@ export const ProjectItem: React.FC<IProjectItemProps> = ({data, index, isArchive
                             <svg width="15" height="16" viewBox="0 0 15 16">
                                 <use xlinkHref="#edit"></use>
                             </svg>
-                            Edit
+                            <Translate>timesheet_page.popups.edit</Translate>
                         </a>
                     </li>
                     <li>
@@ -105,7 +106,7 @@ export const ProjectItem: React.FC<IProjectItemProps> = ({data, index, isArchive
                             <svg width="15" height="16" viewBox="0 0 15 16">
                                 <use xlinkHref="#trash"></use>
                             </svg>
-                            Delete
+                            <Translate>timesheet_page.popups.delete</Translate>
                         </a>
                     </li>
                 </ul>

@@ -4,6 +4,11 @@ import {MonthNumber} from "../../constants/MonthNumber";
 import {useDispatch, useSelector } from 'react-redux';
 import {ITimesheet} from "../../models";
 import {setChosenTimesheet, setTasks} from "../../storage/toolkit";
+import SwiperCore, {Navigation} from 'swiper';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
+
+SwiperCore.use([Navigation]);
 
 interface ITableSelectYearMonthProps {
     setMonth?: any
@@ -80,33 +85,49 @@ export const TableSelectYearMonth: React.FC<ITableSelectYearMonthProps> = ({setM
                 </div>
                 <div className="section-table__change-full-date--slider splide">
                     <div className="splide__track">
-                        <ul className="splide__list">
-                            <li className="splide__slide">
-                                <label>
-                                    <input onChange={_ => setFieldYear(2021)} defaultValue={2021} checked={fieldYear === 2021} type="radio" name="year"/>
-                                    <span>2021</span>
-                                </label>
-                            </li>
-                            <li className="splide__slide">
-                                <label>
-                                    <input onChange={_ => setFieldYear(2022)} defaultValue={2022} checked={fieldYear === 2022} type="radio" name="year"/>
-                                    <span>2022</span>
-                                </label>
-                            </li>
-                            <li className="splide__slide">
-                                <label>
-                                    <input onChange={_ => setFieldYear(2023)} defaultValue={2023} checked={fieldYear === 2023} type="radio" name="year"/>
-                                    <span>2023</span>
-                                </label>
-                            </li>
-                            <li className="splide__slide is-disabled">
-                                <label>
-                                    <input onChange={_ => setFieldYear(2024)} defaultValue={2024} checked={fieldYear === 2024} type="radio" name="year"
-                                           disabled/>
-                                    <span>2024</span>
-                                </label>
-                            </li>
-                        </ul>
+
+                            <Swiper
+                                slidesPerView={3}
+                                navigation={{
+                                    nextEl: '.splide__arrow--next',
+                                    prevEl: '.splide__arrow--prev'
+                                }}
+                                modules={[Navigation]}
+                            >
+                                <SwiperSlide>
+                                    <li className="splide__slide">
+                                        <label>
+                                            <input onChange={_ => setFieldYear(2021)} defaultValue={2021} checked={fieldYear === 2021} type="radio" name="year"/>
+                                            <span>2021</span>
+                                        </label>
+                                    </li>
+                                </SwiperSlide>
+                                <SwiperSlide>
+                                    <li className="splide__slide">
+                                        <label>
+                                            <input onChange={_ => setFieldYear(2022)} defaultValue={2022} checked={fieldYear === 2022} type="radio" name="year"/>
+                                            <span>2022</span>
+                                        </label>
+                                    </li>
+                                </SwiperSlide>
+                                <SwiperSlide>
+                                    <li className="splide__slide">
+                                        <label>
+                                            <input onChange={_ => setFieldYear(2023)} defaultValue={2023} checked={fieldYear === 2023} type="radio" name="year"/>
+                                            <span>2023</span>
+                                        </label>
+                                    </li>
+                                </SwiperSlide>
+                                <SwiperSlide>
+                                    <li className="splide__slide">
+                                        <label>
+                                            <input disabled onChange={_ => setFieldYear(2024)} defaultValue={2024} checked={fieldYear === 2024} type="radio" name="year"/>
+                                            <span>2024</span>
+                                        </label>
+                                    </li>
+                                </SwiperSlide>
+                            </Swiper>
+
                     </div>
                     <div className="splide__arrows">
                         <button className="splide__arrow splide__arrow--prev"

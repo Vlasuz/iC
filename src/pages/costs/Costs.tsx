@@ -34,6 +34,7 @@ export const Costs: React.FC<ICostsProps> = () => {
     const [rowsSelectValue, setRowsSelectValue] = useState(RowsPerPage()[0])
     const [itemToEdit, setItemToEdit] = useState<IExpense>()
     const [isOpenDownSidebar, setIsOpenDownSidebar] = useState(false)
+    const [isLoad, setIsLoad] = useState(false)
 
     useEffect(() => {
         if(!chosenTimesheet || !Object.keys(chosenTimesheet).length) return;
@@ -46,9 +47,14 @@ export const Costs: React.FC<ICostsProps> = () => {
         })
     }, [chosenTimesheet, timesheetId])
 
-    // useEffect(() => {
-    //     setRowsSelectValue(expenseList.length > +RowsPerPage()[0].value ? RowsPerPage()[0] : RowsPerPage()[3])
-    // }, [expenseList])
+    useEffect(() => {
+        if(isLoad) return;
+
+        setRowsSelectValue(expenseList.length > +RowsPerPage()[0].value ? RowsPerPage()[0] : RowsPerPage()[3])
+        setTimeout(() => {
+            setIsLoad(true)
+        }, 1000)
+    }, [expenseList, isLoad])
 
     const handleAddRows = () => {
         const plusCount = window.innerWidth < 768 ? 10 : 20

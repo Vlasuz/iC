@@ -10,3 +10,4 @@ declare module '*.webp';
 declare module 'aos';
 declare module 'google-translate-api';
 declare module 'socket.io-client';
+declare module 'html2pdf.js';

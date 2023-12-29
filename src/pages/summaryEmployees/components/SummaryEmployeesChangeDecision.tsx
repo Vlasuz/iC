@@ -15,7 +15,7 @@ export const SummaryEmployeesChangeDecision: React.FC<ISummaryEmployeesChangeDec
     const dispatch = useDispatch()
 
     const handleChangeDecision = () => {
-        axios.post(getApiLink(`/api/timesheet/employees/review/?timesheet_id=${itemData?.id}&status=progress`)).then(({data}) => {
+        axios.post(getApiLink(`/api/timesheet/employees/review/?timesheet_id=${itemData?.id}&status=waiting`)).then(({data}) => {
             if(!data?.status) return;
 
             SetSummaryEmployees(dispatch)

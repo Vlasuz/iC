@@ -15,6 +15,7 @@ import {CustomSelect} from "../../components/customSelect/CustomSelect";
 import {TableSelectYear} from "../../components/table/TableSelectYear";
 import {TableExport} from "../../components/table/TableExport";
 import {Translate} from "../../components/translate/Translate";
+import {useClickOutside} from "../../hooks/ClickOutside";
 
 interface IProjectsProps {
 
@@ -79,21 +80,28 @@ export const Projects: React.FC<IProjectsProps> = () => {
     const [paginationCountFrom, setPaginationCountFrom] = useState<number>(0)
     const [paginationCountTo, setPaginationCountTo] = useState<number>(paginationCountStep.value)
     const [paginationNavigation, setPaginationNavigation] = useState<number[]>([])
+    const [isLoad, setIsLoad] = useState(false)
 
     const paginationCountOfEndingNavigation = paginationMaximumPages - 5 <= 0 ? 0 : paginationMaximumPages - 5
     const isNearEnd = paginationNavigation?.slice(paginationCountFrom / paginationCountStep.value, (paginationCountOfMaximumNavigation + paginationCountFrom / paginationCountStep.value))[0] + 3 >= paginationNavigation.slice(paginationMaximumPages - 1)[0]
 
     useEffect(() => {
+        console.log(projects)
+        if (projects.length && isLoad) return;
+        console.log(projects.length && isLoad)
+
         const arrayCount = Array?.from({length: Math.ceil(projects?.length / paginationCountStep.value)}, (_, i) => i + 1)
 
         setPaginationNavigation(arrayCount)
         setPaginationCountTo(paginationCountStep.value)
+
+        projects.length && setIsLoad(true)
     }, [projects, paginationMaximumPages])
 
     useEffect(() => {
 
-        setPaginationCountFrom(0)
-        setPaginationMaximumPages(Math.ceil(projects.length / paginationCountStep.value))
+        // setPaginationCountFrom(0)
+        // setPaginationMaximumPages(Math.ceil(projects.length / paginationCountStep.value))
 
     }, [projects])
 
@@ -117,6 +125,30 @@ export const Projects: React.FC<IProjectsProps> = () => {
     }
     // PAGINATION
 
+    const [isOpenInputSearch, setIsOpenInputSearch] = useState(false)
+    const {rootEl} = useClickOutside(setIsOpenInputSearch)
+
+    let numberOfRow = 0
+
+
+    const [rowsSelectValue, setRowsSelectValue] = useState(RowsPerPage()[0])
+    const handleAddRows = () => {
+        const plusCount = window.innerWidth < 768 ? 10 : 20
+        setRowsSelectValue({
+            value: rowsSelectValue.value + plusCount,
+            label: projects.length <= +rowsSelectValue.label + plusCount ? "All" : String(+rowsSelectValue.label + plusCount)
+        })
+    }
+
+    useEffect(() => {
+        if(isLoad) return;
+
+        setRowsSelectValue(projects.length > +RowsPerPage()[0].value ? RowsPerPage()[0] : RowsPerPage()[3])
+        setTimeout(() => {
+            setIsLoad(true)
+        }, 1000)
+    }, [projects, isLoad])
+
     return (
         <ProjectStyled className="section-table">
             <div className="section-table__header">
@@ -136,19 +168,20 @@ export const Projects: React.FC<IProjectsProps> = () => {
                                 <use xlinkHref="#plus"></use>
                             </svg>
                         </a>
-                        <form onSubmit={handleSearch} className="section-table__search">
+                        <form ref={rootEl} onSubmit={handleSearch}
+                              className={`section-table__search ${isOpenInputSearch && "is-active"}`}>
                             <label className="section-table__search--label">
-                                <input type="search" name="search"
-                                       className="section-table__search--input"
-                                       onChange={e => setSearchValue(e.target.value)} value={searchValue}/>
+                                <input onChange={e => setSearchValue(e.target.value)} value={searchValue} type="search"
+                                       name="search" autoComplete="off" className="section-table__search--input"/>
                                 <span className="placeholder">
-                                    {!searchValue.length ?
-                                        <Translate>employees_admin.others.search_a_project</Translate> : ""}
-                                </span>
+                                {!searchValue.length ?
+                                    <Translate>employees_admin.table.search_an_employee</Translate> : ""}
+                            </span>
                             </label>
-                            <button className="section-table__search--submit btn is-grey is-min-on-mob"
+                            <button onClick={_ => setIsOpenInputSearch(true)}
+                                    className="section-table__search--submit btn is-grey is-min-on-mob"
                                     type="submit">
-                                <Translate>projects_admin.search</Translate>
+                                <Translate>employees_admin.table.search</Translate>
                                 <svg width="15" height="15" viewBox="0 0 15 15">
                                     <use xlinkHref="#search"></use>
                                 </svg>
@@ -296,10 +329,20 @@ export const Projects: React.FC<IProjectsProps> = () => {
                             <div className="section-table__body">
                                 {
                                     !!projects.length && projects
-                                        ?.map((project: IProject, index: number) =>
-                                            <ProjectItem isArchive={project.archive} key={project.id} data={project}
-                                                         index={paginationCountFrom / paginationCountStep.value + 1}/>
-                                        )
+                                        ?.slice()?.sort((a, b) => +a.archive - +b.archive)
+                                        // ?.slice(paginationCountFrom, paginationCountTo)
+                                        // ?.filter((item, index) => index >= Math.ceil(paginationCountStep.value / 2))
+                                        ?.map((project: IProject, index: number) => {
+
+                                            numberOfRow += 1
+
+                                            if (rowsSelectValue?.value && rowsSelectValue?.value < numberOfRow) return "";
+
+                                            return (
+                                                <ProjectItem isArchive={project.archive} key={project.id} data={project}
+                                                             index={index}/>
+                                            )
+                                        })
                                 }
                             </div>
                         </div>
@@ -311,8 +354,7 @@ export const Projects: React.FC<IProjectsProps> = () => {
                     <span>
                         <Translate>projects_admin.rows_per_page</Translate>
                     </span>
-                    <CustomSelect list={RowsPerPage()} onChange={handleChangeRows} selectValue={paginationCountStep}
-                                  setSelectedItem={setPaginationCountStep} defaultValue={RowsPerPage()[0]}/>
+                    <CustomSelect list={RowsPerPage()} defaultValue={RowsPerPage()[3]} selectValue={rowsSelectValue} setSelectedItem={setRowsSelectValue}/>
                 </div>
                 {paginationNavigation.length > 1 &&
                     <div className="section-table__pagination pagination visible-on-desktop">
@@ -358,12 +400,14 @@ export const Projects: React.FC<IProjectsProps> = () => {
                             </svg>
                         </button>
                     </div>}
-                <button className="section-table__see-more btn visible-on-mob" type="button">
-                    <Translate>employees_admin.table.show_more</Translate>
-                    <svg width="15" height="15" viewBox="0 0 15 15">
-                        <use xlinkHref="#arrow-down"></use>
-                    </svg>
-                </button>
+
+                {window.innerWidth < 768 && rowsSelectValue.value !== 0 && projects.length > rowsSelectValue.value &&
+                    <button onClick={handleAddRows} className="section-table__see-more btn" type="button">
+                        <Translate>costs_page.table.show_more</Translate>
+                        <svg width="15" height="15" viewBox="0 0 15 15">
+                            <use xlinkHref="#arrow-down"></use>
+                        </svg>
+                    </button>}
                 <div className="section-table__row-per-page visible-on-desktop">
                     <span>
                         <Translate>projects_admin.rows_per_page</Translate>

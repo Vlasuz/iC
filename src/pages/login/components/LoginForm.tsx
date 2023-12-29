@@ -1,4 +1,4 @@
-import React, {FormEvent, useContext, useEffect, useState} from 'react'
+import React, {FormEvent, useContext, useEffect, useRef, useState} from 'react'
 import axios from "axios";
 import {getApiLink} from "../../../functions/getApiLink";
 import {NavLink, useNavigate} from "react-router-dom";
@@ -67,8 +67,31 @@ export const LoginForm: React.FC<ILoginFormProps> = () => {
 
     const setPopup: any = useContext(PopupContext)
 
+
+    const inputRef = useRef(null);
+    const [isAutofill, setIsAutofill] = useState(false)
+
+    // useEffect(() => {
+    //     if (inputRef.current) {
+    //         // @ts-ignore
+    //         const isAutofilled = inputRef.current.value !== '';
+    //         // Делайте что-то, когда поле автозаполнено или изменено
+    //
+    //         setIsAutofill(isAutofilled)
+    //         console.log(isAutofilled)
+    //     }
+    // }, []);
+
+    const handleInputChange = (event: any) => {
+        setTimeout(() => {
+            const isAutofilled = event.target.value !== '';
+            setIsAutofill(isAutofilled)
+            console.log(isAutofilled)
+        }, 100);
+    };
+
     return (
-        <LoginStyled onSubmit={handleAuthorization} className="login__form">
+        <LoginStyled onSubmit={handleAuthorization} autoComplete="off" className="login__form">
             <h1 className="login__title title is-large">
                 <Translate>page_login.login</Translate>
             </h1>
@@ -76,17 +99,17 @@ export const LoginForm: React.FC<ILoginFormProps> = () => {
             <LoginChooseCompany/>
 
             <label className="login__label">
-                <input type="email" name="email" placeholder="E-mail" required
+                <input autoComplete="off" type="email" name="email" placeholder="E-mail" required
                        onChange={e => setEmailField(e.target.value)} value={emailField} className="login__input input"/>
             </label>
 
             <label className="login__label">
                 <span className="input_placeholder">
-                    <input type={isShowPassword ? "text" : "password"} name="password" required
+                    <input autoComplete="off" ref={inputRef} onInput={handleInputChange} type={isShowPassword ? "text" : "password"} name="password" required
                            onChange={e => setPasswordField(e.target.value)} value={passwordField}
                            className="login__input input password-input"/>
                     <span className="placeholder">
-                        {!passwordField.length ? <Translate>page_login.password</Translate> : ""}
+                        {!isAutofill && !passwordField.length ? <Translate>page_login.password</Translate> : ""}
                     </span>
                 </span>
                 <button onClick={_ => setIsShowPassword(prev => !prev)}

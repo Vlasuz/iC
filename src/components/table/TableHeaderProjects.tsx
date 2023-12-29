@@ -48,7 +48,7 @@ export const TableHeaderProjects: React.FC<ITableHeaderProjectsProps> = ({setFil
                 <div className="project-popup">
                     <SimpleBar className="project-popup__body">
                         <div className="project-popup__block">
-                            <h2>Recently used</h2>
+                            <h2><Translate>timesheet_page.popups.commonly_used</Translate></h2>
                             <ul className="project-popup__list">
 
                                 {
@@ -70,7 +70,7 @@ export const TableHeaderProjects: React.FC<ITableHeaderProjectsProps> = ({setFil
                             </ul>
                         </div>
                         <div className="project-popup__block">
-                            <h2>All projects</h2>
+                            <h2><Translate>timesheet_page.popups.all_projects</Translate></h2>
                             <ul className="project-popup__list">
 
                                 {

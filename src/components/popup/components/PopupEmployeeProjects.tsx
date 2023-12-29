@@ -4,6 +4,7 @@ import {IsPopupActiveContext} from "../PopupList";
 import {IProject} from "../../../models";
 import {PopupClose} from "./PopupClose";
 import SimpleBar from "simplebar-react";
+import {Translate} from "../../translate/Translate";
 
 interface IPopupEmployeeProjectsProps {
     isOpenProjects: boolean
@@ -51,7 +52,13 @@ export const PopupEmployeeProjects: React.FC<IPopupEmployeeProjectsProps> = ({
             <div className="sub-popup-employee__wrapper popup-wrapper">
                 <div className="sub-popup-employee__bg popup-bg" onClick={_ => setIsOpenProjects(false)}></div>
                 <div className="sub-popup-employee__body popup-body">
-                    <PopupClose/>
+                    {/*<PopupClose/>*/}
+                    <button type="button" onClick={_ => setIsOpenProjects(false)} className="remove-table-item__close-btn popup-close-btn popup-close"
+                            title="Close">
+                        <svg width="15" height="15" viewBox="0 0 15 15">
+                            <use xlinkHref="#close"></use>
+                        </svg>
+                    </button>
                     <div className="sub-popup-employee__body--wrapper">
                         <button type="button" className="sub-popup-employee__close-btn popup-close-btn"
                                 onClick={_ => setIsOpenProjects(false)} title="Close">
@@ -72,7 +79,7 @@ export const PopupEmployeeProjects: React.FC<IPopupEmployeeProjectsProps> = ({
                                                 </svg>
                                             </span>
                                         <span className="popup-checkbox__text">
-                                            All projects
+                                            <Translate>timesheet_page.popups.all_projects</Translate>
                                         </span>
                                     </label>
                                 </li>
@@ -80,6 +87,7 @@ export const PopupEmployeeProjects: React.FC<IPopupEmployeeProjectsProps> = ({
                                 {
                                     projects.length && projects
                                         ?.filter(item => item.name.toLowerCase().includes(searchValue.toLowerCase()) || item.description.toLowerCase().includes(searchValue.toLowerCase()))
+                                        ?.filter(item => !item.archive)
                                         ?.map(project =>
                                             <li key={project.id}>
                                                 <label className="popup-checkbox">

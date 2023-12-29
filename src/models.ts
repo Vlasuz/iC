@@ -42,6 +42,7 @@ export interface IComment {
         id: string
     }
     answer: IUser
+    id: string
     text: string
 }
 
@@ -63,6 +64,8 @@ export interface ITimesheet {
         last_name: string
         status: string
         id?: string
+        role: string
+        avatar_color: string
     }
 }
 

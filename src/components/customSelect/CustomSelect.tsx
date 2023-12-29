@@ -47,7 +47,7 @@ export const CustomSelect: React.FC<ICustomSelectProps> = ({
 
     const handleSelectItem = (item: any, index?: number) => {
         handleSelect(item)
-        !tabIndex && setIsOpenSelect(false)
+        setIsOpenSelect(false)
 
         tabIndex && inputBlockRef.current.focus()
 
@@ -76,13 +76,12 @@ export const CustomSelect: React.FC<ICustomSelectProps> = ({
         e.preventDefault()
         setIsOpenSelect(prev => !prev)
         if(!isOpenSelect)
-            inputBlockRef.current.focus()
+            inputBlockRef?.current?.focus()
     }
 
     const handleFocusElement = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault()
-        console.log(isOpenSelect)
-        setIsOpenSelect(true)
+        // setIsOpenSelect(true)
     }
 
     const inputBlockRef: any = useRef(null);

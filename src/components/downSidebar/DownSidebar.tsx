@@ -8,6 +8,7 @@ import {useSelector} from "react-redux";
 import {mergeAndSum} from "../../functions/mergeAndSumStatistic";
 import {Translate} from "../translate/Translate";
 import {currency} from "../../constants/Currency";
+import {getBearer} from "../../functions/getBearer";
 
 interface IDownSidebarProps {
     setIsOpenDownSidebar: any
@@ -39,7 +40,7 @@ export const DownSidebar: React.FC<IDownSidebarProps> = ({
     const [isActive, setIsActive] = useState(false)
     const [textValue, setTextValue] = useState("")
     const [comments, setComments] = useState<IComment[]>([])
-    const [answerCommentUserId, setAnswerCommentUserId] = useState("")
+    const [answerCommentUser, setAnswerCommentUser] = useState<any>()
 
     const inputBlock: any = useRef(null)
 
@@ -53,7 +54,6 @@ export const DownSidebar: React.FC<IDownSidebarProps> = ({
 
         setComments(chosenTimesheet?.comments)
 
-        console.log(chosenTimesheet?.comments)
     }, [isActive])
 
     useEffect(() => {
@@ -65,7 +65,7 @@ export const DownSidebar: React.FC<IDownSidebarProps> = ({
 
         axios.post(getApiLink(`/api/timesheet/comment/?timesheet_id=${chosenTimesheet.id}`), {
             "text": textValue.slice(textValue.indexOf(".") + 1),
-            "answer_user_id": answerCommentUserId
+            "answer_user_id": answerCommentUser?.id?.length ? answerCommentUser?.id : null
         }).then(({data}) => {
             if (data.status === false) return;
             console.log(data)
@@ -77,13 +77,23 @@ export const DownSidebar: React.FC<IDownSidebarProps> = ({
                     "avatar": userData.avatar,
                     "status": userData.status
                 },
+                "answer": {
+                    avatar: answerCommentUser?.avatar,
+                    first_name: answerCommentUser?.first_name,
+                    id: answerCommentUser?.id,
+                    last_name: answerCommentUser?.last_name,
+                    role: answerCommentUser?.role,
+                    status: answerCommentUser?.status,
+                },
                 "text": textValue
             }
 
-            setComments(prev => [...prev, comment])
+            if (!answerCommentUser?.first_name) delete comment.answer;
 
+            setComments(prev => [...prev, comment])
             setTextValue("")
         })
+
     }
 
     const isCostPage = type === "cost"
@@ -93,6 +103,14 @@ export const DownSidebar: React.FC<IDownSidebarProps> = ({
     useEffect(() => {
         refCommentBody.current.getScrollElement().scrollTop = 99999
     }, [comments])
+
+    const handleDeleteComment = (id: string) => {
+        getBearer("delete")
+        axios.delete(getApiLink(`/api/timesheet/comment/delete/?comment_id=${id}`)).then(({data}) => {
+            console.log(data)
+            setComments(prev => prev.filter(item => item.id !== id))
+        })
+    }
 
     return (
         <DownSidebarStyled className={`down-sidebar ${isActive && "is-active"}`}>
@@ -142,13 +160,15 @@ export const DownSidebar: React.FC<IDownSidebarProps> = ({
                                                                 {com?.answer &&
                                                                     <span>@{com?.answer?.first_name} {com?.answer?.last_name}.</span>
                                                                 }
-                                                                <b>{com.user.first_name} {com.user.last_name}: </b>
+                                                                <b> {com.user.first_name} {com.user.last_name}: </b>
                                                                 {com.text.slice(com.text?.indexOf(".") + 1)}
                                                             </p>
                                                         </div>
+                                                        <button className={"delete-comment"}
+                                                                 onClick={_ => handleDeleteComment(com.id)}>–</button>
                                                         <button type="button" onClick={_ => {
                                                             setTextValue(`@${com.user.first_name} ${com.user.last_name}. `)
-                                                            setAnswerCommentUserId(com.user.id)
+                                                            setAnswerCommentUser(com.user)
                                                             inputBlock.current.focus()
                                                         }} className="down-sidebar__chat-item--answer" title="Answer">
                                                             <svg width="20" height="20" viewBox="0 0 20 20">
@@ -157,7 +177,7 @@ export const DownSidebar: React.FC<IDownSidebarProps> = ({
                                                         </button>
                                                     </div>
                                                 ) :
-                                                <Translate>timesheet_page.down_sidebar.there_is_no_data_for_a_report</Translate>
+                                                <Translate>timesheet_page.down_sidebar.there_is_no_comments</Translate>
                                         }
 
                                     </SimpleBar>
@@ -198,7 +218,7 @@ export const DownSidebar: React.FC<IDownSidebarProps> = ({
                                                         <b style={{maxWidth: isCostPage ? "80px" : "50px"}}>{isCostPage ? item?.expense.sum : item?.task.hours} {isCostPage ? currency : "h"}</b>
                                                         <div
                                                             className="down-sidebar__total-item--progress-bar"
-                                                            data-value={`${item?.task?.percent}%`}>
+                                                            data-value={`${item.task.percent > 100 ? 100 : item.task.percent}%`}>
                                                             <div className="line_done"
                                                                  style={{width: `${item?.task?.percent}%`}}></div>
                                                         </div>

@@ -11,6 +11,7 @@ import {getBearer} from "../../functions/getBearer";
 import { ITimesheet } from '../../models';
 import {SetTimesheet} from "../../api/SetTimesheet";
 import { useDispatch, useSelector } from 'react-redux';
+import {Translate} from "../../components/translate/Translate";
 
 interface ISummaryProps {
 
@@ -31,7 +32,7 @@ export const Summary: React.FC<ISummaryProps> = () => {
             <div className="summary__header page-header">
                 <div className="page-header__col">
                     <h1 className="page-header__title title">
-                        Summary
+                        <Translate>summary_page.main.summary</Translate>
                     </h1>
                 </div>
                 <div className="page-header__col">
@@ -46,7 +47,7 @@ export const Summary: React.FC<ISummaryProps> = () => {
                 </div>
                 <div className="page-header__col">
 
-                    <TableExport title={"Export All"}/>
+                    <TableExport title={'export all'}/>
 
                 </div>
             </div>

@@ -2,6 +2,14 @@ import styled from "styled-components";
 
 export const EmployeesStyled = styled.section`
   min-height: calc(95vh - 4px);
+
+  @media screen and (max-width: 992px) {
+    min-height: calc(100vh - 115px);
+  };
+
+  @media screen and (max-width: 992px) {
+    min-height: calc(100vh - 115px);
+  };
   
   .section-table {
     padding-bottom: 0;
@@ -35,5 +43,11 @@ export const EmployeesStyled = styled.section`
   }
   .section-table__main--container {
     overflow: visible;
+  }
+
+  @media screen and (max-width: 992px) {
+    .section-table__search--label {
+      position: absolute !important;
+    }
   }
 `

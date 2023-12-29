@@ -8,6 +8,5 @@ export const SetTimesheet = (dispatch: any) => {
     axios.get(getApiLink("/api/timesheet/my/")).then(({data}) => {
         dispatch(setTimesheet(data))
         dispatch(setChosenTimesheet(data[0]))
-
     })
 }

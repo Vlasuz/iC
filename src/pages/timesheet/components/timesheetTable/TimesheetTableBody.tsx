@@ -73,15 +73,13 @@ export const TimesheetTableBody: React.FC<ITimesheetTableBodyProps> = ({
                             return a
                         }
                     })
-                    ?.sort((a: any, b: any) => {
-                        const c = a.hours
-                        const d = b.hours
+                    ?.filter((item: any) => {
                         if(sortByTotal === "ASC") {
-                            return c - d;
+                            return item.hours >= 8
                         } else if (sortByTotal === "DESC") {
-                            return d - c
+                            return item.hours < 8
                         } else {
-                            return a
+                            return item
                         }
                     })
                     .map((dateItem: any) => {

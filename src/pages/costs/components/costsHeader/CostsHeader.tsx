@@ -15,6 +15,7 @@ import { SetExpenses } from '../../../../api/SetExpenses';
 import {SetTasks} from "../../../../api/SetTasks";
 import {SetStatistic} from "../../../../api/SetStatistic";
 import {Translate} from "../../../../components/translate/Translate";
+import {useClickOutside} from "../../../../hooks/ClickOutside";
 
 interface ICostsHeaderProps {
     itemToEdit: IExpense | undefined
@@ -132,12 +133,12 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit}) => {
 
     function getMondayDate() {
         const today = new Date();
-        const dayOfWeek = today.getDay();
-        const difference = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
-        const monday = new Date(today);
-        monday.setDate(today.getDate() + difference);
+        // const dayOfWeek = today.getDay();
+        // const difference = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+        // const monday = new Date(today);
+        // monday.setDate(today.getDate() + difference);
 
-        return monday;
+        return today;
     }
 
     const resetFields = () => {
@@ -154,6 +155,9 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit}) => {
     }, [chosenTimesheet])
 
     const isApprove = chosenTimesheet.status === "approve"
+
+    const [isOpenInputSearch, setIsOpenInputSearch] = useState(false)
+    const {rootEl} = useClickOutside(setIsOpenInputSearch)
 
     return (
         <div className="section-table__header">
@@ -190,7 +194,8 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit}) => {
                                         <use xlinkHref="#plus"></use>
                                     </svg>
                                 </button>
-                                <form onSubmit={handleSearchTimesheet} className="section-table__search">
+                                <form ref={rootEl} onSubmit={handleSearchTimesheet}
+                                      className={`section-table__search ${isOpenInputSearch && "is-active"}`}>
                                     <label className="section-table__search--label">
                                         <input type="search" name="search"
                                                className="section-table__search--input"
@@ -201,7 +206,7 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit}) => {
                                             {!searchValueLocal && <Translate>costs_page.top_part.search_a_project</Translate>}
                                         </span>
                                     </label>
-                                    <button className="section-table__search--submit btn is-grey is-min-on-mob"
+                                    <button onClick={_ => setIsOpenInputSearch(true)} className="section-table__search--submit btn is-grey is-min-on-mob"
                                             type="submit">
                                         <Translate>costs_page.top_part.search</Translate>
                                         <svg width="15" height="15" viewBox="0 0 15 15">

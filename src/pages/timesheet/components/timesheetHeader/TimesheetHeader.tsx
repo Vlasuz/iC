@@ -132,12 +132,12 @@ export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({itemToEdit}) =
 
     function getMondayDate() {
         const today = new Date();
-        const dayOfWeek = today.getDay();
-        const difference = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
-        const monday = new Date(today);
-        monday.setDate(today.getDate() + difference);
+        // const dayOfWeek = today.getDay();
+        // const difference = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+        // const monday = new Date(today);
+        // monday.setDate(today.getDate() + difference);
 
-        return monday;
+        return today;
     }
 
     const handleOpenToCreate = () => {
@@ -160,7 +160,10 @@ export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({itemToEdit}) =
         setDateData(`${lessThenTen(String(getMondayDate().getDate()))}.${chosenTimesheet?.date[3]}${chosenTimesheet?.date[4]}.${getMondayDate().getFullYear()}`)
     }, [chosenTimesheet])
 
-    const isApprove = chosenTimesheet.status === "approve"
+    const isApprove = chosenTimesheet?.status === "approve"
+
+    const [isOpenInputSearch, setIsOpenInputSearch] = useState(false)
+    const {rootEl} = useClickOutside(setIsOpenInputSearch)
 
     return (
         <div className="section-table__header">
@@ -200,7 +203,8 @@ export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({itemToEdit}) =
                                         <use xlinkHref="#plus"></use>
                                     </svg>
                                 </button>
-                                <form onSubmit={handleSearchTimesheet} className="section-table__search">
+                                <form ref={rootEl} onSubmit={handleSearchTimesheet}
+                                      className={`section-table__search ${isOpenInputSearch && "is-active"}`}>
                                     <label className="section-table__search--label">
                                         <input type="search" name="search"
                                                className="section-table__search--input"
@@ -211,7 +215,7 @@ export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({itemToEdit}) =
                                             {!searchValueLocal && <Translate>timesheet_page.top_part.search_a_project</Translate>}
                                         </span>
                                     </label>
-                                    <button className="section-table__search--submit btn is-grey is-min-on-mob"
+                                    <button onClick={_ => setIsOpenInputSearch(true)} className="section-table__search--submit btn is-grey is-min-on-mob"
                                             type="submit">
                                         <Translate>timesheet_page.top_part.search</Translate>
                                         <svg width="15" height="15" viewBox="0 0 15 15">

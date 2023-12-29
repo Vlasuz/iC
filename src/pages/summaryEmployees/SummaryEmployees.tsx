@@ -9,10 +9,11 @@ import {SummaryEmployeesStyled} from "./SummaryEmployees.styled";
 import {RowsPerPage} from "../../constants/RowsPerPage";
 import {SetSummaryEmployees} from "../../api/SetSummaryEmployees";
 import { useDispatch, useSelector } from 'react-redux';
-import {IProject, ISummaryEmployee} from "../../models";
+import {IProject, ISummaryEmployee, IUser} from "../../models";
 import {Translate} from "../../components/translate/Translate";
 import axios from "axios";
 import {getApiLink} from "../../functions/getApiLink";
+import hello from "slim-select/src/vue/dist/vue/hello";
 
 interface ISummaryEmployeesProps {
 
@@ -24,23 +25,28 @@ export const SummaryEmployees: React.FC<ISummaryEmployeesProps> = () => {
 
     const statusSortList = [
         {
+            label: "In progress first",
+            value: "progress"
+        },
+        {
             label: "Pending first",
-            value: "pending_first"
+            value: "waiting"
         },
         {
             label: "Rejected first",
-            value: "rejected_first"
+            value: "reject"
         },
         {
             label: "Approved first",
-            value: "approved_first"
+            value: "approve"
         }
     ]
 
-    const [projectData, setProjectData] = useState(undefined)
+    const [projectData, setProjectData] = useState<any>(undefined)
     const [statusSortValue, setStatusSortValue] = useState(statusSortList[0])
     const [rowsSelectValue, setRowsSelectValue] = useState(RowsPerPage()[0])
 
+    const user: IUser = useSelector((state: any) => state.toolkit.user)
     const summaryEmployees: ISummaryEmployee = useSelector((state: any) => state.toolkit.summaryEmployees)
 
     const handleAddRows = () => {
@@ -64,10 +70,14 @@ export const SummaryEmployees: React.FC<ISummaryEmployeesProps> = () => {
     const [allProjects, setAllProjects] = useState<IProject[]>([])
     useEffect(() => {
         axios.get(getApiLink("/api/timesheet/projects/")).then(({data}) => {
-            console.log(data)
             setAllProjects(data)
         })
     }, [])
+
+    useEffect(() => {
+        if(!projectData?.id) return;
+        SetSummaryEmployees(dispatch, undefined, undefined, projectData.id)
+    }, [projectData])
 
     return (
         <SummaryEmployeesStyled className="summary">
@@ -110,7 +120,7 @@ export const SummaryEmployees: React.FC<ISummaryEmployeesProps> = () => {
                         <CustomSelect list={statusSortList} setSelectedItem={setStatusSortValue} selectValue={statusSortValue} />
                     </div>
 
-                    <TableExport/>
+                    {user.status === "team_lead" && <TableExport/>}
                 </form>
             </div>
             <div className="summary__main">
@@ -118,11 +128,13 @@ export const SummaryEmployees: React.FC<ISummaryEmployeesProps> = () => {
                 {
                     summaryEmployees?.favourite
                         ?.filter(item => item.user.last_name.toLowerCase().includes(valueSearch.toLowerCase()))
+                        ?.sort((a: any, b: any) => b.status === statusSortValue.value ? 1 : -1)
                         ?.map(item => <SummaryEmployeesItem key={item.id} isFavorite={true} itemData={item}/>)
                 }
                 {
                     summaryEmployees?.all
                         ?.filter(item => item.user.last_name.toLowerCase().includes(valueSearch.toLowerCase()))
+                        ?.sort((a: any, b: any) => a.status === statusSortValue.value ? 1 : -1)
                         ?.map(item => <SummaryEmployeesItem key={item.id} itemData={item}/>)
                 }
 
@@ -130,7 +142,8 @@ export const SummaryEmployees: React.FC<ISummaryEmployeesProps> = () => {
             <div className="summary__footer page-footer">
                 <div className="page-footer__row-per-page visible-on-mob">
                     <span>Rows per page:</span>
-                    <CustomSelect list={RowsPerPage()} defaultValue={RowsPerPage()[0]} selectValue={rowsSelectValue} setSelectedItem={setRowsSelectValue}/>
+                    <CustomSelect list={RowsPerPage()} defaultValue={RowsPerPage()[0]} selectValue={rowsSelectValue}
+                                  setSelectedItem={setRowsSelectValue}/>
                 </div>
                 {rowsSelectValue.value !== 0 && summaryEmployees?.all?.length > rowsSelectValue.value &&
                     <button onClick={handleAddRows} className="section-table__see-more btn" type="button">
@@ -143,7 +156,8 @@ export const SummaryEmployees: React.FC<ISummaryEmployeesProps> = () => {
                     <span>
                         <Translate>costs_page.table.rows_per_page</Translate>
                     </span>
-                    <CustomSelect list={RowsPerPage()} defaultValue={RowsPerPage()[0]} selectValue={rowsSelectValue} setSelectedItem={setRowsSelectValue}/>
+                    <CustomSelect list={RowsPerPage()} defaultValue={RowsPerPage()[0]} selectValue={rowsSelectValue}
+                                  setSelectedItem={setRowsSelectValue}/>
                 </div>
             </div>
         </SummaryEmployeesStyled>
