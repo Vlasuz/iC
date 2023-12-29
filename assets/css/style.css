@@ -5662,6 +5662,7 @@ body {
     top: 0;
     width: var(--value,0%);
     height: 100%;
+    max-width: 100%;
     background: rgba(151,160,187,.5)
 }
 
