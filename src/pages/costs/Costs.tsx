@@ -14,6 +14,7 @@ import {DownSidebar} from "../../components/downSidebar/DownSidebar";
 import {useParams} from "react-router-dom";
 import {SetStatistic} from "../../api/SetStatistic";
 import {Translate} from "../../components/translate/Translate";
+import {CostsExportTable} from "./components/CostsExportTable";
 
 interface ICostsProps {
 
@@ -37,18 +38,17 @@ export const Costs: React.FC<ICostsProps> = () => {
     const [isLoad, setIsLoad] = useState(false)
 
     useEffect(() => {
-        if(!chosenTimesheet || !Object.keys(chosenTimesheet).length) return;
+        if (!chosenTimesheet || !Object.keys(chosenTimesheet).length) return;
 
         getBearer("get")
         axios.get(getApiLink(`/api/timesheet/expenses/?timesheet_id=${timesheetId ?? chosenTimesheet.id}`)).then(({data}) => {
             dispatch(setExpenses(data))
-            SetStatistic(dispatch, timesheetId)
-            // setRowsSelectValue()
+            SetStatistic(dispatch, timesheetId ?? chosenTimesheet.id)
         })
     }, [chosenTimesheet, timesheetId])
 
     useEffect(() => {
-        if(isLoad) return;
+        if (isLoad) return;
 
         setRowsSelectValue(expenseList.length > +RowsPerPage()[0].value ? RowsPerPage()[0] : RowsPerPage()[3])
         setTimeout(() => {
@@ -68,36 +68,42 @@ export const Costs: React.FC<ICostsProps> = () => {
         <BlockToEdit.Provider value={setItemToEdit}>
             <CostsStyles style={{paddingBottom: isOpenDownSidebar ? "270px" : "80px"}} className="section-table">
 
-            <CostsHeader itemToEdit={itemToEdit} />
+                <CostsExportTable/>
 
-            <CostsTable rowsSelectValue={rowsSelectValue} />
+                <CostsHeader itemToEdit={itemToEdit}/>
 
-            <div className="section-table__footer">
-                <div className="section-table__row-per-page visible-on-mob">
+                <CostsTable rowsSelectValue={rowsSelectValue}/>
+
+                <div className="section-table__footer">
+                    <div className="section-table__row-per-page visible-on-mob">
                     <span>
                         <Translate>costs_page.table.rows_per_page</Translate>
                     </span>
 
-                    <CustomSelect list={RowsPerPage()} defaultValue={RowsPerPage()[3]} selectValue={rowsSelectValue} setSelectedItem={setRowsSelectValue}/>
-                </div>
-                {rowsSelectValue.value !== 0 && expenseList.length > rowsSelectValue.value &&
-                    <button onClick={handleAddRows} className="section-table__see-more btn" type="button">
-                        <Translate>costs_page.table.show_more</Translate>
-                        <svg width="15" height="15" viewBox="0 0 15 15">
-                            <use xlinkHref="#arrow-down"></use>
-                        </svg>
-                    </button>}
-                <div className="section-table__row-per-page visible-on-desktop">
+                        <CustomSelect list={RowsPerPage()} defaultValue={RowsPerPage()[3]} selectValue={rowsSelectValue}
+                                      setSelectedItem={setRowsSelectValue}/>
+                    </div>
+                    {rowsSelectValue.value !== 0 && expenseList.length > rowsSelectValue.value &&
+                        <button onClick={handleAddRows} className="section-table__see-more btn" type="button">
+                            <Translate>costs_page.table.show_more</Translate>
+                            <svg width="15" height="15" viewBox="0 0 15 15">
+                                <use xlinkHref="#arrow-down"></use>
+                            </svg>
+                        </button>}
+                    <div className="section-table__row-per-page visible-on-desktop">
                     <span>
                         <Translate>costs_page.table.rows_per_page</Translate>
                     </span>
 
-                    <CustomSelect list={RowsPerPage()} defaultValue={RowsPerPage()[3]} selectValue={rowsSelectValue} setSelectedItem={setRowsSelectValue}/>
+                        <CustomSelect list={RowsPerPage()} defaultValue={RowsPerPage()[3]} selectValue={rowsSelectValue}
+                                      setSelectedItem={setRowsSelectValue}/>
+                    </div>
                 </div>
-            </div>
             </CostsStyles>
 
-            <DownSidebar type={"cost"} statisticAllAmount={timesheetStatistic.all_sum} statisticAllElements={timesheetStatistic.expenses} setIsOpenDownSidebar={setIsOpenDownSidebar}/>
+            <DownSidebar type={"cost"} statisticAllAmount={timesheetStatistic.all_sum}
+                         statisticAllElements={timesheetStatistic.expenses}
+                         setIsOpenDownSidebar={setIsOpenDownSidebar}/>
         </BlockToEdit.Provider>
     )
 }

@@ -48,7 +48,7 @@ export const TableSelectYear: React.FC<ITableSelectYearProps> = ({setYear}) => {
 
                             {
                                 Years().map(year =>
-                                    <SwiperSlide>
+                                    <SwiperSlide key={year.year}>
                                         <li className="splide__slide">
                                             <label>
                                                 <input disabled={year.isDisabled} onChange={_ => setFieldYear(+year.year)} defaultValue={+year.year} checked={fieldYear === +year.year} type="radio" name="year"/>

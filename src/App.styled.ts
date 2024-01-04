@@ -101,7 +101,7 @@ export const AppStyled = styled.div`
   
   
   .table-to-download-excel {
-    display: none;
+    //display: none;
   }
 
 

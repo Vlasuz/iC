@@ -52,7 +52,7 @@ export const Timesheet: React.FC<ITimesheetProps> = () => {
         getBearer('get')
         axios.get(getApiLink(`/api/timesheet/statistics/?timesheet_id=${timesheetId ?? chosenTimesheet?.id}`)).then(({data}) => {
             setStatistic(data)
-            SetStatistic(dispatch, timesheetId)
+            SetStatistic(dispatch, timesheetId ?? chosenTimesheet?.id)
         }).catch(er => console.log(getApiLink("/api/timesheet/statistics/?timesheet_id"), er))
 
     }, [chosenTimesheet, timesheetId])
