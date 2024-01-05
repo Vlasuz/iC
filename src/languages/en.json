@@ -224,8 +224,8 @@
     },
     "other": {
       "already_sent_for_approval": "You already sent this timesheet for approval. Please, wait for the answer.",
-      "summary_approved": "Your summary was approved! (by [Name])",
-      "timesheet_rejected": "Your timesheet was rejected. Please, correct and send for reapproval. (by [Name])",
+      "summary_approved": "Your summary was approved! ",
+      "timesheet_rejected": "Your timesheet was rejected. Please, correct and send for reapproval. ",
       "send_request_for_reapproval": "Send request for reapproval",
       "confirm_send_timesheet": "You are going to send the timesheet for approval, continue?",
       "continue": "Continue",
@@ -248,6 +248,7 @@
       "rejected": "Rejected",
       "rejected_first": "Rejected first",
       "approved_first": "Approved first",
+      "progress_first": "In progress first",
       "change_decision": "Cancel decision",
       "summary_already_rejected": "This summary already rejected by [Name] on [date]",
       "export_all": "Export all"
@@ -279,7 +280,8 @@
     "instructions_sent_to_email": "We have sent the letter with instructions to the e-mail: ",
     "enter_new_password": "Enter your new password",
     "confirm_new_password": "Confirm your new password",
-    "save_new_password": "Save new password"
+    "save_new_password": "Save new password",
+    "go_to_the_entry_page": "Go to the entry page"
   },
 
   "profile": {
@@ -292,5 +294,25 @@
   },
 
   "user_exist": "This email already used",
-  "user_not_found": "User not found"
+  "user_not_found": "User not found",
+  "all": "All",
+
+  "month": {
+    "jan": "January",
+    "feb": "February",
+    "mar": "March",
+    "apr": "April",
+    "may": "May",
+    "jun": "June",
+    "jul": "July",
+    "aug": "August",
+    "sep": "September",
+    "oct": "October",
+    "nov": "November",
+    "dec": "December"
+  },
+
+  "export_as": "Export as",
+  "edit_expense": "Edit expense",
+  "edit_cost": "Edit cost"
 }

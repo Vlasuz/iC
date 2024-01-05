@@ -15,6 +15,8 @@ interface IDownSidebarProps {
     statisticAllAmount?: number
     statisticAllElements?: IElement[]
     type: string
+    comments: IComment[]
+    setComments: any
 }
 
 interface IElement {
@@ -32,14 +34,15 @@ export const DownSidebar: React.FC<IDownSidebarProps> = ({
                                                              setIsOpenDownSidebar,
                                                              statisticAllAmount,
                                                              statisticAllElements,
-                                                             type
+                                                             type,
+                                                             comments,
+                                                             setComments,
                                                          }) => {
 
 
     const [statisticList, setStatisticList]: any = useState([])
     const [isActive, setIsActive] = useState(false)
     const [textValue, setTextValue] = useState("")
-    const [comments, setComments] = useState<IComment[]>([])
     const [answerCommentUser, setAnswerCommentUser] = useState<any>()
 
     const inputBlock: any = useRef(null)
@@ -48,17 +51,11 @@ export const DownSidebar: React.FC<IDownSidebarProps> = ({
     const userData: IUser = useSelector((state: any) => state.toolkit.user)
 
     useEffect(() => {
-        setIsOpenDownSidebar(isActive)
 
+        setIsOpenDownSidebar(isActive)
         setStatisticList(mergeAndSum(statisticAllElements, statisticAllElements).statistic)
 
-        setComments(chosenTimesheet?.comments)
-
     }, [isActive])
-
-    useEffect(() => {
-        setComments(chosenTimesheet?.comments)
-    }, [chosenTimesheet])
 
     const handleSendComment = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -88,9 +85,11 @@ export const DownSidebar: React.FC<IDownSidebarProps> = ({
                 "text": textValue
             }
 
+            // TODO Коммент брать из ответа в запросе
+
             if (!answerCommentUser?.first_name) delete comment.answer;
 
-            setComments(prev => [...prev, comment])
+            setComments((prev: any) => [...prev, comment])
             setTextValue("")
         })
 
@@ -108,7 +107,7 @@ export const DownSidebar: React.FC<IDownSidebarProps> = ({
         getBearer("delete")
         axios.delete(getApiLink(`/api/timesheet/comment/delete/?comment_id=${id}`)).then(({data}) => {
             console.log(data)
-            setComments(prev => prev.filter(item => item.id !== id))
+            setComments((prev: any) => prev.filter((item: any) => item.id !== id))
         })
     }
 
@@ -129,7 +128,7 @@ export const DownSidebar: React.FC<IDownSidebarProps> = ({
                             <svg width="13" height="13" viewBox="0 0 13 13">
                                 <use xlinkHref="#comments"></use>
                             </svg>
-                            <Translate>timesheet_page.down_sidebar.comments</Translate> ({chosenTimesheet?.comments?.length})
+                            <Translate>timesheet_page.down_sidebar.comments</Translate> ({comments?.length})
 
                         </button>
                         <div onClick={_ => setIsActive(prev => !prev)} className="down-sidebar__total-target">

@@ -4,7 +4,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import {TimesheetHeader} from "./components/timesheetHeader/TimesheetHeader";
 import {TimesheetTable} from "./components/timesheetTable/TimesheetTable";
 import {TimesheetStyled} from "./Timesheet.styled";
-import {IStatistic, ITask, ITimesheet} from "../../models";
+import {IComment, IStatistic, ITask, ITimesheet} from "../../models";
 import {getBearer} from "../../functions/getBearer";
 import axios from "axios";
 import {getApiLink} from "../../functions/getApiLink";
@@ -80,6 +80,13 @@ export const Timesheet: React.FC<ITimesheetProps> = () => {
     }
 
 
+    const [comments, setComments] = useState<IComment[]>([])
+
+    useEffect(() => {
+        setComments(chosenTimesheet?.comments)
+    }, [chosenTimesheet])
+
+
     return (
         <BlockToEdit.Provider value={setItemToEdit}>
             <TimesheetStyled style={{paddingBottom: isOpenDownSidebar ? "270px" : "80px"}} className="section-table">
@@ -119,7 +126,9 @@ export const Timesheet: React.FC<ITimesheetProps> = () => {
                 </div>
             </TimesheetStyled>
 
-            <DownSidebar type={"timesheet"} statisticAllAmount={statistic?.all_hours ?? timesheetStatistic.all_hours}
+            <DownSidebar comments={comments}
+                         setComments={setComments}
+                type={"timesheet"} statisticAllAmount={statistic?.all_hours ?? timesheetStatistic.all_hours}
                          statisticAllElements={statistic?.tasks ?? timesheetStatistic.tasks}
                          setIsOpenDownSidebar={setIsOpenDownSidebar}/>
         </BlockToEdit.Provider>

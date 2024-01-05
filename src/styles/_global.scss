@@ -195,7 +195,7 @@ section {
 	}
 
 	&:not(.is-none-aside) {
-		height: calc(var(--vh,1vh) * 100 - 70px);
+		//height: calc(var(--vh,1vh) * 100 - 70px);
 
 		width: 100vw;
 		@include _992 {
@@ -266,7 +266,7 @@ section {
 	text-decoration: none;
 
 	padding: 14px 5px;
-	@media (min-width: 360px) {
+	@media (min-width: 430px) {
 		padding: 14px 25px;
 	}
 

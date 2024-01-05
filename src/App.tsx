@@ -28,6 +28,7 @@ import {SetNotifications} from "./api/SetNotifications";
 import {ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import setCookie from "./functions/setCookie";
+import {GetAccessToken} from "./api/GetAccessToken";
 
 export const PopupContext: any = createContext(null)
 
@@ -61,18 +62,7 @@ function App() {
 
     }, [userData])
 
-    const getAccessToken = () => {
-        axios.post(getApiLink("/api/auth/refresh/"), {
-            "refresh_token": getCookies("refresh_token_ic")
-        }).then(({data}) => {
 
-            setCookie("access_token_ic", data.access_token)
-            dispatch(setUser(data.user))
-            dispatch(setAccessToken(data.access_token))
-
-            navigate('/')
-        }).catch(er => {})
-    }
 
     useEffect(() => {
         getBearer('get')
@@ -81,7 +71,7 @@ function App() {
             console.log(data)
         }).catch(er => {
             console.log(getApiLink("/api/user/profile/"), er)
-            getAccessToken()
+            GetAccessToken(dispatch)
         })
     }, [])
 

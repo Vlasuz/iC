@@ -13,8 +13,12 @@ export const DownSidebarStyled = styled.div`
   .delete-comment {
     font-size: 20px;
     color: #aaa;
-    margin-right: 8px;
+    margin-right: 15px;
     background: transparent;
     border: none;
+  }
+  
+  .down-sidebar__chat-item--answer svg {
+    display: block;
   }
 `

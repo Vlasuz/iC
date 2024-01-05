@@ -55,8 +55,6 @@ export const TimesheetExportTable: React.FC<ITimesheetExportTableProps> = () => 
         setAllDates(summarizedArray);
     }, [taskList]);
 
-    console.log(chosenTimesheet)
-
     return (
         <table
             border={2}
@@ -72,25 +70,18 @@ export const TimesheetExportTable: React.FC<ITimesheetExportTableProps> = () => 
 
             <tbody>
             <tr>
-                <td style={{height: "30px"}}>
-                    <img width={30} height={30} src="https://ic.timesheet.space/static/media/logo.7e472f052ce8ccb0ca47.webp" alt=""/>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td style={{fontSize: "18px", color: "red", height: "30px", textAlign: "right", verticalAlign: "top"}}>
+                    <b>iC</b>
                 </td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                {/*<td style={{*/}
-                {/*    textAlign: "center",*/}
-                {/*    verticalAlign: "middle",*/}
-                {/*    background: "red",*/}
-                {/*    color: "#fff",*/}
-                {/*    fontSize: "22px",*/}
-                {/*    width: "43px"*/}
-                {/*}}>*/}
-                {/*    <b>iC</b>*/}
+                {/*<td style={{height: "30px"}}>*/}
+                {/*    <img width={30} height={30} src="https://ic.timesheet.space/static/media/logo.7e472f052ce8ccb0ca47.webp" alt=""/>*/}
                 {/*</td>*/}
             </tr>
 

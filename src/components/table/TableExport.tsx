@@ -104,13 +104,13 @@ export const TableExport: React.FC<ITableExportProps> = ({title}) => {
                 <ul className="drop-down__list">
                     <li>
                         <a onClick={e => tableToExcel('my-table', "timesheet")}>
-                            Export as .xlsx
+                            <Translate>export_as</Translate> .xlsx
                         </a>
                     </li>
                     <li>
                         {/*<a onClick={e => exportToPdf()}>*/}
                         <a onClick={e => convertToPDF()}>
-                            Export as .pdf
+                            <Translate>export_as</Translate> .pdf
                         </a>
                     </li>
                 </ul>

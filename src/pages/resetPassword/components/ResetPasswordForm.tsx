@@ -61,20 +61,21 @@ export const ResetPasswordForm: React.FC<IResetPasswordFormProps> = () => {
                         Your password was successfully updated!
                     </p>
                     <NavLink to={"/login"} className={"login__submit btn"}>
-                        Go to the entry page
+
+                        <Translate>reset_password.go_to_the_entry_page</Translate>
                     </NavLink>
                 </div> :
                 <>
                     <h1 className="login__title title is-large">
-                        Reset password
+                        <Translate>reset_password.reset_password</Translate>
                     </h1>
                     <label className="login__label">
                 <span className="input_placeholder">
                         <input type={isShowPassword ? "text" : "password"} name="password" required
-                               onChange={e => setPasswordField(e.target.value)} value={passwordField}
+                               onChange={e => setPasswordField(e.target.value)} minLength={8} value={passwordField}
                                className="login__input input password-input"/>
                     <span className="placeholder">
-                        {!passwordField.length ? "Enter your new password" : ""}
+                        {!passwordField.length ? <Translate>reset_password.enter_new_password</Translate> : ""}
                     </span>
                 </span>
                         <button onClick={_ => setIsShowPassword(prev => !prev)}
@@ -88,10 +89,10 @@ export const ResetPasswordForm: React.FC<IResetPasswordFormProps> = () => {
                     <label className="login__label">
                 <span className="input_placeholder">
                     <input type={isShowPasswordRepeat ? "text" : "password"} name="password" required
-                           onChange={e => setSecondPasswordField(e.target.value)} value={secondPasswordField}
+                           onChange={e => setSecondPasswordField(e.target.value)} minLength={8} value={secondPasswordField}
                            className="login__input input password-input"/>
                     <span className="placeholder">
-                        {!secondPasswordField.length ? "Confirm your new password" : ""}
+                        {!secondPasswordField.length ? <Translate>reset_password.confirm_new_password</Translate> : ""}
                     </span>
                 </span>
                         <button onClick={_ => setIsShowPasswordRepeat(prev => !prev)}
@@ -106,7 +107,7 @@ export const ResetPasswordForm: React.FC<IResetPasswordFormProps> = () => {
                     <div className="login__form-row">
                         <div></div>
                         <button className="login__submit btn" type="submit">
-                            Save new password
+                            <Translate>reset_password.save_new_password</Translate>
                         </button>
                     </div>
                     <p className="error">

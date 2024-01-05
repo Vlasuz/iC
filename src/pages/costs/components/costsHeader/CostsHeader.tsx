@@ -16,6 +16,7 @@ import {SetTasks} from "../../../../api/SetTasks";
 import {SetStatistic} from "../../../../api/SetStatistic";
 import {Translate} from "../../../../components/translate/Translate";
 import {useClickOutside} from "../../../../hooks/ClickOutside";
+import { GetAccessToken } from '../../../../api/GetAccessToken';
 
 interface ICostsHeaderProps {
     itemToEdit: IExpense | undefined
@@ -87,6 +88,8 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit}) => {
         getBearer("get")
         axios.get(getApiLink(`/api/timesheet/expenses/?search=${searchValueLocal}`)).then(({data}) => {
             dispatch(setExpenses(data))
+        }).catch(er => {
+            er?.response?.status === 401 && GetAccessToken(dispatch)
         })
     }
 
@@ -118,6 +121,8 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit}) => {
 
             SetStatistic(dispatch, idTasksForMonth)
             dispatch(setExpenses(data))
+        }).catch(er => {
+            er?.response?.status === 401 && GetAccessToken(dispatch)
         })
     }
 
@@ -168,7 +173,7 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit}) => {
                                 isOpenCreatBlock && " / "
                             }
                             {
-                                isOpenCreatBlock && (!isEditExpense ? <Translate>costs_page.top_part.add_expense_2</Translate> : "Edit cost")
+                                isOpenCreatBlock && (!isEditExpense ? <Translate>costs_page.top_part.add_expense_2</Translate> : <Translate>edit_cost</Translate>)
                             }
 
                         </span>
@@ -241,14 +246,24 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit}) => {
 
                             <div className="section-table__add-costs--text">
                                 <label>
-                                    <input type="text" name="costs" value={descriptionData} onChange={e => setDescriptionData(e.target.value)} required placeholder="Write short description of the expence" className="input" />
+                                    <span className="input_placeholder">
+                                        <input type="text" name="costs" value={descriptionData} onChange={e => setDescriptionData(e.target.value)} required className="input" />
+                                        <span className="placeholder">
+                                            {!descriptionData && <Translate>costs_page.top_part.write_short_description</Translate>}
+                                        </span>
+                                    </span>
                                 </label>
                             </div>
                             <div className="section-table__add-costs--cost">
-                                <input type="number" name="cost" value={costData === 0 ? "" : costData} onChange={e => setCostData(+e.target.value)} placeholder="Cost" required className="input" />
+                                <div className="input_placeholder">
+                                    <input type="number" name="cost" value={costData === 0 ? "" : costData} onChange={e => setCostData(+e.target.value)} required className="input" />
+                                    <div className="placeholder">
+                                        <Translate>costs_page.table.cost</Translate>
+                                    </div>
+                                </div>
                             </div>
                             <button onClick={handleCreateExpense} className="section-table__add-expense--submit btn" type="submit">
-                                {isEditExpense ? "Edit expence" : <Translate>costs_page.top_part.add_expense_2</Translate>}
+                                {isEditExpense ? <Translate>edit_expense</Translate> : <Translate>costs_page.top_part.add_expense_2</Translate>}
                             </button>
                         </div>
                     </div>

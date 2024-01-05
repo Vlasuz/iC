@@ -62,6 +62,16 @@ export const SummaryEmployeesStyled = styled.section`
       left: auto;
     }
   }
+
+  @media screen and (max-width: 1440px) {
+    .drop-down__target {
+      width: 100%;
+    }
+
+    .section-table__export {
+      max-width: 100%;
+    }
+  }
   
   .page-footer {
     padding-top: 11px;

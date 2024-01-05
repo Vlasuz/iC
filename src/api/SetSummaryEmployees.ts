@@ -2,6 +2,7 @@ import {getBearer} from "../functions/getBearer";
 import axios from "axios";
 import {getApiLink} from "../functions/getApiLink";
 import { setSummaryEmployees } from "../storage/toolkit";
+import { GetAccessToken } from "./GetAccessToken";
 
 export const SetSummaryEmployees = (dispatch: any, month?: number, year?: number, projectId?: string) => {
     const date = new Date()
@@ -14,5 +15,7 @@ export const SetSummaryEmployees = (dispatch: any, month?: number, year?: number
     axios.get(getApiLink(`/api/timesheet/employees/?month=${month}&year=${year}${projectId && "&project_id=" + projectId}`)).then(({data}) => {
         console.log(getApiLink(`/api/timesheet/employees/?month=${month}&year=${year}${projectId && "&project_id=" + projectId}`), data)
         dispatch(setSummaryEmployees(data))
-    }).catch(er => console.log(getApiLink("/api/timesheet/employees/?month=12&year=2023"), er))
+    }).catch(er => {
+        er?.response?.status === 401 && GetAccessToken(dispatch)
+    })
 }

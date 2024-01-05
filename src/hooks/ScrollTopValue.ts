@@ -7,17 +7,17 @@ export const useScrollTopValue = () => {
         const block: any = document.querySelector(".main__inner")?.closest(".simplebar-content-wrapper")
 
         const handleScroll = () => {
-            setScrollY(block.scrollTop);
+            setScrollY(block?.scrollTop);
             document.querySelectorAll(".drop-down-absolute__block").forEach(item => {
                 // @ts-ignore
                 item.style.transition = "none"
             })
         };
 
-        block.addEventListener('scroll', handleScroll);
+        block?.addEventListener('scroll', handleScroll);
 
         return () => {
-            block.removeEventListener('scroll', handleScroll);
+            block?.removeEventListener('scroll', handleScroll);
             document.querySelectorAll(".drop-down-absolute__block").forEach(item => {
                 // @ts-ignore
                 item.style.transition = "opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease"

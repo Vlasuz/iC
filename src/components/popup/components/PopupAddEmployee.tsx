@@ -107,14 +107,14 @@ export const PopupAddEmployee: React.FC<IPopupAddNewEmployeeProps> = ({data, set
                             <span>
                                 <Translate>employees_admin.others.first_name</Translate>
                             </span>
-                            <input onChange={e => setFirstNameValue(e.target.value)} value={firstNameValue} type="text"
+                            <input onChange={e => setFirstNameValue(e.target.value)} autoComplete="off" value={firstNameValue} type="text"
                                    name="first-name" required className="input"/>
                         </label>
                         <label className="popup-form__label">
                             <span>
                                 <Translate>employees_admin.others.last_name</Translate>
                             </span>
-                            <input onChange={e => setLastNameValue(e.target.value)} value={lastNameValue} type="text"
+                            <input onChange={e => setLastNameValue(e.target.value)} autoComplete="off" value={lastNameValue} type="text"
                                    name="last-name" required className="input"/>
                         </label>
                     </div>
@@ -202,7 +202,7 @@ export const PopupAddEmployee: React.FC<IPopupAddNewEmployeeProps> = ({data, set
                                 <span id="checked-projects" data-none-text="None" data-text-1="project"
                                       data-text-2="projects" data-all-text="All projects">
                                     {chosenProjects?.length === projects.length ?
-                                        <Translate>employees_admin.others.all_projects</Translate> : `${chosenProjects?.length} projects`}
+                                        <Translate>employees_admin.others.all_projects</Translate> : `${chosenProjects?.length} `} <Translate>employees_admin.others.projects</Translate>
                                 </span>
                                 <svg width="10" height="7" viewBox="0 0 10 7">
                                     <use xlinkHref="#drop-down-arrow"></use>

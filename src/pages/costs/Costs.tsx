@@ -4,7 +4,7 @@ import {CostsTable} from "./components/costsTable/CostsTable";
 import {RowsPerPage} from "../../constants/RowsPerPage";
 import {CustomSelect} from "../../components/customSelect/CustomSelect";
 import {useDispatch, useSelector} from "react-redux";
-import {IExpense, IStatistic, ITask, ITimesheet} from "../../models";
+import {IComment, IExpense, IStatistic, ITask, ITimesheet} from "../../models";
 import {getBearer} from "../../functions/getBearer";
 import axios from "axios";
 import {getApiLink} from "../../functions/getApiLink";
@@ -15,6 +15,7 @@ import {useParams} from "react-router-dom";
 import {SetStatistic} from "../../api/SetStatistic";
 import {Translate} from "../../components/translate/Translate";
 import {CostsExportTable} from "./components/CostsExportTable";
+import {GetAccessToken} from '../../api/GetAccessToken';
 
 interface ICostsProps {
 
@@ -44,6 +45,8 @@ export const Costs: React.FC<ICostsProps> = () => {
         axios.get(getApiLink(`/api/timesheet/expenses/?timesheet_id=${timesheetId ?? chosenTimesheet.id}`)).then(({data}) => {
             dispatch(setExpenses(data))
             SetStatistic(dispatch, timesheetId ?? chosenTimesheet.id)
+        }).catch(er => {
+            er?.response?.status === 401 && GetAccessToken(dispatch)
         })
     }, [chosenTimesheet, timesheetId])
 
@@ -63,6 +66,12 @@ export const Costs: React.FC<ICostsProps> = () => {
             label: expenseList.length === +rowsSelectValue.label + plusCount ? "All" : String(+rowsSelectValue.label + plusCount)
         })
     }
+
+    const [comments, setComments] = useState<IComment[]>([])
+
+    useEffect(() => {
+        setComments(chosenTimesheet?.comments)
+    }, [chosenTimesheet])
 
     return (
         <BlockToEdit.Provider value={setItemToEdit}>
@@ -101,7 +110,9 @@ export const Costs: React.FC<ICostsProps> = () => {
                 </div>
             </CostsStyles>
 
-            <DownSidebar type={"cost"} statisticAllAmount={timesheetStatistic.all_sum}
+            <DownSidebar comments={comments}
+                         setComments={setComments}
+                         type={"cost"} statisticAllAmount={timesheetStatistic.all_sum}
                          statisticAllElements={timesheetStatistic.expenses}
                          setIsOpenDownSidebar={setIsOpenDownSidebar}/>
         </BlockToEdit.Provider>

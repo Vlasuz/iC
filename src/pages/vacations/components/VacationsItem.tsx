@@ -165,7 +165,7 @@ export const VacationsItem: React.FC<IVacationsItemProps> = ({itemData, index}) 
             </div>
             {
                 itemData.months.map(item =>
-                    <div className="section-table__param">
+                    <div key={item.days + item.month} className="section-table__param">
                         {item.days.toFixed(1)}
                     </div>
                 )

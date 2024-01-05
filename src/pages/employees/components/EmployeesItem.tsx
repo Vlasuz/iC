@@ -5,6 +5,7 @@ import {setSelectedEmployee} from '../../../storage/toolkit';
 import {PopupContext} from "../../../App";
 import {Translate} from "../../../components/translate/Translate";
 import {Trans} from "react-i18next";
+import {useTranslation} from "react-i18next";
 
 interface IEmployeesItemProps {
     data: IEmployee
@@ -19,7 +20,9 @@ interface IStatus {
 
 export const EmployeesItem: React.FC<IEmployeesItemProps> = ({data, index, isArchive}) => {
 
-    const countOfProjects = data.projects?.length === 1 ? data.projects?.length + " project" : data.projects?.length + " projects"
+    const { t } = useTranslation();
+
+    const countOfProjects = data.projects?.length === 1 ? data.projects?.length + ` ${t("navigation_all.projects")}` : data.projects?.length + ` ${t("navigation_all.projects")}`
 
     const [isOpenContextMenu, setIsOpenContextMenu] = useState(false)
     const [menuPosition, setMenuPosition] = useState({})

@@ -1,3 +1,5 @@
+import { Translate } from "../components/translate/Translate"
+
 export const RowsPerPage = () => {
     return [
         {
@@ -14,7 +16,7 @@ export const RowsPerPage = () => {
         },
         {
             value: 0,
-            label: "All"
+            label: <Translate>all</Translate>
         },
     ]
 }

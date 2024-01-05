@@ -16,7 +16,6 @@ interface IWrapperSidebarProps {
 export const WrapperSidebar: React.FC<IWrapperSidebarProps> = ({children}) => {
 
     const location = useLocation()
-    const [isOpenDownSidebar, setIsOpenDownSidebar] = useState(false)
 
     return (
         <WrapperStyled className="wrapper">
@@ -25,18 +24,13 @@ export const WrapperSidebar: React.FC<IWrapperSidebarProps> = ({children}) => {
             <TransitionGroup component={null}>
                 <CSSTransition key={location.pathname} classNames="fade" timeout={300}>
 
-                    <SimpleBar className={"main"}>
+                    <div className={"main"}>
 
                         <div className="main__inner">
                             {children}
-
-                            {/*{*/}
-                            {/*    (location.pathname === "/" || location.pathname.includes("costs")) && <DownSidebar setIsOpenDownSidebar={setIsOpenDownSidebar}/>*/}
-                            {/*}*/}
-
                         </div>
 
-                    </SimpleBar>
+                    </div>
 
                 </CSSTransition>
             </TransitionGroup>

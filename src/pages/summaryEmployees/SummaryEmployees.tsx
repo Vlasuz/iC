@@ -25,19 +25,19 @@ export const SummaryEmployees: React.FC<ISummaryEmployeesProps> = () => {
 
     const statusSortList = [
         {
-            label: "In progress first",
+            label: <Translate>employees_page.table.progress_first</Translate>,
             value: "progress"
         },
         {
-            label: "Pending first",
+            label: <Translate>employees_page.table.pending_first</Translate>,
             value: "waiting"
         },
         {
-            label: "Rejected first",
+            label: <Translate>employees_page.table.rejected_first</Translate>,
             value: "reject"
         },
         {
-            label: "Approved first",
+            label: <Translate>employees_page.table.approved_first</Translate>,
             value: "approve"
         }
     ]

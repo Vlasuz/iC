@@ -13,6 +13,9 @@ import {mergeAndSum} from "../../../functions/mergeAndSumStatistic";
 import {Translate} from "../../../components/translate/Translate";
 import {useTranslation} from "react-i18next";
 import { currency } from '../../../constants/Currency';
+import {SummaryExportTable} from "./SummaryExportTable";
+import html2pdf from "html2pdf.js";
+import { GetAccessToken } from '../../../api/GetAccessToken';
 
 interface ISummaryItemProps {
     dataItem: ITimesheet
@@ -61,6 +64,8 @@ export const SummaryItem: React.FC<ISummaryItemProps> = ({dataItem}) => {
         axios.get(getApiLink(`/api/timesheet/expenses/?timesheet_id=${dataItem.id}`)).then(({data}) => {
             navigate('/costs')
             dispatch(setExpenses(data))
+        }).catch(er => {
+            er?.response?.status === 401 && GetAccessToken(dispatch)
         })
     }
 
@@ -85,152 +90,239 @@ export const SummaryItem: React.FC<ISummaryItemProps> = ({dataItem}) => {
         }).catch(er => console.log(getApiLink("/api/timesheet/statistics/?timesheet_id"), er))
     }, [])
 
+    const tableToExcel = function() {
+        const uri = 'data:application/vnd.ms-excel;base64,';
+        const template = `
+    <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
+    <head>
+        <!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]-->
+    </head>
+    <body>
+        <table>{table}</table>
+    </body>
+    </html>`;
+
+        // @ts-ignore
+        const base64 = function(s) {
+            return window.btoa(unescape(encodeURIComponent(s)));
+        };
+
+        // @ts-ignore
+        const format = function(s, c) {
+            // @ts-ignore
+            return s.replace(/{(\w+)}/g, function(m, p) {
+                return c[p];
+            });
+        };
+
+        // @ts-ignore
+        return function(table, filename = 'excel-export') {
+            if (!table.nodeType) table = document.getElementById(table);
+
+            const ctx = {
+                worksheet: filename,
+                table: table.innerHTML
+            };
+
+            const blob = new Blob([format(template, ctx)], {
+                type: 'application/vnd.ms-excel'
+            });
+
+            // @ts-ignore
+            if (navigator.msSaveBlob) {
+                // @ts-ignore
+                navigator.msSaveBlob(blob, filename + '.xls');
+            } else {
+                const link = document.createElement('a');
+                if (link.download !== undefined) {
+                    const url = URL.createObjectURL(blob);
+                    link.setAttribute('href', url);
+                    link.setAttribute('download', filename + '.xls');
+                    link.style.visibility = 'hidden';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                }
+            }
+        };
+    }();
+
+    const convertToPDF = () => {
+        const element = document.getElementById('my-table');
+
+        const opt = {
+            margin: 0.5,
+            filename: 'timesheet.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 6 },
+            jsPDF: { unit: 'in', format: 'letter', } // Установка альбомной ориентации
+        };
+
+        html2pdf().from(element).set(opt).save();
+        setIsClickToExport(false)
+    };
+
+    const [isClickToExport, setIsClickToExport] = useState(false)
+    const handleExportPdf = () => {
+        setIsClickToExport(true)
+    }
+
+    useEffect(() => {
+        isClickToExport && convertToPDF()
+        isClickToExport && tableToExcel('my-table', "timesheet")
+    }, [isClickToExport])
+
     return (
-        <div ref={rootEl} className={`summary-item ${isActive && "is-active"}`}>
-            <div onClick={_ => setIsActive(prev => !prev)} className="summary-item__target">
-                <h2 className="summary-item__target--name">
-                    {
-                        MonthNumber()[+dataItem.date.slice(3, 5)]
-                    }
-                </h2>
-                <div
-                    className={`summary-item__target--status ${dataItem.status === "waiting" && "is-waiting"} ${dataItem.status === "reject" && "is-danger"} ${dataItem.status === "approve" && "is-success"}`}>
+        <>
+            {isClickToExport && <SummaryExportTable statistic={statistic} statisticList={statisticList}/>}
+            {/*<SummaryExportTable statistic={statistic} statisticList={statisticList}/>*/}
+
+            <div ref={rootEl} className={`summary-item ${isActive && "is-active"}`}>
+                <div onClick={_ => setIsActive(prev => !prev)} className="summary-item__target">
+                    <h2 className="summary-item__target--name">
+                        {
+                            MonthNumber()[+dataItem.date.slice(3, 5)]
+                        }
+                    </h2>
+                    <div
+                        className={`summary-item__target--status ${dataItem.status === "waiting" && "is-waiting"} ${dataItem.status === "reject" && "is-danger"} ${dataItem.status === "approve" && "is-success"}`}>
                     <span>
                         {timesheetStatus[dataItem.status]?.title}
                     </span>
-                    <svg width="20" height="20" viewBox="0 0 20 20">
-                        <use xlinkHref={timesheetStatus[dataItem.status]?.icon}></use>
-                    </svg>
+                        <svg width="20" height="20" viewBox="0 0 20 20">
+                            <use xlinkHref={timesheetStatus[dataItem.status]?.icon}></use>
+                        </svg>
+                    </div>
+                    <button className="summary-item__target--toggle" type="button">
+                        <svg width="10" height="7" viewBox="0 0 10 7" className="summary-item__target--arrow">
+                            <use xlinkHref="#drop-down-arrow"></use>
+                        </svg>
+                    </button>
                 </div>
-                <button className="summary-item__target--toggle" type="button">
-                    <svg width="10" height="7" viewBox="0 0 10 7" className="summary-item__target--arrow">
-                        <use xlinkHref="#drop-down-arrow"></use>
-                    </svg>
-                </button>
-            </div>
-            <div className="summary-item__block">
-                <div>
-                    <div className="summary-item__elements-list">
-
-                        {
-                            statisticList?.map((item: any, index: number) =>
-                                <div key={index} className="summary-item__element">
-                                    <h3 className="summary-item__element--name">
-                                        {item.project.name}_{item.project.description}
-                                    </h3>
-                                    <div className="summary-item__element--progress">
-                                        <span>{item.task.hours} h</span>
-                                        <span data-value={`${item.task.percent > 100 ? 100 : item.task.percent}%`}>
-                                            <div className="line_done" style={{width: `${item.task.percent}%`}}/>
-                                        </span>
-                                    </div>
-                                    <div className="summary-item__element--progress">
-                                        <span>{item.expense.sum} {currency}</span>
-                                        <span data-value={`${item.expense.percent > 100 ? 100 : item.expense.percent}%`}>
-                                            <div className="line_done" style={{width: `${item.expense.percent}%`}}/>
-                                        </span>
-                                    </div>
-                                </div>
-                            )
-                        }
-
-                    </div>
-                    <div className="summary-item__total">
-                        <b className="summary-item__total--title">
-                            <Translate>summary_page.main.total</Translate>
-                        </b>
-                        <div className="summary-item__total--element summary-item__total-element">
-                            <div className="summary-item__total-element--icon">
-                                <svg width="20" height="20" viewBox="0 0 13 13">
-                                    <use xlinkHref="#time"></use>
-                                </svg>
-                            </div>
-                            <b className="summary-item__total-element--name">
-                                <Translate>summary_page.main.time_spent_for_projects</Translate>
-                            </b>
-                            <button onClick={handleEntryTask} className="summary-item__total-element--link">
-                                <Translate>summary_page.main.show_full_data_timesheet</Translate>
-                                <svg width="7" height="10" viewBox="0 0 7 10">
-                                    <use xlinkHref="#arrow-next"></use>
-                                </svg>
-                            </button>
-                            <div className="summary-item__total-element--value">
-                                {statistic?.all_hours} <Translate>summary_page.main.hours</Translate>
-                            </div>
-                        </div>
-                        <div className="summary-item__total--element summary-item__total-element">
-                            <div className="summary-item__total-element--icon">
-                                <svg width="20" height="20" viewBox="0 0 20 20">
-                                    <use xlinkHref="#money"></use>
-                                </svg>
-                            </div>
-                            <b className="summary-item__total-element--name">
-                                <Translate>summary_page.main.money_spent_for_projects</Translate>
-                            </b>
-                            <button onClick={handleEntryCost} className="summary-item__total-element--link">
-                                <Translate>summary_page.main.show_full_data_costs</Translate>
-                                <svg width="7" height="10" viewBox="0 0 7 10">
-                                    <use xlinkHref="#arrow-next"></use>
-                                </svg>
-                            </button>
-                            <div className="summary-item__total-element--value">
-                                {statistic?.all_sum} {currency}
-                            </div>
-                        </div>
-                    </div>
-                    <div className="summary-item__footer">
-                        <div className="summary-item__footer--col">
+                <div className="summary-item__block">
+                    <div>
+                        <div className="summary-item__elements-list">
 
                             {
-                                dataItem.status === "waiting" && <div className="summary-item__message is-waiting">
+                                statisticList?.map((item: any, index: number) =>
+                                    <div key={index} className="summary-item__element">
+                                        <h3 className="summary-item__element--name">
+                                            {item.project.name}_{item.project.description}
+                                        </h3>
+                                        <div className="summary-item__element--progress">
+                                            <span>{item.task.hours} h</span>
+                                            <span data-value={`${item.task.percent > 100 ? 100 : item.task.percent}%`}>
+                                            <div className="line_done" style={{width: `${item.task.percent}%`}}/>
+                                        </span>
+                                        </div>
+                                        <div className="summary-item__element--progress">
+                                            <span>{item.expense.sum} {currency}</span>
+                                            <span data-value={`${item.expense.percent > 100 ? 100 : item.expense.percent}%`}>
+                                            <div className="line_done" style={{width: `${item.expense.percent}%`}}/>
+                                        </span>
+                                        </div>
+                                    </div>
+                                )
+                            }
+
+                        </div>
+                        <div className="summary-item__total">
+                            <b className="summary-item__total--title">
+                                <Translate>summary_page.main.total</Translate>
+                            </b>
+                            <div className="summary-item__total--element summary-item__total-element">
+                                <div className="summary-item__total-element--icon">
                                     <svg width="20" height="20" viewBox="0 0 13 13">
                                         <use xlinkHref="#time"></use>
                                     </svg>
-                                    <p>
-                                        <Translate>summary_page.other.already_sent_for_approval</Translate>
-                                    </p>
                                 </div>
-                            }
-
-                            {
-                                dataItem.status === "reject" && <div className="summary-item__message is-danger">
-                                    <svg width="20" height="20" viewBox="0 0 13 13">
-                                        <use xlinkHref="#round-error"></use>
+                                <b className="summary-item__total-element--name">
+                                    <Translate>summary_page.main.time_spent_for_projects</Translate>
+                                </b>
+                                <button onClick={handleEntryTask} className="summary-item__total-element--link">
+                                    <Translate>summary_page.main.show_full_data_timesheet</Translate>
+                                    <svg width="7" height="10" viewBox="0 0 7 10">
+                                        <use xlinkHref="#arrow-next"></use>
                                     </svg>
-                                    <p>
-                                        <Translate>summary_page.other.timesheet_rejected</Translate> (by {dataItem?.manager?.first_name} {dataItem?.manager?.last_name})
-                                    </p>
+                                </button>
+                                <div className="summary-item__total-element--value">
+                                    {statistic?.all_hours} <Translate>summary_page.main.hours</Translate>
                                 </div>
-                            }
-
-                            {
-                                dataItem.status === "approve" && <div className="summary-item__message is-success">
-                                    <svg width="20" height="20" viewBox="0 0 13 13">
-                                        <use xlinkHref="#round-check"></use>
+                            </div>
+                            <div className="summary-item__total--element summary-item__total-element">
+                                <div className="summary-item__total-element--icon">
+                                    <svg width="20" height="20" viewBox="0 0 20 20">
+                                        <use xlinkHref="#money"></use>
                                     </svg>
-                                    <p>
-                                        <Translate>summary_page.other.summary_approved</Translate> (by {dataItem?.manager?.first_name} {dataItem?.manager?.last_name})
-                                    </p>
                                 </div>
-                            }
-
+                                <b className="summary-item__total-element--name">
+                                    <Translate>summary_page.main.money_spent_for_projects</Translate>
+                                </b>
+                                <button onClick={handleEntryCost} className="summary-item__total-element--link">
+                                    <Translate>summary_page.main.show_full_data_costs</Translate>
+                                    <svg width="7" height="10" viewBox="0 0 7 10">
+                                        <use xlinkHref="#arrow-next"></use>
+                                    </svg>
+                                </button>
+                                <div className="summary-item__total-element--value">
+                                    {statistic?.all_sum} {currency}
+                                </div>
+                            </div>
                         </div>
-                        <div className="summary-item__footer--col">
-                            <button className="summary-item__button btn is-grey is-transparent" type="button">
-                                <Translate>summary_page.main.export_monthly_summary</Translate>
-                                <svg width="16" height="17" viewBox="0 0 16 17">
-                                    <use xlinkHref="#download"></use>
-                                </svg>
-                            </button>
-                            <a onClick={_ => setPopup({popup: "approve-timesheet-popup", data: dataItem})}
-                               className={`summary-item__button btn open-popup ${(dataItem.status === "waiting" || dataItem.status === "approve") && "is-disabled"}`}
-                               type="button">
-                                <Translate>summary_page.main.send_timesheet_for_approval</Translate>
-                            </a>
+                        <div className="summary-item__footer">
+                            <div className="summary-item__footer--col">
+
+                                {
+                                    dataItem.status === "waiting" && <div className="summary-item__message is-waiting">
+                                        <svg width="20" height="20" viewBox="0 0 13 13">
+                                            <use xlinkHref="#time"></use>
+                                        </svg>
+                                        <p>
+                                            <Translate>summary_page.other.already_sent_for_approval</Translate>
+                                        </p>
+                                    </div>
+                                }
+
+                                {
+                                    dataItem.status === "reject" && <div className="summary-item__message is-danger">
+                                        <svg width="20" height="20" viewBox="0 0 13 13">
+                                            <use xlinkHref="#round-error"></use>
+                                        </svg>
+                                        <p>
+                                            <Translate>summary_page.other.timesheet_rejected</Translate> (by {dataItem?.manager?.first_name} {dataItem?.manager?.last_name})
+                                        </p>
+                                    </div>
+                                }
+
+                                {
+                                    dataItem.status === "approve" && <div className="summary-item__message is-success">
+                                        <svg width="20" height="20" viewBox="0 0 13 13">
+                                            <use xlinkHref="#round-check"></use>
+                                        </svg>
+                                        <p>
+                                            <Translate>summary_page.other.summary_approved</Translate> (by {dataItem?.manager?.first_name} {dataItem?.manager?.last_name})
+                                        </p>
+                                    </div>
+                                }
+
+                            </div>
+                            <div className="summary-item__footer--col">
+                                <button className="summary-item__button btn is-grey is-transparent" type="button" onClick={_ => handleExportPdf()}>
+                                    <Translate>summary_page.main.export_monthly_summary</Translate>
+                                    <svg width="16" height="17" viewBox="0 0 16 17">
+                                        <use xlinkHref="#download"></use>
+                                    </svg>
+                                </button>
+                                <a onClick={_ => setPopup({popup: "approve-timesheet-popup", data: dataItem})}
+                                   className={`summary-item__button btn open-popup ${(dataItem.status === "waiting" || dataItem.status === "approve") && "is-disabled"}`}
+                                   type="button">
+                                    <Translate>summary_page.main.send_timesheet_for_approval</Translate>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </>
     )
 }

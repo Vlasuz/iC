@@ -113,11 +113,16 @@ export const PopupEmployeeProjects: React.FC<IPopupEmployeeProjectsProps> = ({
                         </SimpleBar>
                         <div className="sub-popup-employee__search">
                             <label>
-                                <input type="search" name="search" required placeholder="Search a project"
-                                       onChange={e => setSearchValue(e.target.value)} className="input"/>
+                                <span className="input_placeholder">
+                                <input type="search" name="search" required
+                                       onChange={e => setSearchValue(e.target.value)}  value={searchValue} className="input"/>
+                                    <span className="placeholder">
+                                        {!searchValue && <Translate>employees_admin.others.search_a_project</Translate>}
+                                    </span>
+                                </span>
                             </label>
                             <button className="btn is-grey" type="submit">
-                                Search
+                                <Translate>employees_page.table.search</Translate>
                                 <svg width="15" height="15" viewBox="0 0 15 15">
                                     <use xlinkHref="#search"></use>
                                 </svg>
