@@ -101,7 +101,7 @@ export const TimesheetExportTable: React.FC<ITimesheetExportTableProps> = () => 
                 <td></td>
                 <td></td>
                 <td style={{textAlign: "right", paddingBottom: "20px", ...styleForOtherText}} colSpan={3}>
-                    <b>{`${chosenTimesheet?.date && MonthNumber()[+`${chosenTimesheet?.date[3]}${chosenTimesheet?.date[4]}`]}`},
+                    <b>{chosenTimesheet?.date && MonthNumber()[+`${chosenTimesheet?.date[3]}${chosenTimesheet?.date[4]}`].translate},
                         20{`${chosenTimesheet?.date && chosenTimesheet?.date[6]}${chosenTimesheet?.date && chosenTimesheet?.date[7]}`}</b>
                 </td>
             </tr>
@@ -260,10 +260,10 @@ export const TimesheetExportTable: React.FC<ITimesheetExportTableProps> = () => 
                 <td></td>
                 <td></td>
                 <td style={{textAlign: "right", paddingTop: "20px", ...styleForOtherText}} colSpan={4}>
-                    <b>Total: {timesheetStatistic.all_hours} hours</b></td>
+                    <b>Total: {timesheetStatistic?.all_hours} hours</b></td>
             </tr>
 
-            {chosenTimesheet.status === "approve" && <>
+            {chosenTimesheet?.status === "approve" && <>
                 <tr></tr>
 
                 <tr>

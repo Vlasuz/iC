@@ -27,20 +27,21 @@ export const TableProjectsForUser: React.FC<ITableProjectsForUserProps> = ({
 
     const handleChooseProject = (e: React.MouseEvent<HTMLAnchorElement>, item: IProject) => {
         e.preventDefault()
-        setProject(item)
-        setProjectData(item)
-        console.log(item)
+
+        if(item?.id === projectData?.id) {
+            setProject(undefined)
+            setProjectData(undefined)
+        } else {
+            setProject(item)
+            setProjectData(item)
+        }
+
         setIsActiveSelectProjects(false)
     }
 
-    // useEffect(() => {
-    //     if (projectData) return;
-    //
-    //     setProject(undefined)
-    // }, [projectData])
-
     return (
-        <div ref={rootEl} className={`section-table__add-task--project drop-down ${isActiveSelectProjects && "is-active"}`}>
+        <div ref={rootEl}
+             className={`section-table__add-task--project drop-down ${isActiveSelectProjects && "is-active"}`}>
             <button onClick={_ => setIsActiveSelectProjects(prev => !prev)}
                     className="section-table__add-task--project-target drop-down__target"
                     type="button">
@@ -48,7 +49,7 @@ export const TableProjectsForUser: React.FC<ITableProjectsForUserProps> = ({
                 {projectData?.name ?? project?.name ?? <Translate>timesheet_page.top_part.choose_project</Translate>}
 
                 <svg width="10" height="7" viewBox="0 0 10 7"
-                                     className="drop-down__target--arrow">
+                     className="drop-down__target--arrow">
                     <use xlinkHref="#drop-down-arrow"></use>
                 </svg>
             </button>
@@ -62,9 +63,11 @@ export const TableProjectsForUser: React.FC<ITableProjectsForUserProps> = ({
 
                                     {
                                         userData?.recent_projects
+                                            ?.filter(item => !item.project.archive)
                                             ?.filter(item => searchValue ? item.project.name.toLowerCase().includes(searchValue.toLowerCase()) || item.project.description.toLowerCase().includes(searchValue.toLowerCase()) : item)
                                             ?.map(item =>
-                                                <li key={item.project.id} className="project-popup__item">
+                                                <li key={item.project.id}
+                                                    className={`project-popup__item ${projectData?.id === item?.project?.id && "is-active"}`}>
                                                     <a href="#" onClick={e => handleChooseProject(e, item.project)}>
                                                         {item.project.name}_{item.project.description}
                                                     </a>
@@ -82,21 +85,23 @@ export const TableProjectsForUser: React.FC<ITableProjectsForUserProps> = ({
                                     !projectList?.length ? userData?.projects_list
                                             ?.filter(item => searchValue ? item.name.toLowerCase().includes(searchValue.toLowerCase()) || item.description.toLowerCase().includes(searchValue.toLowerCase()) : item)
                                             ?.map(item =>
-                                            <li key={item.id} className="project-popup__item">
-                                                <a href="#" onClick={e => handleChooseProject(e, item)}>
-                                                    {item.name}_{item.description}
-                                                </a>
-                                            </li>
-                                        ) :
+                                                <li key={item.id}
+                                                    className={`project-popup__item ${projectData?.id === item?.id && "is-active"}`}>
+                                                    <a href="#" onClick={e => handleChooseProject(e, item)}>
+                                                        {item.name}_{item.description}
+                                                    </a>
+                                                </li>
+                                            ) :
                                         projectList
                                             ?.filter(item => searchValue ? item.name.toLowerCase().includes(searchValue.toLowerCase()) || item.description.toLowerCase().includes(searchValue.toLowerCase()) : item)
                                             ?.map(item =>
-                                            <li key={item.id} className="project-popup__item">
-                                                <a href="#" onClick={e => handleChooseProject(e, item)}>
-                                                    {item.name}_{item.description}
-                                                </a>
-                                            </li>
-                                        )
+                                                <li key={item.id}
+                                                    className={`project-popup__item ${projectData?.id === item?.id && "is-active"}`}>
+                                                    <a href="#" onClick={e => handleChooseProject(e, item)}>
+                                                        {item.name}_{item.description}
+                                                    </a>
+                                                </li>
+                                            )
                                 }
 
                             </ul>

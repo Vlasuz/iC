@@ -1290,7 +1290,7 @@
 
 		&__row-block:not(:last-child) .section-table__row-block--list .section-table__row:last-child {
 			border-bottom: 1px solid rgba(95,100,114,0.1);
-			margin-bottom: -1px;
+			//margin-bottom: -1px;
 		}		
 
 		&__row-block.on-active .section-table__row-block--span-params .section-table__param {
@@ -1737,8 +1737,11 @@
 		//display: grid;
 		//grid-template-columns: 1fr 1fr;
 		display: flex;
-		flex-direction: row-reverse;
 		justify-content: space-between;
+
+		@media screen and (max-width: 992px) {
+			flex-direction: row-reverse;
+		}
 
 		@include _992 {
 			display: flex;
@@ -2466,14 +2469,14 @@
 		}
 	} */
 
-	.section-table__row {
-		
-	}
-
 	.section-table__main--wrapper {
 		min-width: 1000px;
 		@include _992 {
 			min-width: 1300px;
 		}
 	}
+}
+
+.section-table__row {
+	border-bottom: 1px solid rgba(95,100,114,0.1);
 }

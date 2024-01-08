@@ -108,14 +108,14 @@ export const PopupAddEmployee: React.FC<IPopupAddNewEmployeeProps> = ({data, set
                                 <Translate>employees_admin.others.first_name</Translate>
                             </span>
                             <input onChange={e => setFirstNameValue(e.target.value)} autoComplete="off" value={firstNameValue} type="text"
-                                   name="first-name" required className="input"/>
+                                   required name={"tick"} id={"tick"} className="input"/>
                         </label>
                         <label className="popup-form__label">
                             <span>
                                 <Translate>employees_admin.others.last_name</Translate>
                             </span>
                             <input onChange={e => setLastNameValue(e.target.value)} autoComplete="off" value={lastNameValue} type="text"
-                                   name="last-name" required className="input"/>
+                                   name={"tick1"} id={"tick1"} required className="input"/>
                         </label>
                     </div>
                     <div className="popup-form__row">
@@ -136,10 +136,10 @@ export const PopupAddEmployee: React.FC<IPopupAddNewEmployeeProps> = ({data, set
                     </div>
                     <div className="popup-form__row">
                         <label className="popup-form__label">
-                            <span>Email</span>
+                            <span>Ema<span className={"delete"}>111</span>il</span>
                             <input autoComplete="off" onChange={e => setEmailValue(e.target.value)} value={emailValue}
                                    type="email"
-                                   name="email" required className="input"/>
+                                   required className="input"/>
                         </label>
                         <label className="popup-form__label">
                             <span>

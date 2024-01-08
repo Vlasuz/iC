@@ -47,7 +47,10 @@ export const CustomSelect: React.FC<ICustomSelectProps> = ({
 
     const handleSelectItem = (item: any, index?: number) => {
         handleSelect(item)
-        setIsOpenSelect(false)
+
+        setTimeout(() => {
+            setIsOpenSelect(false)
+        }, 50)
 
         tabIndex && inputBlockRef.current.focus()
 

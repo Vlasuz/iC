@@ -7,6 +7,8 @@ import {editProject} from "../../../storage/toolkit";
 import { useDispatch } from 'react-redux';
 import {useMask} from "@react-input/mask";
 import {PopupClose} from "./PopupClose";
+import {Translate} from "../../translate/Translate";
+import {PopupCloseCancel} from "./PopupCloseCancel";
 
 interface IPopupEditProjectProps {
     data: any
@@ -46,7 +48,7 @@ export const PopupEditProject: React.FC<IPopupEditProjectProps> = ({data}) => {
     return (
         <div className="add-project__body popup-body">
             <h2 className="add-project__title popup-title title">
-                Edit project
+                <Translate>edit_project</Translate>
             </h2>
             <PopupClose/>
             <div className="add-project__container popup-container" data-simplebar
@@ -54,24 +56,36 @@ export const PopupEditProject: React.FC<IPopupEditProjectProps> = ({data}) => {
                 <form onSubmit={handleAddProject} className="add-project__form popup-form">
                     <div className="popup-form__row">
                         <label className="popup-form__label is-full">
-                            <span>Project name</span>
-                            <input type="text" name="project-name" required placeholder="Project name"
-                                   className="input" value={nameValue} onChange={e => setNameValue(e.target.value)}/>
+                            <span>
+                                <Translate>projects_admin.project_name</Translate>
+                            </span>
+                            <span className="input_placeholder">
+                                <input type="text" name="project-name" required
+                                       className="input" value={nameValue} onChange={e => setNameValue(e.target.value)}/>
+                                <span className="placeholder">
+                                    {!nameValue && <Translate>projects_admin.project_name</Translate>}
+                                </span>
+                            </span>
                         </label>
                     </div>
                     <div className="popup-form__row">
                         <label className="popup-form__label is-full">
-                            <span>Project description</span>
-                            <input type="text" name="project-description" required
-                                   placeholder="Project description" className="input" onChange={e => setDescriptionValue(e.target.value)} value={descriptionValue}/>
+                            <span>
+                                <Translate>projects_admin.project_description</Translate>
+                            </span>
+                            <span className="input_placeholder">
+                                <input type="text" name="project-description" required
+                                       className="input" onChange={e => setDescriptionValue(e.target.value)} value={descriptionValue}/>
+                                <span className="placeholder">
+                                    {!descriptionValue && <Translate>projects_admin.project_description</Translate>}
+                                </span>
+                            </span>
                         </label>
                     </div>
                     <div className="popup-form__row is-min-gap">
-                        <button className="popup-form__cancel btn is-transparent popup-close" type="button">
-                            Cancel
-                        </button>
+                        <PopupCloseCancel/>
                         <button className="popup-form__submit btn" type="submit">
-                            Save
+                            <Translate>projects_admin.save</Translate>
                         </button>
                     </div>
                 </form>

@@ -110,7 +110,7 @@ export const TimesheetTableBody: React.FC<ITimesheetTableBodyProps> = ({
                                             ?.filter(item => item.date === dateItem.date)
                                             ?.filter(item => filterByProjectName ? item.project.name === filterByProjectName : item)
                                             ?.filter(item => filterByProjectDescription ? item.project.description === filterByProjectDescription : item)
-                                            ?.filter(item => chosenTimesheet?.date && MonthNumber()[`${item?.date[3]}${item?.date[4]}`] === MonthNumber()[`${chosenTimesheet.date[3]}${chosenTimesheet.date[4]}`])
+                                            // ?.filter(item => chosenTimesheet?.date && MonthNumber()[+`${item?.date[3]}${item?.date[4]}`] === MonthNumber()[+`${chosenTimesheet.date[3]}${chosenTimesheet.date[4]}`])
                                             ?.sort((a, b) => {
                                                 return b.hours - a.hours;
                                             })

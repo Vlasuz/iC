@@ -60,7 +60,7 @@
       "all_projects": "All projects",
       "save": "Save",
       "cancel": "Cancel",
-      "edit_employee": "Edit employee",
+      "edit_employee": "Edit data",
       "click_to_reset_password": "Click to reset password",
       "search_a_project": "Search a project",
       "search": "Search",
@@ -105,7 +105,7 @@
     "search_a_project": "Search a project",
     "search": "Search",
     "export": "Export",
-    "project_name": "№ name",
+    "project_name": "Number",
     "project_description": "Project description",
     "rows_per_page": "Rows per page",
     "save": "Save",
@@ -314,5 +314,6 @@
 
   "export_as": "Export as",
   "edit_expense": "Edit expense",
-  "edit_cost": "Edit cost"
+  "edit_cost": "Edit cost",
+  "edit_project": "Edit data"
 }

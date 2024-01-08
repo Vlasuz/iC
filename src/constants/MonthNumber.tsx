@@ -2,17 +2,53 @@ import { Translate } from "../components/translate/Translate"
 
 export const MonthNumber: any = () => {
     return {
-        1: <Translate>month.jan</Translate>,
-        2: <Translate>month.feb</Translate>,
-        3: <Translate>month.mar</Translate>,
-        4: <Translate>month.apr</Translate>,
-        5: <Translate>month.may</Translate>,
-        6: <Translate>month.jun</Translate>,
-        7: <Translate>month.jul</Translate>,
-        8: <Translate>month.aug</Translate>,
-        9: <Translate>month.sep</Translate>,
-        10: <Translate>month.oct</Translate>,
-        11: <Translate>month.nov</Translate>,
-        12: <Translate>month.dec</Translate>
+        1: {
+            translate: <Translate>month.jan</Translate>,
+            translate_code: "month.jan"
+        },
+        2: {
+            translate: <Translate>month.feb</Translate>,
+            translate_code: "month.feb"
+        },
+        3: {
+            translate: <Translate>month.mar</Translate>,
+            translate_code: "month.mar"
+        },
+        4: {
+            translate: <Translate>month.apr</Translate>,
+            translate_code: "month.apr"
+        },
+        5: {
+            translate: <Translate>month.may</Translate>,
+            translate_code: "month.may"
+        },
+        6: {
+            translate: <Translate>month.jun</Translate>,
+            translate_code: "month.jun"
+        },
+        7: {
+            translate: <Translate>month.jul</Translate>,
+            translate_code: "month.jul"
+        },
+        8: {
+            translate: <Translate>month.aug</Translate>,
+            translate_code: "month.aug"
+        },
+        9: {
+            translate: <Translate>month.sep</Translate>,
+            translate_code: "month.sep"
+        },
+        10: {
+            translate: <Translate>month.oct</Translate>,
+            translate_code: "month.oct"
+        },
+        11: {
+            translate: <Translate>month.nov</Translate>,
+            translate_code: "month.nov"
+        },
+        12: {
+            translate: <Translate>month.dec</Translate>,
+            translate_code: "month.dec"
+        }
     }
 }

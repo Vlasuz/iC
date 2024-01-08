@@ -181,7 +181,7 @@ export const SummaryItem: React.FC<ISummaryItemProps> = ({dataItem}) => {
                 <div onClick={_ => setIsActive(prev => !prev)} className="summary-item__target">
                     <h2 className="summary-item__target--name">
                         {
-                            MonthNumber()[+dataItem.date.slice(3, 5)]
+                            MonthNumber()[+dataItem.date.slice(3, 5)].translate
                         }
                     </h2>
                     <div

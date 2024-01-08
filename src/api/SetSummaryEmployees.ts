@@ -7,6 +7,8 @@ import { GetAccessToken } from "./GetAccessToken";
 export const SetSummaryEmployees = (dispatch: any, month?: number, year?: number, projectId?: string) => {
     const date = new Date()
 
+    console.log(year)
+
     month = month ?? date.getMonth()+1
     year = year ?? date.getFullYear()
     projectId = projectId ?? ""

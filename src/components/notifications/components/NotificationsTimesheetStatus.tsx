@@ -1,7 +1,6 @@
-import React, {useEffect} from 'react'
+import React from 'react'
 import {INotification} from "../../../models";
 import {MonthNumber} from "../../../constants/MonthNumber";
-import {Translate} from "../../translate/Translate";
 import {useTranslation} from "react-i18next";
 
 interface INotificationsTimesheetStatusProps {
@@ -15,8 +14,8 @@ export const NotificationsTimesheetStatus: React.FC<INotificationsTimesheetStatu
     const { t } = useTranslation();
 
     const statusText: any = {
-        "reject": `${t('timesheet_page.notifications.your_timesheet_rejected')}`.replace("[month]", timesheetMonth).replace("[місяць]", timesheetMonth),
-        "approve": `${t('timesheet_page.notifications.your_timesheet_approved')}`.replace("[month]", timesheetMonth).replace("[місяць]", timesheetMonth),
+        "reject": `${t('timesheet_page.notifications.your_timesheet_rejected')}`.replace("[month]", t(timesheetMonth.translate_code)).replace("[місяць]", t(timesheetMonth.translate_code)),
+        "approve": `${t('timesheet_page.notifications.your_timesheet_approved')}`.replace("[month]", t(timesheetMonth.translate_code)).replace("[місяць]", t(timesheetMonth.translate_code)),
     }
 
     const statusIcon: any = {

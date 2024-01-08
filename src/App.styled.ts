@@ -462,6 +462,19 @@ export const AppStyled = styled.div`
   }
 
 
+  .project-popup__item.is-active {
+    a {
+      color: var(--accent);
+      &:before {
+        opacity: 1;
+      }
+    }
+  }
+  
+  .popup-form__label .delete {
+    display: none;
+  }
+
   .section-table__search--label,
   .down-sidebar__chat-user-panel label,
   .project-popup__search label,

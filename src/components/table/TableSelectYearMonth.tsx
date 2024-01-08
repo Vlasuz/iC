@@ -16,9 +16,10 @@ SwiperCore.use([Navigation]);
 interface ITableSelectYearMonthProps {
     setMonth?: any
     onSwitch?: any
+    setYear?: any
 }
 
-export const TableSelectYearMonth: React.FC<ITableSelectYearMonthProps> = ({setMonth, onSwitch}) => {
+export const TableSelectYearMonth: React.FC<ITableSelectYearMonthProps> = ({setMonth, setYear, onSwitch}) => {
 
     const [isSelectActive, setIsSelectActive] = useState(false)
     const {rootEl} = useClickOutside(setIsSelectActive)
@@ -33,13 +34,16 @@ export const TableSelectYearMonth: React.FC<ITableSelectYearMonthProps> = ({setM
     const [filedMonth, setFiledMonth] = useState((chosenTimesheet && Object.keys(chosenTimesheet)?.length) ? Number(`${chosenTimesheet?.date[3]}${chosenTimesheet?.date[4]}`) : dateNow?.getMonth() + 1)
     const [fieldYear, setFieldYear] = useState(dateNow.getFullYear())
 
-    // useEffect(() => {
-    //     setMonth && setMonth(filedMonth)
-    // }, [filedMonth])
-
     const handleChooseMonth = (month: number) => {
         setFiledMonth(month)
-        onSwitch(month)
+
+        if(onSwitch !== undefined) {
+            onSwitch(month)
+        }
+
+        if(setMonth !== undefined) {
+            setMonth(month)
+        }
 
         if(!timesheet.length) return;
 
@@ -60,8 +64,11 @@ export const TableSelectYearMonth: React.FC<ITableSelectYearMonthProps> = ({setM
     }, [timesheet])
 
     useEffect(() => {
-        console.log(timesheetId)
         if(timesheetId !== undefined) return;
+
+        if(setYear !== undefined) {
+            setYear(fieldYear)
+        }
 
         SetTimesheet(dispatch, fieldYear)
     }, [fieldYear])
@@ -73,7 +80,7 @@ export const TableSelectYearMonth: React.FC<ITableSelectYearMonthProps> = ({setM
                 type="button"
                 onClick={_ => setIsSelectActive(prev => !prev)}
             >
-                <span>{MonthNumber()[filedMonth]}, {fieldYear}</span>
+                <span>{MonthNumber()[filedMonth].translate}, {fieldYear}</span>
                 <svg width="10" height="7" viewBox="0 0 10 7"
                      className="section-table__change-full-date--target-arrow drop-down__target--arrow">
                     <use xlinkHref="#drop-down-arrow"></use>
@@ -88,7 +95,7 @@ export const TableSelectYearMonth: React.FC<ITableSelectYearMonthProps> = ({setM
                                 <li key={item} className={!isHaveMonth.some(m => +m === +item) ? "is-disabled" : ""}>
                                     <label>
                                         <input type="radio" name="month" defaultValue={item} onChange={_ => handleChooseMonth(+item)} checked={+item === filedMonth}/>
-                                        <span>{MonthNumber()[index + 1]}</span>
+                                        <span>{MonthNumber()[index + 1].translate}</span>
                                     </label>
                                 </li>
                             )

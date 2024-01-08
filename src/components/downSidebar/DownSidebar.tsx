@@ -65,31 +65,10 @@ export const DownSidebar: React.FC<IDownSidebarProps> = ({
             "answer_user_id": answerCommentUser?.id?.length ? answerCommentUser?.id : null
         }).then(({data}) => {
             if (data.status === false) return;
-            console.log(data)
 
-            const comment: any = {
-                "user": {
-                    "first_name": userData.first_name,
-                    "last_name": userData.last_name,
-                    "avatar": userData.avatar,
-                    "status": userData.status
-                },
-                "answer": {
-                    avatar: answerCommentUser?.avatar,
-                    first_name: answerCommentUser?.first_name,
-                    id: answerCommentUser?.id,
-                    last_name: answerCommentUser?.last_name,
-                    role: answerCommentUser?.role,
-                    status: answerCommentUser?.status,
-                },
-                "text": textValue
-            }
+            if (!answerCommentUser?.first_name) delete data.answer;
 
-            // TODO Коммент брать из ответа в запросе
-
-            if (!answerCommentUser?.first_name) delete comment.answer;
-
-            setComments((prev: any) => [...prev, comment])
+            setComments((prev: any) => [...prev, data])
             setTextValue("")
         })
 

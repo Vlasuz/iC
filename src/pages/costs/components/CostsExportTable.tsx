@@ -73,7 +73,8 @@ export const CostsExportTable: React.FC<ICostsExportTableProps> = () => {
                 <td style={{paddingBottom: "20px", ...styleForOtherText}} colSpan={3}>
                     <b>Name:</b> {userData.first_name} {userData.last_name}</td>
                 <td style={{textAlign: "right", paddingBottom: "20px", ...styleForOtherText}} colSpan={3}>
-                    <b>{`${chosenTimesheet?.date && MonthNumber()[+`${chosenTimesheet?.date[3]}${chosenTimesheet?.date[4]}`]}`},
+
+                    <b>{chosenTimesheet?.date && MonthNumber()[+`${chosenTimesheet?.date[3]}${chosenTimesheet?.date[4]}`].translate},
                         20{`${chosenTimesheet?.date && chosenTimesheet?.date[6]}${chosenTimesheet?.date && chosenTimesheet?.date[7]}`}</b>
                 </td>
             </tr>

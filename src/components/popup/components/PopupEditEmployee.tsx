@@ -120,17 +120,15 @@ export const PopupEditEmployee: React.FC<IPopupEditEmployeeProps> = ({setIsOpenP
                             <span>
                                 <Translate>employees_admin.others.first_name</Translate>
                             </span>
-                            <input type="text" name="first-name" required placeholder="First name"
-                                   value={firstNameValue} onChange={e => setFirstNameValue(e.target.value)}
-                                   className="input"/>
+                            <input onChange={e => setFirstNameValue(e.target.value)} autoComplete="off" value={firstNameValue} type="text"
+                                   required name={"tick"} id={"tick"} className="input"/>
                         </label>
                         <label className="popup-form__label">
                             <span>
                                 <Translate>employees_admin.others.last_name</Translate>
                             </span>
-                            <input type="text" name="last-name" required placeholder="Second name"
-                                   value={lastNameValue} onChange={e => setLastNameValue(e.target.value)}
-                                   className="input"/>
+                            <input onChange={e => setLastNameValue(e.target.value)} autoComplete="off" value={lastNameValue} type="text"
+                                   name={"tick1"} id={"tick1"} required className="input"/>
                         </label>
                     </div>
                     <div className="popup-form__row">
@@ -151,9 +149,9 @@ export const PopupEditEmployee: React.FC<IPopupEditEmployeeProps> = ({setIsOpenP
                     </div>
                     <div className="popup-form__row">
                         <label className="popup-form__label">
-                            <span>Email</span>
+                            <span>Ema<span className={"delete"}>111</span>il</span>
                             <input onChange={e => setEmailValue(e.target.value)} value={emailValue} type="email"
-                                   name="email" required className="input"/>
+                                   required className="input"/>
                         </label>
                         <label className="popup-form__label">
                             <span>

@@ -26,6 +26,7 @@ export const Vacations: React.FC<IVacationsProps> = () => {
     const [sortByName, setSortByName] = useState<string>("sortDown")
     const [selectValue, setSelectValue] = useState(RowsPerPage()[0])
     const [vacations, setVacations] = useState<IVacation[]>([])
+    const [isLoad, setIsLoad] = useState(false)
 
     const dispatch = useDispatch()
 
@@ -48,13 +49,22 @@ export const Vacations: React.FC<IVacationsProps> = () => {
     }, [valueSearch])
 
 
+    useEffect(() => {
+        if (isLoad) return;
+
+        setSelectValue(vacations.length > +RowsPerPage()[0].value ? RowsPerPage()[0] : RowsPerPage()[3])
+        setTimeout(() => {
+            setIsLoad(true)
+        }, 1000)
+    }, [vacations, isLoad])
 
 
     const handleAddRows = () => {
         const plusCount = window.innerWidth < 768 ? 10 : 20
+
         setSelectValue({
-            value: selectValue.value + plusCount,
-            label: vacations.length === +selectValue.label + plusCount ? "All" : String(+selectValue.label + plusCount)
+            value: vacations.length <= +selectValue.label + plusCount ? 0 : selectValue.value + plusCount,
+            label: vacations.length <= +selectValue.label + plusCount ? "All" : String(+selectValue.label + plusCount)
         })
     }
 
@@ -76,6 +86,7 @@ export const Vacations: React.FC<IVacationsProps> = () => {
             setVacations(data)
         })
     }, [listYear])
+
 
     return (
         <VacationsStyled className="section-table">
@@ -123,15 +134,20 @@ export const Vacations: React.FC<IVacationsProps> = () => {
                         <div className="section-table__body">
                                 {
                                     vacations
-                                        ?.sort((a: any, b: any) => {
-                                            if (sortByName === "sortUp") {
-                                                return b?.user?.last_name.localeCompare(a?.user?.last_name);
-                                            } else if (sortByName === "sortDown") {
-                                                return a?.user?.last_name.localeCompare(b?.user?.last_name);
-                                            } else {
-                                                return 0;
-                                            }
-                                        })
+                                        // ?.sort((a: any, b: any) => {
+                                        //     if (sortByName === "sortUp") {
+                                        //         return b?.user?.last_name.localeCompare(a?.user?.last_name);
+                                        //     } else if (sortByName === "sortDown") {
+                                        //         return a?.user?.last_name.localeCompare(b?.user?.last_name);
+                                        //     } else {
+                                        //         return 0;
+                                        //     }
+                                        // })
+
+                                        ?.sort((a, b) => a.user?.last_name < b.user?.last_name ? sortByName === "sortUp" ? 1 : -1 : sortByName === "sortDown" ? 1 : -1)
+                                        ?.filter((item, index) => selectValue.value === 0 ? item : index < selectValue.value)
+                                        // ?.sort((a, b) => +a.archive - +b.archive)
+
                                         ?.map((item: IVacation, index: number) => (
                                             <VacationsItem key={item.user.id} index={index + 1} itemData={item} />
                                         ))
@@ -151,7 +167,7 @@ export const Vacations: React.FC<IVacationsProps> = () => {
                     <CustomSelect list={RowsPerPage()} defaultValue={RowsPerPage()[0]} selectValue={selectValue} setSelectedItem={setSelectValue}/>
                 </div>
 
-                {selectValue.value !== 0 && employees.length > selectValue.value &&
+                {selectValue.value !== 0 && vacations.length > selectValue.value &&
                     <button onClick={handleAddRows} className="section-table__see-more btn" type="button">
                         <Translate>employees_admin.table.show_more</Translate>
                         <svg width="15" height="15" viewBox="0 0 15 15">

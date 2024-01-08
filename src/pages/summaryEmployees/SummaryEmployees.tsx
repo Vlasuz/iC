@@ -42,9 +42,12 @@ export const SummaryEmployees: React.FC<ISummaryEmployeesProps> = () => {
         }
     ]
 
+
     const [projectData, setProjectData] = useState<any>(undefined)
     const [statusSortValue, setStatusSortValue] = useState(statusSortList[0])
     const [rowsSelectValue, setRowsSelectValue] = useState(RowsPerPage()[0])
+    const [year, setYear] = useState()
+    const [month, setMonth] = useState()
 
     const user: IUser = useSelector((state: any) => state.toolkit.user)
     const summaryEmployees: ISummaryEmployee = useSelector((state: any) => state.toolkit.summaryEmployees)
@@ -59,15 +62,22 @@ export const SummaryEmployees: React.FC<ISummaryEmployeesProps> = () => {
 
     useEffect(() => {
         setRowsSelectValue(RowsPerPage()[0].value < summaryEmployees?.all?.length ? RowsPerPage()[0] : RowsPerPage()[3])
-    }, [])
-
-    useEffect(() => {
         SetSummaryEmployees(dispatch)
     }, [])
 
-    const [valueSearch, setValueSearch] = useState("")
+    useEffect(() => {
+        if(!year) return;
+        SetSummaryEmployees(dispatch, month, year)
+    }, [year])
 
+    useEffect(() => {
+        if(!month) return;
+        SetSummaryEmployees(dispatch, month, year)
+    }, [month])
+
+    const [valueSearch, setValueSearch] = useState("")
     const [allProjects, setAllProjects] = useState<IProject[]>([])
+
     useEffect(() => {
         axios.get(getApiLink("/api/timesheet/projects/")).then(({data}) => {
             setAllProjects(data)
@@ -75,9 +85,13 @@ export const SummaryEmployees: React.FC<ISummaryEmployeesProps> = () => {
     }, [])
 
     useEffect(() => {
-        if(!projectData?.id) return;
-        SetSummaryEmployees(dispatch, undefined, undefined, projectData.id)
+        SetSummaryEmployees(dispatch, undefined, undefined, projectData?.id)
     }, [projectData])
+
+    // useEffect(() => {
+    //     if(!projectData?.id) return;
+    //     SetSummaryEmployees(dispatch, undefined, undefined, projectData.id)
+    // }, [projectData])
 
     return (
         <SummaryEmployeesStyled className="summary">
@@ -94,7 +108,7 @@ export const SummaryEmployees: React.FC<ISummaryEmployeesProps> = () => {
                 </div>
                 <form className="page-header__row employees-row">
 
-                    <TableSelectYearMonth/>
+                    <TableSelectYearMonth setMonth={setMonth} setYear={setYear}/>
 
                     <TableProjectsForUser projectList={allProjects} setProjectData={setProjectData} projectData={projectData}/>
 
@@ -134,7 +148,7 @@ export const SummaryEmployees: React.FC<ISummaryEmployeesProps> = () => {
                 {
                     summaryEmployees?.all
                         ?.filter(item => item.user.last_name.toLowerCase().includes(valueSearch.toLowerCase()))
-                        ?.sort((a: any, b: any) => a.status === statusSortValue.value ? 1 : -1)
+                        ?.sort((a: any, b: any) => b.status === statusSortValue.value ? 1 : -1)
                         ?.map(item => <SummaryEmployeesItem key={item.id} itemData={item}/>)
                 }
 
