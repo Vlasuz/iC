@@ -61,9 +61,10 @@ export const Costs: React.FC<ICostsProps> = () => {
 
     const handleAddRows = () => {
         const plusCount = window.innerWidth < 768 ? 10 : 20
+
         setRowsSelectValue({
-            value: rowsSelectValue.value + plusCount,
-            label: expenseList.length === +rowsSelectValue.label + plusCount ? "All" : String(+rowsSelectValue.label + plusCount)
+            value: expenseList.length <= +rowsSelectValue.label + plusCount ? 0 : rowsSelectValue.value + plusCount,
+            label: expenseList.length <= +rowsSelectValue.label + plusCount ? "All" : String(+rowsSelectValue.label + plusCount)
         })
     }
 

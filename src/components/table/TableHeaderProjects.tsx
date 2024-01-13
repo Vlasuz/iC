@@ -16,7 +16,7 @@ interface ITableHeaderProjectsProps {
 
 export const TableHeaderProjects: React.FC<ITableHeaderProjectsProps> = ({setFilterByProjectName, setIsActiveBlock, isActiveBlock, title, icon}) => {
 
-    const [searchProjectName, setSearchProjectName] = useState("")
+    const [searchProjectName, setSearchProjectName]: any = useState<string>("")
     const [chosenProjectName, setChosenProjectName]: any = useState<string>("")
 
     const {rootEl} = useClickOutside(setIsActiveBlock)
@@ -24,6 +24,10 @@ export const TableHeaderProjects: React.FC<ITableHeaderProjectsProps> = ({setFil
     const userData: IUser = useSelector((state: any) => state.toolkit.user)
 
     const {scrollY} = useScrollTopValue()
+
+    useEffect(() => {
+        setSearchProjectName("")
+    }, [isActiveBlock])
 
     return (
         <div ref={rootEl}
@@ -53,6 +57,7 @@ export const TableHeaderProjects: React.FC<ITableHeaderProjectsProps> = ({setFil
 
                                 {
                                     userData.recent_projects
+                                        ?.slice(0, 5)
                                         ?.filter(item => item.project.name.toLowerCase().includes(searchProjectName.toLowerCase()) || item.project.description.toLowerCase().includes(searchProjectName.toLowerCase()))
                                         ?.map(item =>
                                             <li key={item.project.id} className={`project-popup__item ${chosenProjectName === item.project.name ? " is-active" : ""}`}>

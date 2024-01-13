@@ -24,13 +24,13 @@ export const WrapperSidebar: React.FC<IWrapperSidebarProps> = ({children}) => {
             <TransitionGroup component={null}>
                 <CSSTransition key={location.pathname} classNames="fade" timeout={300}>
 
-                    <div className={"main"}>
+                    <SimpleBar style={{paddingBottom: 0}} className={"main"}>
 
                         <div className="main__inner">
                             {children}
                         </div>
 
-                    </div>
+                    </SimpleBar>
 
                 </CSSTransition>
             </TransitionGroup>

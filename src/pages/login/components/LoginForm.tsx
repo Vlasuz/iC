@@ -42,7 +42,7 @@ export const LoginForm: React.FC<ILoginFormProps> = () => {
         dispatch(resetState())
 
         axios.post(getApiLink('/api/auth/sign_in/'), {
-            "email": emailField,
+            "email": emailField.toLowerCase(),
             "password": passwordField
         }).then(({data}) => {
             setIsLoading(false)

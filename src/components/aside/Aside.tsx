@@ -28,6 +28,7 @@ export const Aside: React.FC<IAsideProps> = () => {
         e.preventDefault()
 
         setCookie("access_token_ic", "")
+        setCookie("refresh_token_ic", "")
         navigate("/login")
     }
 

@@ -25,12 +25,12 @@ export const SummaryEmployees: React.FC<ISummaryEmployeesProps> = () => {
 
     const statusSortList = [
         {
-            label: <Translate>employees_page.table.progress_first</Translate>,
-            value: "progress"
-        },
-        {
             label: <Translate>employees_page.table.pending_first</Translate>,
             value: "waiting"
+        },
+        {
+            label: <Translate>employees_page.table.progress_first</Translate>,
+            value: "progress"
         },
         {
             label: <Translate>employees_page.table.rejected_first</Translate>,
@@ -48,15 +48,17 @@ export const SummaryEmployees: React.FC<ISummaryEmployeesProps> = () => {
     const [rowsSelectValue, setRowsSelectValue] = useState(RowsPerPage()[0])
     const [year, setYear] = useState()
     const [month, setMonth] = useState()
+    const [isLoad, setIsLoad] = useState(false)
 
     const user: IUser = useSelector((state: any) => state.toolkit.user)
     const summaryEmployees: ISummaryEmployee = useSelector((state: any) => state.toolkit.summaryEmployees)
 
     const handleAddRows = () => {
         const plusCount = window.innerWidth < 768 ? 10 : 20
+
         setRowsSelectValue({
-            value: rowsSelectValue.value + plusCount,
-            label: summaryEmployees.all.length === +rowsSelectValue.label + plusCount ? "All" : String(+rowsSelectValue.label + plusCount)
+            value: summaryEmployees.all.length <= +rowsSelectValue.label + plusCount ? 0 : rowsSelectValue.value + plusCount,
+            label: summaryEmployees.all.length <= +rowsSelectValue.label + plusCount ? "All" : String(+rowsSelectValue.label + plusCount)
         })
     }
 
@@ -64,6 +66,15 @@ export const SummaryEmployees: React.FC<ISummaryEmployeesProps> = () => {
         setRowsSelectValue(RowsPerPage()[0].value < summaryEmployees?.all?.length ? RowsPerPage()[0] : RowsPerPage()[3])
         SetSummaryEmployees(dispatch)
     }, [])
+
+    useEffect(() => {
+        if (isLoad) return;
+
+        setRowsSelectValue(summaryEmployees.all?.length > +RowsPerPage()[0].value ? RowsPerPage()[0] : RowsPerPage()[3])
+        setTimeout(() => {
+            setIsLoad(true)
+        }, 1000)
+    }, [summaryEmployees.all, isLoad])
 
     useEffect(() => {
         if(!year) return;
@@ -88,10 +99,7 @@ export const SummaryEmployees: React.FC<ISummaryEmployeesProps> = () => {
         SetSummaryEmployees(dispatch, undefined, undefined, projectData?.id)
     }, [projectData])
 
-    // useEffect(() => {
-    //     if(!projectData?.id) return;
-    //     SetSummaryEmployees(dispatch, undefined, undefined, projectData.id)
-    // }, [projectData])
+    let numberOfRow = 0;
 
     return (
         <SummaryEmployeesStyled className="summary">
@@ -149,31 +157,37 @@ export const SummaryEmployees: React.FC<ISummaryEmployeesProps> = () => {
                     summaryEmployees?.all
                         ?.filter(item => item.user.last_name.toLowerCase().includes(valueSearch.toLowerCase()))
                         ?.sort((a: any, b: any) => b.status === statusSortValue.value ? 1 : -1)
-                        ?.map(item => <SummaryEmployeesItem key={item.id} itemData={item}/>)
+                        ?.map(item => {
+                            numberOfRow += 1
+
+                            // if (rowsSelectValue?.value && rowsSelectValue?.value < numberOfRow) return "";
+
+                            return <SummaryEmployeesItem key={item.id} itemData={item}/>
+                        })
                 }
 
             </div>
-            <div className="summary__footer page-footer">
-                <div className="page-footer__row-per-page visible-on-mob">
-                    <span>Rows per page:</span>
-                    <CustomSelect list={RowsPerPage()} defaultValue={RowsPerPage()[0]} selectValue={rowsSelectValue}
-                                  setSelectedItem={setRowsSelectValue}/>
-                </div>
-                {rowsSelectValue.value !== 0 && summaryEmployees?.all?.length > rowsSelectValue.value &&
-                    <button onClick={handleAddRows} className="section-table__see-more btn" type="button">
-                        <Translate>costs_page.table.show_more</Translate>
-                        <svg width="15" height="15" viewBox="0 0 15 15">
-                            <use xlinkHref="#arrow-down"></use>
-                        </svg>
-                    </button>}
-                <div className="page-footer__row-per-page visible-on-desktop">
-                    <span>
-                        <Translate>costs_page.table.rows_per_page</Translate>
-                    </span>
-                    <CustomSelect list={RowsPerPage()} defaultValue={RowsPerPage()[0]} selectValue={rowsSelectValue}
-                                  setSelectedItem={setRowsSelectValue}/>
-                </div>
-            </div>
+            {/*<div className="summary__footer page-footer">*/}
+            {/*    <div className="page-footer__row-per-page visible-on-mob">*/}
+            {/*        <span>Rows per page:</span>*/}
+            {/*        <CustomSelect list={RowsPerPage()} defaultValue={RowsPerPage()[0]} selectValue={rowsSelectValue}*/}
+            {/*                      setSelectedItem={setRowsSelectValue}/>*/}
+            {/*    </div>*/}
+            {/*    {rowsSelectValue.value !== 0 && summaryEmployees?.all?.length > rowsSelectValue.value &&*/}
+            {/*        <button onClick={handleAddRows} className="section-table__see-more btn" type="button">*/}
+            {/*            <Translate>costs_page.table.show_more</Translate>*/}
+            {/*            <svg width="15" height="15" viewBox="0 0 15 15">*/}
+            {/*                <use xlinkHref="#arrow-down"></use>*/}
+            {/*            </svg>*/}
+            {/*        </button>}*/}
+            {/*    <div className="page-footer__row-per-page visible-on-desktop">*/}
+            {/*        <span>*/}
+            {/*            <Translate>costs_page.table.rows_per_page</Translate>*/}
+            {/*        </span>*/}
+            {/*        <CustomSelect list={RowsPerPage()} defaultValue={RowsPerPage()[0]} selectValue={rowsSelectValue}*/}
+            {/*                      setSelectedItem={setRowsSelectValue}/>*/}
+            {/*    </div>*/}
+            {/*</div>*/}
         </SummaryEmployeesStyled>
     )
 }

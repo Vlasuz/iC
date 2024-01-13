@@ -149,9 +149,9 @@ export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({itemToEdit}) =
     const resetFields = () => {
         setProjectData(undefined)
         setTaskData("")
-        setDateData(`${lessThenTen(String(getMondayDate().getDate()))}.${chosenTimesheet?.date[3]}${chosenTimesheet?.date[4]}.${getMondayDate().getFullYear()}`)
-        setTimeData("")
-        setHoursData(0)
+        // setDateData(`${lessThenTen(String(getMondayDate().getDate()))}.${chosenTimesheet?.date[3]}${chosenTimesheet?.date[4]}.${getMondayDate().getFullYear()}`)
+        // setTimeData("")
+        // setHoursData(0)
     }
 
     useEffect(() => {

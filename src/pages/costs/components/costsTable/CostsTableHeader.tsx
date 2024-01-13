@@ -66,7 +66,7 @@ export const CostsTableHeader: React.FC<ICostsTableHeaderProps> = ({setFilterByP
                                         setChosenSortCost("")
                                         setIsActiveDate(false)
                                     }}>
-                                        Newest first
+                                        <Translate>newest_first</Translate>
                                     </a>
                                 </li>
                                 <li className={` ${chosenSortDate === "DESC" && "is-active"}`}>
@@ -77,7 +77,7 @@ export const CostsTableHeader: React.FC<ICostsTableHeaderProps> = ({setFilterByP
                                         setChosenSortCost("")
                                         setIsActiveDate(false)
                                     }}>
-                                        Oldest first
+                                        <Translate>oldest_first</Translate>
                                     </a>
                                 </li>
                             </ul>
@@ -116,7 +116,7 @@ export const CostsTableHeader: React.FC<ICostsTableHeaderProps> = ({setFilterByP
                                         setChosenSortCost("")
                                         setIsActiveDate(false)
                                     }}>
-                                        Newest first
+                                        <Translate>newest_first</Translate>
                                     </a>
                                 </li>
                                 <li className={` ${chosenSortDate === "DESC" && "is-active"}`}>
@@ -127,7 +127,7 @@ export const CostsTableHeader: React.FC<ICostsTableHeaderProps> = ({setFilterByP
                                         setChosenSortCost("")
                                         setIsActiveDate(false)
                                     }}>
-                                        Oldest first
+                                        <Translate>oldest_first</Translate>
                                     </a>
                                 </li>
                             </ul>
@@ -174,7 +174,7 @@ export const CostsTableHeader: React.FC<ICostsTableHeaderProps> = ({setFilterByP
                                         setSortByDate("")
                                         setIsActiveCost(false)
                                     }}>
-                                        Ascending
+                                        <Translate>ascending</Translate>
                                     </a>
                                 </li>
                                 <li className={chosenSortCost === "ASC" ? "is-active" : ""}>
@@ -185,7 +185,7 @@ export const CostsTableHeader: React.FC<ICostsTableHeaderProps> = ({setFilterByP
                                         setSortByDate("")
                                         setIsActiveCost(false)
                                     }}>
-                                        Descending
+                                        <Translate>descending</Translate>
                                     </a>
                                 </li>
                             </ul>

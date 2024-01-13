@@ -87,6 +87,10 @@ export const TimesheetTableItem: React.FC<ITimesheetTableItemProps> = ({taskItem
             top: 0,
             behavior: 'smooth'
         });
+        document.querySelector(".main__inner")?.closest(".main")?.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
     }
     const handleRemoveTask = (data: ITask) => {
         setPopup({popup: "remove-task-popup", data})

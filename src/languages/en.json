@@ -250,7 +250,8 @@
       "approved_first": "Approved first",
       "progress_first": "In progress first",
       "change_decision": "Cancel decision",
-      "summary_already_rejected": "This summary already rejected by [Name] on [date]",
+      "summary_already_rejected": "This summary already rejected by",
+      "summary_already_approved": "This summary was approved by",
       "export_all": "Export all"
     },
     "other": {
@@ -315,5 +316,12 @@
   "export_as": "Export as",
   "edit_expense": "Edit expense",
   "edit_cost": "Edit cost",
-  "edit_project": "Edit data"
+  "edit_project": "Edit data",
+
+  "uncompleted": "Uncompleted",
+  "completed": "Completed",
+  "ascending": "Ascending",
+  "descending": "Descending",
+  "newest_first": "Newest first",
+  "oldest_first": "Oldest first"
 }

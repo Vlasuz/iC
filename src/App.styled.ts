@@ -385,9 +385,10 @@ export const AppStyled = styled.div`
   }
 
   .simplebar-content {
-    padding-bottom: 10px !important;
+    padding-bottom: 25px !important;
   }
 
+  .aside__body .simplebar-content,
   .select .simplebar-content,
   .section-table__main .simplebar-content {
     padding-bottom: 0px !important;
@@ -544,11 +545,11 @@ export const AppStyled = styled.div`
   }
 
   .section-table__export {
-    width: 100%;
-    max-width: 120px;
+    width: fit-content;
   }
 
   @media screen and (max-width: 992px) {
+    .section-table__export,
     .drop-down__target {
       width: 100%;
     }
@@ -590,6 +591,12 @@ export const AppStyled = styled.div`
       display: block;
       margin-left: 1.5px;
       margin-top: 1.5px;
+    }
+  }
+
+  .login-wrapper {
+    .simplebar-content {
+      padding-bottom: 0!important;
     }
   }
 

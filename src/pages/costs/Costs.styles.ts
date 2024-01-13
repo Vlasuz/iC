@@ -64,4 +64,14 @@ export const CostsStyles = styled.section`
       position: absolute !important;
     }
   }
+
+  .section-table__head-th:last-child {
+    .drop-down-absolute__block.is-right-default {
+      right: 51px !important;
+
+      @media screen and (max-width: 1440px) {
+        right: 16px !important;
+      }
+    }
+  }
 `

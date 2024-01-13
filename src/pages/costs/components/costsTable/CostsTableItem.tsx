@@ -80,6 +80,15 @@ export const CostsTableItem: React.FC<ICostsTableItemProps> = ({item, index}) =>
     const handleEditTask = (data: IExpense) => {
         editTask(item)
         setIsOpenContextMenu(false)
+
+        document.querySelector(".main__inner")?.closest(".simplebar-content-wrapper")?.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+        document.querySelector(".main__inner")?.closest(".main")?.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
     }
     const handleRemoveTask = (data: IExpense) => {
         setPopup({popup: "remove-expense-popup", data})

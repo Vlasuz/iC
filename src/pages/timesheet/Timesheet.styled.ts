@@ -81,4 +81,8 @@ export const TimesheetStyled = styled.section`
       position: absolute !important;
     }
   }
+  
+  .section-table__footer {
+    //padding-bottom: 23px !important;
+  }
 `

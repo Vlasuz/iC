@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 export const SummaryEmployeesStyled = styled.section`
   min-height: calc(95vh - 4px);
+  margin-bottom: 12px;
 
   @media screen and (max-width: 992px) {
     min-height: calc(100vh - 115px);
@@ -9,6 +10,10 @@ export const SummaryEmployeesStyled = styled.section`
   display: flex;
   flex-direction: column;
   padding-bottom: 0;
+  
+  .section-table__export .drop-down__block {
+    width: max-content;
+  }
   
   .page-header__select.employees-row__sort .select{
     width: 100%;
@@ -19,7 +24,7 @@ export const SummaryEmployeesStyled = styled.section`
       height: 100%;
     }
   }
-
+  
   .page-footer__row-per-page {
     white-space: nowrap;
     justify-content: flex-end;

@@ -187,7 +187,7 @@ export const PopupAddEmployee: React.FC<IPopupAddNewEmployeeProps> = ({data, set
                                    onChange={e => setHolidaysValue(+e.target.value > 99 ? "99" : e.target.value)}
                                    value={+holidaysValue > 99 ? 99 : holidaysValue}/>
                             {!!holidaysValue.length &&
-                                <span className={"input-title"} style={{left: +holidaysValue < 10 ? "34px" : "42px"}}>
+                                <span className={"input-title"} style={{left: +holidaysValue.length === 1 ? "34px" : +holidaysValue.length === 2 ? "42px" : "50px"}}>
                                 <Translate>employees_admin.others.days_per_year</Translate>
                             </span>}
                         </label>

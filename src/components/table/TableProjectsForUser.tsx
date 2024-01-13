@@ -39,6 +39,10 @@ export const TableProjectsForUser: React.FC<ITableProjectsForUserProps> = ({
         setIsActiveSelectProjects(false)
     }
 
+    useEffect(() => {
+        setSearchValue("")
+    }, [isActiveSelectProjects])
+
     return (
         <div ref={rootEl}
              className={`section-table__add-task--project drop-down ${isActiveSelectProjects && "is-active"}`}>
@@ -46,7 +50,7 @@ export const TableProjectsForUser: React.FC<ITableProjectsForUserProps> = ({
                     className="section-table__add-task--project-target drop-down__target"
                     type="button">
 
-                {projectData?.name ?? project?.name ?? <Translate>timesheet_page.top_part.choose_project</Translate>}
+                {projectData?.name ?? projectData?.name ?? <Translate>timesheet_page.top_part.choose_project</Translate>}
 
                 <svg width="10" height="7" viewBox="0 0 10 7"
                      className="drop-down__target--arrow">
@@ -63,6 +67,7 @@ export const TableProjectsForUser: React.FC<ITableProjectsForUserProps> = ({
 
                                     {
                                         userData?.recent_projects
+                                            ?.slice(0, 5)
                                             ?.filter(item => !item.project.archive)
                                             ?.filter(item => searchValue ? item.project.name.toLowerCase().includes(searchValue.toLowerCase()) || item.project.description.toLowerCase().includes(searchValue.toLowerCase()) : item)
                                             ?.map(item =>

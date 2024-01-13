@@ -249,7 +249,8 @@
       "approved_first": "Затверджені спочатку",
       "progress_first": "В процесі спочатку",
       "change_decision": "Скасувати рішення",
-      "summary_already_rejected": "Цей таймшит вже відхилений [Ім'я] [дата]",
+      "summary_already_rejected": "Цей таймшит вже відхилений",
+      "summary_already_approved": "Цей таймшит вже затверджено",
       "export_all": "Експорт усіх"
     },
     "other": {
@@ -314,5 +315,12 @@
   "export_as": "Експортувати як",
   "edit_expense": "Редагувати витрати",
   "edit_cost": "Вартість редагування",
-  "edit_project": "Редагувати проект"
+  "edit_project": "Редагувати проект",
+
+  "uncompleted": "Незаповнені",
+  "completed": "Заповнені",
+  "ascending": "По зростанню",
+  "descending": "За спаданням",
+  "newest_first": "Спочатку найновіші",
+  "oldest_first": "Спочатку найстаріші"
 }

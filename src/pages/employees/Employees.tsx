@@ -20,9 +20,16 @@ export const Employees: React.FC<IEmployeesProps> = () => {
     const [searchValue, setSearchValue] = useState<string>('')
     const [selectValue, setSelectValue] = useState(RowsPerPage()[0])
 
+    const [isLoad, setIsLoad] = useState(false)
+
     useEffect(() => {
+        if (isLoad) return;
+
         setSelectValue(employees.length > +RowsPerPage()[0].value ? RowsPerPage()[0] : RowsPerPage()[3])
-    }, [employees])
+        setTimeout(() => {
+            setIsLoad(true)
+        }, 1000)
+    }, [employees, isLoad])
 
     const handleAddRows = () => {
         const plusCount = window.innerWidth < 768 ? 10 : 20
@@ -39,7 +46,7 @@ export const Employees: React.FC<IEmployeesProps> = () => {
 
                     <EmployeesHeader/>
 
-                    <EmployeesTable countOfShowRows={selectValue.value} searchValue={searchValue}/>
+                    <EmployeesTable rowsSelectValue={selectValue} searchValue={searchValue}/>
 
                     <div className="section-table__footer">
                         <div className="section-table__row-per-page visible-on-mob">

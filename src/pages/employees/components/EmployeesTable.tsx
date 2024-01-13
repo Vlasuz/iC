@@ -10,10 +10,11 @@ import SimpleBar from "simplebar-react";
 import {useScrollTopValue} from "../../../hooks/ScrollTopValue";
 import {Translate} from "../../../components/translate/Translate";
 import {EmployeesStatus} from "../../../constants/EmployeesStatus";
+import {RowsPerPage} from "../../../constants/RowsPerPage";
 
 interface IEmployeesTableProps {
     searchValue: string
-    countOfShowRows: number
+    rowsSelectValue: any
 }
 
 interface IStatus {
@@ -21,7 +22,7 @@ interface IStatus {
     label: string
 }
 
-export const EmployeesTable: React.FC<IEmployeesTableProps> = ({searchValue, countOfShowRows}) => {
+export const EmployeesTable: React.FC<IEmployeesTableProps> = ({searchValue, rowsSelectValue}) => {
 
     const {scrollY} = useScrollTopValue()
 
@@ -91,6 +92,8 @@ export const EmployeesTable: React.FC<IEmployeesTableProps> = ({searchValue, cou
         setIsActiveNameDropDown(prev => !prev)
         console.log(nameSortBlock.current.clientHeight)
     }
+
+    let numberOfRow = 0;
 
     return (
         <div className="section-table__main table-employees">
@@ -301,11 +304,16 @@ export const EmployeesTable: React.FC<IEmployeesTableProps> = ({searchValue, cou
                             {
                                 employees
                                     ?.filter(item => chosenStatus?.value ? item.status === chosenStatus.value : item)
-                                    ?.filter((item, index) => countOfShowRows === 0 ? item : index < countOfShowRows)
+                                    // ?.filter((item, index) => countOfShowRows === 0 ? item : index < countOfShowRows)
                                     ?.sort((a, b) => a.last_name < b.last_name ? sortByName === "sortUp" ? 1 : -1 : sortByName === "sortDown" ? 1 : -1)
                                     ?.sort((a, b) => +a.archive - +b.archive)
-                                    ?.map((employee: IEmployee, index) =>
-                                        <EmployeesItem key={employee.id} isArchive={employee.archive} index={index + 1} data={employee}/>)
+                                    ?.map((employee: IEmployee, index) => {
+                                        numberOfRow += 1
+
+                                        if (rowsSelectValue?.value && rowsSelectValue?.value < numberOfRow) return "";
+
+                                        return <EmployeesItem key={employee.id} isArchive={employee.archive} index={index + 1} data={employee}/>
+                                    })
                             }
                         </div>
                     </div>

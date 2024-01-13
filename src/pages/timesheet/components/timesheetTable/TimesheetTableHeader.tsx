@@ -66,7 +66,7 @@ export const TimesheetTableHeader: React.FC<ITimesheetTableHeaderProps> = ({
                                         setChosenSortTotal("")
                                         setIsActiveDate(false)
                                     }}>
-                                        Newest first
+                                        <Translate>newest_first</Translate>
                                     </a>
                                 </li>
                                 <li className={` ${chosenSortDate === "DESC" && "is-active"}`}>
@@ -77,7 +77,7 @@ export const TimesheetTableHeader: React.FC<ITimesheetTableHeaderProps> = ({
                                         setChosenSortTotal("")
                                         setIsActiveDate(false)
                                     }}>
-                                        Oldest first
+                                        <Translate>oldest_first</Translate>
                                     </a>
                                 </li>
                             </ul>
@@ -117,7 +117,7 @@ export const TimesheetTableHeader: React.FC<ITimesheetTableHeaderProps> = ({
                                         setChosenSortTotal("")
                                         setIsActiveDate(false)
                                     }}>
-                                        Newest first
+                                        <Translate>newest_first</Translate>
                                     </a>
                                 </li>
                                 <li className={` ${chosenSortDate === "DESC" && "is-active"}`}>
@@ -128,7 +128,7 @@ export const TimesheetTableHeader: React.FC<ITimesheetTableHeaderProps> = ({
                                         setChosenSortTotal("")
                                         setIsActiveDate(false)
                                     }}>
-                                        Oldest first
+                                        <Translate>oldest_first</Translate>
                                     </a>
                                 </li>
                             </ul>
@@ -183,7 +183,7 @@ export const TimesheetTableHeader: React.FC<ITimesheetTableHeaderProps> = ({
                         </button>
                         <div
                             className={isActiveTotal ? "section-table__main--func-block drop-down-absolute__block is-right-default is-active" : "section-table__main--func-block drop-down-absolute__block is-right-default"}
-                            id="total-sort" style={{minWidth: "170px", transform: `translateY(${-scrollY}px)`}}>
+                            id="total-sort" style={{transform: `translateY(${-scrollY}px)`}}>
                             <ul className="drop-down__list drop-down__list-date">
                                 <li className={chosenSortTotal === "DESC" ? "is-active" : ""}>
                                     <a onClick={_ => {
@@ -199,7 +199,7 @@ export const TimesheetTableHeader: React.FC<ITimesheetTableHeaderProps> = ({
 
                                         setIsActiveTotal(false)
                                     }}>
-                                        Uncompleted first
+                                        <Translate>uncompleted</Translate>
                                     </a>
                                 </li>
                                 <li className={chosenSortTotal === "ASC" ? "is-active" : ""}>
@@ -214,13 +214,9 @@ export const TimesheetTableHeader: React.FC<ITimesheetTableHeaderProps> = ({
                                             setChosenSortDate("")
                                         }
 
-                                        // setSortByTotal("ASC")
-                                        // setChosenSortTotal("ASC")
-                                        // setSortByDate("")
-                                        // setChosenSortDate("")
                                         setIsActiveTotal(false)
                                     }}>
-                                        Completed first
+                                        <Translate>completed</Translate>
                                     </a>
                                 </li>
                             </ul>

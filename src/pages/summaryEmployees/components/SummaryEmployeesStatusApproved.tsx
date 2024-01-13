@@ -1,5 +1,6 @@
 import React, {useEffect} from 'react'
 import {ITimesheet} from "../../../models";
+import {Translate} from "../../../components/translate/Translate";
 
 interface ISummaryEmployeesStatusApprovedProps {
     itemData: ITimesheet
@@ -13,7 +14,7 @@ export const SummaryEmployeesStatusApproved: React.FC<ISummaryEmployeesStatusApp
                 <svg width="20" height="20" viewBox="0 0 13 13">
                     <use xlinkHref="#round-check"></use>
                 </svg>
-                <p>This summary was approved! (by {itemData?.manager?.first_name} {itemData?.manager?.last_name})</p>
+                <p><Translate>employees_page.table.summary_already_approved</Translate> {itemData?.manager?.first_name} {itemData?.manager?.last_name}</p>
             </div>
         </div>
     )

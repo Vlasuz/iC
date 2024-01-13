@@ -146,7 +146,7 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit}) => {
         setProjectData(undefined)
         setDescriptionData("")
         setCostData(0)
-        setDateData(`${lessThenTen(String(getMondayDate().getDate()))}.${chosenTimesheet?.date[3]}${chosenTimesheet?.date[4]}.${getMondayDate().getFullYear()}`)
+        // setDateData(`${lessThenTen(String(getMondayDate().getDate()))}.${chosenTimesheet?.date[3]}${chosenTimesheet?.date[4]}.${getMondayDate().getFullYear()}`)
     }
 
     useEffect(() => {
@@ -258,7 +258,7 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit}) => {
                                 <div className="input_placeholder">
                                     <input type="number" name="cost" value={costData === 0 ? "" : costData} onChange={e => setCostData(+e.target.value)} required className="input" />
                                     <div className="placeholder">
-                                        <Translate>costs_page.table.cost</Translate>
+                                        {!costData && <Translate>costs_page.table.cost</Translate>}
                                     </div>
                                 </div>
                             </div>

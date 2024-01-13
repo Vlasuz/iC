@@ -13,17 +13,16 @@ export const GetAccessToken = (dispatch: any) => {
         "refresh_token": getCookies("refresh_token_ic")
     }).then(({data}) => {
 
-        console.log('111')
         setCookie("access_token_ic", data.access_token)
         dispatch(setUser(data.user))
         dispatch(setAccessToken(data.access_token))
+        window.location.href = "/"
 
     }).catch(er => {
-        console.log('er refresh',er)
-        // navigate('/login')
-        // if(window.location.href !== "/login") {
-        //     window.location.href = "/login"
-        // }
+        console.log("er refresh",er)
+        if(window.location.href.includes("login")) return;
+
+        window.location.href = "/login"
     })
 
 }

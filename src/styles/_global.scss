@@ -42,6 +42,8 @@ body {
 	line-height: 150%;
 	font-size: 0.875rem;
 
+	scroll-behavior: smooth;
+
 	@include _992 {
 		display: flex;
 		flex-direction: column;
@@ -209,9 +211,9 @@ section {
 	}
 
 	@include _992 {
-		height: calc(var(--vh,1vh) * 100);
+		height: calc(var(--vh,1vh) * 102);
 		&:not(.is-none-aside) {
-			height: calc(var(--vh,1vh) * 100);
+			height: calc(var(--vh,1vh) * 102);
 		}
 	}
 

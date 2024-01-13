@@ -1,10 +1,5 @@
 import React, {useEffect, useState} from 'react'
 import {TimesheetTableBody} from "./TimesheetTableBody";
-import axios from "axios";
-import {getApiLink} from "../../../../functions/getApiLink";
-import {getBearer} from "../../../../functions/getBearer";
-import {ITask} from "../../../../models";
-import SimpleBar from "simplebar-react";
 import {TimesheetTableHeader} from "./TimesheetTableHeader";
 import {useSelector} from 'react-redux';
 

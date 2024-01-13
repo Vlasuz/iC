@@ -8,7 +8,7 @@ export const LoginStyled = styled.form`
   }
   p.error {
     color: red;
-    font-size: 17px;
+    font-size: 14px;
 
     @media screen and (max-width: 768px) {
       font-size: 14px;
