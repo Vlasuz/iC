@@ -11,9 +11,10 @@ import { saveAs } from 'file-saver';
 
 interface ITableExportProps {
     title?: string
+    onClick?: any
 }
 
-export const TableExport: React.FC<ITableExportProps> = ({title}) => {
+export const TableExport: React.FC<ITableExportProps> = ({title, onClick}) => {
 
     const tableToExcel = function() {
         const uri = 'data:application/vnd.ms-excel;base64,';
@@ -94,7 +95,10 @@ export const TableExport: React.FC<ITableExportProps> = ({title}) => {
 
     return (
         <div ref={rootEl} className={isExportSelectOpen ? "section-table__export drop-down is-right-default is-active" : "section-table__export drop-down is-right-default"}>
-            <button onClick={_ => setIsExportSelectOpen(prev => !prev)} className="section-table__export--target drop-down__target" type="button">
+            <button onClick={_ => {
+                setIsExportSelectOpen(prev => !prev)
+                onClick()
+            }} className="section-table__export--target drop-down__target" type="button">
                 {title === 'export all' ? <Translate>summary_page.main.export_all</Translate> : <Translate>employees_admin.table.export</Translate>}
                 <svg width="16" height="17" viewBox="0 0 16 17">
                     <use xlinkHref="#download"></use>

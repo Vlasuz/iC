@@ -21,6 +21,7 @@ import {PopupContext} from "../../../App";
 interface ISummaryEmployeesItemProps {
     itemData: ITimesheet
     isFavorite?: boolean
+    setStatisticForTable: any
 }
 
 interface IStatisticList {
@@ -39,7 +40,11 @@ interface IStatisticList {
     }
 }
 
-export const SummaryEmployeesItem: React.FC<ISummaryEmployeesItemProps> = ({itemData, isFavorite}) => {
+export const SummaryEmployeesItem: React.FC<ISummaryEmployeesItemProps> = ({
+                                                                               itemData,
+                                                                               isFavorite,
+                                                                               setStatisticForTable
+                                                                           }) => {
 
     const [isOpen, setIsOpen] = useState(false)
     const [isFavoriteLocal, setIsFavoriteLocal] = useState(isFavorite)
@@ -119,12 +124,16 @@ export const SummaryEmployeesItem: React.FC<ISummaryEmployeesItemProps> = ({item
         if (!statistic || !Object.keys(statistic).length) return;
 
         setStatisticList(mergeAndSum(statistic?.expenses, statistic?.tasks).statistic)
+
+        setStatisticForTable((prev: any[]) => [...prev, {
+            user: itemData.user,
+            data: mergeAndSum(statistic?.expenses, statistic?.tasks).statistic,
+            all_hours: statistic.all_hours,
+            all_sum: statistic.all_sum
+        }])
     }, [statistic])
 
-
     const handleOpenProfile = () => {
-        console.log('123')
-
         setPopup({popup: "profile-popup", data: itemData.user})
     }
 
@@ -216,7 +225,8 @@ export const SummaryEmployeesItem: React.FC<ISummaryEmployeesItemProps> = ({item
                             <b className="summary-item__total-element--name">
                                 <Translate>summary_page.main.time_spent_for_projects</Translate>
                             </b>
-                            <NavLink onClick={_ => dispatch(setChosenTimesheet(itemData))} to={`/timesheet/${itemData.id}`} className="summary-item__total-element--link">
+                            <NavLink onClick={_ => dispatch(setChosenTimesheet(itemData))}
+                                     to={`/timesheet/${itemData.id}`} className="summary-item__total-element--link">
                                 <Translate>summary_page.main.show_full_data_timesheet</Translate>
                                 <svg width="7" height="10" viewBox="0 0 7 10">
                                     <use xlinkHref="#arrow-next"></use>

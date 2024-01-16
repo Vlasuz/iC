@@ -20,6 +20,7 @@ export const TimesheetHeaderChooseTime: React.FC<ITimesheetHeaderChooseTimeProps
                                                                                      }) => {
 
     const [isChosenDate, setIsChosenDate] = useState(false)
+    const [isLoad, setIsLoad] = useState(false)
 
     const [timeFromHours, setTimeFromHours] = useState(TimeHoursList()[7])
     const [timeFromMinutes, setTimeFromMinutes] = useState(TimeMinutesList()[0])
@@ -29,13 +30,16 @@ export const TimesheetHeaderChooseTime: React.FC<ITimesheetHeaderChooseTimeProps
     const [isActiveSelectTime, setIsActiveSelectTime] = useState(false)
     const {rootEl} = useClickOutside(setIsActiveSelectTime)
 
-    // const hoursAmount = timeFromHours.value > timeToHours.value ? 24 + Math.floor((+timeToHours.value - +timeFromHours.value - (+timeFromMinutes.value - +timeToMinutes.value))) : Math.floor((+timeToHours.value - +timeFromHours.value - (+timeFromMinutes.value - +timeToMinutes.value)))
     const hoursAmount = timeFromHours.value > timeToHours.value ? 24 + (+timeToHours.value - +timeFromHours.value - (+timeFromMinutes.value - +timeToMinutes.value)) : (+timeToHours.value - +timeFromHours.value - (+timeFromMinutes.value - +timeToMinutes.value))
 
     const lessThenTen = (num: string | number) => +num < 10 ? "0" + num : num
 
     const handleTimeChange = (e: any) => {
         setIsChosenDate(true)
+    }
+    const handleHoursFromChange = (e: any) => {
+        setIsChosenDate(true)
+        setTimeToHours(TimeHoursList()[e.value])
     }
 
     useEffect(() => {
@@ -122,7 +126,7 @@ export const TimesheetHeaderChooseTime: React.FC<ITimesheetHeaderChooseTimeProps
                         <div className="section-table__time--item-col">
                             <div className="section-table__time--select">
 
-                                <CustomSelect tabIndex={1} list={TimeHoursList()} onChange={handleTimeChange}
+                                <CustomSelect tabIndex={1} list={TimeHoursList()} onChange={handleHoursFromChange}
                                               defaultValue={timeFromHours} selectValue={timeFromHours}
                                               setSelectedItem={setTimeFromHours} scrollNumber={357}/>
 

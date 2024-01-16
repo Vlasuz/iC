@@ -8,12 +8,12 @@ import {CustomSelect} from "../../components/customSelect/CustomSelect";
 import {SummaryEmployeesStyled} from "./SummaryEmployees.styled";
 import {RowsPerPage} from "../../constants/RowsPerPage";
 import {SetSummaryEmployees} from "../../api/SetSummaryEmployees";
-import { useDispatch, useSelector } from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {IProject, ISummaryEmployee, IUser} from "../../models";
 import {Translate} from "../../components/translate/Translate";
 import axios from "axios";
 import {getApiLink} from "../../functions/getApiLink";
-import hello from "slim-select/src/vue/dist/vue/hello";
+import {SummaryEmployeesExportTable} from "./components/SummaryEmployeesExportTable";
 
 interface ISummaryEmployeesProps {
 
@@ -49,6 +49,7 @@ export const SummaryEmployees: React.FC<ISummaryEmployeesProps> = () => {
     const [year, setYear] = useState()
     const [month, setMonth] = useState()
     const [isLoad, setIsLoad] = useState(false)
+    const [statisticForTable, setStatisticForTable]: any = useState([])
 
     const user: IUser = useSelector((state: any) => state.toolkit.user)
     const summaryEmployees: ISummaryEmployee = useSelector((state: any) => state.toolkit.summaryEmployees)
@@ -65,6 +66,10 @@ export const SummaryEmployees: React.FC<ISummaryEmployeesProps> = () => {
     useEffect(() => {
         setRowsSelectValue(RowsPerPage()[0].value < summaryEmployees?.all?.length ? RowsPerPage()[0] : RowsPerPage()[3])
         SetSummaryEmployees(dispatch)
+
+        axios.get(getApiLink("/api/timesheet/projects/")).then(({data}) => {
+            setAllProjects(data)
+        })
     }, [])
 
     useEffect(() => {
@@ -77,12 +82,12 @@ export const SummaryEmployees: React.FC<ISummaryEmployeesProps> = () => {
     }, [summaryEmployees.all, isLoad])
 
     useEffect(() => {
-        if(!year) return;
+        if (!year) return;
         SetSummaryEmployees(dispatch, month, year)
     }, [year])
 
     useEffect(() => {
-        if(!month) return;
+        if (!month) return;
         SetSummaryEmployees(dispatch, month, year)
     }, [month])
 
@@ -90,19 +95,22 @@ export const SummaryEmployees: React.FC<ISummaryEmployeesProps> = () => {
     const [allProjects, setAllProjects] = useState<IProject[]>([])
 
     useEffect(() => {
-        axios.get(getApiLink("/api/timesheet/projects/")).then(({data}) => {
-            setAllProjects(data)
-        })
-    }, [])
-
-    useEffect(() => {
         SetSummaryEmployees(dispatch, undefined, undefined, projectData?.id)
     }, [projectData])
 
     let numberOfRow = 0;
 
+    const [isOpen, setIsOpen] = useState(false)
+
+    const handleOpenExport = () => {
+        setIsOpen(true)
+    }
+
     return (
         <SummaryEmployeesStyled className="summary">
+
+            <SummaryEmployeesExportTable isOpen={isOpen} statisticForTable={statisticForTable}/>
+
             <div className="summary__header page-header">
                 <div className="page-header__col">
                     <h1 className="page-header__title title">
@@ -118,13 +126,15 @@ export const SummaryEmployees: React.FC<ISummaryEmployeesProps> = () => {
 
                     <TableSelectYearMonth setMonth={setMonth} setYear={setYear}/>
 
-                    <TableProjectsForUser projectList={allProjects} setProjectData={setProjectData} projectData={projectData}/>
+                    <TableProjectsForUser projectList={allProjects} setProjectData={setProjectData}
+                                          projectData={projectData}/>
 
                     <div className="employees-row__search">
                         <div className="section-table__search is-alternative">
                             <label className="section-table__search--label">
                                 <input type="search" required name="search"
-                                       className="section-table__search--input" value={valueSearch} onChange={e => setValueSearch(e.target.value)} />
+                                       className="section-table__search--input" value={valueSearch}
+                                       onChange={e => setValueSearch(e.target.value)}/>
                                 <span className="placeholder">
                                     <Translate>employees_page.table.search_an_employee</Translate>
                                 </span>
@@ -139,10 +149,11 @@ export const SummaryEmployees: React.FC<ISummaryEmployeesProps> = () => {
                     </div>
 
                     <div className="page-header__select employees-row__sort">
-                        <CustomSelect list={statusSortList} setSelectedItem={setStatusSortValue} selectValue={statusSortValue} />
+                        <CustomSelect list={statusSortList} setSelectedItem={setStatusSortValue}
+                                      selectValue={statusSortValue}/>
                     </div>
 
-                    {user.status === "team_lead" && <TableExport/>}
+                    {user.status === "team_lead" && <TableExport onClick={handleOpenExport}/>}
                 </form>
             </div>
             <div className="summary__main">
@@ -151,7 +162,8 @@ export const SummaryEmployees: React.FC<ISummaryEmployeesProps> = () => {
                     summaryEmployees?.favourite
                         ?.filter(item => item.user.last_name.toLowerCase().includes(valueSearch.toLowerCase()))
                         ?.sort((a: any, b: any) => b.status === statusSortValue.value ? 1 : -1)
-                        ?.map(item => <SummaryEmployeesItem key={item.id} isFavorite={true} itemData={item}/>)
+                        ?.map(item => <SummaryEmployeesItem setStatisticForTable={setStatisticForTable} key={item.id}
+                                                            isFavorite={true} itemData={item}/>)
                 }
                 {
                     summaryEmployees?.all
@@ -162,7 +174,8 @@ export const SummaryEmployees: React.FC<ISummaryEmployeesProps> = () => {
 
                             // if (rowsSelectValue?.value && rowsSelectValue?.value < numberOfRow) return "";
 
-                            return <SummaryEmployeesItem key={item.id} itemData={item}/>
+                            return <SummaryEmployeesItem setStatisticForTable={setStatisticForTable} key={item.id}
+                                                         itemData={item}/>
                         })
                 }
 

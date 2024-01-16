@@ -27,11 +27,12 @@ export const TimesheetTableBody: React.FC<ITimesheetTableBodyProps> = ({
     const [allDates, setAllDates] = useState<any>([])
 
     const chosenTimesheet: ITimesheet = useSelector((state: any) => state.toolkit.chosenTimesheet)
+    const tasksSortByProject = taskList?.filter(item => filterByProjectName ? item.project.name === filterByProjectName : item)?.filter(item => filterByProjectDescription ? item.project.description === filterByProjectDescription : item)
 
     useEffect(() => {
         if(!taskList.length) return;
 
-        const summarizedData = taskList?.reduce((acc: any, item) => {
+        const summarizedData = tasksSortByProject?.reduce((acc: any, item) => {
             const date = item.date;
 
             const existingItem: any = acc.find((entry: any) => entry.date === date);
@@ -53,7 +54,7 @@ export const TimesheetTableBody: React.FC<ITimesheetTableBodyProps> = ({
             }
         }))
 
-    }, [taskList])
+    }, [taskList, filterByProjectName, filterByProjectDescription])
 
     let numberOfRow = 0
 
@@ -86,9 +87,10 @@ export const TimesheetTableBody: React.FC<ITimesheetTableBodyProps> = ({
                         let allHoursAmount = 0
                         let mobileDateHeight = 0;
 
-                        taskList?.filter(item => item.date === dateItem.date)?.map(item => allHoursAmount += +item.hours)
 
-                        mobileDateHeight = taskList?.filter(item => item.date === dateItem.date).length * 48.8
+                        tasksSortByProject?.filter(item => item.date === dateItem.date)?.map(item => allHoursAmount += +item.hours)
+
+                        mobileDateHeight = tasksSortByProject?.filter(item => item.date === dateItem.date).length * 48.8
 
                         return (
                             <div key={dateItem.date} className="section-table__row-block">

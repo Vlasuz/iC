@@ -81,4 +81,5 @@ export const SummaryEmployeesStyled = styled.section`
   .page-footer {
     padding-top: 11px;
   }
+  
 `
