@@ -104,6 +104,14 @@ export const TimesheetHeaderChooseTime: React.FC<ITimesheetHeaderChooseTimeProps
         }
     }, [timeData])
 
+    const handleAddTime = (additionalHours: number) => {
+        if(!TimeHoursList()[timeToHours.value - 1 + additionalHours]) return;
+
+        setTimeToHours(TimeHoursList()[timeToHours.value - 1 + additionalHours])
+    }
+
+    const additionalHoursList = ["2", "4", "6"]
+
     return (
         <>
             <div ref={rootEl}
@@ -141,6 +149,21 @@ export const TimesheetHeaderChooseTime: React.FC<ITimesheetHeaderChooseTimeProps
                             </div>
                         </div>
                     </div>
+
+                    <ul className="section-table__time--item-additional">
+
+                        {
+                            additionalHoursList.map((hour: string) =>
+                                <li key={hour}>
+                                    <button onClick={_ => handleAddTime(+hour)}>
+                                        +{hour} h
+                                    </button>
+                                </li>
+                            )
+                        }
+
+                    </ul>
+
                     <div className="section-table__time--item">
                         <div className="section-table__time--item-col">
                             <span><Translate>timesheet_page.popups.to</Translate>:</span>

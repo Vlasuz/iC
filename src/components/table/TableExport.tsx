@@ -43,49 +43,57 @@ export const TableExport: React.FC<ITableExportProps> = ({title, onClick}) => {
 
         // @ts-ignore
         return function(table, filename = 'excel-export') {
-            if (!table.nodeType) table = document.getElementById(table);
+            if (!table.nodeType) table = document.querySelectorAll(table);
 
-            const ctx = {
-                worksheet: filename,
-                table: table.innerHTML
-            };
+            table.forEach((tbl: any) => {
 
-            const blob = new Blob([format(template, ctx)], {
-                type: 'application/vnd.ms-excel'
-            });
+                const ctx = {
+                    worksheet: filename,
+                    table: tbl.innerHTML
+                };
 
-            // @ts-ignore
-            if (navigator.msSaveBlob) {
+                const blob = new Blob([format(template, ctx)], {
+                    type: 'application/vnd.ms-excel'
+                });
+
                 // @ts-ignore
-                navigator.msSaveBlob(blob, filename + '.xls');
-            } else {
-                const link = document.createElement('a');
-                if (link.download !== undefined) {
-                    const url = URL.createObjectURL(blob);
-                    link.setAttribute('href', url);
-                    link.setAttribute('download', filename + '.xls');
-                    link.style.visibility = 'hidden';
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
+                if (navigator.msSaveBlob) {
+                    // @ts-ignore
+                    navigator.msSaveBlob(blob, filename + '.xls');
+                } else {
+                    const link = document.createElement('a');
+                    if (link.download !== undefined) {
+                        const url = URL.createObjectURL(blob);
+                        link.setAttribute('href', url);
+                        link.setAttribute('download', filename + '.xls');
+                        link.style.visibility = 'hidden';
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                    }
                 }
-            }
+
+            })
+
+
         };
     }();
 
 
     const convertToPDF = () => {
-        const element = document.getElementById('my-table');
+        const element = document.querySelectorAll('.table-to-download-excel');
 
-        const opt = {
-            margin: 0.5,
-            filename: 'timesheet.pdf',
-            image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { scale: 6 },
-            jsPDF: { unit: 'in', format: 'letter', } // Установка альбомной ориентации
-        };
+        element.forEach(tbl => {
+            const opt = {
+                margin: 0.5,
+                filename: 'timesheet.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 6 },
+                jsPDF: { unit: 'in', format: 'letter', } // Установка альбомной ориентации
+            };
 
-        html2pdf().from(element).set(opt).save();
+            html2pdf().from(tbl).set(opt).save();
+        })
     };
 
 
@@ -97,7 +105,7 @@ export const TableExport: React.FC<ITableExportProps> = ({title, onClick}) => {
         <div ref={rootEl} className={isExportSelectOpen ? "section-table__export drop-down is-right-default is-active" : "section-table__export drop-down is-right-default"}>
             <button onClick={_ => {
                 setIsExportSelectOpen(prev => !prev)
-                onClick()
+                onClick && onClick()
             }} className="section-table__export--target drop-down__target" type="button">
                 {title === 'export all' ? <Translate>summary_page.main.export_all</Translate> : <Translate>employees_admin.table.export</Translate>}
                 <svg width="16" height="17" viewBox="0 0 16 17">
@@ -107,7 +115,7 @@ export const TableExport: React.FC<ITableExportProps> = ({title, onClick}) => {
             <div className="section-table__export--block drop-down__block">
                 <ul className="drop-down__list">
                     <li>
-                        <a onClick={e => tableToExcel('my-table', "timesheet")}>
+                        <a onClick={e => tableToExcel('.table-to-download-excel', "timesheet")}>
                             <Translate>export_as</Translate> .xlsx
                         </a>
                     </li>

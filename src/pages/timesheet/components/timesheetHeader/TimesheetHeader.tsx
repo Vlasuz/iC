@@ -8,8 +8,8 @@ import axios from "axios";
 import {getApiLink} from "../../../../functions/getApiLink";
 import {getBearer} from "../../../../functions/getBearer";
 import {Notifications} from "../../../../components/notifications/Notifications";
-import {addTask, editTask, setExpenses, setTasks} from "../../../../storage/toolkit";
-import {BlockToEdit} from "../../Timesheet";
+import {setTasks} from "../../../../storage/toolkit";
+import {BlockToEdit, FixedTopEdit} from "../../Timesheet";
 import {TableExport} from "../../../../components/table/TableExport";
 import {TableSelectYearMonth} from "../../../../components/table/TableSelectYearMonth";
 import {TableProjectsForUser} from '../../../../components/table/TableProjectsForUser';
@@ -17,15 +17,18 @@ import {TableCalendar} from "../../../../components/table/TableCalendar";
 import {SetTasks} from "../../../../api/SetTasks";
 import {SetStatistic} from "../../../../api/SetStatistic";
 import {Translate} from "../../../../components/translate/Translate";
+import {toast} from "react-toastify";
 
 interface ITimesheetHeaderProps {
     itemToEdit: ITask | undefined
+    isFixedEditBlock: boolean
 }
 
-export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({itemToEdit}) => {
+export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({itemToEdit, isFixedEditBlock}) => {
 
     const isEditTask = itemToEdit && Object.keys(itemToEdit).length
 
+    const tasks: ITask[] = useSelector((state: any) => state.toolkit.tasks)
     const timesheet: ITimesheet[] = useSelector((state: any) => state.toolkit.timesheet)
     const chosenTimesheet: ITimesheet = useSelector((state: any) => state.toolkit.chosenTimesheet)
 
@@ -38,6 +41,8 @@ export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({itemToEdit}) =
 
     const dispatch = useDispatch()
 
+    const setIsFixedEditBlock: any = useContext(FixedTopEdit)
+
     const handleCreateTask = () => {
         const timesheetRequest: any = {
             "project_id": projectData?.id,
@@ -47,10 +52,16 @@ export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({itemToEdit}) =
             "hours": hoursData
         }
 
-        if (isEditTask) {
-            // delete timesheetRequest.project_id;
+        const theTimeYouChose = +timeData.slice(0, 2)
+        const theHighestHoursInThisDate = +tasks.filter(item => item.date.slice(0, 5) === dateData.slice(0, 5))?.reverse()[0]?.time?.slice(8).slice(0, 2)
 
-            console.log(timesheetRequest.project_id)
+        if(theTimeYouChose < theHighestHoursInThisDate) {
+            return toast.error(<Translate>time_was_used</Translate>)
+        }
+
+        if (isEditTask) {
+
+            setIsFixedEditBlock(false)
 
             getBearer("patch")
             axios.patch(getApiLink("/api/task/edit/?task_id=" + itemToEdit.id), timesheetRequest).then(({data}) => {
@@ -112,8 +123,9 @@ export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({itemToEdit}) =
     const setItemEdit: any = useContext(BlockToEdit)
 
     const handleBackFromCreate = () => {
-        setIsOpenCreatBlock(false)
         setItemEdit({})
+        setIsOpenCreatBlock(false)
+        setIsFixedEditBlock(false)
     }
 
 
@@ -160,13 +172,13 @@ export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({itemToEdit}) =
         setDateData(`${lessThenTen(String(getMondayDate().getDate()))}.${chosenTimesheet?.date[3]}${chosenTimesheet?.date[4]}.${getMondayDate().getFullYear()}`)
     }, [chosenTimesheet])
 
-    const isApprove = chosenTimesheet?.status === "approve"
+    const isApprove = chosenTimesheet?.status === "waiting"
 
     const [isOpenInputSearch, setIsOpenInputSearch] = useState(false)
     const {rootEl} = useClickOutside(setIsOpenInputSearch)
 
     return (
-        <div className="section-table__header">
+        <div className="section-table__header" style={{top: isFixedEditBlock ? "-55px" : "0px", position: isFixedEditBlock ? "sticky" : "relative"}}>
             <div className="section-table__header--row is-always-row">
                 <div className="section-table__header--col">
                     <h1 className="section-table__title title change-title" id="main-title">
@@ -189,8 +201,7 @@ export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({itemToEdit}) =
                 <Notifications/>
 
             </div>
-            <div
-                className={isOpenCreatBlock ? "section-table__header--block block-for-is-active is-active" : "section-table__header--block block-for-is-active"}>
+            <div className={`section-table__header--block block-for-is-active ${isOpenCreatBlock && "is-active"}`} style={{padding: isFixedEditBlock ? "15px 0" : "0", background: isFixedEditBlock ? "#f2f3f7" : "transparent"}}>
                 <div className="section-table__header--block-item">
                     <div>
                         <div className="section-table__header--row row-2">

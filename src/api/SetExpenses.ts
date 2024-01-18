@@ -5,12 +5,12 @@ import { getBearer } from "../functions/getBearer"
 import { setExpenses } from "../storage/toolkit"
 import { GetAccessToken } from "./GetAccessToken"
 
-export const SetExpenses = (dispatch: any, timesheetId: string) => {
+export const SetExpenses = async (dispatch: any, timesheetId: string) => {
 
     if(!timesheetId) return;
 
     getBearer("get")
-    axios.get(getApiLink(`/api/timesheet/expenses/?timesheet_id=${timesheetId}`)).then(({data}) => {
+    await axios.get(getApiLink(`/api/timesheet/expenses/?timesheet_id=${timesheetId}`)).then(({data}) => {
         dispatch(setExpenses(data))
     }).catch(er => {
         er?.response?.status === 401 && GetAccessToken(dispatch)

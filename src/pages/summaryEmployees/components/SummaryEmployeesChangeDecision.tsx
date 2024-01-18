@@ -8,9 +8,11 @@ import { useDispatch } from 'react-redux';
 
 interface ISummaryEmployeesChangeDecisionProps {
     itemData: any
+    handleExportPdf: any
+    isClickToExport: boolean
 }
 
-export const SummaryEmployeesChangeDecision: React.FC<ISummaryEmployeesChangeDecisionProps> = ({itemData}) => {
+export const SummaryEmployeesChangeDecision: React.FC<ISummaryEmployeesChangeDecisionProps> = ({itemData, handleExportPdf, isClickToExport}) => {
 
     const dispatch = useDispatch()
 
@@ -24,7 +26,7 @@ export const SummaryEmployeesChangeDecision: React.FC<ISummaryEmployeesChangeDec
 
     return (
         <div className="summary-item__footer--col">
-            <button className="summary-item__button btn is-grey is-transparent" type="button">
+            <button disabled={isClickToExport} onClick={handleExportPdf} className="summary-item__button btn is-grey is-transparent" type="button">
                 Export monthly summary
                 <svg width="16" height="17" viewBox="0 0 16 17">
                     <use xlinkHref="#download"></use>

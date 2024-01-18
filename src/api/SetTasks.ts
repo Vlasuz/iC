@@ -4,15 +4,12 @@ import {getApiLink} from "../functions/getApiLink";
 import {setTasks} from "../storage/toolkit";
 import { GetAccessToken } from "./GetAccessToken";
 
-export const SetTasks = (dispatch: any, timesheetId: string) => {
-
-    console.log(timesheetId)
+export const SetTasks = async (dispatch: any, timesheetId: string) => {
 
     if(!timesheetId) return;
 
     getBearer("get")
-    axios.get(getApiLink(`/api/timesheet/tasks/?timesheet_id=${timesheetId}`)).then(({data}) => {
-        console.log(data)
+    await axios.get(getApiLink(`/api/timesheet/tasks/?timesheet_id=${timesheetId}`)).then(({data}) => {
         dispatch(setTasks(data))
     }).catch(er => {
         er?.response?.status === 401 && GetAccessToken(dispatch)

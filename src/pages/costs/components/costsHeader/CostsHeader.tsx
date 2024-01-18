@@ -9,7 +9,7 @@ import {addExpense, editExpense, setExpenses} from "../../../../storage/toolkit"
 import {TableExport} from "../../../../components/table/TableExport";
 import {TableSelectYearMonth} from "../../../../components/table/TableSelectYearMonth";
 import {TableCalendar} from "../../../../components/table/TableCalendar";
-import { BlockToEdit } from '../../Costs';
+import { BlockToEdit, FixedTopEdit } from '../../Costs';
 import {TableProjectsForUser} from "../../../../components/table/TableProjectsForUser";
 import { SetExpenses } from '../../../../api/SetExpenses';
 import {SetTasks} from "../../../../api/SetTasks";
@@ -20,9 +20,10 @@ import { GetAccessToken } from '../../../../api/GetAccessToken';
 
 interface ICostsHeaderProps {
     itemToEdit: IExpense | undefined
+    isFixedEditBlock: boolean
 }
 
-export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit}) => {
+export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit, isFixedEditBlock}) => {
 
 
     const isEditExpense = itemToEdit && Object.keys(itemToEdit).length
@@ -39,6 +40,8 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit}) => {
 
     const dispatch = useDispatch()
 
+    const setIsFixedEditBlock: any = useContext(FixedTopEdit)
+
     const handleCreateExpense = () => {
         const timesheetRequest: any = {
             "project_id": projectData?.id,
@@ -49,6 +52,9 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit}) => {
 
         if(isEditExpense) {
             delete timesheetRequest.project_id;
+
+            setIsFixedEditBlock(false)
+            setItemEdit({})
 
             getBearer("patch")
             axios.patch(getApiLink("/api/expense/edit/?expense_id=" + itemToEdit.id), timesheetRequest).then(({data}) => {
@@ -104,6 +110,7 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit}) => {
     const handleBackFromCreate = () => {
         setIsOpenCreatBlock(false)
         setItemEdit({})
+        setIsFixedEditBlock(false)
     }
 
     const [isOpenCreatBlock, setIsOpenCreatBlock] = useState(false)
@@ -155,13 +162,13 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit}) => {
         setDateData(`${lessThenTen(String(getMondayDate().getDate()))}.${chosenTimesheet?.date[3]}${chosenTimesheet?.date[4]}.${getMondayDate().getFullYear()}`)
     }, [chosenTimesheet])
 
-    const isApprove = chosenTimesheet?.status === "approve"
+    const isApprove = chosenTimesheet?.status === "waiting"
 
     const [isOpenInputSearch, setIsOpenInputSearch] = useState(false)
     const {rootEl} = useClickOutside(setIsOpenInputSearch)
 
     return (
-        <div className="section-table__header">
+        <div className="section-table__header" style={{top: isFixedEditBlock ? "-55px" : "0px", position: isFixedEditBlock ? "sticky" : "relative"}}>
             <div className="section-table__header--row is-always-row">
                 <div className="section-table__header--col">
                     <h1 className="section-table__title title change-title" id="main-title">
@@ -183,7 +190,7 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit}) => {
                 <Notifications/>
 
             </div>
-            <div className={isOpenCreatBlock ? "section-table__header--block block-for-is-active is-active" : "section-table__header--block block-for-is-active"}>
+            <div className={`section-table__header--block block-for-is-active ${isOpenCreatBlock && "is-active"}`} style={{padding: isFixedEditBlock ? "15px 0" : "0", background: isFixedEditBlock ? "#f2f3f7" : "transparent"}}>
                 <div className="section-table__header--block-item">
                     <div>
                         <div className="section-table__header--row row-2">
@@ -247,7 +254,7 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit}) => {
                             <div className="section-table__add-costs--text">
                                 <label>
                                     <span className="input_placeholder">
-                                        <input type="text" name="costs" value={descriptionData} onChange={e => setDescriptionData(e.target.value)} required className="input" />
+                                        <input type="text" spellCheck name="costs" value={descriptionData} onChange={e => setDescriptionData(e.target.value)} required className="input" />
                                         <span className="placeholder">
                                             {!descriptionData && <Translate>costs_page.top_part.write_short_description</Translate>}
                                         </span>
@@ -256,7 +263,7 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit}) => {
                             </div>
                             <div className="section-table__add-costs--cost">
                                 <div className="input_placeholder">
-                                    <input type="number" name="cost" value={costData === 0 ? "" : costData} onChange={e => setCostData(+e.target.value)} required className="input" />
+                                    <input type="number" spellCheck name="cost" value={costData === 0 ? "" : costData} onChange={e => setCostData(+e.target.value)} required className="input" />
                                     <div className="placeholder">
                                         {!costData && <Translate>costs_page.table.cost</Translate>}
                                     </div>

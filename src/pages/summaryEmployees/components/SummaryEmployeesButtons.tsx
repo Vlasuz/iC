@@ -6,9 +6,11 @@ import {Translate} from "../../../components/translate/Translate";
 
 interface ISummaryEmployeesButtonsProps {
     timesheetId: string
+    handleExportPdf: any
+    isClickToExport: boolean
 }
 
-export const SummaryEmployeesButtons: React.FC<ISummaryEmployeesButtonsProps> = ({timesheetId}) => {
+export const SummaryEmployeesButtons: React.FC<ISummaryEmployeesButtonsProps> = ({timesheetId, handleExportPdf, isClickToExport}) => {
 
     const setPopup: any = useContext(PopupContext)
 
@@ -23,7 +25,7 @@ export const SummaryEmployeesButtons: React.FC<ISummaryEmployeesButtonsProps> = 
 
     return (
         <div className="summary-item__footer--col add-cols">
-            <button className="summary-item__button btn is-grey is-transparent" type="button">
+            <button disabled={isClickToExport} onClick={handleExportPdf} className="summary-item__button btn is-grey is-transparent" type="button">
                 <Translate>summary_page.main.export_monthly_summary</Translate>
                 <svg width="16" height="17" viewBox="0 0 16 17">
                     <use xlinkHref="#download"></use>

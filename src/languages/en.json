@@ -244,8 +244,8 @@
       "pending_first": "Pending first",
       "total": "Total",
       "export_monthly_summary": "Export monthly summary",
-      "approved": "Approved",
-      "rejected": "Rejected",
+      "approved": "Approve",
+      "rejected": "Reject",
       "rejected_first": "Rejected first",
       "approved_first": "Approved first",
       "progress_first": "In progress first",
@@ -323,5 +323,7 @@
   "ascending": "Ascending",
   "descending": "Descending",
   "newest_first": "Newest first",
-  "oldest_first": "Oldest first"
+  "oldest_first": "Oldest first",
+
+  "time_was_used": "You are trying to add already occupied time, please change it and try again"
 }

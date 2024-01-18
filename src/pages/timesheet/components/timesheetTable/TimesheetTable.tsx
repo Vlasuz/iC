@@ -9,8 +9,6 @@ interface ITimesheetTableProps {
 
 export const TimesheetTable: React.FC<ITimesheetTableProps> = ({rowsSelectValue}) => {
 
-    const taskList = useSelector((state: any) => state.toolkit.tasks)
-
     const [filterByProjectName, setFilterByProjectName] = useState("")
     const [filterByProjectDescription, setFilterByProjectDescription] = useState("")
     const [sortByDate, setSortByDate] = useState("ASC")
@@ -29,7 +27,6 @@ export const TimesheetTable: React.FC<ITimesheetTableProps> = ({rowsSelectValue}
                         />
                         <TimesheetTableBody
                             rowsSelectValue={rowsSelectValue}
-                            taskList={taskList}
                             filterByProjectName={filterByProjectName}
                             filterByProjectDescription={filterByProjectDescription}
                             sortByDate={sortByDate}

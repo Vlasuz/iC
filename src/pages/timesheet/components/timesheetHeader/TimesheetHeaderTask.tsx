@@ -23,7 +23,7 @@ export const TimesheetHeaderTask: React.FC<ITimesheetHeaderTaskProps> = ({setTas
         <div className="section-table__add-task--text">
             <label>
                 <span className="input_placeholder">
-                    <input type="text" onChange={handleChangeInput} value={valueField} name="task" required className="input"/>
+                    <input spellCheck type="text" onChange={handleChangeInput} value={valueField} name="task" required className="input"/>
                     <span className="placeholder">
                         {!valueField && <Translate>timesheet_page.top_part.tell_us_your_secrets</Translate>}
                     </span>

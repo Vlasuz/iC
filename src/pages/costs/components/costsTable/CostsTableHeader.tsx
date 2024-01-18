@@ -1,10 +1,11 @@
-import React, {useEffect, useState} from 'react'
+import React, {useContext, useEffect, useState} from 'react'
 import {useClickOutside} from "../../../../hooks/ClickOutside";
 import {IUser} from "../../../../models";
 import {useSelector} from "react-redux";
 import {useScrollTopValue} from "../../../../hooks/ScrollTopValue";
 import {Translate} from "../../../../components/translate/Translate";
 import {TableHeaderProjects} from "../../../../components/table/TableHeaderProjects";
+import {FixedTopEdit} from "../../../timesheet/Timesheet";
 
 interface ICostsTableHeaderProps {
     setFilterByProjectName: any
@@ -24,12 +25,14 @@ export const CostsTableHeader: React.FC<ICostsTableHeaderProps> = ({setFilterByP
     const [isActiveCost, setIsActiveCost] = useState(false)
     const activeCost = useClickOutside(setIsActiveCost)
 
-    const userData: IUser = useSelector((state: any) => state.toolkit.user)
+    const setIsFixedEditBlock: any = useContext(FixedTopEdit)
 
-    const [chosenProjectName, setChosenProjectName]: any = useState<string>("")
-    const [chosenProjectDescription, setChosenProjectDescription]: any = useState("")
-    const [searchProjectName, setSearchProjectName] = useState("")
-    const [searchProjectDescription, setSearchProjectDescription] = useState("")
+    // const userData: IUser = useSelector((state: any) => state.toolkit.user)
+
+    // const [chosenProjectName, setChosenProjectName]: any = useState<string>("")
+    // const [chosenProjectDescription, setChosenProjectDescription]: any = useState("")
+    // const [searchProjectName, setSearchProjectName] = useState("")
+    // const [searchProjectDescription, setSearchProjectDescription] = useState("")
     const [chosenSortDate, setChosenSortDate] = useState("ASC")
     const [chosenSortCost, setChosenSortCost] = useState("")
 

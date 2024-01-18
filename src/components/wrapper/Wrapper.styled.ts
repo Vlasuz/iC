@@ -14,5 +14,6 @@ export const WrapperStyled = styled.div`
 
   .main__inner section {
     transition: padding-bottom .4s ease;
+    width: 100%;
   }
 `

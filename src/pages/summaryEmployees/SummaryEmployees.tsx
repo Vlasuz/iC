@@ -14,6 +14,7 @@ import {Translate} from "../../components/translate/Translate";
 import axios from "axios";
 import {getApiLink} from "../../functions/getApiLink";
 import {SummaryEmployeesExportTable} from "./components/SummaryEmployeesExportTable";
+import {SummaryEmployeesExportTableCosts} from "./components/SummaryEmployeesExportTableCosts";
 
 interface ISummaryEmployeesProps {
 
@@ -110,6 +111,7 @@ export const SummaryEmployees: React.FC<ISummaryEmployeesProps> = () => {
         <SummaryEmployeesStyled className="summary">
 
             <SummaryEmployeesExportTable isOpen={isOpen} statisticForTable={statisticForTable}/>
+            <SummaryEmployeesExportTableCosts isOpen={isOpen} statisticForTable={statisticForTable}/>
 
             <div className="summary__header page-header">
                 <div className="page-header__col">

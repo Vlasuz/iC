@@ -2,12 +2,13 @@ import React, {useEffect, useState} from 'react'
 import {IExpense, IStatistic, ITask, ITimesheet, IUser} from "../../../models";
 import {useSelector} from "react-redux";
 import {MonthNumber} from "../../../constants/MonthNumber";
+import {currency} from "../../../constants/Currency";
 
 interface ICostsExportTableProps {
-
+    user?: any
 }
 
-export const CostsExportTable: React.FC<ICostsExportTableProps> = () => {
+export const CostsExportTable: React.FC<ICostsExportTableProps> = ({user}) => {
 
     const expenseList: IExpense[] = useSelector((state: any) => state.toolkit.expenses)
     const chosenTimesheet: ITimesheet = useSelector((state: any) => state.toolkit.chosenTimesheet)
@@ -71,7 +72,7 @@ export const CostsExportTable: React.FC<ICostsExportTableProps> = () => {
 
             <tr>
                 <td style={{paddingBottom: "20px", ...styleForOtherText}} colSpan={3}>
-                    <b>Name:</b> {userData.first_name} {userData.last_name}</td>
+                    <b>Name:</b> {user?.first_name ?? userData.first_name} {user?.last_name ?? userData.last_name}</td>
                 <td style={{textAlign: "right", paddingBottom: "20px", ...styleForOtherText}} colSpan={3}>
 
                     <b>{chosenTimesheet?.date && MonthNumber()[+`${chosenTimesheet?.date[3]}${chosenTimesheet?.date[4]}`].translate},
@@ -185,7 +186,7 @@ export const CostsExportTable: React.FC<ICostsExportTableProps> = () => {
                 <td></td>
                 <td></td>
                 <td style={{textAlign: "right", paddingTop: "20px", ...styleForOtherText}} colSpan={4}>
-                    <b>Total: {timesheetStatistic.all_sum} EUR</b></td>
+                    <b>Total: {timesheetStatistic.all_sum} {currency}</b></td>
             </tr>
 
             {chosenTimesheet.status === "approve" && <>

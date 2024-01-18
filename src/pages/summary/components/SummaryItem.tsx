@@ -1,14 +1,14 @@
 import React, {useContext, useEffect, useRef, useState} from 'react'
 import {useNavigate} from "react-router-dom";
 import {useClickOutside} from "../../../hooks/ClickOutside";
-import {IStatistic, ITimesheet} from "../../../models";
+import {IStatistic, ITask, ITimesheet} from "../../../models";
 import {MonthNumber} from "../../../constants/MonthNumber";
 import axios from "axios";
 import {getApiLink} from "../../../functions/getApiLink";
 import {PopupContext} from "../../../App";
 import {getBearer} from "../../../functions/getBearer";
 import {setChosenTimesheet, setExpenses, setTasks} from "../../../storage/toolkit";
-import { useDispatch } from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {mergeAndSum} from "../../../functions/mergeAndSumStatistic";
 import {Translate} from "../../../components/translate/Translate";
 import {useTranslation} from "react-i18next";
@@ -16,25 +16,32 @@ import { currency } from '../../../constants/Currency';
 import {SummaryExportTable} from "./SummaryExportTable";
 import html2pdf from "html2pdf.js";
 import { GetAccessToken } from '../../../api/GetAccessToken';
+import {SummaryExportTableTimesheet} from "./SummaryExportTableTimesheet";
+import {SetTasks} from "../../../api/SetTasks";
+import {SetExpenses} from "../../../api/SetExpenses";
+import {da} from "date-fns/locale";
+import {CostsExportTable} from "../../costs/components/CostsExportTable";
+import {SetStatistic} from "../../../api/SetStatistic";
 
 interface ISummaryItemProps {
     dataItem: ITimesheet
+    isOpen: boolean
 }
 
-export const SummaryItem: React.FC<ISummaryItemProps> = ({dataItem}) => {
+export const SummaryItem: React.FC<ISummaryItemProps> = ({dataItem, isOpen}) => {
 
     const [statisticList, setStatisticList]: any = useState()
-    const [isActive, setIsActive] = useState(false)
+    const [isActive, setIsActive] = useState(isOpen)
     const [statistic, setStatistic] = useState<IStatistic | undefined>()
 
-    const {rootEl} = useClickOutside(setIsActive)
+    // const {rootEl} = useClickOutside(setIsActive)
 
     const setPopup: any = useContext(PopupContext)
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
     const itemDate = dataItem.updated_at;
-    const dateForStatus = `${itemDate[3] + itemDate[4]} / ${itemDate[0] + itemDate[1]} / 20${itemDate[6] + itemDate[7]}`
+    const dateForStatus = itemDate.replaceAll(".", " / ")
 
     const { t } = useTranslation();
 
@@ -117,49 +124,56 @@ export const SummaryItem: React.FC<ISummaryItemProps> = ({dataItem}) => {
 
         // @ts-ignore
         return function(table, filename = 'excel-export') {
-            if (!table.nodeType) table = document.getElementById(table);
+            if (!table.nodeType) table = document.querySelectorAll(table);
 
-            const ctx = {
-                worksheet: filename,
-                table: table.innerHTML
-            };
+            table.forEach((tbl: any) => {
 
-            const blob = new Blob([format(template, ctx)], {
-                type: 'application/vnd.ms-excel'
-            });
+                const ctx = {
+                    worksheet: filename,
+                    table: tbl.innerHTML
+                };
 
-            // @ts-ignore
-            if (navigator.msSaveBlob) {
+                const blob = new Blob([format(template, ctx)], {
+                    type: 'application/vnd.ms-excel'
+                });
+
                 // @ts-ignore
-                navigator.msSaveBlob(blob, filename + '.xls');
-            } else {
-                const link = document.createElement('a');
-                if (link.download !== undefined) {
-                    const url = URL.createObjectURL(blob);
-                    link.setAttribute('href', url);
-                    link.setAttribute('download', filename + '.xls');
-                    link.style.visibility = 'hidden';
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
+                if (navigator.msSaveBlob) {
+                    // @ts-ignore
+                    navigator.msSaveBlob(blob, filename + '.xls');
+                } else {
+                    const link = document.createElement('a');
+                    if (link.download !== undefined) {
+                        const url = URL.createObjectURL(blob);
+                        link.setAttribute('href', url);
+                        link.setAttribute('download', filename + '.xls');
+                        link.style.visibility = 'hidden';
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                    }
                 }
-            }
+
+            })
+
+
         };
     }();
 
     const convertToPDF = () => {
-        const element = document.getElementById('my-table');
+        const element = document.querySelectorAll('.table-to-download-excel');
 
-        const opt = {
-            margin: 0.5,
-            filename: 'timesheet.pdf',
-            image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { scale: 6 },
-            jsPDF: { unit: 'in', format: 'letter', } // Установка альбомной ориентации
-        };
+        element.forEach(tbl => {
+            const opt = {
+                margin: 0.5,
+                filename: 'timesheet.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 6 },
+                jsPDF: { unit: 'in', format: 'letter', } // Установка альбомной ориентации
+            };
 
-        html2pdf().from(element).set(opt).save();
-        setIsClickToExport(false)
+            html2pdf().from(tbl).set(opt).save();
+        })
     };
 
     const [isClickToExport, setIsClickToExport] = useState(false)
@@ -168,16 +182,25 @@ export const SummaryItem: React.FC<ISummaryItemProps> = ({dataItem}) => {
     }
 
     useEffect(() => {
-        isClickToExport && convertToPDF()
-        isClickToExport && tableToExcel('my-table', "timesheet")
+
+        SetStatistic(dispatch, dataItem.id)
+        SetExpenses(dispatch, dataItem.id)
+        SetTasks(dispatch, dataItem.id).then(_ => {
+            setIsClickToExport(false)
+
+            isClickToExport && convertToPDF()
+            isClickToExport && tableToExcel('.table-to-download-excel', "timesheet")
+        })
+
     }, [isClickToExport])
 
     return (
         <>
             {isClickToExport && <SummaryExportTable statistic={statistic} statisticList={statisticList}/>}
-            {/*<SummaryExportTable statistic={statistic} statisticList={statisticList}/>*/}
+            {isClickToExport && <SummaryExportTableTimesheet />}
+            {isClickToExport && <CostsExportTable />}
 
-            <div ref={rootEl} className={`summary-item ${isActive && "is-active"}`}>
+            <div className={`summary-item ${isActive && "is-active"}`}>
                 <div onClick={_ => setIsActive(prev => !prev)} className="summary-item__target">
                     <h2 className="summary-item__target--name">
                         {

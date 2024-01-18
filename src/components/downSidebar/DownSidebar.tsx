@@ -3,7 +3,7 @@ import SimpleBar from "simplebar-react";
 import {DownSidebarStyled} from "./DownSidebar.styled";
 import axios from "axios";
 import {getApiLink} from "../../functions/getApiLink";
-import {IComment, ITimesheet, IUser} from "../../models";
+import {IComment, ITask, ITimesheet, IUser} from "../../models";
 import {useSelector} from "react-redux";
 import {mergeAndSum} from "../../functions/mergeAndSumStatistic";
 import {Translate} from "../translate/Translate";
@@ -17,6 +17,7 @@ interface IDownSidebarProps {
     type: string
     comments: IComment[]
     setComments: any
+    amountStatistic: number
 }
 
 interface IElement {
@@ -37,6 +38,7 @@ export const DownSidebar: React.FC<IDownSidebarProps> = ({
                                                              type,
                                                              comments,
                                                              setComments,
+                                                             amountStatistic,
                                                          }) => {
 
 
@@ -90,6 +92,8 @@ export const DownSidebar: React.FC<IDownSidebarProps> = ({
         })
     }
 
+
+    console.log(amountStatistic)
     return (
         <DownSidebarStyled className={`down-sidebar ${isActive && "is-active"}`}>
 
@@ -115,7 +119,7 @@ export const DownSidebar: React.FC<IDownSidebarProps> = ({
                                 <Translate>timesheet_page.down_sidebar.total_for_month</Translate>
                             </span>
                             <div className="down-sidebar__total-target--value">
-                                {statisticAllAmount} {isCostPage ? currency : "hours"}
+                                {amountStatistic ? amountStatistic : statisticAllAmount} {isCostPage ? currency : <Translate>timesheet_page.down_sidebar.hours</Translate>}
                             </div>
                         </div>
                     </div>
@@ -143,7 +147,7 @@ export const DownSidebar: React.FC<IDownSidebarProps> = ({
                                                             </p>
                                                         </div>
                                                         {com.user.id === userData.id && <button className={"delete-comment"}
-                                                                 onClick={_ => handleDeleteComment(com.id)}>–</button>}
+                                                                                                onClick={_ => handleDeleteComment(com.id)}>–</button>}
                                                         <button type="button" onClick={_ => {
                                                             setTextValue(`@${com.user.first_name} ${com.user.last_name}. `)
                                                             setAnswerCommentUser(com.user)

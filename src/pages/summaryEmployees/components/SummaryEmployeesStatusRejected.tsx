@@ -9,7 +9,7 @@ interface ISummaryEmployeesStatusRejectedProps {
 export const SummaryEmployeesStatusRejected: React.FC<ISummaryEmployeesStatusRejectedProps> = ({itemData}) => {
 
     const itemDate = itemData.updated_at;
-    const dateForStatus = `${itemDate[3] + itemDate[4]} / ${itemDate[0] + itemDate[1]} / 20${itemDate[6] + itemDate[7]}`
+    const dateForStatus = itemDate.replaceAll(".", " / ")
 
     return (
         <div className="summary-item__footer--col">

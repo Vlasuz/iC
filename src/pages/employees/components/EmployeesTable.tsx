@@ -11,6 +11,7 @@ import {useScrollTopValue} from "../../../hooks/ScrollTopValue";
 import {Translate} from "../../../components/translate/Translate";
 import {EmployeesStatus} from "../../../constants/EmployeesStatus";
 import {RowsPerPage} from "../../../constants/RowsPerPage";
+import {EmployeesTableExport} from "./EmployeesTableExport";
 
 interface IEmployeesTableProps {
     searchValue: string
@@ -98,36 +99,7 @@ export const EmployeesTable: React.FC<IEmployeesTableProps> = ({searchValue, row
     return (
         <div className="section-table__main table-employees">
 
-            <table id="my-table" className="table-to-download-excel">
-                <thead>
-                <tr>
-                    <th style={{background: "#FF0A00", padding: "5px 10px"}}>№</th>
-                    <th style={{background: "#FF0A00", padding: "5px 10px"}}>Name</th>
-                    <th style={{background: "#FF0A00", padding: "5px 10px"}}>Position of company</th>
-                    <th style={{background: "#FF0A00", padding: "5px 10px"}}>Status</th>
-                    <th style={{background: "#FF0A00", padding: "5px 10px"}}>Email</th>
-                    <th style={{background: "#FF0A00", padding: "5px 10px"}}>Projects</th>
-                    <th style={{background: "#FF0A00", padding: "5px 10px"}}>Phone number</th>
-                    <th style={{background: "#FF0A00", padding: "5px 10px"}}>Vacations</th>
-                </tr>
-                </thead>
-                <tbody>
-                {
-                    employees?.map((employee, index) =>
-                            <tr key={employee.id}>
-                                <td style={{padding: "10px 20px"}}>{index + 1}</td>
-                                <td style={{padding: "10px 20px"}}>{employee.first_name} {employee.last_name}</td>
-                                <td style={{padding: "10px 20px"}}>{employee.role}</td>
-                                <td style={{padding: "10px 20px"}}>{employee.status}</td>
-                                <td style={{padding: "10px 20px"}}>{employee.email}</td>
-                                <td style={{padding: "10px 20px"}}>{employee.projects.length}</td>
-                                <td style={{padding: "10px 20px"}}>{employee.phone}</td>
-                                <td style={{padding: "10px 20px"}}>{employee.holidays}</td>
-                            </tr>
-                        )
-                }
-                </tbody>
-            </table>
+            <EmployeesTableExport/>
 
             <SimpleBar autoHide={false}>
                 <div className="section-table__main--container">

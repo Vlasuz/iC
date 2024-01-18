@@ -2,7 +2,7 @@ import React, {useContext, useEffect, useRef, useState} from 'react'
 import {IExpense, ITask, ITimesheet} from "../../../../models";
 import {useDispatch, useSelector} from "react-redux";
 import {PopupContext} from "../../../../App";
-import { BlockToEdit } from '../../Costs';
+import { BlockToEdit, FixedTopEdit } from '../../Costs';
 import {addExpense, addTask} from "../../../../storage/toolkit";
 import {getBearer} from "../../../../functions/getBearer";
 import axios from "axios";
@@ -13,9 +13,10 @@ import {SetStatistic} from "../../../../api/SetStatistic";
 interface ICostsTableItemProps {
     item: IExpense,
     index: number
+    itemToEdit: any
 }
 
-export const CostsTableItem: React.FC<ICostsTableItemProps> = ({item, index}) => {
+export const CostsTableItem: React.FC<ICostsTableItemProps> = ({item, index, itemToEdit}) => {
 
     const [isOpenContextMenu, setIsOpenContextMenu] = useState(false)
     const [menuPosition, setMenuPosition] = useState({})
@@ -40,7 +41,7 @@ export const CostsTableItem: React.FC<ICostsTableItemProps> = ({item, index}) =>
         }
     }, []);
 
-    const isApprove = chosenTimesheet.status === "approve"
+    const isApprove = chosenTimesheet.status === "waiting"
 
     const handleOpenContextMenu = (e: React.MouseEvent<HTMLDivElement>) => {
         if(isApprove) return;
@@ -76,52 +77,56 @@ export const CostsTableItem: React.FC<ICostsTableItemProps> = ({item, index}) =>
 
     const setPopup: any = useContext(PopupContext)
     const editTask: any = useContext(BlockToEdit)
+    const setIsFixedEditBlock: any = useContext(FixedTopEdit)
 
-    const handleEditTask = (data: IExpense) => {
+    const handleEditTask = (data?: IExpense) => {
         editTask(item)
         setIsOpenContextMenu(false)
+        setIsFixedEditBlock(true)
 
-        document.querySelector(".main__inner")?.closest(".simplebar-content-wrapper")?.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
-        document.querySelector(".main__inner")?.closest(".main")?.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
+        // document.querySelector(".main__inner")?.closest(".simplebar-content-wrapper")?.scrollTo({
+        //     top: 0,
+        //     behavior: 'smooth'
+        // });
+        // document.querySelector(".main__inner")?.closest(".main")?.scrollTo({
+        //     top: 0,
+        //     behavior: 'smooth'
+        // });
     }
     const handleRemoveTask = (data: IExpense) => {
         setPopup({popup: "remove-expense-popup", data})
         setIsOpenContextMenu(false)
     }
     const handleDuplicateTask = (data: IExpense) => {
-        // dispatch(addExpense(data))
+        handleEditTask()
 
         getBearer("post")
         axios.post(getApiLink(`/api/expense/duplicate/?expense_id=${item.id}`)).then(({data}) => {
 
             SetStatistic(dispatch, chosenTimesheet.id)
             SetExpenses(dispatch, chosenTimesheet.id)
+
         })
         setIsOpenContextMenu(false)
     }
 
     return (
-        <div className="section-table__row drop-down-2" ref={rowBlock} onContextMenu={handleOpenContextMenu}>
+        <div className="section-table__row drop-down-2" ref={rowBlock} style={{border: itemToEdit?.id === item?.id ? "1px solid red" : ""}} onContextMenu={handleOpenContextMenu}>
             <div className="section-table__param visible-on-mob">
                 <span>
                     {index + 1}
                 </span>
                 <span>
-                    {/*{item.date}*/}
-                    {item.date.substring(3, 5)}/{item.date.substring(0, 2)}/{item.date.substring(6)}
+                    {/*{item.date.substring(0, 2)}/{item.date.substring(3, 5)}/{item.date.substring(6)}*/}
+                    {item.date.replaceAll(".", "/")}
                 </span>
             </div>
             <div className="section-table__param visible-on-desktop is-center">
                 {index + 1}
             </div>
             <div className="section-table__param visible-on-desktop is-center">
-                {item.date.substring(3, 5)}/{item.date.substring(0, 2)}/{item.date.substring(6)}
+                {/*{item.date.substring(0, 2)}/{item.date.substring(3, 5)}/{item.date.substring(6)}*/}
+                {item.date.replaceAll(".", "/")}
             </div>
             <div className="section-table__param is-center">
                 {item.project.name}

@@ -1,7 +1,7 @@
-import React, {useEffect, useState} from 'react'
+import React, {useContext, useEffect, useState} from 'react'
 import {IExpense, ITask, ITimesheet} from "../../../../models";
+import { AmountStatistic } from '../../Costs';
 import {CostsTableItem} from "./CostsTableItem";
-import {useSelector} from "react-redux";
 
 interface ICostsTableBodyProps {
     list: IExpense[]
@@ -10,13 +10,35 @@ interface ICostsTableBodyProps {
     sortByDate: string
     sortByCost: string
     rowsSelectValue: any
+    itemToEdit: any
 }
 
-export const CostsTableBody: React.FC<ICostsTableBodyProps> = ({list, filterByProjectName, filterByProjectDescription, sortByDate, sortByCost, rowsSelectValue}) => {
+export const CostsTableBody: React.FC<ICostsTableBodyProps> = ({
+                                                                   list,
+                                                                   filterByProjectName,
+                                                                   filterByProjectDescription,
+                                                                   sortByDate,
+                                                                   sortByCost,
+                                                                   rowsSelectValue,
+                                                                   itemToEdit
+                                                               }) => {
 
     let numberOfRow = 0
 
-    const chosenTimesheet: ITimesheet = useSelector((state: any) => state.toolkit.chosenTimesheet)
+    const setAmountStatistic: any = useContext(AmountStatistic)
+
+    useEffect(() => {
+        let finalAmountHours = 0;
+
+        const newList = list
+            ?.filter(item => filterByProjectName ? item.project.name === filterByProjectName : item)
+            ?.filter(item => filterByProjectDescription ? item.project.description === filterByProjectDescription : item)
+            ?.reduce((sum: number, cur: any) => {
+                return sum + cur.sum;
+            }, finalAmountHours);
+
+        setAmountStatistic(newList)
+    }, [list, filterByProjectName, filterByProjectDescription]);
 
     return (
         <div className="section-table__body">
@@ -41,7 +63,7 @@ export const CostsTableBody: React.FC<ICostsTableBodyProps> = ({list, filterByPr
 
                         if (rowsSelectValue?.value && rowsSelectValue?.value < numberOfRow) return "";
 
-                        return <CostsTableItem key={item.id} item={item} index={index}/>
+                        return <CostsTableItem key={item.id} itemToEdit={itemToEdit} item={item} index={index}/>
                     })
             }
 

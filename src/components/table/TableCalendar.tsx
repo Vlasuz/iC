@@ -1,10 +1,9 @@
 import React, {useEffect, useRef, useState} from 'react'
 import DatePicker from "react-datepicker";
-import { useSelector } from 'react-redux';
-import {log} from "util";
+import { uk, enUS } from 'date-fns/locale';
 import {useClickOutside} from "../../hooks/ClickOutside";
-import {ITimesheet} from "../../models";
 import {Translate} from "../translate/Translate";
+import { useSelector } from 'react-redux';
 
 interface ITableCalendarProps {
     setDateData: any
@@ -69,6 +68,8 @@ export const TableCalendar: React.FC<ITableCalendarProps> = ({setDateData, dateD
 
     const {rootEl} = useClickOutside(setCalendarOpen)
 
+    const language: string = useSelector((state: any) => state.toolkit.language)
+
     return (
         <div className="section-table__add-task--set-date">
 
@@ -85,6 +86,8 @@ export const TableCalendar: React.FC<ITableCalendarProps> = ({setDateData, dateD
                     open={calendarOpen}
                     onInputClick={() => handleCalendarToggle({type: "input", data: !calendarOpen})}
                     onChange={handleSetDate}
+                    dateFormat="dd/MM/yyyy"
+                    locale={language === "en" ? enUS : uk}
                 />
             </div>
 

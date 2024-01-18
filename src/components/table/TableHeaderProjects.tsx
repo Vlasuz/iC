@@ -14,7 +14,13 @@ interface ITableHeaderProjectsProps {
     icon: string
 }
 
-export const TableHeaderProjects: React.FC<ITableHeaderProjectsProps> = ({setFilterByProjectName, setIsActiveBlock, isActiveBlock, title, icon}) => {
+export const TableHeaderProjects: React.FC<ITableHeaderProjectsProps> = ({
+                                                                             setFilterByProjectName,
+                                                                             setIsActiveBlock,
+                                                                             isActiveBlock,
+                                                                             title,
+                                                                             icon
+                                                                         }) => {
 
     const [searchProjectName, setSearchProjectName]: any = useState<string>("")
     const [chosenProjectName, setChosenProjectName]: any = useState<string>("")
@@ -52,6 +58,22 @@ export const TableHeaderProjects: React.FC<ITableHeaderProjectsProps> = ({setFil
                 <div className="project-popup">
                     <SimpleBar className="project-popup__body">
                         <div className="project-popup__block">
+                            {/*<h2>*/}
+                            {/*    All projects*/}
+                            {/*</h2>*/}
+                            <ul className="project-popup__list">
+                                <li className={`project-popup__item ${chosenProjectName === "" ? " is-active" : ""}`}>
+                                    <a onClick={_ => {
+                                        setChosenProjectName("")
+                                        setFilterByProjectName("")
+                                        setIsActiveBlock(false)
+                                    }}>
+                                        <Translate>employees_admin.table.all_projects</Translate>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div className="project-popup__block">
                             <h2><Translate>timesheet_page.popups.commonly_used</Translate></h2>
                             <ul className="project-popup__list">
 
@@ -60,7 +82,8 @@ export const TableHeaderProjects: React.FC<ITableHeaderProjectsProps> = ({setFil
                                         ?.slice(0, 5)
                                         ?.filter(item => item.project.name.toLowerCase().includes(searchProjectName.toLowerCase()) || item.project.description.toLowerCase().includes(searchProjectName.toLowerCase()))
                                         ?.map(item =>
-                                            <li key={item.project.id} className={`project-popup__item ${chosenProjectName === item.project.name ? " is-active" : ""}`}>
+                                            <li key={item.project.id}
+                                                className={`project-popup__item ${chosenProjectName === item.project.name ? " is-active" : ""}`}>
                                                 <a onClick={_ => {
                                                     setChosenProjectName((prev: string) => prev === item.project.name ? "" : item.project.name)
                                                     setFilterByProjectName((prev: string) => prev === item.project.name ? "" : item.project.name)
@@ -82,7 +105,8 @@ export const TableHeaderProjects: React.FC<ITableHeaderProjectsProps> = ({setFil
                                     userData.projects_list
                                         ?.filter(item => item.name.toLowerCase().includes(searchProjectName.toLowerCase()) || item.description.toLowerCase().includes(searchProjectName.toLowerCase()))
                                         ?.map(item =>
-                                            <li key={item.id} className={`project-popup__item ${chosenProjectName === item.name ? " is-active" : ""}`}>
+                                            <li key={item.id}
+                                                className={`project-popup__item ${chosenProjectName === item.name ? " is-active" : ""}`}>
                                                 <a onClick={_ => {
                                                     setChosenProjectName((prev: string) => prev === item.name ? "" : item.name)
                                                     setFilterByProjectName((prev: string) => prev === item.name ? "" : item.name)
@@ -98,10 +122,12 @@ export const TableHeaderProjects: React.FC<ITableHeaderProjectsProps> = ({setFil
                     </SimpleBar>
                     <div className="project-popup__search">
                         <label>
-                            <input onChange={e => setSearchProjectName(e.target.value)} value={searchProjectName} type="search" name="search" className="input"
+                            <input onChange={e => setSearchProjectName(e.target.value)} value={searchProjectName}
+                                   type="search" name="search" className="input"
                                    required/>
                             <span className="placeholder">
-                                            {!searchProjectName && <Translate>timesheet_page.top_part.search_a_project</Translate>}
+                                            {!searchProjectName &&
+                                                <Translate>timesheet_page.top_part.search_a_project</Translate>}
                                         </span>
                         </label>
                         <button className="btn is-grey">

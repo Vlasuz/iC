@@ -7,9 +7,10 @@ import {currency} from "../../../constants/Currency";
 interface ISummaryExportTableProps {
     statistic: IStatistic | undefined
     statisticList: any
+    user?: any
 }
 
-export const SummaryExportTable: React.FC<ISummaryExportTableProps> = ({statistic, statisticList}) => {
+export const SummaryExportTable: React.FC<ISummaryExportTableProps> = ({statistic, statisticList, user}) => {
 
     const chosenTimesheet: ITimesheet = useSelector((state: any) => state.toolkit.chosenTimesheet)
     const userData: IUser = useSelector((state: any) => state.toolkit.user)
@@ -27,7 +28,7 @@ export const SummaryExportTable: React.FC<ISummaryExportTableProps> = ({statisti
     console.log(statistic)
 
     return (
-        statisticList.length && <table
+        statistic && statisticList.length && <table
             border={2}
             style={{
                 borderCollapse: 'collapse',
@@ -65,7 +66,7 @@ export const SummaryExportTable: React.FC<ISummaryExportTableProps> = ({statisti
 
             <tr>
                 <td style={{paddingBottom: "20px", ...styleForOtherText}} colSpan={3}>
-                    <b>Name:</b> {userData.first_name} {userData.last_name}</td>
+                    <b>Name:</b> {user?.first_name ?? userData.first_name} {user?.last_name ?? userData.last_name}</td>
                 <td style={{textAlign: "right", paddingBottom: "20px", ...styleForOtherText}} colSpan={2}>
 
                     <b>{chosenTimesheet?.date && MonthNumber()[+`${chosenTimesheet?.date[3]}${chosenTimesheet?.date[4]}`].translate},

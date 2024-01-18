@@ -24,6 +24,8 @@ interface ITimesheetProps {
 }
 
 export const BlockToEdit: any = createContext(null)
+export const FixedTopEdit: any = createContext(null)
+export const AmountStatistic: any = createContext(null)
 
 export const Timesheet: React.FC<ITimesheetProps> = () => {
 
@@ -86,51 +88,60 @@ export const Timesheet: React.FC<ITimesheetProps> = () => {
         setComments(chosenTimesheet?.comments)
     }, [chosenTimesheet])
 
+    const [isFixedEditBlock, setIsFixedEditBlock] = useState(false)
+    const [amountStatistic, setAmountStatistic] = useState(0)
 
     return (
-        <BlockToEdit.Provider value={setItemToEdit}>
-            <TimesheetStyled style={{paddingBottom: isOpenDownSidebar ? "270px" : "80px"}} className="section-table">
+        <AmountStatistic.Provider value={setAmountStatistic}>
+            <FixedTopEdit.Provider value={setIsFixedEditBlock}>
+                <BlockToEdit.Provider value={setItemToEdit}>
+                    <TimesheetStyled style={{paddingBottom: isOpenDownSidebar ? "270px" : "80px"}}
+                                     className="section-table">
 
+                        <TimesheetExportTable/>
 
-                <TimesheetExportTable/>
+                        <TimesheetHeader isFixedEditBlock={isFixedEditBlock} itemToEdit={itemToEdit}/>
 
+                        <TimesheetTable rowsSelectValue={rowsSelectValue}/>
 
-                <TimesheetHeader itemToEdit={itemToEdit}/>
-
-                <TimesheetTable rowsSelectValue={rowsSelectValue}/>
-
-                <div className="section-table__footer">
-                    <div className="section-table__row-per-page visible-on-mob">
+                        <div className="section-table__footer">
+                            <div className="section-table__row-per-page visible-on-mob">
                         <span>
                             <Translate>timesheet_page.table.rows_per_page</Translate>
                         </span>
 
-                        <CustomSelect list={RowsPerPage()} defaultValue={RowsPerPage()[3]} selectValue={rowsSelectValue}
-                                      setSelectedItem={setRowsSelectValue}/>
-                    </div>
-                    {rowsSelectValue.value !== 0 && taskList.length > rowsSelectValue.value &&
-                        <button onClick={handleAddRows} className="section-table__see-more btn" type="button">
-                            <Translate>timesheet_page.table.show_more</Translate>
-                            <svg width="15" height="15" viewBox="0 0 15 15">
-                                <use xlinkHref="#arrow-down"></use>
-                            </svg>
-                        </button>}
-                    <div className="section-table__row-per-page visible-on-desktop">
+                                <CustomSelect list={RowsPerPage()} defaultValue={RowsPerPage()[3]}
+                                              selectValue={rowsSelectValue}
+                                              setSelectedItem={setRowsSelectValue}/>
+                            </div>
+                            {rowsSelectValue.value !== 0 && taskList.length > rowsSelectValue.value &&
+                                <button onClick={handleAddRows} className="section-table__see-more btn" type="button">
+                                    <Translate>timesheet_page.table.show_more</Translate>
+                                    <svg width="15" height="15" viewBox="0 0 15 15">
+                                        <use xlinkHref="#arrow-down"></use>
+                                    </svg>
+                                </button>}
+                            <div className="section-table__row-per-page visible-on-desktop">
                         <span>
                             <Translate>timesheet_page.table.rows_per_page</Translate>
                         </span>
 
-                        <CustomSelect list={RowsPerPage()} defaultValue={RowsPerPage()[3]} selectValue={rowsSelectValue}
-                                      setSelectedItem={setRowsSelectValue}/>
-                    </div>
-                </div>
-            </TimesheetStyled>
+                                <CustomSelect list={RowsPerPage()} defaultValue={RowsPerPage()[3]}
+                                              selectValue={rowsSelectValue}
+                                              setSelectedItem={setRowsSelectValue}/>
+                            </div>
+                        </div>
+                    </TimesheetStyled>
 
-            <DownSidebar comments={comments}
-                         setComments={setComments}
-                type={"timesheet"} statisticAllAmount={statistic?.all_hours ?? timesheetStatistic.all_hours}
-                         statisticAllElements={statistic?.tasks ?? timesheetStatistic.tasks}
-                         setIsOpenDownSidebar={setIsOpenDownSidebar}/>
-        </BlockToEdit.Provider>
+                    <DownSidebar comments={comments}
+                                 amountStatistic={amountStatistic}
+                                 setComments={setComments}
+                                 type={"timesheet"}
+                                 statisticAllAmount={statistic?.all_hours ?? timesheetStatistic.all_hours}
+                                 statisticAllElements={statistic?.tasks ?? timesheetStatistic.tasks}
+                                 setIsOpenDownSidebar={setIsOpenDownSidebar}/>
+                </BlockToEdit.Provider>
+            </FixedTopEdit.Provider>
+        </AmountStatistic.Provider>
     )
 }

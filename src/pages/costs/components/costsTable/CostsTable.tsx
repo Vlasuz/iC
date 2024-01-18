@@ -1,13 +1,14 @@
-import React, {useEffect, useState} from 'react'
+import React, {createContext, useEffect, useState} from 'react'
 import {CostsTableHeader} from "./CostsTableHeader";
 import {CostsTableBody} from "./CostsTableBody";
 import {useSelector} from "react-redux";
 
 interface ICostsTableProps {
     rowsSelectValue: any
+    itemToEdit: any
 }
 
-export const CostsTable: React.FC<ICostsTableProps> = ({rowsSelectValue}) => {
+export const CostsTable: React.FC<ICostsTableProps> = ({rowsSelectValue, itemToEdit}) => {
 
     const expenseList = useSelector((state: any) => state.toolkit.expenses)
 
@@ -17,28 +18,29 @@ export const CostsTable: React.FC<ICostsTableProps> = ({rowsSelectValue}) => {
     const [sortByCost, setSortByCost] = useState("")
 
     return (
-        <div className="section-table__main table-costs add-border">
-            <div className="section-table__main--container" data-simplebar data-simplebar-auto-hide="false">
-                <div className="section-table__main--wrapper">
+            <div className="section-table__main table-costs add-border">
+                <div className="section-table__main--container" data-simplebar data-simplebar-auto-hide="false">
+                    <div className="section-table__main--wrapper">
 
-                    <CostsTableHeader
-                        setFilterByProjectName={setFilterByProjectName}
-                        setFilterByProjectDescription={setFilterByProjectDescription}
-                        setSortByDate={setSortByDate}
-                        setSortByCost={setSortByCost}
-                    />
+                        <CostsTableHeader
+                            setFilterByProjectName={setFilterByProjectName}
+                            setFilterByProjectDescription={setFilterByProjectDescription}
+                            setSortByDate={setSortByDate}
+                            setSortByCost={setSortByCost}
+                        />
 
-                    <CostsTableBody
-                        list={expenseList}
-                        rowsSelectValue={rowsSelectValue}
-                        filterByProjectName={filterByProjectName}
-                        filterByProjectDescription={filterByProjectDescription}
-                        sortByDate={sortByDate}
-                        sortByCost={sortByCost}
-                    />
+                        <CostsTableBody
+                            list={expenseList}
+                            rowsSelectValue={rowsSelectValue}
+                            filterByProjectName={filterByProjectName}
+                            filterByProjectDescription={filterByProjectDescription}
+                            sortByDate={sortByDate}
+                            sortByCost={sortByCost}
+                            itemToEdit={itemToEdit}
+                        />
 
+                    </div>
                 </div>
             </div>
-        </div>
     )
 }

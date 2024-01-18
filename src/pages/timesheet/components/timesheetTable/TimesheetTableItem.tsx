@@ -6,7 +6,7 @@ import {addTask} from "../../../../storage/toolkit";
 import axios from "axios";
 import {getApiLink} from "../../../../functions/getApiLink";
 import {getBearer} from "../../../../functions/getBearer";
-import {BlockToEdit} from "../../Timesheet";
+import {BlockToEdit, FixedTopEdit} from "../../Timesheet";
 import {SetTasks} from "../../../../api/SetTasks";
 import {SetStatistic} from "../../../../api/SetStatistic";
 import {Translate} from "../../../../components/translate/Translate";
@@ -41,7 +41,7 @@ export const TimesheetTableItem: React.FC<ITimesheetTableItemProps> = ({taskItem
         }
     }, []);
 
-    const isApprove = chosenTimesheet.status === "approve"
+    const isApprove = chosenTimesheet.status === "waiting"
 
     const handleOpenContextMenu = (e: React.MouseEvent<HTMLDivElement>) => {
         if(isApprove) return;
@@ -78,30 +78,36 @@ export const TimesheetTableItem: React.FC<ITimesheetTableItemProps> = ({taskItem
 
     const setPopup: any = useContext(PopupContext)
     const editTask: any = useContext(BlockToEdit)
+    const setIsFixedEditBlock: any = useContext(FixedTopEdit)
 
-    const handleEditTask = (data: ITask) => {
+    const handleEditTask = (data?: ITask) => {
         editTask(taskItem)
         setIsOpenContextMenu(false)
 
-        document.querySelector(".main__inner")?.closest(".simplebar-content-wrapper")?.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
-        document.querySelector(".main__inner")?.closest(".main")?.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
+        setIsFixedEditBlock(true)
+
+        // document.querySelector(".main__inner")?.closest(".simplebar-content-wrapper")?.scrollTo({
+        //     top: 0,
+        //     behavior: 'smooth'
+        // });
+        // document.querySelector(".main__inner")?.closest(".main")?.scrollTo({
+        //     top: 0,
+        //     behavior: 'smooth'
+        // });
     }
     const handleRemoveTask = (data: ITask) => {
         setPopup({popup: "remove-task-popup", data})
         setIsOpenContextMenu(false)
     }
     const handleDuplicateTask = (data: ITask) => {
+        handleEditTask()
+
         getBearer("post")
         axios.post(getApiLink(`/api/task/duplicate/?task_id=${taskItem.id}`)).then(({data}) => {
 
             SetStatistic(dispatch, chosenTimesheet.id)
             SetTasks(dispatch, chosenTimesheet.id)
+
         })
         setIsOpenContextMenu(false)
     }
