@@ -119,7 +119,7 @@ export const DownSidebar: React.FC<IDownSidebarProps> = ({
                                 <Translate>timesheet_page.down_sidebar.total_for_month</Translate>
                             </span>
                             <div className="down-sidebar__total-target--value">
-                                {amountStatistic ? amountStatistic : statisticAllAmount} {isCostPage ? currency : <Translate>timesheet_page.down_sidebar.hours</Translate>}
+                                {amountStatistic ? amountStatistic.toFixed(2) : statisticAllAmount?.toFixed(2)} {isCostPage ? currency : <Translate>timesheet_page.down_sidebar.hours</Translate>}
                             </div>
                         </div>
                     </div>

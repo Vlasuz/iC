@@ -48,11 +48,20 @@ export const CostsTableBody: React.FC<ICostsTableBodyProps> = ({
                     ?.filter(item => filterByProjectName ? item.project.name === filterByProjectName : item)
                     ?.filter(item => filterByProjectDescription ? item.project.description === filterByProjectDescription : item)
                     // ?.filter(item => chosenTimesheet?.date && MonthNumber()[`${item?.date[3]}${item?.date[4]}`] === MonthNumber()[`${chosenTimesheet.date[3]}${chosenTimesheet.date[4]}`])
-                    ?.sort((a, b) => {
-                        const c = new Date(`${a.created_at[3]}${a.created_at[4]}.${a.created_at[0]}${a.created_at[1]}.${a.created_at[6]}${a.created_at[7]}`).getTime();
-                        const d = new Date(`${b.created_at[3]}${b.created_at[4]}.${b.created_at[0]}${b.created_at[1]}.${b.created_at[6]}${b.created_at[7]}`).getTime();
-                        return sortByDate !== "" ? sortByDate === "ASC" ? d - c : c - d : c;
+                    .sort((a, b) => {
+                        // Пример: "21.01.16 20:07:55"
+                        const aDate: any = new Date(`20${a.date} ${a.created_at.slice(9).replaceAll("/", ".")}`);
+                        const bDate: any = new Date(`20${b.date} ${b.created_at.slice(9).replaceAll("/", ".")}`);
+
+                        // Проверка на корректность дат
+                        if (isNaN(aDate.getTime()) || isNaN(bDate.getTime())) {
+                            // Обработка случая, когда даты некорректны
+                            return 0;
+                        }
+
+                        return sortByDate !== "" ? (sortByDate === "DESC" ? aDate - bDate : bDate - aDate) : 0;
                     })
+
                     ?.sort((a, b) => {
                         const c = +a.sum;
                         const d = +b.sum;

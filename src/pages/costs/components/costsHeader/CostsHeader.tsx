@@ -188,6 +188,31 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit, isFixedEdi
     const {rootEl} = useClickOutside(setIsOpenInputSearch)
 
 
+    const handleSetValueCost = (e: any) => {
+        const enteredValue = e.target.value.replace(',', '.');
+
+        // Преобразуем строку в число с использованием точки в качестве разделителя десятичной части
+        const floatValue = parseFloat(enteredValue.replace(',', '.'));
+
+        // Проверяем, является ли введенное значение числом и не превышает ли количество знаков после точки 2
+        if (!isNaN(floatValue)) {
+            // Ограничиваем количество знаков после точки до 2
+            const limitedFloatValue = parseFloat(floatValue.toFixed(2).replace(',', '.'));
+
+            // Обновляем значение в поле ввода
+            // @ts-ignore
+            setCostData(limitedFloatValue.toString());
+        } else {
+            // Если введенное значение не является числом, просто обновляем значение
+            setCostData(enteredValue.replace(',', '.'));
+        }
+    }
+
+
+
+
+
+
     return (
         <div
             className={`section-table__header ${isFixedEditBlock && "animate-to-show"} ${isCancelEdit && "animate-to-hide"}`}>
@@ -294,8 +319,8 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit, isFixedEdi
                             </div>
                             <div className="section-table__add-costs--cost">
                                 <div className="input_placeholder">
-                                    <input type="number" spellCheck name="cost" value={costData === 0 ? "" : costData}
-                                           onChange={e => setCostData(+e.target.value)} required className="input"/>
+                                    <input type="number" spellCheck name="cost" value={costData === 0 ? "" : String(costData).replace(',', '.')}
+                                           onChange={handleSetValueCost} required className="input"/>
                                     <div className="placeholder">
                                         {!costData && <Translate>costs_page.table.cost</Translate>}
                                     </div>

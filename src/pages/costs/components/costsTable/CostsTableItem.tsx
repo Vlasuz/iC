@@ -9,6 +9,7 @@ import axios from "axios";
 import {getApiLink} from "../../../../functions/getApiLink";
 import {SetExpenses} from "../../../../api/SetExpenses";
 import {SetStatistic} from "../../../../api/SetStatistic";
+import {Translate} from "../../../../components/translate/Translate";
 
 interface ICostsTableItemProps {
     item: IExpense,
@@ -98,6 +99,8 @@ export const CostsTableItem: React.FC<ICostsTableItemProps> = ({item, index, ite
 
     }
 
+    console.log(item)
+
     return (
         <div className="section-table__row drop-down-2" ref={rowBlock} style={{border: itemToEdit?.id === item?.id ? "1px solid red" : ""}} onContextMenu={handleOpenContextMenu}>
             <div className="section-table__param visible-on-mob">
@@ -137,7 +140,7 @@ export const CostsTableItem: React.FC<ICostsTableItemProps> = ({item, index, ite
                             <svg width="15" height="16" viewBox="0 0 15 16">
                                 <use xlinkHref="#edit"></use>
                             </svg>
-                            Edit
+                            <Translate>timesheet_page.popups.edit</Translate>
                         </a>
                     </li>
                     <li>
@@ -145,7 +148,7 @@ export const CostsTableItem: React.FC<ICostsTableItemProps> = ({item, index, ite
                             <svg width="15" height="16" viewBox="0 0 15 16">
                                 <use xlinkHref="#copy"></use>
                             </svg>
-                            Duplicate
+                            <Translate>timesheet_page.popups.duplicate</Translate>
                         </a>
                     </li>
                     <li>
@@ -153,7 +156,7 @@ export const CostsTableItem: React.FC<ICostsTableItemProps> = ({item, index, ite
                             <svg width="15" height="16" viewBox="0 0 15 16">
                                 <use xlinkHref="#trash"></use>
                             </svg>
-                            Delete
+                            <Translate>timesheet_page.popups.delete</Translate>
                         </a>
                     </li>
                 </ul>

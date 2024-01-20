@@ -18,6 +18,7 @@ import {SetTasks} from "../../../../api/SetTasks";
 import {SetStatistic} from "../../../../api/SetStatistic";
 import {Translate} from "../../../../components/translate/Translate";
 import {toast} from "react-toastify";
+import {useTranslation} from "react-i18next";
 
 interface ITimesheetHeaderProps {
     itemToEdit: ITask | undefined
@@ -26,6 +27,8 @@ interface ITimesheetHeaderProps {
 }
 
 export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({itemToEdit, isFixedEditBlock, itemToDuplicate}) => {
+
+    const { t } = useTranslation();
 
     const isEditTask = itemToEdit && Object.keys(itemToEdit).length
     const isDuplicateTask = itemToDuplicate && Object.keys(itemToDuplicate).length
@@ -84,7 +87,9 @@ export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({itemToEdit, is
         } else {
             getBearer("post")
             axios.post(getApiLink("/api/task/add/"), timesheetRequest).then(({data}) => {
-                if (data?.status === false) return;
+                if (data?.status === false) {
+                    return toast.error(`${t("time_was_used")}`);
+                }
 
                 SetStatistic(dispatch, chosenTimesheet.id)
 
