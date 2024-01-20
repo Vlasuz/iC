@@ -62,7 +62,7 @@ export const TableHeaderProjects: React.FC<ITableHeaderProjectsProps> = ({
                             {/*    All projects*/}
                             {/*</h2>*/}
                             <ul className="project-popup__list">
-                                <li className={`project-popup__item ${chosenProjectName === "" ? " is-active" : ""}`}>
+                                <li className={`project-popup__item project-popup__item_all ${chosenProjectName === "" ? " is-active" : ""}`}>
                                     <a onClick={_ => {
                                         setChosenProjectName("")
                                         setFilterByProjectName("")
@@ -78,7 +78,7 @@ export const TableHeaderProjects: React.FC<ITableHeaderProjectsProps> = ({
                             <ul className="project-popup__list">
 
                                 {
-                                    userData.recent_projects
+                                    userData.used_projects
                                         ?.slice(0, 5)
                                         ?.filter(item => item.project.name.toLowerCase().includes(searchProjectName.toLowerCase()) || item.project.description.toLowerCase().includes(searchProjectName.toLowerCase()))
                                         ?.map(item =>

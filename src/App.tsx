@@ -74,8 +74,8 @@ function App() {
             return;
         }
 
-        SetTasks(dispatch, chosenTimesheet.id)
-        SetExpenses(dispatch, chosenTimesheet.id)
+        SetTasks(dispatch, chosenTimesheet?.id)
+        SetExpenses(dispatch, chosenTimesheet?.id)
         SetTimesheet(dispatch)
         SetNotifications(dispatch)
         SetSummaryEmployees(dispatch)

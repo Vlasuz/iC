@@ -85,4 +85,91 @@ export const TimesheetStyled = styled.section`
   .section-table__footer {
     //padding-bottom: 23px !important;
   }
+
+  .section-table__main.table-timesheet .section-table__row-block:not(:last-child) .section-table__row-block--list .section-table__row:last-child {
+    border: none;
+  }
+
+  @keyframes scrollToShow {
+    from {
+      top: -150px
+    }
+    to {
+      top: 0px
+    }
+  }
+  @keyframes scrollToHide {
+    from {
+      top: 0px
+    }
+    to {
+      top: -150px
+    }
+  }
+
+  @media screen and (max-width: 992px) {
+    @keyframes scrollToShow {
+      from {
+        top: -220px
+      }
+      to {
+        top: 65px
+      }
+    }
+    @keyframes scrollToHide {
+      from {
+        top: 65px
+      }
+      to {
+        top: -220px
+      }
+    }
+  }
+
+  .section-table__header.animate-to-show {
+    transition: var(--transition-width, none);
+    animation: scrollToShow .4s ease forwards;
+    position: fixed;
+    left: var(--aside-width, 230px);
+    width: calc(100% - var(--aside-width, 230px));
+    margin-bottom: -15px;
+    background: #f2f3f7;
+    box-shadow: 0 0 10px #ccc;
+
+    padding: 20px 50px 20px 50px;
+
+    @media screen and (max-width: 1440px) {
+      padding: 20px;
+      padding-left: 40px;
+    }
+    @media screen and (max-width: 992px) {
+      padding: 20px;
+    }
+
+    @media screen and (max-width: 1440px) {
+      left: var(--aside-width, 330px);
+      width: calc(100% - var(--aside-width, 330px));
+    }
+    @media screen and (max-width: 1200px) {
+      left: var(--aside-width, 230px);
+      width: calc(100% - var(--aside-width, 230px));
+    }
+    @media screen and (max-width: 992px) {
+      left: 0;
+      width: 100%;
+    }
+
+  }
+  .section-table__header.animate-to-show.animate-to-hide {
+    animation: scrollToHide .4s ease forwards;
+  }
+
+  &.fixed-edit-block {
+    padding-top: 100px;
+    transition: all .3s ease;
+
+    @media screen and (max-width: 992px) {
+      padding-top: 150px;
+    }
+  }
 `

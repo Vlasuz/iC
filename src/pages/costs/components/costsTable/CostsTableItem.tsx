@@ -2,7 +2,7 @@ import React, {useContext, useEffect, useRef, useState} from 'react'
 import {IExpense, ITask, ITimesheet} from "../../../../models";
 import {useDispatch, useSelector} from "react-redux";
 import {PopupContext} from "../../../../App";
-import { BlockToEdit, FixedTopEdit } from '../../Costs';
+import {BlockToDuplicate, BlockToEdit, FixedTopEdit } from '../../Costs';
 import {addExpense, addTask} from "../../../../storage/toolkit";
 import {getBearer} from "../../../../functions/getBearer";
 import axios from "axios";
@@ -22,6 +22,7 @@ export const CostsTableItem: React.FC<ICostsTableItemProps> = ({item, index, ite
     const [menuPosition, setMenuPosition] = useState({})
 
     const chosenTimesheet: ITimesheet = useSelector((state: any) => state.toolkit.chosenTimesheet)
+    const expenseList: IExpense[] = useSelector((state: any) => state.toolkit.expenses)
 
     const dispatch = useDispatch()
 
@@ -41,7 +42,7 @@ export const CostsTableItem: React.FC<ICostsTableItemProps> = ({item, index, ite
         }
     }, []);
 
-    const isApprove = chosenTimesheet.status === "waiting"
+    const isApprove = chosenTimesheet?.status === "waiting"
 
     const handleOpenContextMenu = (e: React.MouseEvent<HTMLDivElement>) => {
         if(isApprove) return;
@@ -56,8 +57,8 @@ export const CostsTableItem: React.FC<ICostsTableItemProps> = ({item, index, ite
             }, 300)
         } else {
             setMenuPosition({
-                top: e.pageY > 600 ? e.pageY - 160 : e.pageY + 10 + "px",
-                left: e.pageX + 10 + "px"
+                top: e.screenY > 470 ? e.screenY - 160 : e.screenY - 100 + "px",
+                left: e.screenX + 50 + "px"
             })
         }
 
@@ -77,44 +78,31 @@ export const CostsTableItem: React.FC<ICostsTableItemProps> = ({item, index, ite
 
     const setPopup: any = useContext(PopupContext)
     const editTask: any = useContext(BlockToEdit)
+    const duplicateTask: any = useContext(BlockToDuplicate)
     const setIsFixedEditBlock: any = useContext(FixedTopEdit)
 
     const handleEditTask = (data?: IExpense) => {
         editTask(item)
         setIsOpenContextMenu(false)
         setIsFixedEditBlock(true)
-
-        // document.querySelector(".main__inner")?.closest(".simplebar-content-wrapper")?.scrollTo({
-        //     top: 0,
-        //     behavior: 'smooth'
-        // });
-        // document.querySelector(".main__inner")?.closest(".main")?.scrollTo({
-        //     top: 0,
-        //     behavior: 'smooth'
-        // });
     }
     const handleRemoveTask = (data: IExpense) => {
         setPopup({popup: "remove-expense-popup", data})
         setIsOpenContextMenu(false)
     }
     const handleDuplicateTask = (data: IExpense) => {
-        handleEditTask()
 
-        getBearer("post")
-        axios.post(getApiLink(`/api/expense/duplicate/?expense_id=${item.id}`)).then(({data}) => {
-
-            SetStatistic(dispatch, chosenTimesheet.id)
-            SetExpenses(dispatch, chosenTimesheet.id)
-
-        })
+        duplicateTask(item)
+        setIsFixedEditBlock(true)
         setIsOpenContextMenu(false)
+
     }
 
     return (
         <div className="section-table__row drop-down-2" ref={rowBlock} style={{border: itemToEdit?.id === item?.id ? "1px solid red" : ""}} onContextMenu={handleOpenContextMenu}>
             <div className="section-table__param visible-on-mob">
                 <span>
-                    {index + 1}
+                    {expenseList.length - index}
                 </span>
                 <span>
                     {/*{item.date.substring(0, 2)}/{item.date.substring(3, 5)}/{item.date.substring(6)}*/}
@@ -122,7 +110,7 @@ export const CostsTableItem: React.FC<ICostsTableItemProps> = ({item, index, ite
                 </span>
             </div>
             <div className="section-table__param visible-on-desktop is-center">
-                {index + 1}
+                {expenseList.length - index}
             </div>
             <div className="section-table__param visible-on-desktop is-center">
                 {/*{item.date.substring(0, 2)}/{item.date.substring(3, 5)}/{item.date.substring(6)}*/}

@@ -138,7 +138,7 @@ export const SummaryEmployees: React.FC<ISummaryEmployeesProps> = () => {
                                        className="section-table__search--input" value={valueSearch}
                                        onChange={e => setValueSearch(e.target.value)}/>
                                 <span className="placeholder">
-                                    <Translate>employees_page.table.search_an_employee</Translate>
+                                    {!valueSearch && <Translate>employees_page.table.search_an_employee</Translate>}
                                 </span>
                             </label>
                             <button className="section-table__search--submit btn is-grey is-min-on-mob" type="submit">
@@ -162,24 +162,36 @@ export const SummaryEmployees: React.FC<ISummaryEmployeesProps> = () => {
 
                 {
                     summaryEmployees?.favourite
-                        ?.filter(item => item.user.last_name.toLowerCase().includes(valueSearch.toLowerCase()))
+                        ?.filter(item => `${item.user.first_name} ${item.user.last_name}`.toLowerCase().includes(valueSearch.toLowerCase()))
                         ?.sort((a: any, b: any) => b.status === statusSortValue.value ? 1 : -1)
+                        ?.sort((a: any, b: any) => {
+                            const lastNameA = a.user.last_name.toLowerCase();
+                            const lastNameB = b.user.last_name.toLowerCase();
+
+                            return lastNameB > lastNameA ? -1 : 1;
+                        })
                         ?.map(item => <SummaryEmployeesItem setStatisticForTable={setStatisticForTable} key={item.id}
                                                             isFavorite={true} itemData={item}/>)
                 }
                 {
                     summaryEmployees?.all
-                        ?.filter(item => item.user.last_name.toLowerCase().includes(valueSearch.toLowerCase()))
+                        ?.filter(item => `${item.user.first_name} ${item.user.last_name}`.toLowerCase().includes(valueSearch.toLowerCase()))
                         ?.sort((a: any, b: any) => b.status === statusSortValue.value ? 1 : -1)
+                        ?.sort((a: any, b: any) => {
+                            const lastNameA = a.user.last_name.toLowerCase();
+                            const lastNameB = b.user.last_name.toLowerCase();
+
+                            return lastNameB > lastNameA ? -1 : 1;
+                        })
                         ?.map(item => {
-                            numberOfRow += 1
+                            numberOfRow += 1;
 
                             // if (rowsSelectValue?.value && rowsSelectValue?.value < numberOfRow) return "";
 
-                            return <SummaryEmployeesItem setStatisticForTable={setStatisticForTable} key={item.id}
-                                                         itemData={item}/>
+                            return <SummaryEmployeesItem setStatisticForTable={setStatisticForTable} key={item.id} itemData={item}/>
                         })
                 }
+
 
             </div>
             {/*<div className="summary__footer page-footer">*/}

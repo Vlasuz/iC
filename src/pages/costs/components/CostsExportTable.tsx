@@ -152,7 +152,7 @@ export const CostsExportTable: React.FC<ICostsExportTableProps> = ({user}) => {
                                 textAlign: "center",
                                 ...tdStyle
                             }}>
-                                {expenseItem.date.substring(3, 5)}/{expenseItem.date.substring(0, 2)}/{expenseItem.date.substring(6)}
+                                {expenseItem.date.replaceAll(".", "/")}
                             </td>
                             <td style={{
                                 textAlign: "center",
@@ -189,7 +189,7 @@ export const CostsExportTable: React.FC<ICostsExportTableProps> = ({user}) => {
                     <b>Total: {timesheetStatistic.all_sum} {currency}</b></td>
             </tr>
 
-            {chosenTimesheet.status === "approve" && <>
+            {chosenTimesheet?.status === "approve" && <>
                 <tr></tr>
 
                 <tr>

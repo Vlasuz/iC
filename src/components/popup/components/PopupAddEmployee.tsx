@@ -202,7 +202,11 @@ export const PopupAddEmployee: React.FC<IPopupAddNewEmployeeProps> = ({data, set
                                 <span id="checked-projects" data-none-text="None" data-text-1="project"
                                       data-text-2="projects" data-all-text="All projects">
                                     {chosenProjects?.length === projects.length ?
-                                        <Translate>employees_admin.others.all_projects</Translate> : `${chosenProjects?.length} `} <Translate>employees_admin.others.projects</Translate>
+                                        <Translate>employees_admin.others.all_projects</Translate> : `${chosenProjects?.length} `}
+
+                                    {
+                                        chosenProjects?.length !== projects.length && <Translate>employees_admin.others.projects</Translate>
+                                    }
                                 </span>
                                 <svg width="10" height="7" viewBox="0 0 10 7">
                                     <use xlinkHref="#drop-down-arrow"></use>

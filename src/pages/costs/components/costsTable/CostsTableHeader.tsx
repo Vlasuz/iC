@@ -191,6 +191,17 @@ export const CostsTableHeader: React.FC<ICostsTableHeaderProps> = ({setFilterByP
                                         <Translate>descending</Translate>
                                     </a>
                                 </li>
+                                <li className={chosenSortCost === "" ? "is-active" : ""}>
+                                    <a onClick={_ => {
+                                        setSortByCost("")
+                                        setChosenSortCost("")
+                                        setChosenSortDate("")
+                                        setSortByDate("")
+                                        setIsActiveCost(false)
+                                    }}>
+                                        <Translate>all_costs</Translate>
+                                    </a>
+                                </li>
                             </ul>
                         </div>
                     </div>

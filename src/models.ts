@@ -9,7 +9,7 @@ export interface IUser {
     status: string
     id?: string
     holidays: number
-    recent_projects: {
+    used_projects: {
         count: number
         project: IProject
     }[]
@@ -31,6 +31,7 @@ export interface IExpense {
     date: string
     sum: number
     project: IProject
+    created_at: string
 }
 
 export interface IComment {

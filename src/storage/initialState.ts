@@ -28,5 +28,7 @@ export const initialState = () => {
         notifications: <INotification[]>[],
 
         projects: <IProject[]>[],
+
+        summaryEmployeeIdOpen: <string>{},
     }
 }

@@ -6,7 +6,7 @@ import {addTask} from "../../../../storage/toolkit";
 import axios from "axios";
 import {getApiLink} from "../../../../functions/getApiLink";
 import {getBearer} from "../../../../functions/getBearer";
-import {BlockToEdit, FixedTopEdit} from "../../Timesheet";
+import {BlockToDuplicate, BlockToEdit, FixedTopEdit} from "../../Timesheet";
 import {SetTasks} from "../../../../api/SetTasks";
 import {SetStatistic} from "../../../../api/SetStatistic";
 import {Translate} from "../../../../components/translate/Translate";
@@ -21,6 +21,7 @@ export const TimesheetTableItem: React.FC<ITimesheetTableItemProps> = ({taskItem
     const [isOpenContextMenu, setIsOpenContextMenu] = useState(false)
     const [menuPosition, setMenuPosition] = useState({})
 
+    const taskList: ITask[] = useSelector((state: any) => state.toolkit.tasks)
     const chosenTimesheet: ITimesheet = useSelector((state: any) => state.toolkit.chosenTimesheet)
 
     const dispatch = useDispatch()
@@ -41,12 +42,14 @@ export const TimesheetTableItem: React.FC<ITimesheetTableItemProps> = ({taskItem
         }
     }, []);
 
-    const isApprove = chosenTimesheet.status === "waiting"
+    const isApprove = chosenTimesheet?.status === "waiting"
 
     const handleOpenContextMenu = (e: React.MouseEvent<HTMLDivElement>) => {
         if(isApprove) return;
 
         e.preventDefault()
+
+        console.log(e.screenX)
 
         if (isOpenContextMenu) {
             setTimeout(() => {
@@ -57,8 +60,8 @@ export const TimesheetTableItem: React.FC<ITimesheetTableItemProps> = ({taskItem
             }, 300)
         } else {
             setMenuPosition({
-                top: e.pageY > 470 ? e.pageY - 160 : e.pageY + 10 + "px",
-                left: e.pageX + 10 + "px"
+                top: e.screenY > 470 ? e.screenY - 160 : e.screenY - 100 + "px",
+                left: e.screenX + 50 + "px"
             })
         }
 
@@ -78,6 +81,7 @@ export const TimesheetTableItem: React.FC<ITimesheetTableItemProps> = ({taskItem
 
     const setPopup: any = useContext(PopupContext)
     const editTask: any = useContext(BlockToEdit)
+    const duplicateTask: any = useContext(BlockToDuplicate)
     const setIsFixedEditBlock: any = useContext(FixedTopEdit)
 
     const handleEditTask = (data?: ITask) => {
@@ -85,31 +89,17 @@ export const TimesheetTableItem: React.FC<ITimesheetTableItemProps> = ({taskItem
         setIsOpenContextMenu(false)
 
         setIsFixedEditBlock(true)
-
-        // document.querySelector(".main__inner")?.closest(".simplebar-content-wrapper")?.scrollTo({
-        //     top: 0,
-        //     behavior: 'smooth'
-        // });
-        // document.querySelector(".main__inner")?.closest(".main")?.scrollTo({
-        //     top: 0,
-        //     behavior: 'smooth'
-        // });
     }
     const handleRemoveTask = (data: ITask) => {
         setPopup({popup: "remove-task-popup", data})
         setIsOpenContextMenu(false)
     }
     const handleDuplicateTask = (data: ITask) => {
-        handleEditTask()
 
-        getBearer("post")
-        axios.post(getApiLink(`/api/task/duplicate/?task_id=${taskItem.id}`)).then(({data}) => {
-
-            SetStatistic(dispatch, chosenTimesheet.id)
-            SetTasks(dispatch, chosenTimesheet.id)
-
-        })
+        duplicateTask(taskItem)
+        setIsFixedEditBlock(true)
         setIsOpenContextMenu(false)
+
     }
 
     return (
@@ -117,7 +107,7 @@ export const TimesheetTableItem: React.FC<ITimesheetTableItemProps> = ({taskItem
              className={`section-table__row drop-down-2 ${numberOfRow % 2 ? " even" : " odd"}` + (isOpenContextMenu ? " is-active-drop-down" : "")}>
             <div className={`section-table__param is-center ${numberOfRow % 2 ? " even" : " odd"}`}>
                 <span>
-                    {numberOfRow}
+                    {taskList?.length - numberOfRow + 1}
                 </span>
             </div>
             <div className="section-table__param">

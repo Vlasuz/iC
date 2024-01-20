@@ -48,8 +48,8 @@ export const LoginForm: React.FC<ILoginFormProps> = () => {
             setIsLoading(false)
             if (data?.status !== undefined) return setErrorMessage(data.message)
 
-            setCookie("access_token_ic", data.access_token, isStayLoggedIn ? undefined : 1800)
-            setCookie("refresh_token_ic", data.refresh_token, isStayLoggedIn ? undefined : 1800)
+            setCookie("access_token_ic", data.access_token, isStayLoggedIn ? undefined : 86400)
+            setCookie("refresh_token_ic", data.refresh_token, isStayLoggedIn ? undefined : 86400)
 
             dispatch(setUser(data.user))
             dispatch(setAccessToken(data.access_token))

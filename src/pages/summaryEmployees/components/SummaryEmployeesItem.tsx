@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react'
+import React, {useContext, useEffect, useRef, useState} from 'react'
 
 import {IStatistic, ISummaryEmployee, ITimesheet} from "../../../models";
 import {getApiLink} from "../../../functions/getApiLink";
@@ -10,7 +10,7 @@ import {SummaryEmployeesStatusRejected} from "./SummaryEmployeesStatusRejected";
 import {SummaryEmployeesStatusApproved} from "./SummaryEmployeesStatusApproved";
 import axios from "axios";
 import {getBearer} from "../../../functions/getBearer";
-import {setChosenTimesheet} from "../../../storage/toolkit";
+import {setChosenTimesheet, setSummaryEmployeeIdOpen} from "../../../storage/toolkit";
 import {NavLink} from "react-router-dom";
 import {mergeAndSum} from '../../../functions/mergeAndSumStatistic';
 import {useTranslation} from "react-i18next";
@@ -53,12 +53,37 @@ export const SummaryEmployeesItem: React.FC<ISummaryEmployeesItemProps> = ({
                                                                                setStatisticForTable
                                                                            }) => {
 
-    const [isOpen, setIsOpen] = useState(false)
+    const summaryEmployees: ISummaryEmployee = useSelector((state: any) => state.toolkit.summaryEmployees)
+    const summaryEmployeeIdOpen: string = useSelector((state: any) => state.toolkit.summaryEmployeeIdOpen)
+
+    const [isOpen, setIsOpen] = useState(summaryEmployeeIdOpen === itemData?.id)
     const [isFavoriteLocal, setIsFavoriteLocal] = useState(isFavorite)
     const [statistic, setStatistic] = useState<IStatistic | undefined>()
     const [isChangeDecision, setIsChangeDecision] = useState(false)
+    const [isLoad, setIsLoad] = useState(false)
 
-    const summaryEmployees: ISummaryEmployee = useSelector((state: any) => state.toolkit.summaryEmployees)
+    const summaryBlock: any = useRef(null)
+
+    useEffect(() => {
+        if (isLoad) return;
+
+        setIsLoad(true)
+
+        if (summaryEmployeeIdOpen === itemData?.id && summaryBlock.current) {
+            // Получаем высоту элемента
+            const blockHeight = summaryBlock.current.getBoundingClientRect().y;
+
+
+            // Прокручиваем пользователя к элементу
+            setTimeout(() => {
+                // @ts-ignore
+                summaryBlock.current.closest(".simplebar-content-wrapper").scrollTo({
+                    top: blockHeight, // Вычитаем высоту элемента, чтобы цель оказалась выше визуальной области
+                    behavior: 'smooth', // Для плавной прокрутки
+                });
+            }, 200)
+        }
+    }, [isLoad, summaryEmployeeIdOpen, itemData]);
 
     const dispatch = useDispatch()
 
@@ -70,13 +95,12 @@ export const SummaryEmployeesItem: React.FC<ISummaryEmployeesItemProps> = ({
     const {t} = useTranslation();
 
 
-
     const [isClickToExport, setIsClickToExport] = useState(false)
     const handleExportPdf = () => {
         setIsClickToExport(true)
     }
 
-    const tableToExcel = function() {
+    const tableToExcel = function () {
         const uri = 'data:application/vnd.ms-excel;base64,';
         const template = `
     <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
@@ -89,20 +113,20 @@ export const SummaryEmployeesItem: React.FC<ISummaryEmployeesItemProps> = ({
     </html>`;
 
         // @ts-ignore
-        const base64 = function(s) {
+        const base64 = function (s) {
             return window.btoa(unescape(encodeURIComponent(s)));
         };
 
         // @ts-ignore
-        const format = function(s, c) {
+        const format = function (s, c) {
             // @ts-ignore
-            return s.replace(/{(\w+)}/g, function(m, p) {
+            return s.replace(/{(\w+)}/g, function (m, p) {
                 return c[p];
             });
         };
 
         // @ts-ignore
-        return function(table, filename = 'excel-export') {
+        return function (table, filename = 'excel-export') {
             if (!table.nodeType) table = document.querySelectorAll(table);
 
             table.forEach((tbl: any) => {
@@ -146,9 +170,9 @@ export const SummaryEmployeesItem: React.FC<ISummaryEmployeesItemProps> = ({
             const opt = {
                 margin: 0.5,
                 filename: 'timesheet.pdf',
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 6 },
-                jsPDF: { unit: 'in', format: 'letter', } // Установка альбомной ориентации
+                image: {type: 'jpeg', quality: 0.98},
+                html2canvas: {scale: 6},
+                jsPDF: {unit: 'in', format: 'letter',} // Установка альбомной ориентации
             };
 
             html2pdf().from(tbl).set(opt).save();
@@ -160,7 +184,7 @@ export const SummaryEmployeesItem: React.FC<ISummaryEmployeesItemProps> = ({
     useEffect(() => {
         console.log(count, isClickToExport)
 
-        if(isClickToExport && count === 3) {
+        if (isClickToExport && count === 3) {
 
             setTimeout(() => {
                 convertToPDF()
@@ -175,7 +199,7 @@ export const SummaryEmployeesItem: React.FC<ISummaryEmployeesItemProps> = ({
     }, [count, isClickToExport])
 
     useEffect(() => {
-        if(!isClickToExport) return;
+        if (!isClickToExport) return;
 
         setCount(0)
 
@@ -193,7 +217,6 @@ export const SummaryEmployeesItem: React.FC<ISummaryEmployeesItemProps> = ({
         })
 
     }, [isClickToExport])
-
 
 
     const timesheetStatus: any = {
@@ -218,7 +241,7 @@ export const SummaryEmployeesItem: React.FC<ISummaryEmployeesItemProps> = ({
     useEffect(() => {
 
         getBearer('get')
-        axios.get(getApiLink(`/api/timesheet/statistics/?timesheet_id=${itemData.id}`)).then(({data}) => {
+        axios.get(getApiLink(`/api/timesheet/statistics/?timesheet_id=${itemData?.id}`)).then(({data}) => {
             setStatistic(data)
         }).catch(er => console.log(getApiLink("/api/timesheet/statistics/?timesheet_id"), er))
 
@@ -228,22 +251,27 @@ export const SummaryEmployeesItem: React.FC<ISummaryEmployeesItemProps> = ({
         setIsChangeDecision(false)
     }, [summaryEmployees])
 
-    const handleFavorite = () => {
-        setIsOpen(prev => !prev)
-        setIsFavoriteLocal(prev => !prev)
+    const handleOpenItem = (e: any) => {
+        if(e.target.closest('.summary-item__user--favorite')) return;
 
-        SetFavoriteEmployee(dispatch, itemData?.user.id ?? "")
+        setIsOpen(prev => !prev)
+        dispatch(setSummaryEmployeeIdOpen(isOpen ? "" : itemData.id))
     }
 
-    const handleOpenItem = () => {
-        setIsOpen(prev => !prev)
+    const handleFavorite = () => {
+        setIsFavoriteLocal(prev => !prev)
+
+        SetFavoriteEmployee(dispatch, itemData?.user?.id ?? "")
     }
 
     const footerBlockByStatus: any = {
         "progress": "",
-        "waiting": <SummaryEmployeesButtons isClickToExport={isClickToExport} handleExportPdf={handleExportPdf} timesheetId={itemData.id}/>,
-        "reject": <SummaryEmployeesChangeDecision isClickToExport={isClickToExport} handleExportPdf={handleExportPdf} itemData={itemData}/>,
-        "approve": <SummaryEmployeesChangeDecision isClickToExport={isClickToExport} handleExportPdf={handleExportPdf} itemData={itemData}/>,
+        "waiting": <SummaryEmployeesButtons isClickToExport={isClickToExport} handleExportPdf={handleExportPdf}
+                                            timesheetId={itemData.id}/>,
+        "reject": <SummaryEmployeesChangeDecision isClickToExport={isClickToExport} handleExportPdf={handleExportPdf}
+                                                  itemData={itemData}/>,
+        "approve": <SummaryEmployeesChangeDecision isClickToExport={isClickToExport} handleExportPdf={handleExportPdf}
+                                                   itemData={itemData}/>,
     }
     const footerStatusesByStatus: any = {
         "progress": <div className="summary-item__footer--col"/>,
@@ -273,11 +301,12 @@ export const SummaryEmployeesItem: React.FC<ISummaryEmployeesItemProps> = ({
 
     return (
         <>
-            {isClickToExport && <SummaryExportTable user={itemData.user} statistic={statistic} statisticList={statisticList}/>}
-            {isClickToExport && <SummaryExportTableTimesheet user={itemData.user} />}
-            {isClickToExport && <CostsExportTable user={itemData.user} />}
+            {isClickToExport &&
+                <SummaryExportTable user={itemData.user} statistic={statistic} statisticList={statisticList}/>}
+            {isClickToExport && <SummaryExportTableTimesheet user={itemData.user}/>}
+            {isClickToExport && <CostsExportTable user={itemData.user}/>}
 
-            <div className={`summary-item ${isOpen && "is-active"}`}>
+            <div ref={summaryBlock} className={`summary-item ${isOpen && "is-active"}`}>
                 <div onClick={handleOpenItem} className="summary-item__target">
                     <div className="summary-item__target--user summary-item__user">
                         <button onClick={handleOpenProfile} className="summary-item__user--avatar">
@@ -384,7 +413,8 @@ export const SummaryEmployeesItem: React.FC<ISummaryEmployeesItemProps> = ({
                                 <b className="summary-item__total-element--name">
                                     <Translate>summary_page.main.money_spent_for_projects</Translate>
                                 </b>
-                                <NavLink onClick={_ => dispatch(setChosenTimesheet(itemData))} to={`/costs/${itemData.id}`}
+                                <NavLink onClick={_ => dispatch(setChosenTimesheet(itemData))}
+                                         to={`/costs/${itemData.id}`}
                                          className="summary-item__total-element--link">
                                     <Translate>summary_page.main.show_full_data_costs</Translate>
                                     <svg width="7" height="10" viewBox="0 0 7 10">
@@ -402,7 +432,9 @@ export const SummaryEmployeesItem: React.FC<ISummaryEmployeesItemProps> = ({
                             {footerStatusesByStatus[itemData.status]}
                             {
                                 isChangeDecision ?
-                                    <SummaryEmployeesButtons isClickToExport={isClickToExport} handleExportPdf={handleExportPdf} timesheetId={itemData.id}/>
+                                    <SummaryEmployeesButtons isClickToExport={isClickToExport}
+                                                             handleExportPdf={handleExportPdf}
+                                                             timesheetId={itemData.id}/>
                                     :
                                     footerBlockByStatus[itemData.status]
                             }

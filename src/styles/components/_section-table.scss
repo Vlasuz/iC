@@ -16,6 +16,12 @@
   &__title {
     > span {
       align-self: center;
+
+      @media screen and (max-width: 576px) {
+        span {
+          font-size: 12px;
+        }
+      }
     }
   }
 
@@ -2051,7 +2057,7 @@
 
 .project-popup {
 
-  padding-top: 30px;
+  padding-top: 20px;
 
   // .project-popup__body
 

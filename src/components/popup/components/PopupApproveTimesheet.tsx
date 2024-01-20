@@ -20,7 +20,7 @@ export const PopupApproveTimesheet: React.FC<IPopupApproveTimesheetProps> = ({da
     const dispatch = useDispatch()
 
     const sendOnApprove = () => {
-        axios.post(getApiLink("/api/timesheet/my/send/?timesheet_id=" + data.id)).then(({data}) => {
+        axios.post(getApiLink(`/api/timesheet/my/send/?timesheet_id=${data.id}&status=waiting`)).then(({data}) => {
             if (!data.status) return;
 
             SetTimesheet(dispatch)

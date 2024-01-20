@@ -123,7 +123,11 @@ const toolkit = createSlice({
 
         setNotifications(state, action) {
             state.notifications = action.payload
-        }
+        },
+
+        setSummaryEmployeeIdOpen(state, action) {
+            state.summaryEmployeeIdOpen = action.payload
+        },
     },
 })
 
@@ -166,5 +170,7 @@ export const {
     resetState,
 
     setNotifications,
+
+    setSummaryEmployeeIdOpen,
 
 } = toolkit.actions;

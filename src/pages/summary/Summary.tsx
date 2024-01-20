@@ -57,9 +57,9 @@ export const Summary: React.FC<ISummaryProps> = () => {
             <div className="summary__main">
 
                 {
-                    timesheet.map((item: ITimesheet, index: number) =>
+                    timesheet.length ? timesheet.map((item: ITimesheet, index: number) =>
                         <SummaryItem key={item.id} isOpen={index === 0} dataItem={item} />
-                    )
+                    ) : "Таймщитов нету"
                 }
 
             </div>

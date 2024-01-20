@@ -219,6 +219,18 @@ export const TimesheetTableHeader: React.FC<ITimesheetTableHeaderProps> = ({
                                         <Translate>completed</Translate>
                                     </a>
                                 </li>
+                                <li className={chosenSortTotal === "" ? "is-active" : ""}>
+                                    <a onClick={_ => {
+                                        setSortByTotal("")
+                                        setChosenSortTotal("")
+                                        setSortByDate("")
+                                        setChosenSortDate("")
+
+                                        setIsActiveTotal(false)
+                                    }}>
+                                        <Translate>all_tasks</Translate>
+                                    </a>
+                                </li>
                             </ul>
                         </div>
                     </div>

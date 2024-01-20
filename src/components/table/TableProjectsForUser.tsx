@@ -60,13 +60,13 @@ export const TableProjectsForUser: React.FC<ITableProjectsForUserProps> = ({
             <div className="section-table__main--project-name-block drop-down__block">
                 <div className="project-popup">
                     <SimpleBar className="project-popup__body" autoHide={false}>
-                        {!projectList?.length && !!userData?.recent_projects?.length &&
+                        {!projectList?.length && !!userData?.used_projects?.length &&
                             <div className="project-popup__block">
                                 <h2><Translate>timesheet_page.popups.commonly_used</Translate></h2>
                                 <ul className="project-popup__list">
 
                                     {
-                                        userData?.recent_projects
+                                        userData?.used_projects
                                             ?.slice(0, 5)
                                             ?.filter(item => !item.project.archive)
                                             ?.filter(item => searchValue ? item.project.name.toLowerCase().includes(searchValue.toLowerCase()) || item.project.description.toLowerCase().includes(searchValue.toLowerCase()) : item)

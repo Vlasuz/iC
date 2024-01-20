@@ -24,6 +24,7 @@ interface ITimesheetProps {
 }
 
 export const BlockToEdit: any = createContext(null)
+export const BlockToDuplicate: any = createContext(null)
 export const FixedTopEdit: any = createContext(null)
 export const AmountStatistic: any = createContext(null)
 
@@ -39,6 +40,7 @@ export const Timesheet: React.FC<ITimesheetProps> = () => {
 
     const [rowsSelectValue, setRowsSelectValue] = useState(RowsPerPage()[0])
     const [itemToEdit, setItemToEdit] = useState<ITask>()
+    const [itemToDuplicate, setItemToDuplicate] = useState<ITask>()
     const [isOpenDownSidebar, setIsOpenDownSidebar] = useState(false)
     const [statistic, setStatistic] = useState<IStatistic | undefined>()
     const [isLoad, setIsLoad] = useState(false)
@@ -92,56 +94,59 @@ export const Timesheet: React.FC<ITimesheetProps> = () => {
     const [amountStatistic, setAmountStatistic] = useState(0)
 
     return (
-        <AmountStatistic.Provider value={setAmountStatistic}>
-            <FixedTopEdit.Provider value={setIsFixedEditBlock}>
-                <BlockToEdit.Provider value={setItemToEdit}>
-                    <TimesheetStyled style={{paddingBottom: isOpenDownSidebar ? "270px" : "80px"}}
-                                     className="section-table">
+        <BlockToDuplicate.Provider value={setItemToDuplicate}>
+            <AmountStatistic.Provider value={setAmountStatistic}>
+                <FixedTopEdit.Provider value={setIsFixedEditBlock}>
+                    <BlockToEdit.Provider value={setItemToEdit}>
+                        <TimesheetStyled style={{paddingBottom: isOpenDownSidebar ? "270px" : "80px"}}
+                                         className={`section-table ${isFixedEditBlock && "fixed-edit-block"}`}>
 
-                        <TimesheetExportTable/>
+                            <TimesheetExportTable/>
 
-                        <TimesheetHeader isFixedEditBlock={isFixedEditBlock} itemToEdit={itemToEdit}/>
+                            <TimesheetHeader itemToDuplicate={itemToDuplicate} isFixedEditBlock={isFixedEditBlock} itemToEdit={itemToEdit}/>
 
-                        <TimesheetTable rowsSelectValue={rowsSelectValue}/>
+                            {chosenTimesheet?.id && <TimesheetTable rowsSelectValue={rowsSelectValue}/>}
 
-                        <div className="section-table__footer">
-                            <div className="section-table__row-per-page visible-on-mob">
+                            <div className="section-table__footer">
+                                <div className="section-table__row-per-page visible-on-mob">
                         <span>
                             <Translate>timesheet_page.table.rows_per_page</Translate>
                         </span>
 
-                                <CustomSelect list={RowsPerPage()} defaultValue={RowsPerPage()[3]}
-                                              selectValue={rowsSelectValue}
-                                              setSelectedItem={setRowsSelectValue}/>
-                            </div>
-                            {rowsSelectValue.value !== 0 && taskList.length > rowsSelectValue.value &&
-                                <button onClick={handleAddRows} className="section-table__see-more btn" type="button">
-                                    <Translate>timesheet_page.table.show_more</Translate>
-                                    <svg width="15" height="15" viewBox="0 0 15 15">
-                                        <use xlinkHref="#arrow-down"></use>
-                                    </svg>
-                                </button>}
-                            <div className="section-table__row-per-page visible-on-desktop">
+                                    <CustomSelect list={RowsPerPage()} defaultValue={RowsPerPage()[3]}
+                                                  selectValue={rowsSelectValue}
+                                                  setSelectedItem={setRowsSelectValue}/>
+                                </div>
+                                {rowsSelectValue.value !== 0 && taskList.length > rowsSelectValue.value &&
+                                    <button onClick={handleAddRows} className="section-table__see-more btn"
+                                            type="button">
+                                        <Translate>timesheet_page.table.show_more</Translate>
+                                        <svg width="15" height="15" viewBox="0 0 15 15">
+                                            <use xlinkHref="#arrow-down"></use>
+                                        </svg>
+                                    </button>}
+                                <div className="section-table__row-per-page visible-on-desktop">
                         <span>
                             <Translate>timesheet_page.table.rows_per_page</Translate>
                         </span>
 
-                                <CustomSelect list={RowsPerPage()} defaultValue={RowsPerPage()[3]}
-                                              selectValue={rowsSelectValue}
-                                              setSelectedItem={setRowsSelectValue}/>
+                                    <CustomSelect list={RowsPerPage()} defaultValue={RowsPerPage()[3]}
+                                                  selectValue={rowsSelectValue}
+                                                  setSelectedItem={setRowsSelectValue}/>
+                                </div>
                             </div>
-                        </div>
-                    </TimesheetStyled>
+                        </TimesheetStyled>
 
-                    <DownSidebar comments={comments}
-                                 amountStatistic={amountStatistic}
-                                 setComments={setComments}
-                                 type={"timesheet"}
-                                 statisticAllAmount={statistic?.all_hours ?? timesheetStatistic.all_hours}
-                                 statisticAllElements={statistic?.tasks ?? timesheetStatistic.tasks}
-                                 setIsOpenDownSidebar={setIsOpenDownSidebar}/>
-                </BlockToEdit.Provider>
-            </FixedTopEdit.Provider>
-        </AmountStatistic.Provider>
+                        <DownSidebar comments={comments}
+                                     amountStatistic={amountStatistic}
+                                     setComments={setComments}
+                                     type={"timesheet"}
+                                     statisticAllAmount={statistic?.all_hours ?? timesheetStatistic.all_hours}
+                                     statisticAllElements={statistic?.tasks ?? timesheetStatistic.tasks}
+                                     setIsOpenDownSidebar={setIsOpenDownSidebar}/>
+                    </BlockToEdit.Provider>
+                </FixedTopEdit.Provider>
+            </AmountStatistic.Provider>
+        </BlockToDuplicate.Provider>
     )
 }

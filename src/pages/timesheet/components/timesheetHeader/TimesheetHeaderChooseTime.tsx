@@ -4,6 +4,7 @@ import {CustomSelect} from "../../../../components/customSelect/CustomSelect";
 import {TimeHoursList} from "../../../../constants/TimeHoursList";
 import {TimeMinutesList} from "../../../../constants/TimeMinutesList";
 import { Translate } from '../../../../components/translate/Translate';
+import {useTranslation} from "react-i18next";
 
 interface ITimesheetHeaderChooseTimeProps {
     setHoursData: any
@@ -18,6 +19,8 @@ export const TimesheetHeaderChooseTime: React.FC<ITimesheetHeaderChooseTimeProps
                                                                                          hoursData,
                                                                                          timeData
                                                                                      }) => {
+
+    const { t } = useTranslation();
 
     const [isChosenDate, setIsChosenDate] = useState(false)
     const [isLoad, setIsLoad] = useState(false)
@@ -107,10 +110,10 @@ export const TimesheetHeaderChooseTime: React.FC<ITimesheetHeaderChooseTimeProps
     const handleAddTime = (additionalHours: number) => {
         if(!TimeHoursList()[timeToHours.value - 1 + additionalHours]) return;
 
-        setTimeToHours(TimeHoursList()[timeToHours.value - 1 + additionalHours])
+        setTimeToHours(TimeHoursList()[timeFromHours.value - 1 + additionalHours])
     }
 
-    const additionalHoursList = ["2", "4", "6"]
+    const additionalHoursList = ["2", "4", "8"]
 
     return (
         <>
@@ -156,7 +159,7 @@ export const TimesheetHeaderChooseTime: React.FC<ITimesheetHeaderChooseTimeProps
                             additionalHoursList.map((hour: string) =>
                                 <li key={hour}>
                                     <button onClick={_ => handleAddTime(+hour)}>
-                                        +{hour} h
+                                        {hour} <Translate>timesheet_page.table.h</Translate>
                                     </button>
                                 </li>
                             )
@@ -187,7 +190,7 @@ export const TimesheetHeaderChooseTime: React.FC<ITimesheetHeaderChooseTimeProps
                 </div>
             </div>
             <div className="section-table__add-task--hours">
-                <input type="text" readOnly name="hours" value={`${hoursAmount} h`} placeholder="0 hours" required
+                <input type="text" readOnly name="hours" value={`${hoursAmount} ${t('timesheet_page.table.h')}`} placeholder="0 hours" required
                        className="input hours-input none-disabled-style" data-add-text="hours"/>
             </div>
         </>

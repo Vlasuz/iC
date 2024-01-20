@@ -22,6 +22,7 @@ import {SetExpenses} from "../../../api/SetExpenses";
 import {da} from "date-fns/locale";
 import {CostsExportTable} from "../../costs/components/CostsExportTable";
 import {SetStatistic} from "../../../api/SetStatistic";
+import {SetTimesheet} from "../../../api/SetTimesheet";
 
 interface ISummaryItemProps {
     dataItem: ITimesheet
@@ -194,6 +195,15 @@ export const SummaryItem: React.FC<ISummaryItemProps> = ({dataItem, isOpen}) => 
 
     }, [isClickToExport])
 
+
+    const handleCancelSending = () => {
+        axios.post(getApiLink(`/api/timesheet/my/send/?timesheet_id=${dataItem.id}&status=progress`)).then(({data}) => {
+            if (!data.status) return;
+
+            SetTimesheet(dispatch)
+        })
+    }
+
     return (
         <>
             {isClickToExport && <SummaryExportTable statistic={statistic} statisticList={statisticList}/>}
@@ -288,7 +298,7 @@ export const SummaryItem: React.FC<ISummaryItemProps> = ({dataItem, isOpen}) => 
                                     </svg>
                                 </button>
                                 <div className="summary-item__total-element--value">
-                                    {statistic?.all_sum} {currency}
+                                    {statistic?.all_sum.toFixed(2)} {currency}
                                 </div>
                             </div>
                         </div>
@@ -336,11 +346,16 @@ export const SummaryItem: React.FC<ISummaryItemProps> = ({dataItem, isOpen}) => 
                                         <use xlinkHref="#download"></use>
                                     </svg>
                                 </button>
-                                <a onClick={_ => setPopup({popup: "approve-timesheet-popup", data: dataItem})}
-                                   className={`summary-item__button btn open-popup ${(dataItem.status === "waiting" || dataItem.status === "approve") && "is-disabled"}`}
-                                   type="button">
+                                {!(dataItem.status === "waiting" || dataItem.status === "approve") ? <a onClick={_ => setPopup({popup: "approve-timesheet-popup", data: dataItem})}
+                                    className={`summary-item__button btn open-popup`}
+                                    type="button">
                                     <Translate>summary_page.main.send_timesheet_for_approval</Translate>
-                                </a>
+                                </a> :
+                                    <a onClick={handleCancelSending} className={`summary-item__button btn is-grey`}
+                                    type="button">
+                                    <Translate>cancel_sending</Translate>
+                                    </a>
+                                }
                             </div>
                         </div>
                     </div>

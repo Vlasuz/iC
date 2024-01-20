@@ -30,4 +30,9 @@ export const SummaryStyled = styled.section`
       margin-top: -25px;
     }
   }
+
+  .summary-item__total-element--icon svg {
+    width: 20px;
+    height: 20px;
+  }
 `

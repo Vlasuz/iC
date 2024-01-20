@@ -41,7 +41,7 @@ export const VacationsHeader: React.FC<IVacationsHeaderProps> = ({sortByName, se
 									<svg width="13" height="13" viewBox="0 0 13 13">
 										<use xlinkHref="#user"></use>
 									</svg>
-									Name
+									<Translate>employees_admin.table.name</Translate>
 									<svg width="10" height="15" viewBox="0 0 11 15">
 										<use xlinkHref="#sort-up-down"></use>
 									</svg>
@@ -86,7 +86,7 @@ export const VacationsHeader: React.FC<IVacationsHeaderProps> = ({sortByName, se
                             <svg width="13" height="13" viewBox="0 0 13 13">
                                 <use xlinkHref="#user"></use>
                             </svg>
-                            Name
+                            <Translate>employees_admin.table.name</Translate>
                             <svg width="10" height="15" viewBox="0 0 11 15">
                                 <use xlinkHref="#sort-up-down"></use>
                             </svg>
@@ -138,11 +138,11 @@ export const VacationsHeader: React.FC<IVacationsHeaderProps> = ({sortByName, se
                         <Translate>vacations_admin.total</Translate>
                     </span>
                 </div>
-                <div className="section-table__head-th">
-                    <span className="section-table__main--param is-center">
-                        <Translate>vacations_admin.total</Translate>
-                    </span>
-                </div>
+                {/*<div className="section-table__head-th">*/}
+                {/*    <span className="section-table__main--param is-center">*/}
+                {/*        <Translate>vacations_admin.total</Translate>*/}
+                {/*    </span>*/}
+                {/*</div>*/}
                 <div className="section-table__head-th">
                     <span className="section-table__main--param is-center">
                     	<Translate>vacations_admin.jan</Translate>
@@ -196,6 +196,11 @@ export const VacationsHeader: React.FC<IVacationsHeaderProps> = ({sortByName, se
                 <div className="section-table__head-th">
                     <span className="section-table__main--param is-center">
                     	<Translate>vacations_admin.nov</Translate>
+                    </span>
+                </div>
+                <div className="section-table__head-th">
+                    <span className="section-table__main--param is-center">
+                    	<Translate>vacations_admin.dec</Translate>
                     </span>
                 </div>
                 <div className="section-table__head-th is-accent-col">

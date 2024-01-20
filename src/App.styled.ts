@@ -72,6 +72,11 @@ export const AppStyled = styled.div`
     max-width: 88px;
   }
 
+  @media screen and (max-width: 768px) {
+    .section-table__see-more {
+      height: 44px;
+    }
+  }
   .section-table__row-per-page {
     width: 230px;
     justify-content: flex-end;
@@ -79,6 +84,7 @@ export const AppStyled = styled.div`
 
     @media screen and (max-width: 768px) {
       margin-left: 0;
+      width: 225px;
     }
   }
 
@@ -470,6 +476,10 @@ export const AppStyled = styled.div`
         opacity: 1;
       }
     }
+  }
+
+  .project-popup__item_all a {
+    font-weight: 600;
   }
   
   .popup-form__label .delete {

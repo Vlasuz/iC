@@ -210,7 +210,7 @@ export const TimesheetExportTable: React.FC<ITimesheetExportTableProps> = () => 
                                                 // verticalAlign: "middle",
                                                 ...tdStyle
                                             }} rowSpan={dateItem.count === countAmount && dateItem.count}>
-                                                {dateItem.date.substring(3, 5)}/{dateItem.date.substring(0, 2)}/{dateItem.date.substring(6)}
+                                                {dateItem.date.replaceAll(".", "/")}
                                             </td>}
                                             <td style={{
                                                 textAlign: "center",
