@@ -1,6 +1,7 @@
 {
   "name": "ic_ces",
   "version": "0.1.0",
+  "author": "Vlasok",
   "private": true,
   "dependencies": {
     "@react-input/mask": "^1.0.20",
@@ -50,8 +51,14 @@
   "eslintConfig": {
     "extends": [
       "react-app",
-      "react-app/jest"
-    ]
+      "eslint-config-react-app"
+    ],
+    "plugins": [
+      "jest"
+    ],
+    "env": {
+      "jest/globals": true
+    }
   },
   "browserslist": {
     "production": [
@@ -72,6 +79,8 @@
     "browser-sync": "^2.29.3",
     "clipboard": "^2.0.11",
     "del": "^6.0.0",
+    "eslint": "^8.56.0",
+    "eslint-plugin-jest": "^27.6.3",
     "gsap": "^3.12.2",
     "gulp": "^4.0.2",
     "gulp-autoprefixer": "^8.0.0",

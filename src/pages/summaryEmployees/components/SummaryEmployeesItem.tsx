@@ -369,7 +369,7 @@ export const SummaryEmployeesItem: React.FC<ISummaryEmployeesItemProps> = ({
                                             </span>
                                         </div>
                                         <div className="summary-item__element--progress">
-                                            <span>{item.expense.sum} {currency}</span>
+                                            <span>{item.expense.sum.toFixed(2)} {currency}</span>
                                             <span
                                                 data-value={`${item.expense.percent > 100 ? 100 : item.expense.percent}%`}>
                                                 <div className="line_done" style={{width: `${item.expense.percent}%`}}/>
@@ -422,7 +422,7 @@ export const SummaryEmployeesItem: React.FC<ISummaryEmployeesItemProps> = ({
                                     </svg>
                                 </NavLink>
                                 <div className="summary-item__total-element--value">
-                                    {statistic?.all_sum} {currency}
+                                    {statistic?.all_sum.toFixed(2)} {currency}
                                 </div>
                             </div>
                         </div>

@@ -114,12 +114,16 @@ export const TableProjectsForUser: React.FC<ITableProjectsForUserProps> = ({
                     </SimpleBar>
                     <div className="project-popup__search">
                         <label>
-                            <input type="search" name="search" className="input"
-                                   onChange={e => setSearchValue(e.target.value)} value={searchValue}
-                                   placeholder="Search a project" required/>
+                            <span className="input_placeholder">
+                                <input type="text" className="input" name={'search'}
+                                       onChange={e => setSearchValue(e.target.value)} value={searchValue}/>
+                                {!searchValue && <span className="placeholder">
+                                    <Translate>projects_admin.search_a_project</Translate>
+                                </span>}
+                            </span>
                         </label>
                         <button className="btn is-grey" type="submit">
-                            Search
+                            <Translate>projects_admin.search</Translate>
                             <svg width="15" height="15" viewBox="0 0 15 15">
                                 <use xlinkHref="#search"></use>
                             </svg>

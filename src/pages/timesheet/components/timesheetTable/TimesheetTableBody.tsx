@@ -72,8 +72,6 @@ export const TimesheetTableBody: React.FC<ITimesheetTableBodyProps> = ({
         setAmountStatistic(finalAmountHours)
     }, [allDates]);
 
-    console.log(taskList?.length)
-
     let numberOfRow = 0
 
     return (

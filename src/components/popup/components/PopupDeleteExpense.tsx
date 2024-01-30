@@ -8,6 +8,8 @@ import {SetExpenses} from "../../../api/SetExpenses";
 import {SetStatistic} from "../../../api/SetStatistic";
 import {ITimesheet} from "../../../models";
 import {removeExpense, removeTask} from "../../../storage/toolkit";
+import {Translate} from "../../translate/Translate";
+import {PopupCloseCancel} from "./PopupCloseCancel";
 
 interface IPopupDeleteExpenseProps {
     data: any
@@ -49,15 +51,13 @@ export const PopupDeleteExpense: React.FC<IPopupDeleteExpenseProps> = ({data}) =
             <div className="remove-table-item__container popup-container" data-simplebar
                  data-simplebar-auto-hide="false">
                 <h2 className="remove-table-item__title popup-title title is-center">
-                    Are you sure you want to delete this row?
+                    <Translate>employees_admin.others.confirm_delete_row</Translate>
                 </h2>
                 <form onSubmit={handleDelete} className="popup-form">
                     <div className="popup-form__row is-min-gap">
-                        <button className="popup-form__cancel btn is-transparent popup-close" type="button">
-                            Cancel
-                        </button>
+                        <PopupCloseCancel/>
                         <button className="popup-form__submit btn" type="submit">
-                            Delete
+                            <Translate>employees_admin.others.delete</Translate>
                         </button>
                     </div>
                 </form>

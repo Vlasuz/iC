@@ -6,6 +6,7 @@ import {PopupContext} from "../../../App";
 import {Translate} from "../../../components/translate/Translate";
 import {Trans} from "react-i18next";
 import {useTranslation} from "react-i18next";
+import {handleOpenContextMenu} from "../../../functions/handleOpenContextMenu";
 
 interface IEmployeesItemProps {
     data: IEmployee
@@ -29,27 +30,6 @@ export const EmployeesItem: React.FC<IEmployeesItemProps> = ({data, index, isArc
 
     const modalBlock: any = useRef(null)
     const rowBlock: any = useRef(null)
-
-    const handleOpenContextMenu = (e: React.MouseEvent<HTMLDivElement>) => {
-        e.preventDefault()
-        if(isArchive) return;
-
-        if (isOpenContextMenu) {
-            setTimeout(() => {
-                setMenuPosition({
-                    top: "auto",
-                    left: "auto"
-                })
-            }, 300)
-        } else {
-            setMenuPosition({
-                top: e.pageY > 600 ? e.pageY - 160 : e.pageY + 10 + "px",
-                left: e.pageX + 10 + "px"
-            })
-        }
-
-        setIsOpenContextMenu(prev => !prev)
-    }
 
     useEffect(() => {
         if (!isOpenContextMenu) {
@@ -87,7 +67,7 @@ export const EmployeesItem: React.FC<IEmployeesItemProps> = ({data, index, isArc
     }
 
     return (
-        <div ref={rowBlock} onContextMenu={handleOpenContextMenu}
+        <div ref={rowBlock} onContextMenu={e => handleOpenContextMenu({e, isOpenContextMenu, setMenuPosition, setIsOpenContextMenu, height: 110, width: 165})}
              className={`section-table__row drop-down-2 ${isArchive && "is-archive"} ${isOpenContextMenu && "is-active-drop-down"}`}>
             <div className="section-table__param visible-on-mob">
                 <span>

@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react'
 import {Notifications} from "../../../../components/notifications/Notifications";
-import {IExpense, IProject, ITimesheet} from "../../../../models";
+import {IExpense, IProject, ITimesheet, IUser} from "../../../../models";
 import {useDispatch, useSelector} from "react-redux";
 import {getBearer} from "../../../../functions/getBearer";
 import axios from "axios";
@@ -38,6 +38,7 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit, isFixedEdi
 
     const timesheet: ITimesheet[] = useSelector((state: any) => state.toolkit.timesheet)
     const chosenTimesheet: ITimesheet = useSelector((state: any) => state.toolkit.chosenTimesheet)
+    const userData: IUser = useSelector((state: any) => state.toolkit.user)
 
     const [searchValueLocal, setSearchValueLocal] = useState("")
 
@@ -45,7 +46,9 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit, isFixedEdi
 
     const setIsFixedEditBlock: any = useContext(FixedTopEdit)
 
-    const handleCreateExpense = () => {
+    const handleCreateExpense = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+
         const timesheetRequest: any = {
             "project_id": projectData?.id,
             "date": dateData,
@@ -58,11 +61,12 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit, isFixedEdi
             setIsCancelEdit(true)
             setTimeout(() => {
 
-                setIsFixedEditBlock(false)
-                setItemEdit({})
-                setIsCancelEdit(false)
                 getBearer("patch")
                 axios.patch(getApiLink("/api/expense/edit/?expense_id=" + itemToEdit.id), timesheetRequest).then(({data}) => {
+
+                    setIsFixedEditBlock(false)
+                    setItemEdit({})
+                    setIsCancelEdit(false)
 
                     SetStatistic(dispatch, chosenTimesheet.id)
                     SetExpenses(dispatch, chosenTimesheet.id)
@@ -232,6 +236,10 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit, isFixedEdi
                                     <Translate>edit_cost</Translate>)
                             }
 
+                            {
+                                chosenTimesheet?.user?.id !== userData?.id && <span> ({chosenTimesheet?.user?.first_name} {chosenTimesheet?.user?.last_name})</span>
+                            }
+
                         </span>
                     </h1>
                 </div>
@@ -287,7 +295,7 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit, isFixedEdi
                 </div>
                 <div className="section-table__header--block-item">
                     <div>
-                        <div className="section-table__header--add-costs section-table__add-costs">
+                        <form onSubmit={handleCreateExpense} className="section-table__header--add-costs section-table__add-costs">
                             <button onClick={handleBackFromCreate}
                                     className="section-table__add-expense--back back-btn remove-is-active"
                                     data-remove-active-change-title="main-title" type="button"
@@ -326,12 +334,12 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit, isFixedEdi
                                     </div>
                                 </div>
                             </div>
-                            <button onClick={handleCreateExpense} className="section-table__add-expense--submit btn"
+                            <button className="section-table__add-expense--submit btn"
                                     type="submit">
                                 {isEditExpense ? <Translate>edit_expense</Translate> :
                                     <Translate>costs_page.top_part.add_expense_2</Translate>}
                             </button>
-                        </div>
+                        </form>
                     </div>
                 </div>
             </div>

@@ -15,7 +15,7 @@ export const NotificationsComment: React.FC<INotificationsCommentProps> = ({item
                 <p>
 
                     <b>
-                        {itemData?.comment?.answer === null ? <Translate>timesheet_page.notifications.you_have_a_new_comment_from</Translate> : <Translate>timesheet_page.notifications.you_have_a_new_response_from</Translate>} {itemData?.comment?.user?.first_name} {itemData?.comment?.user?.last_name}:</b>
+                        {itemData?.comment?.answer === null ? <Translate>timesheet_page.notifications.you_have_a_new_comment_from</Translate> : <Translate>timesheet_page.notifications.you_have_a_new_response_from</Translate>} {itemData?.comment?.user?.first_name} {itemData?.comment?.user?.last_name}: </b>
                     {itemData?.comment?.text}
                 </p>
             </div>

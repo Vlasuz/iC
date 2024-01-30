@@ -10,6 +10,7 @@ import {getApiLink} from "../../../functions/getApiLink";
 import {SetStatistic} from "../../../api/SetStatistic";
 import {SetTasks} from "../../../api/SetTasks";
 import {useClickOutside} from "../../../hooks/ClickOutside";
+import {handleOpenContextMenu} from "../../../functions/handleOpenContextMenu";
 
 interface IVacationsItemProps {
     itemData: IVacation
@@ -96,26 +97,6 @@ export const VacationsItem: React.FC<IVacationsItemProps> = ({itemData, index}) 
         }
     }, []);
 
-    const handleOpenContextMenu = (e: React.MouseEvent<HTMLDivElement>) => {
-        e.preventDefault()
-
-        if (isOpenContextMenu) {
-            setTimeout(() => {
-                setMenuPosition({
-                    top: "auto",
-                    left: "auto"
-                })
-            }, 300)
-        } else {
-            setMenuPosition({
-                top: e.pageY > 600 ? e.pageY - 160 : e.pageY + 10 + "px",
-                left: e.pageX + 10 + "px"
-            })
-        }
-
-        setIsOpenContextMenu(prev => !prev)
-    }
-
     useEffect(() => {
         if (!isOpenContextMenu) {
             setTimeout(() => {
@@ -128,7 +109,7 @@ export const VacationsItem: React.FC<IVacationsItemProps> = ({itemData, index}) 
     }, [isOpenContextMenu])
 
     return (
-        <div className="section-table__row drop-down-2" ref={rowBlock} onContextMenu={handleOpenContextMenu}>
+        <div className="section-table__row drop-down-2" ref={rowBlock} onContextMenu={e => handleOpenContextMenu({e, isOpenContextMenu, setMenuPosition, setIsOpenContextMenu, height: 60, width: 175})}>
             <div className="section-table__param visible-on-mob">
                 <span>
                     {index}

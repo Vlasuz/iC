@@ -10,6 +10,7 @@ import {getApiLink} from "../../../../functions/getApiLink";
 import {SetExpenses} from "../../../../api/SetExpenses";
 import {SetStatistic} from "../../../../api/SetStatistic";
 import {Translate} from "../../../../components/translate/Translate";
+import {handleOpenContextMenu} from "../../../../functions/handleOpenContextMenu";
 
 interface ICostsTableItemProps {
     item: IExpense,
@@ -45,27 +46,6 @@ export const CostsTableItem: React.FC<ICostsTableItemProps> = ({item, index, ite
 
     const isApprove = chosenTimesheet?.status === "waiting"
 
-    const handleOpenContextMenu = (e: React.MouseEvent<HTMLDivElement>) => {
-        if(isApprove) return;
-        e.preventDefault()
-
-        if (isOpenContextMenu) {
-            setTimeout(() => {
-                setMenuPosition({
-                    top: "auto",
-                    left: "auto"
-                })
-            }, 300)
-        } else {
-            setMenuPosition({
-                top: e.screenY > 470 ? e.screenY - 160 : e.screenY - 100 + "px",
-                left: e.screenX + 50 + "px"
-            })
-        }
-
-        setIsOpenContextMenu(prev => !prev)
-    }
-
     useEffect(() => {
         if (!isOpenContextMenu) {
             setTimeout(() => {
@@ -99,10 +79,8 @@ export const CostsTableItem: React.FC<ICostsTableItemProps> = ({item, index, ite
 
     }
 
-    console.log(item)
-
     return (
-        <div className="section-table__row drop-down-2" ref={rowBlock} style={{border: itemToEdit?.id === item?.id ? "1px solid red" : ""}} onContextMenu={handleOpenContextMenu}>
+        <div className="section-table__row drop-down-2" ref={rowBlock} style={{border: itemToEdit?.id === item?.id ? "1px solid red" : ""}} onContextMenu={e => handleOpenContextMenu({e, isOpenContextMenu, setMenuPosition, setIsOpenContextMenu, height: 160, width: 165})}>
             <div className="section-table__param visible-on-mob">
                 <span>
                     {expenseList.length - index}

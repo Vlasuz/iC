@@ -249,7 +249,7 @@ export const SummaryItem: React.FC<ISummaryItemProps> = ({dataItem, isOpen}) => 
                                         </span>
                                         </div>
                                         <div className="summary-item__element--progress">
-                                            <span>{item.expense.sum} {currency}</span>
+                                            <span>{item.expense.sum.toFixed(2)} {currency}</span>
                                             <span data-value={`${item.expense.percent > 100 ? 100 : item.expense.percent}%`}>
                                             <div className="line_done" style={{width: `${item.expense.percent}%`}}/>
                                         </span>

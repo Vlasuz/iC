@@ -10,6 +10,7 @@ import {PopupClose} from "./PopupClose";
 import {PopupCloseCancel} from "./PopupCloseCancel";
 import {SetTasks} from "../../../api/SetTasks";
 import {SetStatistic} from "../../../api/SetStatistic";
+import {Translate} from "../../translate/Translate";
 
 interface IPopupDeleteTaskProps {
     data: ITask
@@ -46,13 +47,13 @@ export const PopupDeleteTask: React.FC<IPopupDeleteTaskProps> = ({data}) => {
             <div className="remove-table-item__container popup-container" data-simplebar
                  data-simplebar-auto-hide="false">
                 <h2 className="remove-table-item__title popup-title title is-center">
-                    Are you sure you want to delete this row?
+                    <Translate>employees_admin.others.confirm_delete_row</Translate>
                 </h2>
                 <form onSubmit={handleDelete} className="popup-form">
                     <div className="popup-form__row is-min-gap">
                         <PopupCloseCancel/>
                         <button className="popup-form__submit btn" type="submit">
-                            Delete
+                            <Translate>employees_admin.others.delete</Translate>
                         </button>
                     </div>
                 </form>

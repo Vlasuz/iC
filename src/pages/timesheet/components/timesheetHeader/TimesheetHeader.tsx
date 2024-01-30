@@ -33,7 +33,6 @@ export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({itemToEdit, is
     const isEditTask = itemToEdit && Object.keys(itemToEdit).length
     const isDuplicateTask = itemToDuplicate && Object.keys(itemToDuplicate).length
 
-    const tasks: ITask[] = useSelector((state: any) => state.toolkit.tasks)
     const timesheet: ITimesheet[] = useSelector((state: any) => state.toolkit.timesheet)
     const chosenTimesheet: ITimesheet = useSelector((state: any) => state.toolkit.chosenTimesheet)
     const userData: IUser = useSelector((state: any) => state.toolkit.user)
@@ -50,7 +49,9 @@ export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({itemToEdit, is
 
     const setIsFixedEditBlock: any = useContext(FixedTopEdit)
 
-    const handleCreateTask = () => {
+    const handleCreateTask = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+
         const timesheetRequest: any = {
             "project_id": projectData?.id,
             "task": taskData,
@@ -71,11 +72,13 @@ export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({itemToEdit, is
             setIsCancelEdit(true)
             setTimeout(() => {
 
-                setIsFixedEditBlock(false)
-                setIsCancelEdit(false)
                 getBearer("patch")
                 axios.patch(getApiLink("/api/task/edit/?task_id=" + itemToEdit.id), timesheetRequest).then(({data}) => {
+                    console.log(data)
                     if (data?.status === false) return;
+
+                    setIsFixedEditBlock(false)
+                    setIsCancelEdit(false)
 
                     SetStatistic(dispatch, chosenTimesheet.id)
                     SetTasks(dispatch, chosenTimesheet.id)
@@ -239,7 +242,7 @@ export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({itemToEdit, is
                 <Notifications/>
 
             </div>
-            <div className={`section-table__header--block block-for-is-active ${(isOpenCreatBlock || isDuplicateTask) && "is-active"}`} >
+            <div className={`section-table__header--block block-for-is-active ${isOpenCreatBlock && "is-active"}`} >
                 <div className="section-table__header--block-item">
                     <div>
                         <div className="section-table__header--row row-2">
@@ -285,7 +288,7 @@ export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({itemToEdit, is
                 </div>
                 <div className="section-table__header--block-item">
                     <div>
-                        <div className="section-table__header--add-task section-table__add-task">
+                        <form onSubmit={handleCreateTask} className="section-table__header--add-task section-table__add-task">
                             <button onClick={handleBackFromCreate}
                                     className="section-table__add-task--back back-btn remove-is-active"
                                     data-remove-active-change-title="main-title" type="button"
@@ -307,11 +310,11 @@ export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({itemToEdit, is
                             <TimesheetHeaderChooseTime hoursData={hoursData} timeData={timeData}
                                                        setHoursData={setHoursData} setTimeData={setTimeData}/>
 
-                            <button onClick={handleCreateTask} className="section-table__add-task--submit btn"
+                            <button className="section-table__add-task--submit btn"
                                     type="submit">
                                 {isEditTask ? "Edit task" : <Translate>timesheet_page.top_part.add_task</Translate>}
                             </button>
-                        </div>
+                        </form>
                     </div>
                 </div>
             </div>

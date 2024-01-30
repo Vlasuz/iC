@@ -645,7 +645,7 @@ section {
 	&__block {
 		position: absolute;
 		left: var(--x); top: var(--y);
-		transform: translate(-50%,0);
+		//transform: translate(-50%,0);
 		@include _992 {
 			transform: none;
 		}

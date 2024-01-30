@@ -10,6 +10,7 @@ import {BlockToDuplicate, BlockToEdit, FixedTopEdit} from "../../Timesheet";
 import {SetTasks} from "../../../../api/SetTasks";
 import {SetStatistic} from "../../../../api/SetStatistic";
 import {Translate} from "../../../../components/translate/Translate";
+import {handleOpenContextMenu} from "../../../../functions/handleOpenContextMenu";
 
 interface ITimesheetTableItemProps {
     taskItem: ITask
@@ -43,30 +44,6 @@ export const TimesheetTableItem: React.FC<ITimesheetTableItemProps> = ({taskItem
     }, []);
 
     const isApprove = chosenTimesheet?.status === "waiting"
-
-    const handleOpenContextMenu = (e: React.MouseEvent<HTMLDivElement>) => {
-        if(isApprove) return;
-
-        e.preventDefault()
-
-        console.log(e.screenX)
-
-        if (isOpenContextMenu) {
-            setTimeout(() => {
-                setMenuPosition({
-                    top: "auto",
-                    left: "auto"
-                })
-            }, 300)
-        } else {
-            setMenuPosition({
-                top: e.screenY > 470 ? e.screenY - 160 : e.screenY - 100 + "px",
-                left: e.screenX + 50 + "px"
-            })
-        }
-
-        setIsOpenContextMenu(prev => !prev)
-    }
 
     useEffect(() => {
         if (!isOpenContextMenu) {
@@ -103,7 +80,7 @@ export const TimesheetTableItem: React.FC<ITimesheetTableItemProps> = ({taskItem
     }
 
     return (
-        <div ref={rowBlock} onContextMenu={handleOpenContextMenu}
+        <div ref={rowBlock} onContextMenu={e => handleOpenContextMenu({e, isOpenContextMenu, setMenuPosition, setIsOpenContextMenu, height: 160, width: 165})}
              className={`section-table__row drop-down-2 ${numberOfRow % 2 ? " even" : " odd"}` + (isOpenContextMenu ? " is-active-drop-down" : "")}>
             <div className={`section-table__param is-center ${numberOfRow % 2 ? " even" : " odd"}`}>
                 <span>
