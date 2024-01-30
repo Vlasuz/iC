@@ -1,10 +1,9 @@
-import React, {useContext, useEffect, useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {useSelector} from 'react-redux';
-import {IsPopupActiveContext} from "../PopupList";
 import {IProject} from "../../../models";
-import {PopupClose} from "./PopupClose";
 import SimpleBar from "simplebar-react";
 import {Translate} from "../../translate/Translate";
+import {useTranslation} from "react-i18next";
 
 interface IPopupEmployeeProjectsProps {
     isOpenProjects: boolean
@@ -46,6 +45,8 @@ export const PopupEmployeeProjects: React.FC<IPopupEmployeeProjectsProps> = ({
         }
     }, [data])
 
+    const {t} = useTranslation();
+
     return (
         <div className={"sub-popup-employee popup is-sub" + (isOpenProjects ? " is-active" : "")}
              id="edit-sub-popup-employee" style={{display: "flex"}}>
@@ -53,7 +54,8 @@ export const PopupEmployeeProjects: React.FC<IPopupEmployeeProjectsProps> = ({
                 <div className="sub-popup-employee__bg popup-bg" onClick={_ => setIsOpenProjects(false)}></div>
                 <div className="sub-popup-employee__body popup-body">
                     {/*<PopupClose/>*/}
-                    <button type="button" onClick={_ => setIsOpenProjects(false)} className="remove-table-item__close-btn popup-close-btn popup-close"
+                    <button type="button" onClick={_ => setIsOpenProjects(false)}
+                            className="remove-table-item__close-btn popup-close-btn popup-close"
                             title="Close">
                         <svg width="15" height="15" viewBox="0 0 15 15">
                             <use xlinkHref="#close"></use>
@@ -100,7 +102,11 @@ export const PopupEmployeeProjects: React.FC<IPopupEmployeeProjectsProps> = ({
                                                     <use xlinkHref="#check"></use>
                                                 </svg>
                                             </span>
-                                                    <span className="popup-checkbox__text" style={{whiteSpace: "nowrap", textOverflow: "ellipsis", overflow: "hidden"}}>
+                                                    <span className="popup-checkbox__text" style={{
+                                                        whiteSpace: "nowrap",
+                                                        textOverflow: "ellipsis",
+                                                        overflow: "hidden"
+                                                    }}>
                                                     {project.name}_{project.description}
                                                 </span>
                                                 </label>
@@ -113,13 +119,11 @@ export const PopupEmployeeProjects: React.FC<IPopupEmployeeProjectsProps> = ({
                         </SimpleBar>
                         <div className="sub-popup-employee__search">
                             <label>
-                                <span className="input_placeholder">
                                 <input type="search" name="search" required
-                                       onChange={e => setSearchValue(e.target.value)}  value={searchValue} className="input"/>
-                                    <span className="placeholder">
-                                        {!searchValue && <Translate>employees_admin.others.search_a_project</Translate>}
-                                    </span>
-                                </span>
+                                       onChange={e => setSearchValue(e.target.value)} value={searchValue}
+                                       className="input"
+                                       placeholder={`${t("employees_admin.others.search_a_project")}`}
+                                />
                             </label>
                             <button className="btn is-grey" type="submit">
                                 <Translate>employees_page.table.search</Translate>

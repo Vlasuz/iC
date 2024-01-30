@@ -113,6 +113,7 @@ export const TableSelectYearMonth: React.FC<ITableSelectYearMonthProps> = ({setM
                                     prevEl: '.splide__arrow--prev'
                                 }}
                                 modules={[Navigation]}
+                                initialSlide={1}
                             >
 
                                 {

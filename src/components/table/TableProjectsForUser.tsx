@@ -4,6 +4,7 @@ import {useSelector} from "react-redux";
 import {useClickOutside} from "../../hooks/ClickOutside";
 import SimpleBar from "simplebar-react";
 import {Translate} from "../translate/Translate";
+import {useTranslation} from "react-i18next";
 
 interface ITableProjectsForUserProps {
     setProjectData: any
@@ -28,7 +29,7 @@ export const TableProjectsForUser: React.FC<ITableProjectsForUserProps> = ({
     const handleChooseProject = (e: React.MouseEvent<HTMLAnchorElement>, item: IProject) => {
         e.preventDefault()
 
-        if(item?.id === projectData?.id) {
+        if (item?.id === projectData?.id) {
             setProject(undefined)
             setProjectData(undefined)
         } else {
@@ -43,6 +44,8 @@ export const TableProjectsForUser: React.FC<ITableProjectsForUserProps> = ({
         setSearchValue("")
     }, [isActiveSelectProjects])
 
+    const {t} = useTranslation();
+
     return (
         <div ref={rootEl}
              className={`section-table__add-task--project drop-down ${isActiveSelectProjects && "is-active"}`}>
@@ -50,7 +53,8 @@ export const TableProjectsForUser: React.FC<ITableProjectsForUserProps> = ({
                     className="section-table__add-task--project-target drop-down__target"
                     type="button">
 
-                {projectData?.name ?? projectData?.name ?? <Translate>timesheet_page.top_part.choose_project</Translate>}
+                {projectData?.name ?? projectData?.name ??
+                    <Translate>timesheet_page.top_part.choose_project</Translate>}
 
                 <svg width="10" height="7" viewBox="0 0 10 7"
                      className="drop-down__target--arrow">
@@ -114,13 +118,10 @@ export const TableProjectsForUser: React.FC<ITableProjectsForUserProps> = ({
                     </SimpleBar>
                     <div className="project-popup__search">
                         <label>
-                            <span className="input_placeholder">
-                                <input type="text" className="input" name={'search'}
-                                       onChange={e => setSearchValue(e.target.value)} value={searchValue}/>
-                                {!searchValue && <span className="placeholder">
-                                    <Translate>projects_admin.search_a_project</Translate>
-                                </span>}
-                            </span>
+                            <input type="text" className="input" name={'search'}
+                                   onChange={e => setSearchValue(e.target.value)} value={searchValue}
+                                   placeholder={`${t("projects_admin.search_a_project")}`}
+                            />
                         </label>
                         <button className="btn is-grey" type="submit">
                             <Translate>projects_admin.search</Translate>

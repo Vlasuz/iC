@@ -5,18 +5,18 @@ import {useDispatch, useSelector} from "react-redux";
 import {getBearer} from "../../../../functions/getBearer";
 import axios from "axios";
 import {getApiLink} from "../../../../functions/getApiLink";
-import {addExpense, editExpense, setExpenses} from "../../../../storage/toolkit";
+import {setExpenses} from "../../../../storage/toolkit";
 import {TableExport} from "../../../../components/table/TableExport";
 import {TableSelectYearMonth} from "../../../../components/table/TableSelectYearMonth";
 import {TableCalendar} from "../../../../components/table/TableCalendar";
 import {BlockToEdit, FixedTopEdit} from '../../Costs';
 import {TableProjectsForUser} from "../../../../components/table/TableProjectsForUser";
 import {SetExpenses} from '../../../../api/SetExpenses';
-import {SetTasks} from "../../../../api/SetTasks";
 import {SetStatistic} from "../../../../api/SetStatistic";
 import {Translate} from "../../../../components/translate/Translate";
 import {useClickOutside} from "../../../../hooks/ClickOutside";
 import {GetAccessToken} from '../../../../api/GetAccessToken';
+import {useTranslation} from "react-i18next";
 
 interface ICostsHeaderProps {
     itemToEdit: IExpense | undefined
@@ -213,8 +213,7 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit, isFixedEdi
     }
 
 
-
-
+    const {t} = useTranslation();
 
 
     return (
@@ -237,7 +236,8 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit, isFixedEdi
                             }
 
                             {
-                                chosenTimesheet?.user?.id !== userData?.id && <span> ({chosenTimesheet?.user?.first_name} {chosenTimesheet?.user?.last_name})</span>
+                                chosenTimesheet?.user?.id && chosenTimesheet?.user?.id !== userData?.id &&
+                                <span> ({chosenTimesheet?.user?.first_name} {chosenTimesheet?.user?.last_name})</span>
                             }
 
                         </span>
@@ -267,11 +267,8 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit, isFixedEdi
                                                className="section-table__search--input"
                                                onChange={e => setSearchValueLocal(e.target.value)}
                                                value={searchValueLocal}
+                                               placeholder={`${t("costs_page.top_part.search_a_project")}`}
                                         />
-                                        <span className="placeholder">
-                                            {!searchValueLocal &&
-                                                <Translate>costs_page.top_part.search_a_project</Translate>}
-                                        </span>
                                     </label>
                                     <button onClick={_ => setIsOpenInputSearch(true)}
                                             className="section-table__search--submit btn is-grey is-min-on-mob"
@@ -295,7 +292,8 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit, isFixedEdi
                 </div>
                 <div className="section-table__header--block-item">
                     <div>
-                        <form onSubmit={handleCreateExpense} className="section-table__header--add-costs section-table__add-costs">
+                        <form onSubmit={handleCreateExpense}
+                              className="section-table__header--add-costs section-table__add-costs">
                             <button onClick={handleBackFromCreate}
                                     className="section-table__add-expense--back back-btn remove-is-active"
                                     data-remove-active-change-title="main-title" type="button"
@@ -314,25 +312,19 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit, isFixedEdi
 
                             <div className="section-table__add-costs--text">
                                 <label>
-                                    <span className="input_placeholder">
-                                        <input type="text" spellCheck name="costs" value={descriptionData}
-                                               onChange={e => setDescriptionData(e.target.value)} required
-                                               className="input"/>
-                                        <span className="placeholder">
-                                            {!descriptionData &&
-                                                <Translate>costs_page.top_part.write_short_description</Translate>}
-                                        </span>
-                                    </span>
+                                    <input type="text" spellCheck name="costs" value={descriptionData}
+                                           onChange={e => setDescriptionData(e.target.value)} required
+                                           className="input"
+                                           placeholder={`${t("costs_page.top_part.write_short_description")}`}
+                                    />
                                 </label>
                             </div>
                             <div className="section-table__add-costs--cost">
-                                <div className="input_placeholder">
-                                    <input type="number" spellCheck name="cost" value={costData === 0 ? "" : String(costData).replace(',', '.')}
-                                           onChange={handleSetValueCost} required className="input"/>
-                                    <div className="placeholder">
-                                        {!costData && <Translate>costs_page.table.cost</Translate>}
-                                    </div>
-                                </div>
+                                <input type="number" spellCheck name="cost"
+                                       value={costData === 0 ? "" : String(costData).replace(',', '.')}
+                                       onChange={handleSetValueCost} required className="input"
+                                       placeholder={`${t("costs_page.table.cost")}`}
+                                />
                             </div>
                             <button className="section-table__add-expense--submit btn"
                                     type="submit">

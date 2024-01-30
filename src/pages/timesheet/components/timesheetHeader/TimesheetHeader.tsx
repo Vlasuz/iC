@@ -232,7 +232,8 @@ export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({itemToEdit, is
                             }
 
                             {
-                                chosenTimesheet?.user?.id !== userData?.id && <span> ({chosenTimesheet?.user?.first_name} {chosenTimesheet?.user?.last_name})</span>
+                                chosenTimesheet?.user?.id && chosenTimesheet?.user?.id !== userData?.id &&
+                                <span> ({chosenTimesheet?.user?.first_name} {chosenTimesheet?.user?.last_name})</span>
                             }
 
                         </span>

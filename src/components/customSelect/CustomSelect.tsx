@@ -3,6 +3,7 @@ import {CustomSelectStyled} from "./CustomSelect.styled";
 import {useClickOutside} from "../../hooks/ClickOutside";
 import SimpleBar from "simplebar-react";
 import {Translate} from "../translate/Translate";
+import {useTranslation} from "react-i18next";
 
 interface ICustomSelectProps {
     list: any[]
@@ -78,7 +79,7 @@ export const CustomSelect: React.FC<ICustomSelectProps> = ({
     const handleOpenSelect = (e: React.MouseEvent<HTMLButtonElement> | React.MouseEvent<HTMLInputElement>) => {
         e.preventDefault()
         setIsOpenSelect(prev => !prev)
-        if(!isOpenSelect)
+        if (!isOpenSelect)
             inputBlockRef?.current?.focus()
     }
 
@@ -94,24 +95,19 @@ export const CustomSelect: React.FC<ICustomSelectProps> = ({
         return whoHaveTranslate.some(item2 => item2 === item)
     }
 
+    const {t} = useTranslation();
+
     return (
         <CustomSelectStyled ref={rootEl} className={`select ${isOpenSelect && "is-active"}`}>
-            <button onClick={handleOpenSelect} className="custom-select__head">
+            <button type={"button"} onClick={handleOpenSelect} className="custom-select__head">
                 {/*{*/}
-                {/*    tabIndex ?*/}
-                {/*        <span className="input_placeholder">*/}
-                {/*    <input tabIndex={tabIndex} style={{width: "20px"}} type="text"/>*/}
-                {/*    <span className="placeholder">*/}
-                {/*        {isHaveTranslate(selectedItemLocal?.value) ?*/}
-                {/*            <Translate>{`employees_admin.table.${selectedItemLocal?.value}`}</Translate> : selectedItemLocal?.label}*/}
-                {/*    </span>*/}
-                {/*</span>*/}
-                {/*        :*/}
-                {/*        */}
+                {/*    tabIndex &&*/}
+                {/*        <input tabIndex={tabIndex} style={{width: "20px"}} type="text"*/}
+                {/*               placeholder={`${t(`employees_admin.table.${selectedItemLocal?.value}`)}`}/>*/}
                 {/*}*/}
 
                 {tabIndex && <input type="text" ref={inputBlockRef} tabIndex={tabIndex}
-                        onClick={handleOpenSelect} onFocus={handleFocusElement}/>}
+                                    onClick={handleOpenSelect} onFocus={handleFocusElement}/>}
                 <span>
                         {
                             isHaveTranslate(selectedItemLocal?.value) ?

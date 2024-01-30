@@ -6,6 +6,7 @@ import axios from "axios";
 import {getApiLink} from "../../../functions/getApiLink";
 import {PopupContext} from "../../../App";
 import {toast} from "react-toastify";
+import {useTranslation} from "react-i18next";
 
 interface IPopupForgotPasswordProps {
     popup: any
@@ -23,7 +24,7 @@ export const PopupForgotPassword: React.FC<IPopupForgotPasswordProps> = ({popup,
         e.preventDefault()
 
         axios.post(getApiLink(`/api/auth/reset_password/?email=${emailValue}`)).then(({data}) => {
-            if(!data.status) {
+            if (!data.status) {
                 toast.error(<Translate>{`${data.message}`}</Translate>)
                 return;
             }
@@ -31,6 +32,8 @@ export const PopupForgotPassword: React.FC<IPopupForgotPasswordProps> = ({popup,
             setPopup({popup: "reset-password-thanks-popup", data: {email: emailValue}})
         })
     }
+
+    const {t} = useTranslation();
 
     return (
 
@@ -52,13 +55,10 @@ export const PopupForgotPassword: React.FC<IPopupForgotPasswordProps> = ({popup,
                 <form onSubmit={handleSubmit} className="popup-form">
                     <div className="popup-form__row">
                         <label className="popup-form__label is-full">
-                            <span className="input_placeholder">
-                                <input type="email" name="Email" required
-                                       className="input" value={emailValue} onChange={e => setEmailValue(e.target.value)}/>
-                                <span className="placeholder">
-                                    {!emailValue && <Translate>reset_password.enter_email</Translate>}
-                                </span>
-                            </span>
+                            <input type="email" name="Email" required
+                                   className="input" value={emailValue} onChange={e => setEmailValue(e.target.value)}
+                                   placeholder={`${t("reset_password.enter_email")}`}
+                            />
                         </label>
                     </div>
                     <div className="popup-form__row is-min-gap">

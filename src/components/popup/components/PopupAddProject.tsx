@@ -2,12 +2,13 @@ import React, {useContext, useEffect, useRef, useState} from 'react'
 import axios from "axios";
 import {getBearer} from "../../../functions/getBearer";
 import {getApiLink} from "../../../functions/getApiLink";
-import { useDispatch } from 'react-redux';
-import { addProject } from '../../../storage/toolkit';
+import {useDispatch} from 'react-redux';
+import {addProject} from '../../../storage/toolkit';
 import {IsPopupActiveContext} from "../PopupList";
 import {Translate} from "../../translate/Translate";
 import {PopupCloseCancel} from "./PopupCloseCancel";
 import {PopupClose} from "./PopupClose";
+import {useTranslation} from "react-i18next";
 
 interface IPopupAddProjectProps {
 
@@ -34,6 +35,8 @@ export const PopupAddProject: React.FC<IPopupAddProjectProps> = () => {
         }).catch(er => console.log(getApiLink("/api/admin/project/add/"), er))
     }
 
+    const {t} = useTranslation();
+
     return (
         <div className="add-project__body popup-body">
             <h2 className="add-project__title popup-title title">
@@ -48,13 +51,10 @@ export const PopupAddProject: React.FC<IPopupAddProjectProps> = () => {
                             <span>
                                 <Translate>projects_admin.project_name</Translate>
                             </span>
-                            <span className="input_placeholder">
-                                <input type="text" name="project-name" required
-                                       className="input" value={nameValue} onChange={e => setNameValue(e.target.value)}/>
-                                <span className="placeholder">
-                                    {!nameValue.length ? <Translate>projects_admin.project_name</Translate> : ""}
-                                </span>
-                            </span>
+                            <input type="text" name="project-name" required
+                                   className="input" value={nameValue} onChange={e => setNameValue(e.target.value)}
+                                   placeholder={`${t("projects_admin.project_name")}`}
+                            />
                         </label>
                     </div>
                     <div className="popup-form__row">
@@ -62,13 +62,11 @@ export const PopupAddProject: React.FC<IPopupAddProjectProps> = () => {
                             <span>
                                 <Translate>projects_admin.project_description</Translate>
                             </span>
-                            <span className="input_placeholder">
-                                <input type="text" name="project-description" required
-                                       className="input" onChange={e => setDescriptionValue(e.target.value)} value={descriptionValue}/>
-                                <span className="placeholder">
-                                    {!descriptionValue.length ? <Translate>projects_admin.project_description</Translate> : ""}
-                                </span>
-                            </span>
+                            <input type="text" name="project-description" required
+                                   className="input" onChange={e => setDescriptionValue(e.target.value)}
+                                   value={descriptionValue}
+                                   placeholder={`${t("projects_admin.project_description")}`}
+                            />
                         </label>
                     </div>
                     <div className="popup-form__row is-min-gap">

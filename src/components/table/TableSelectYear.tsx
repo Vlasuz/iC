@@ -44,6 +44,7 @@ export const TableSelectYear: React.FC<ITableSelectYearProps> = ({setYear}) => {
                                 prevEl: '.splide__arrow--prev'
                             }}
                             modules={[Navigation]}
+                            initialSlide={1}
                         >
 
                             {

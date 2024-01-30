@@ -1,10 +1,9 @@
 import React, {useEffect, useState} from 'react'
 import {Translate} from "../../../components/translate/Translate";
-import {LoginChooseCompany} from "../../login/components/LoginChooseCompany";
-import {LoginStyled} from "../../login/Login.styled";
 import axios from "axios";
 import {getApiLink} from "../../../functions/getApiLink";
 import {NavLink, useParams} from "react-router-dom";
+import {useTranslation} from "react-i18next";
 
 interface IResetPasswordFormProps {
 
@@ -28,9 +27,9 @@ export const ResetPasswordForm: React.FC<IResetPasswordFormProps> = () => {
             "password": passwordField
         }).then(({data}) => {
             console.log(data)
-            if(data.status === true) {
+            if (data.status === true) {
                 setIsSuccessChanges(true)
-            } else if (data.status === false){
+            } else if (data.status === false) {
                 setErrorMessage(data.message)
             }
         }).catch(er => {
@@ -50,6 +49,8 @@ export const ResetPasswordForm: React.FC<IResetPasswordFormProps> = () => {
     const [passwordField, setPasswordField] = useState("")
     const [secondPasswordField, setSecondPasswordField] = useState("")
 
+    const {t} = useTranslation();
+
     return (
         <form onSubmit={handleReset} className="login__form">
 
@@ -61,7 +62,6 @@ export const ResetPasswordForm: React.FC<IResetPasswordFormProps> = () => {
                         Your password was successfully updated!
                     </p>
                     <NavLink to={"/login"} className={"login__submit btn"}>
-
                         <Translate>reset_password.go_to_the_entry_page</Translate>
                     </NavLink>
                 </div> :
@@ -70,14 +70,11 @@ export const ResetPasswordForm: React.FC<IResetPasswordFormProps> = () => {
                         <Translate>reset_password.reset_password</Translate>
                     </h1>
                     <label className="login__label">
-                <span className="input_placeholder">
                         <input type={isShowPassword ? "text" : "password"} name="password" required
                                onChange={e => setPasswordField(e.target.value)} minLength={8} value={passwordField}
-                               className="login__input input password-input"/>
-                    <span className="placeholder">
-                        {!passwordField.length ? <Translate>reset_password.enter_new_password</Translate> : ""}
-                    </span>
-                </span>
+                               className="login__input input password-input"
+                               placeholder={`${t("reset_password.enter_new_password")}`}
+                        />
                         <button onClick={_ => setIsShowPassword(prev => !prev)}
                                 className="login__show-password password-input__visible-toggle" type="button"
                                 title="Show/Hide password">
@@ -87,14 +84,12 @@ export const ResetPasswordForm: React.FC<IResetPasswordFormProps> = () => {
                         </button>
                     </label>
                     <label className="login__label">
-                <span className="input_placeholder">
-                    <input type={isShowPasswordRepeat ? "text" : "password"} name="password" required
-                           onChange={e => setSecondPasswordField(e.target.value)} minLength={8} value={secondPasswordField}
-                           className="login__input input password-input"/>
-                    <span className="placeholder">
-                        {!secondPasswordField.length ? <Translate>reset_password.confirm_new_password</Translate> : ""}
-                    </span>
-                </span>
+                        <input type={isShowPasswordRepeat ? "text" : "password"} name="password" required
+                               onChange={e => setSecondPasswordField(e.target.value)} minLength={8}
+                               value={secondPasswordField}
+                               className="login__input input password-input"
+                               placeholder={`${t("reset_password.confirm_new_password")}`}
+                        />
                         <button onClick={_ => setIsShowPasswordRepeat(prev => !prev)}
                                 className="login__show-password password-input__visible-toggle" type="button"
                                 title="Show/Hide password">

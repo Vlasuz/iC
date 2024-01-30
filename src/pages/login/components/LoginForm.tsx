@@ -9,6 +9,7 @@ import setCookie from "../../../functions/setCookie";
 import {PopupContext} from "../../../App";
 import {LoginChooseCompany} from "./LoginChooseCompany";
 import {Translate} from "../../../components/translate/Translate";
+import {useTranslation} from "react-i18next";
 
 interface ILoginFormProps {
 
@@ -88,8 +89,10 @@ export const LoginForm: React.FC<ILoginFormProps> = () => {
         }, 100);
     };
 
+    const { t } = useTranslation();
+
     return (
-        <LoginStyled onSubmit={handleAuthorization} autoComplete="off" className="login__form">
+        <LoginStyled onSubmit={handleAuthorization} className="login__form">
             <h1 className="login__title title is-large">
                 <Translate>page_login.login</Translate>
             </h1>
@@ -97,19 +100,16 @@ export const LoginForm: React.FC<ILoginFormProps> = () => {
             <LoginChooseCompany/>
 
             <label className="login__label">
-                <input autoComplete="off" type="email" name="email" placeholder="E-mail" required
+                <input type="email" name="email" placeholder="E-mail" required
                        onChange={e => setEmailField(e.target.value)} value={emailField} className="login__input input"/>
             </label>
 
             <label className="login__label">
-                <span className="input_placeholder">
-                    <input autoComplete="off" ref={inputRef} onInput={handleInputChange} type={isShowPassword ? "text" : "password"} name="password" required
+                    <input ref={inputRef} onInput={handleInputChange} type={isShowPassword ? "text" : "password"} name="password" required
                            onChange={e => setPasswordField(e.target.value)} value={passwordField}
-                           className="login__input input password-input"/>
-                    <span className="placeholder">
-                        {!isAutofill && !passwordField.length ? <Translate>page_login.password</Translate> : ""}
-                    </span>
-                </span>
+                           className="login__input input password-input"
+                           placeholder={`${t("page_login.password")}`}
+                    />
                 <button onClick={_ => setIsShowPassword(prev => !prev)}
                         className="login__show-password password-input__visible-toggle" type="button"
                         title="Show/Hide password">

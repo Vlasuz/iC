@@ -6,6 +6,8 @@ import {getBearer} from "../../../functions/getBearer";
 import {IEmployee} from "../../../models";
 import {IsPopupActiveContext} from "../PopupList";
 import {SetEmployees} from "../../../api/SetEmployees";
+import {Translate} from "../../translate/Translate";
+import {PopupCloseCancel} from "./PopupCloseCancel";
 
 interface IPopupDeleteEmployeeProps {
     data: IEmployee
@@ -46,15 +48,13 @@ export const PopupDeleteEmployee: React.FC<IPopupDeleteEmployeeProps> = ({data})
             <div className="remove-table-item__container popup-container" data-simplebar
                  data-simplebar-auto-hide="false">
                 <h2 className="remove-table-item__title popup-title title is-center">
-                    Are you sure you want to delete this row?
+                    <Translate>employees_admin.others.confirm_delete_row</Translate>
                 </h2>
                 <form onSubmit={handleDelete} className="popup-form">
                     <div className="popup-form__row is-min-gap">
-                        <button className="popup-form__cancel btn is-transparent popup-close" type="button">
-                            Cancel
-                        </button>
+                        <PopupCloseCancel/>
                         <button className="popup-form__submit btn" type="submit">
-                            Delete
+                            <Translate>employees_admin.others.delete</Translate>
                         </button>
                     </div>
                 </form>

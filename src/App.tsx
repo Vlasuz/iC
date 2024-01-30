@@ -42,18 +42,36 @@ function App() {
             // @ts-ignore
             if (document.querySelector(".main__inner section")) {
                 // @ts-ignore
-                document.querySelector(".main__inner section").style.paddingBottom = "110px"
-                // @ts-ignore
                 document.querySelector(".main__inner section").style.zoom = "70%";
+                // @ts-ignore
+                document.querySelector(".main__inner section").style.minHeight = "calc(140vh - 60px)";
+
+                if(document.querySelector(".down-sidebar")) {
+                    // @ts-ignore
+                    document.querySelector(".main__inner section").style.paddingBottom = "110px"
+                } else {
+                    // @ts-ignore
+                    document.querySelector(".main__inner section").style.paddingBottom = "0px"
+                }
+
             }
         } else {
             // @ts-ignore
             document.body.style.zoom = "100%";
             if (document.querySelector(".main__inner section")) {
                 // @ts-ignore
-                document.querySelector(".main__inner section").style.paddingBottom = "80px"
-                // @ts-ignore
                 document.querySelector(".main__inner section").style.zoom = "100%";
+                // @ts-ignore
+                document.querySelector(".main__inner section").style.minHeight = "calc(95vh - 4px)";
+
+                if(document.querySelector(".down-sidebar")) {
+                    // @ts-ignore
+                    document.querySelector(".main__inner section").style.paddingBottom = "80px"
+                } else {
+                    // @ts-ignore
+                    document.querySelector(".main__inner section").style.paddingBottom = "0px"
+                }
+
             }
         }
     }

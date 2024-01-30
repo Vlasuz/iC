@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import {Translate} from "../../../../components/translate/Translate";
+import {useTranslation} from "react-i18next";
 
 interface ITimesheetHeaderTaskProps {
     setTaskData: any
@@ -19,15 +20,15 @@ export const TimesheetHeaderTask: React.FC<ITimesheetHeaderTaskProps> = ({setTas
         setValueField(taskData)
     }, [taskData])
 
+    const {t} = useTranslation();
+
     return (
         <div className="section-table__add-task--text">
             <label>
-                <span className="input_placeholder">
-                    <input spellCheck type="text" onChange={handleChangeInput} value={valueField} name="task" required className="input"/>
-                    <span className="placeholder">
-                        {!valueField && <Translate>timesheet_page.top_part.tell_us_your_secrets</Translate>}
-                    </span>
-                </span>
+                <input spellCheck type="text" onChange={handleChangeInput} value={valueField} name="task" required
+                       className="input"
+                       placeholder={`${t("timesheet_page.top_part.tell_us_your_secrets")}`}
+                />
             </label>
         </div>
     )
