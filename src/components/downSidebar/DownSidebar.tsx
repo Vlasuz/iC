@@ -117,7 +117,7 @@ export const DownSidebar: React.FC<IDownSidebarProps> = ({
                                 <Translate>timesheet_page.down_sidebar.total_for_month</Translate>
                             </span>
                             <div className="down-sidebar__total-target--value">
-                                {amountStatistic ? amountStatistic.toFixed(2) : statisticAllAmount?.toFixed(2)} {isCostPage ? currency : <Translate>timesheet_page.down_sidebar.hours</Translate>}
+                                {amountStatistic ? isCostPage ? amountStatistic.toFixed(2) : amountStatistic.toFixed(1) : isCostPage ? statisticAllAmount?.toFixed(2) : statisticAllAmount?.toFixed(1)} {isCostPage ? currency : <Translate>timesheet_page.down_sidebar.hours</Translate>}
                             </div>
                         </div>
                     </div>
@@ -195,7 +195,7 @@ export const DownSidebar: React.FC<IDownSidebarProps> = ({
                                                         {item.project.name}_{item.project.description}
                                                     </b>
                                                     <div className="down-sidebar__total-item--value">
-                                                        <b style={{maxWidth: isCostPage ? "80px" : "50px"}}>{isCostPage ? item?.expense.sum.toFixed(2) : item?.task.hours} {isCostPage ? currency : "h"}</b>
+                                                        <b style={{maxWidth: isCostPage ? "105px" : "85px"}}>{isCostPage ? item?.expense.sum.toFixed(2) : item?.task.hours} {isCostPage ? currency : <Translate>timesheet_page.table.h</Translate>}</b>
                                                         <div
                                                             className="down-sidebar__total-item--progress-bar"
                                                             data-value={`${item.task.percent > 100 ? 100 : item.task.percent}%`}>

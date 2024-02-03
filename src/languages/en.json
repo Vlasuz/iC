@@ -316,7 +316,11 @@
   "export_as": "Export as",
   "edit_expense": "Edit expense",
   "edit_cost": "Edit cost",
+  "edit_task": "Edit task",
   "edit_project": "Edit data",
+
+  "duplicate_task": "Duplicate task",
+  "duplicate_cost": "Duplicate cost",
 
   "uncompleted": "Uncompleted",
   "completed": "Completed",
@@ -324,6 +328,8 @@
   "descending": "Descending",
   "newest_first": "Newest first",
   "oldest_first": "Oldest first",
+
+  "loading": "Loading...",
 
   "time_was_used": "You are trying to add already occupied time, please change it and try again",
   "cancel_sending": "Cancel sending",

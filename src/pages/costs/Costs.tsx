@@ -4,7 +4,7 @@ import {CostsTable} from "./components/costsTable/CostsTable";
 import {RowsPerPage} from "../../constants/RowsPerPage";
 import {CustomSelect} from "../../components/customSelect/CustomSelect";
 import {useDispatch, useSelector} from "react-redux";
-import {IComment, IExpense, IStatistic, ITask, ITimesheet} from "../../models";
+import {IComment, IExpense, IStatistic, ITask, ITimesheet, IUser} from "../../models";
 import {getBearer} from "../../functions/getBearer";
 import axios from "axios";
 import {getApiLink} from "../../functions/getApiLink";
@@ -16,6 +16,9 @@ import {SetStatistic} from "../../api/SetStatistic";
 import {Translate} from "../../components/translate/Translate";
 import {CostsExportTable} from "./components/CostsExportTable";
 import {GetAccessToken} from '../../api/GetAccessToken';
+import {SetTimesheet} from "../../api/SetTimesheet";
+import {SetTasks} from "../../api/SetTasks";
+import {SetExpenses} from "../../api/SetExpenses";
 
 interface ICostsProps {
 
@@ -32,6 +35,7 @@ export const Costs: React.FC<ICostsProps> = () => {
 
     const {timesheetId}: any = useParams()
 
+    const user: IUser = useSelector((state: any) => state.toolkit.user)
     const expenseList: IExpense[] = useSelector((state: any) => state.toolkit.expenses)
     const chosenTimesheet: ITimesheet = useSelector((state: any) => state.toolkit.chosenTimesheet)
     const timesheetStatistic: IStatistic = useSelector((state: any) => state.toolkit.timesheetStatistic)
@@ -43,7 +47,7 @@ export const Costs: React.FC<ICostsProps> = () => {
     const [isLoad, setIsLoad] = useState(false)
 
     useEffect(() => {
-        if (!chosenTimesheet || !Object.keys(chosenTimesheet).length) return;
+        if (!!timesheetId || !chosenTimesheet || !Object.keys(chosenTimesheet).length) return;
 
         getBearer("get")
         axios.get(getApiLink(`/api/timesheet/expenses/?timesheet_id=${timesheetId ?? chosenTimesheet.id}`)).then(({data}) => {
@@ -53,6 +57,16 @@ export const Costs: React.FC<ICostsProps> = () => {
             er?.response?.status === 401 && GetAccessToken(dispatch)
         })
     }, [chosenTimesheet, timesheetId])
+
+    useEffect(() => {
+        if(timesheetId === undefined && chosenTimesheet?.user?.id !== user?.id) {
+
+            console.log('123')
+
+            SetTimesheet(dispatch)
+            SetExpenses(dispatch, chosenTimesheet.id)
+        }
+    }, [])
 
     useEffect(() => {
         if (isLoad) return;
@@ -91,7 +105,7 @@ export const Costs: React.FC<ICostsProps> = () => {
 
                             <CostsExportTable/>
 
-                            <CostsHeader itemToDuplicate={itemToDuplicate} isFixedEditBlock={isFixedEditBlock} itemToEdit={itemToEdit}/>
+                            <CostsHeader itemToDuplicate={itemToDuplicate} setItemToDuplicate={setItemToDuplicate} isFixedEditBlock={isFixedEditBlock} itemToEdit={itemToEdit}/>
                             {chosenTimesheet?.id && <CostsTable itemToEdit={itemToEdit} rowsSelectValue={rowsSelectValue}/>}
 
                             <div className="section-table__footer">

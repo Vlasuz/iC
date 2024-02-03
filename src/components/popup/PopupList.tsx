@@ -19,6 +19,7 @@ import {PopupResetPasswordThankYou} from "./components/PopupResetPasswordThankYo
 import {PopupResetPassword} from "./components/PopupResetPassword";
 import {PopupReviewToTimesheet} from "./components/PopupReviewToTimesheet";
 import {PopupListStyled} from "./PopupList.styled";
+import {PopupResetPasswordInput} from "./components/PopupResetPasswordInput";
 
 interface IPopupListProps {
     popup: any
@@ -55,6 +56,7 @@ export const PopupList: React.FC<IPopupListProps> = ({popup}) => {
         "profile-popup": <PopupProfile data={popup.data}/>,
         "edit-profile-popup": <PopupEditProfile popup={popup}/>,
 
+        "reset-password-input-popup": <PopupResetPasswordInput popup={popup} data={popup.data}/>,
         "reset-password-popup": <PopupResetPassword popup={popup} data={popup.data}/>,
         "reset-password-thanks-popup": <PopupResetPasswordThankYou popup={popup} data={popup.data}/>,
     }
@@ -98,8 +100,6 @@ export const PopupList: React.FC<IPopupListProps> = ({popup}) => {
     }, [isPopupSecondActive])
 
     const sidePopup = ["profile-popup", "edit-profile-popup"]
-
-    console.log(popup)
 
     const handleClosePopup = () => {
         setIsPopupActive(false)

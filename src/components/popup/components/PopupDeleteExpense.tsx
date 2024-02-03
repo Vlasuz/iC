@@ -10,6 +10,7 @@ import {ITimesheet} from "../../../models";
 import {removeExpense, removeTask} from "../../../storage/toolkit";
 import {Translate} from "../../translate/Translate";
 import {PopupCloseCancel} from "./PopupCloseCancel";
+import {PopupClose} from "./PopupClose";
 
 interface IPopupDeleteExpenseProps {
     data: any
@@ -42,12 +43,7 @@ export const PopupDeleteExpense: React.FC<IPopupDeleteExpenseProps> = ({data}) =
 
     return (
         <div className="remove-table-item__body popup-body">
-            <button type="button" className="remove-table-item__close-btn popup-close-btn popup-close"
-                    title="Close">
-                <svg width="15" height="15" viewBox="0 0 15 15">
-                    <use xlinkHref="#close"></use>
-                </svg>
-            </button>
+            <PopupClose/>
             <div className="remove-table-item__container popup-container" data-simplebar
                  data-simplebar-auto-hide="false">
                 <h2 className="remove-table-item__title popup-title title is-center">

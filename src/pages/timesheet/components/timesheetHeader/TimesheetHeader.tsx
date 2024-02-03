@@ -24,9 +24,10 @@ interface ITimesheetHeaderProps {
     itemToEdit: ITask | undefined
     isFixedEditBlock: boolean
     itemToDuplicate: ITask | undefined
+    setItemToDuplicate: any
 }
 
-export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({itemToEdit, isFixedEditBlock, itemToDuplicate}) => {
+export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({itemToEdit, isFixedEditBlock, itemToDuplicate, setItemToDuplicate}) => {
 
     const { t } = useTranslation();
 
@@ -44,6 +45,7 @@ export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({itemToEdit, is
     const [hoursData, setHoursData] = useState<number>(0)
     const [searchValueLocal, setSearchValueLocal] = useState("")
     const [isCancelEdit, setIsCancelEdit] = useState(false)
+    const [isLoadingToAdd, setIsLoadingToAdd] = useState(false)
 
     const dispatch = useDispatch()
 
@@ -51,6 +53,8 @@ export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({itemToEdit, is
 
     const handleCreateTask = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
+
+        setIsLoadingToAdd(true)
 
         const timesheetRequest: any = {
             "project_id": projectData?.id,
@@ -60,13 +64,6 @@ export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({itemToEdit, is
             "hours": hoursData
         }
 
-        // const theTimeYouChose = +timeData.slice(0, 2)
-        // const theHighestHoursInThisDate = +tasks.filter(item => item.date.slice(0, 5) === dateData.replaceAll(".", "/").slice(0, 5))?.reverse()[0]?.time?.slice(8).slice(0, 2)
-        //
-        // if(theTimeYouChose < theHighestHoursInThisDate) {
-        //     return toast.error(<Translate>time_was_used</Translate>)
-        // }
-
         if (isEditTask) {
 
             setIsCancelEdit(true)
@@ -74,11 +71,15 @@ export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({itemToEdit, is
 
                 getBearer("patch")
                 axios.patch(getApiLink("/api/task/edit/?task_id=" + itemToEdit.id), timesheetRequest).then(({data}) => {
+                    setIsLoadingToAdd(false)
+
                     console.log(data)
                     if (data?.status === false) return;
 
                     setIsFixedEditBlock(false)
                     setIsCancelEdit(false)
+                    setItemToDuplicate({})
+                    setItemEdit({})
 
                     SetStatistic(dispatch, chosenTimesheet.id)
                     SetTasks(dispatch, chosenTimesheet.id)
@@ -90,9 +91,13 @@ export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({itemToEdit, is
         } else {
             getBearer("post")
             axios.post(getApiLink("/api/task/add/"), timesheetRequest).then(({data}) => {
+                setIsLoadingToAdd(false)
+
                 if (data?.status === false) {
                     return toast.error(`${t("time_was_used")}`);
                 }
+
+                isDuplicateTask && handleBackFromCreate()
 
                 SetStatistic(dispatch, chosenTimesheet.id)
 
@@ -160,6 +165,7 @@ export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({itemToEdit, is
         setTimeout(() => {
             setIsFixedEditBlock(false)
             setItemEdit({})
+            setItemToDuplicate({})
             setIsOpenCreatBlock(false)
             setIsCancelEdit(false)
         }, 400)
@@ -214,6 +220,12 @@ export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({itemToEdit, is
     const [isOpenInputSearch, setIsOpenInputSearch] = useState(false)
     const {rootEl} = useClickOutside(setIsOpenInputSearch)
 
+    const secondTitle: { [key: string]: string } = {
+        "duplicate": `${t("duplicate_task")}`,
+        "edit": `${t("edit_task")}`,
+        "add": `${t("timesheet_page.top_part.add_task")}`
+    }
+
     return (
         <div className={`section-table__header ${isFixedEditBlock && "animate-to-show"} ${isCancelEdit && "animate-to-hide"}`}>
             <div className="section-table__header--row is-always-row">
@@ -228,7 +240,7 @@ export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({itemToEdit, is
                                 isOpenCreatBlock && " / "
                             }
                             {
-                                isOpenCreatBlock && (!isEditTask ? <Translate>timesheet_page.top_part.add_task</Translate> : "Edit task")
+                                isOpenCreatBlock && (secondTitle[isDuplicateTask ? "duplicate" : isEditTask ? "edit" : "add"])
                             }
 
                             {
@@ -311,9 +323,8 @@ export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({itemToEdit, is
                             <TimesheetHeaderChooseTime hoursData={hoursData} timeData={timeData}
                                                        setHoursData={setHoursData} setTimeData={setTimeData}/>
 
-                            <button className="section-table__add-task--submit btn"
-                                    type="submit">
-                                {isEditTask ? "Edit task" : <Translate>timesheet_page.top_part.add_task</Translate>}
+                            <button disabled={isLoadingToAdd} className="section-table__add-task--submit btn" type="submit">
+                                {!isLoadingToAdd ? (isEditTask ? <Translate>edit_task</Translate> : <Translate>timesheet_page.top_part.add_task</Translate>) : <Translate>loading</Translate>}
                             </button>
                         </form>
                     </div>

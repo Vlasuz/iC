@@ -9,7 +9,7 @@ interface INotificationsTimesheetStatusProps {
 
 export const NotificationsTimesheetStatus: React.FC<INotificationsTimesheetStatusProps> = ({itemData}) => {
 
-    const timesheetMonth = MonthNumber()[+`${itemData.timesheet.updated_at[3]}${itemData.timesheet.updated_at[4]}`]
+    const timesheetMonth = MonthNumber()[+`${itemData.timesheet.date[3]}${itemData.timesheet.date[4]}`]
 
     const { t } = useTranslation();
 

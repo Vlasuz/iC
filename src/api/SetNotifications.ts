@@ -8,6 +8,7 @@ export const SetNotifications = (dispatch: any) => {
     getBearer("get")
     axios.get(getApiLink(`/api/user/notifications/`)).then(({data}) => {
         dispatch(setNotifications(data))
+        console.log(data)
     }).catch(er => {
         er?.response?.status === 401 && GetAccessToken(dispatch)
     })

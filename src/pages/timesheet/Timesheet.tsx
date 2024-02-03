@@ -4,7 +4,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import {TimesheetHeader} from "./components/timesheetHeader/TimesheetHeader";
 import {TimesheetTable} from "./components/timesheetTable/TimesheetTable";
 import {TimesheetStyled} from "./Timesheet.styled";
-import {IComment, IStatistic, ITask, ITimesheet} from "../../models";
+import {IComment, IStatistic, ITask, ITimesheet, IUser} from "../../models";
 import {getBearer} from "../../functions/getBearer";
 import axios from "axios";
 import {getApiLink} from "../../functions/getApiLink";
@@ -18,6 +18,9 @@ import {useParams} from "react-router-dom";
 import {Translate} from "../../components/translate/Translate";
 import {SetStatistic} from "../../api/SetStatistic";
 import {TimesheetExportTable} from "./components/TimesheetExportTable";
+import {SetTimesheet} from "../../api/SetTimesheet";
+import {SetTasks} from "../../api/SetTasks";
+import {SetExpenses} from "../../api/SetExpenses";
 
 interface ITimesheetProps {
 
@@ -34,6 +37,7 @@ export const Timesheet: React.FC<ITimesheetProps> = () => {
 
     const {timesheetId}: any = useParams()
 
+    const user: IUser = useSelector((state: any) => state.toolkit.user)
     const taskList: ITask[] = useSelector((state: any) => state.toolkit.tasks)
     const chosenTimesheet: ITimesheet = useSelector((state: any) => state.toolkit.chosenTimesheet)
     const timesheetStatistic: IStatistic = useSelector((state: any) => state.toolkit.timesheetStatistic)
@@ -46,7 +50,7 @@ export const Timesheet: React.FC<ITimesheetProps> = () => {
     const [isLoad, setIsLoad] = useState(false)
 
     useEffect(() => {
-        if (!chosenTimesheet || !Object.keys(chosenTimesheet)?.length) return;
+        if (!!timesheetId || !chosenTimesheet || !Object.keys(chosenTimesheet)?.length) return;
 
         getBearer("get")
         axios.get(getApiLink(`/api/timesheet/tasks/?timesheet_id=${timesheetId ?? chosenTimesheet?.id}`)).then(({data}) => {
@@ -60,6 +64,16 @@ export const Timesheet: React.FC<ITimesheetProps> = () => {
         }).catch(er => console.log(getApiLink("/api/timesheet/statistics/?timesheet_id"), er))
 
     }, [chosenTimesheet, timesheetId])
+
+    useEffect(() => {
+        if(timesheetId === undefined && chosenTimesheet?.user?.id !== user?.id) {
+
+            console.log('123')
+
+            SetTimesheet(dispatch)
+            SetTasks(dispatch, chosenTimesheet.id)
+        }
+    }, [])
 
     useEffect(() => {
         if (isLoad) return;
@@ -98,14 +112,14 @@ export const Timesheet: React.FC<ITimesheetProps> = () => {
             <AmountStatistic.Provider value={setAmountStatistic}>
                 <FixedTopEdit.Provider value={setIsFixedEditBlock}>
                     <BlockToEdit.Provider value={setItemToEdit}>
-                        <TimesheetStyled style={{paddingBottom: isOpenDownSidebar ? "270px" : "80px"}}
+                        <TimesheetStyled style={{paddingBottom: isOpenDownSidebar ? "270px" : window.innerWidth < 576 ? "60px" : "80px"}}
                                          className={`section-table ${isFixedEditBlock && "fixed-edit-block"}`}>
 
                             <TimesheetExportTable/>
 
-                            <TimesheetHeader itemToDuplicate={itemToDuplicate} isFixedEditBlock={isFixedEditBlock} itemToEdit={itemToEdit}/>
+                            <TimesheetHeader itemToDuplicate={itemToDuplicate} setItemToDuplicate={setItemToDuplicate} isFixedEditBlock={isFixedEditBlock} itemToEdit={itemToEdit}/>
 
-                            {chosenTimesheet?.id && <TimesheetTable rowsSelectValue={rowsSelectValue}/>}
+                            {chosenTimesheet?.id && <TimesheetTable itemToEdit={itemToEdit} rowsSelectValue={rowsSelectValue}/>}
 
                             <div className="section-table__footer">
                                 <div className="section-table__row-per-page visible-on-mob">

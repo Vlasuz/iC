@@ -550,7 +550,7 @@
 		@media (min-width: 1600px) {
 			&.add-cols {
 				display: grid;
-				grid-template-columns: 1fr 1.5fr;
+				grid-template-columns: 1fr 2fr;
 			}
 		}
 
@@ -562,7 +562,7 @@
 				
 				display: grid;
 				@include _768 {
-					grid-template-columns: 1fr 1fr;
+					grid-template-columns: 2fr 1fr;
 				}
 				
 			}

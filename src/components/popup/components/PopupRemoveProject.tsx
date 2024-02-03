@@ -36,10 +36,10 @@ export const PopupRemoveProject: React.FC<IPopupRemoveProjectProps> = ({data}) =
     return (
         <div className="remove-table-item__body popup-body">
             <PopupClose/>
-            <div className="remove-table-item__container popup-container" data-simplebar
+            <div className="remove-table-item__container popup-container"
                  data-simplebar-auto-hide="false">
                 <h2 className="remove-table-item__title popup-title title is-center">
-                    Are you sure you want to delete this row?
+                    <Translate>employees_admin.others.confirm_delete_row</Translate>
                 </h2>
                 <form onSubmit={handleDelete} className="popup-form">
                     <div className="popup-form__row is-min-gap">

@@ -2,22 +2,17 @@ import React, {useContext, useEffect, useRef, useState} from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import {PopupContext} from "../../../../App";
 import {ITask, ITimesheet} from "../../../../models";
-import {addTask} from "../../../../storage/toolkit";
-import axios from "axios";
-import {getApiLink} from "../../../../functions/getApiLink";
-import {getBearer} from "../../../../functions/getBearer";
 import {BlockToDuplicate, BlockToEdit, FixedTopEdit} from "../../Timesheet";
-import {SetTasks} from "../../../../api/SetTasks";
-import {SetStatistic} from "../../../../api/SetStatistic";
 import {Translate} from "../../../../components/translate/Translate";
 import {handleOpenContextMenu} from "../../../../functions/handleOpenContextMenu";
 
 interface ITimesheetTableItemProps {
     taskItem: ITask
     numberOfRow: number
+    itemToEdit: any
 }
 
-export const TimesheetTableItem: React.FC<ITimesheetTableItemProps> = ({taskItem, numberOfRow}) => {
+export const TimesheetTableItem: React.FC<ITimesheetTableItemProps> = ({taskItem, numberOfRow, itemToEdit}) => {
 
     const [isOpenContextMenu, setIsOpenContextMenu] = useState(false)
     const [menuPosition, setMenuPosition] = useState({})
@@ -80,7 +75,7 @@ export const TimesheetTableItem: React.FC<ITimesheetTableItemProps> = ({taskItem
     }
 
     return (
-        <div ref={rowBlock} onContextMenu={e => handleOpenContextMenu({e, isOpenContextMenu, setMenuPosition, setIsOpenContextMenu, height: 160, width: 165})}
+        <div ref={rowBlock} style={{border: itemToEdit?.id === taskItem?.id ? "1px solid red" : ""}} onContextMenu={e => handleOpenContextMenu({e, isOpenContextMenu, setMenuPosition, setIsOpenContextMenu, height: 160, width: 165})}
              className={`section-table__row drop-down-2 ${numberOfRow % 2 ? " even" : " odd"}` + (isOpenContextMenu ? " is-active-drop-down" : "")}>
             <div className={`section-table__param is-center ${numberOfRow % 2 ? " even" : " odd"}`}>
                 <span>

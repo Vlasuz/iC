@@ -17,7 +17,7 @@ interface ITableExportProps {
 export const TableExport: React.FC<ITableExportProps> = ({title, onClick}) => {
 
     const tableToExcel = function() {
-        const uri = 'data:application/vnd.ms-excel;base64,';
+        const uri = 'data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,';
         const template = `
     <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
     <head>

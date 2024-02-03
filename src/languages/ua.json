@@ -245,9 +245,9 @@
       "export_monthly_summary": "Експортувати місячний звіт",
       "approved": "Затвердити",
       "rejected": "Відхилити",
-      "rejected_first": "Відхилені спочатку",
-      "approved_first": "Затверджені спочатку",
-      "progress_first": "В процесі спочатку",
+      "rejected_first": "Відхилені",
+      "approved_first": "Затверджені",
+      "progress_first": "В процесі",
       "change_decision": "Скасувати рішення",
       "summary_already_rejected": "Цей таймшит вже відхилений",
       "summary_already_approved": "Цей таймшит вже затверджено",
@@ -315,7 +315,11 @@
   "export_as": "Експортувати як",
   "edit_expense": "Редагувати",
   "edit_cost": "Редагування",
+  "edit_task": "Редагування",
   "edit_project": "Редагувати проект",
+
+  "duplicate_task": "Дублювати задачу",
+  "duplicate_cost": "Дублювати витрату",
 
   "uncompleted": "Незаповнені",
   "completed": "Заповнені",
@@ -323,6 +327,8 @@
   "descending": "За спаданням",
   "newest_first": "Спочатку найновіші",
   "oldest_first": "Спочатку найстаріші",
+
+  "loading": "Зачекайте...",
 
   "time_was_used": "Ви намагаєтесь додати час, що вже зайнятий, будь ласка змініть його та спробуйте ще раз",
   "cancel_sending": "Відмінити відправку",

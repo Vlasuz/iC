@@ -87,7 +87,7 @@ export const TimesheetStyled = styled.section`
   }
 
   .section-table__main.table-timesheet .section-table__row-block:not(:last-child) .section-table__row-block--list .section-table__row:last-child {
-    border: none;
+    //border: none;
   }
 
   @keyframes scrollToShow {
@@ -136,7 +136,7 @@ export const TimesheetStyled = styled.section`
     background: #f2f3f7;
     box-shadow: 0 0 10px #ccc;
 
-    padding: 20px 50px 20px 50px;
+    padding: 25px 50px 20px 50px;
 
     @media screen and (max-width: 1440px) {
       padding: 20px;

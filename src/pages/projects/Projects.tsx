@@ -181,7 +181,7 @@ export const Projects: React.FC<IProjectsProps> = () => {
                                        name="search" autoComplete="off" className="section-table__search--input"/>
                                 <span className="placeholder">
                                 {!searchValue.length ?
-                                    <Translate>employees_admin.table.search_an_employee</Translate> : ""}
+                                    <Translate>employees_admin.others.search_a_project</Translate> : ""}
                             </span>
                             </label>
                             <button onClick={_ => setIsOpenInputSearch(true)}

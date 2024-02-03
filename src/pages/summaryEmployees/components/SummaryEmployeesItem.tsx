@@ -414,7 +414,7 @@ export const SummaryEmployeesItem: React.FC<ISummaryEmployeesItemProps> = ({
                                     <Translate>summary_page.main.money_spent_for_projects</Translate>
                                 </b>
                                 <NavLink onClick={_ => dispatch(setChosenTimesheet(itemData))}
-                                         to={`/costs/${itemData.id}`}
+                                         to={`/expenses/${itemData.id}`}
                                          className="summary-item__total-element--link">
                                     <Translate>summary_page.main.show_full_data_costs</Translate>
                                     <svg width="7" height="10" viewBox="0 0 7 10">

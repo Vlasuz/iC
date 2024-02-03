@@ -1,0 +1,72 @@
+import React, {useContext, useEffect} from 'react'
+import {PopupClose} from "./PopupClose";
+import {Translate} from "../../translate/Translate";
+import {IsPopupActiveSecondContext} from "../PopupList";
+import {PopupContext} from "../../../App";
+import {IUser} from "../../../models";
+import {useSelector} from "react-redux";
+import {useTranslation} from "react-i18next";
+
+interface IPopupResetPasswordInputProps {
+    data: any
+    popup: any
+}
+
+export const PopupResetPasswordInput: React.FC<IPopupResetPasswordInputProps> = ({data, popup}) => {
+
+    const setPopup: any = useContext(PopupContext)
+
+    const userData: IUser = useSelector((state: any) => state.toolkit.user)
+
+    const handleResetPassword = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+
+        // axios.post(getApiLink(`/api/auth/reset_password/?email=${userData.email}`)).then(({data}) => {
+        //     if(!data.status) return;
+        //
+        //     setPopup({popup: popup.popup, secondPopup: "reset-password-thanks-popup", data: popup.data})
+        // })
+
+        setPopup({popup: popup.popup, secondPopup: "reset-password-thanks-popup", data: popup.data})
+    }
+
+    const setIsPopupSecondActive: any = useContext(IsPopupActiveSecondContext)
+    const handleClose = () => {
+        setIsPopupSecondActive(false)
+    }
+
+    const {t} = useTranslation()
+
+    return (
+        <div className="forgot-password__body popup-body">
+            <PopupClose/>
+            <button type="button" onClick={handleClose} className="remove-table-item__close-btn popup-close-btn popup-close"
+                    title="Close">
+                <svg width="15" height="15" viewBox="0 0 15 15">
+                    <use xlinkHref="#close"></use>
+                </svg>
+            </button>
+            <div className="forgot-password__container popup-container" data-simplebar
+                 data-simplebar-auto-hide="false">
+                <form onSubmit={handleResetPassword} className="popup-form">
+                    <h2 className="forgot-password__title popup-title title is-center">
+                        <Translate>page_login.password</Translate>
+                    </h2>
+                    <div className="forgot-password__text popup-text is-center">
+                        <label>
+                            <input required type="password" minLength={8} placeholder={`${t("page_login.password")}`} className={"input"}/>
+                        </label>
+                    </div>
+                    <div className="popup-form__row is-min-gap">
+                        <button type="button" onClick={handleClose} className="btn is-transparent">
+                            <Translate>employees_admin.others.cancel</Translate>
+                        </button>
+                        <button className="popup-form__submit btn" type="submit">
+                            <Translate>reset_password.save_new_password</Translate>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    )
+}

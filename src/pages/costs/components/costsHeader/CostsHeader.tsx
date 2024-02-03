@@ -22,9 +22,10 @@ interface ICostsHeaderProps {
     itemToEdit: IExpense | undefined
     itemToDuplicate: IExpense | undefined
     isFixedEditBlock: boolean
+    setItemToDuplicate: any
 }
 
-export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit, isFixedEditBlock, itemToDuplicate}) => {
+export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit, isFixedEditBlock, itemToDuplicate, setItemToDuplicate}) => {
 
 
     const isEditExpense = itemToEdit && Object.keys(itemToEdit).length
@@ -35,7 +36,9 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit, isFixedEdi
     const [dateData, setDateData] = useState<string>("")
     const [descriptionData, setDescriptionData] = useState<string>("")
     const [costData, setCostData] = useState<number>(0)
+    const [isLoadingToAdd, setIsLoadingToAdd] = useState(false)
 
+    const language = useSelector((state: any) => state.toolkit.language)
     const timesheet: ITimesheet[] = useSelector((state: any) => state.toolkit.timesheet)
     const chosenTimesheet: ITimesheet = useSelector((state: any) => state.toolkit.chosenTimesheet)
     const userData: IUser = useSelector((state: any) => state.toolkit.user)
@@ -48,6 +51,7 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit, isFixedEdi
 
     const handleCreateExpense = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
+        setIsLoadingToAdd(true)
 
         const timesheetRequest: any = {
             "project_id": projectData?.id,
@@ -63,9 +67,11 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit, isFixedEdi
 
                 getBearer("patch")
                 axios.patch(getApiLink("/api/expense/edit/?expense_id=" + itemToEdit.id), timesheetRequest).then(({data}) => {
+                    setIsLoadingToAdd(false)
 
                     setIsFixedEditBlock(false)
                     setItemEdit({})
+                    setItemToDuplicate({})
                     setIsCancelEdit(false)
 
                     SetStatistic(dispatch, chosenTimesheet.id)
@@ -78,6 +84,7 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit, isFixedEdi
         } else {
             getBearer("post")
             axios.post(getApiLink("/api/expense/add/"), timesheetRequest).then(({data}) => {
+                setIsLoadingToAdd(false)
 
                 SetStatistic(dispatch, chosenTimesheet.id)
                 SetExpenses(dispatch, chosenTimesheet.id)
@@ -132,6 +139,7 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit, isFixedEdi
         setTimeout(() => {
             setIsOpenCreatBlock(false)
             setItemEdit({})
+            setItemToDuplicate({})
             setIsCancelEdit(false)
             setIsFixedEditBlock(false)
         }, 400)
@@ -193,28 +201,33 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit, isFixedEdi
 
 
     const handleSetValueCost = (e: any) => {
-        const enteredValue = e.target.value.replace(',', '.');
 
-        // Преобразуем строку в число с использованием точки в качестве разделителя десятичной части
-        const floatValue = parseFloat(enteredValue.replace(',', '.'));
+        let inputValue = e.target.value;
 
-        // Проверяем, является ли введенное значение числом и не превышает ли количество знаков после точки 2
-        if (!isNaN(floatValue)) {
-            // Ограничиваем количество знаков после точки до 2
-            const limitedFloatValue = parseFloat(floatValue.toFixed(2).replace(',', '.'));
+        inputValue = inputValue.replace(/,/g, '.');
 
-            // Обновляем значение в поле ввода
-            // @ts-ignore
-            setCostData(limitedFloatValue.toString());
-        } else {
-            // Если введенное значение не является числом, просто обновляем значение
-            setCostData(enteredValue.replace(',', '.'));
+        const dotIndex = inputValue.indexOf('.');
+
+        if (dotIndex !== -1) {
+            const decimals = inputValue.substring(dotIndex + 1);
+            if (decimals.length > 2) {
+                setCostData(inputValue.substring(0, dotIndex + 3));
+                return;
+            }
         }
+
+        setCostData(inputValue);
     }
 
 
     const {t} = useTranslation();
 
+
+    const secondTitle: { [key: string]: string } = {
+        "duplicate": `${t("duplicate_cost")}`,
+        "edit": `${t("edit_cost")}`,
+        "add": `${t("costs_page.top_part.add_expense_2")}`
+    }
 
     return (
         <div
@@ -230,9 +243,7 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit, isFixedEdi
                                 isOpenCreatBlock && " / "
                             }
                             {
-                                isOpenCreatBlock && (!isEditExpense ?
-                                    <Translate>costs_page.top_part.add_expense_2</Translate> :
-                                    <Translate>edit_cost</Translate>)
+                                isOpenCreatBlock && (secondTitle[isDuplicateExpense ? "duplicate" : isEditExpense ? "edit" : "add"])
                             }
 
                             {
@@ -314,6 +325,7 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit, isFixedEdi
                                 <label>
                                     <input type="text" spellCheck name="costs" value={descriptionData}
                                            onChange={e => setDescriptionData(e.target.value)} required
+                                           lang={language}
                                            className="input"
                                            placeholder={`${t("costs_page.top_part.write_short_description")}`}
                                     />
@@ -328,8 +340,7 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit, isFixedEdi
                             </div>
                             <button className="section-table__add-expense--submit btn"
                                     type="submit">
-                                {isEditExpense ? <Translate>edit_expense</Translate> :
-                                    <Translate>costs_page.top_part.add_expense_2</Translate>}
+                                {!isLoadingToAdd ? (isEditExpense ? <Translate>edit_expense</Translate> : <Translate>costs_page.top_part.add_expense_2</Translate>) : <Translate>loading</Translate>}
                             </button>
                         </form>
                     </div>

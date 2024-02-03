@@ -158,7 +158,7 @@ export const TimesheetHeaderChooseTime: React.FC<ITimesheetHeaderChooseTimeProps
                         {
                             additionalHoursList.map((hour: string) =>
                                 <li key={hour}>
-                                    <button onClick={_ => handleAddTime(+hour)}>
+                                    <button type={"button"} onClick={_ => handleAddTime(+hour)}>
                                         {hour} <Translate>timesheet_page.table.h</Translate>
                                     </button>
                                 </li>

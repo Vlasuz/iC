@@ -153,7 +153,7 @@ function App() {
                     <Routes location={location}>
 
                         <Route path={'/costs'} element={<Costs/>}/>
-                        <Route path={'/costs/:timesheetId'} element={<Costs/>}/>
+                        <Route path={'/expenses/:timesheetId'} element={<Costs/>}/>
                         <Route path={isEmployee || isManager ? "/" : "/timesheet"} element={<Timesheet/>}/>
                         <Route path={isEmployee || isManager ? "/iC" : "/timesheet"} element={<Timesheet/>}/>
                         <Route path={"/timesheet/:timesheetId"} element={<Timesheet/>}/>

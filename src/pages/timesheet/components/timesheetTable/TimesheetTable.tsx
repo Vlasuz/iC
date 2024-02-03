@@ -5,9 +5,10 @@ import {useSelector} from 'react-redux';
 
 interface ITimesheetTableProps {
     rowsSelectValue: any
+    itemToEdit: any
 }
 
-export const TimesheetTable: React.FC<ITimesheetTableProps> = ({rowsSelectValue}) => {
+export const TimesheetTable: React.FC<ITimesheetTableProps> = ({rowsSelectValue, itemToEdit}) => {
 
     const [filterByProjectName, setFilterByProjectName] = useState("")
     const [filterByProjectDescription, setFilterByProjectDescription] = useState("")
@@ -31,6 +32,7 @@ export const TimesheetTable: React.FC<ITimesheetTableProps> = ({rowsSelectValue}
                             filterByProjectDescription={filterByProjectDescription}
                             sortByDate={sortByDate}
                             sortByTotal={sortByTotal}
+                            itemToEdit={itemToEdit}
                         />
                     </div>
                 </div>

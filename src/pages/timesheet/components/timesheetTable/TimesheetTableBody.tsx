@@ -16,6 +16,7 @@ interface ITimesheetTableBodyProps {
     filterByProjectDescription: string
     sortByDate: string
     sortByTotal: string
+    itemToEdit: any
 }
 
 export const TimesheetTableBody: React.FC<ITimesheetTableBodyProps> = ({
@@ -23,7 +24,8 @@ export const TimesheetTableBody: React.FC<ITimesheetTableBodyProps> = ({
                                                                            filterByProjectName,
                                                                            filterByProjectDescription,
                                                                            sortByDate,
-                                                                           sortByTotal
+                                                                           sortByTotal,
+                                                                           itemToEdit,
                                                                        }) => {
 
     const taskList: ITask[] = useSelector((state: any) => state.toolkit.tasks)
@@ -32,12 +34,12 @@ export const TimesheetTableBody: React.FC<ITimesheetTableBodyProps> = ({
 
     const [allDates, setAllDates] = useState<any>([])
 
-    const tasksSortByProject = taskList?.filter(item => filterByProjectName ? item.project.name === filterByProjectName : item)?.filter(item => filterByProjectDescription ? item.project.description === filterByProjectDescription : item)
+    const tasksSortByProject = taskList?.filter(item => filterByProjectName ? item.project.name === filterByProjectName : item)?.filter(item => filterByProjectDescription ? item?.project?.description === filterByProjectDescription : item)
 
     useEffect(() => {
         if (!taskList.length) return;
 
-        const summarizedData = tasksSortByProject?.reduce((acc: any, item) => {
+        const summarizedData = tasksSortByProject?.reduce((acc: any, item: any) => {
             const date = item.date;
 
             const existingItem: any = acc.find((entry: any) => entry.date === date);
@@ -112,12 +114,13 @@ export const TimesheetTableBody: React.FC<ITimesheetTableBodyProps> = ({
                                 <div className="section-table__row-block--span-params">
                                     <div className="section-table__param" style={{
                                         height: window.innerWidth < 992 ? `${mobileDateHeight}px` : "",
-                                        marginBottom: window.innerWidth < 992 ? `-${mobileDateHeight}px` : ""
+                                        marginBottom: window.innerWidth < 992 ? `-${mobileDateHeight}px` : "",
+                                        border: itemToEdit?.date === dateItem?.date ? "1px solid red" : ""
                                     }}>
                                         {/*{dateItem.date.substring(0, 2)}/{dateItem.date.substring(3, 5)}/{dateItem.date.substring(6)}*/}
                                         {dateItem.date.replaceAll(".", "/")}
                                     </div>
-                                    <div className={`section-table__param ${allHoursAmount !== 8 && "is-accent"}`}>
+                                    <div style={{border: itemToEdit?.date === dateItem?.date ? "1px solid red" : ""}} className={`section-table__param ${allHoursAmount !== 8 && "is-accent"}`}>
                                         {allHoursAmount} <Translate>timesheet_page.table.h</Translate>
                                     </div>
                                 </div>
@@ -143,7 +146,7 @@ export const TimesheetTableBody: React.FC<ITimesheetTableBodyProps> = ({
                                                 if (rowsSelectValue?.value && rowsSelectValue?.value < numberOfRow) return "";
 
                                                 return (
-                                                    <TimesheetTableItem key={taskItem?.id} taskItem={taskItem}
+                                                    <TimesheetTableItem key={taskItem?.id} itemToEdit={itemToEdit} taskItem={taskItem}
                                                                         numberOfRow={numberOfRow}/>
                                                 )
                                             })

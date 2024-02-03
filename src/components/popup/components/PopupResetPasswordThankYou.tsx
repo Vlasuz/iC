@@ -33,7 +33,8 @@ export const PopupResetPasswordThankYou: React.FC<IPopupForgotPasswordThankYouPr
                     <Translate>reset_password.thank_you</Translate>
                 </h2>
                 <div className="forgot-password-2__text popup-text is-center">
-                    <Translate>reset_password.instructions_sent_to_email</Translate> <u>{data?.email ?? userData?.email}</u>
+                    {/*<Translate>reset_password.instructions_sent_to_email</Translate> <u>{data?.email ?? userData?.email}</u>*/}
+                    <Translate>reset_password.password_successfully_changed</Translate>
                 </div>
                 <form className="popup-form">
                     <div className="popup-form__row-2">

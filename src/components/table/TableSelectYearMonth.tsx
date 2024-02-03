@@ -49,9 +49,11 @@ export const TableSelectYearMonth: React.FC<ITableSelectYearMonthProps> = ({setM
 
         const selectedTimesheet = timesheet.filter(item => Number(`${item.date[3]}${item.date[4]}`) === month)[0]
 
-        if(!Object.keys(selectedTimesheet).length) return;
+        if(selectedTimesheet && !Object.keys(selectedTimesheet).length) return;
 
         dispatch(setChosenTimesheet(selectedTimesheet))
+
+        setIsSelectActive(false)
     }
 
 
@@ -63,15 +65,19 @@ export const TableSelectYearMonth: React.FC<ITableSelectYearMonthProps> = ({setM
         })
     }, [timesheet])
 
-    useEffect(() => {
+    const handleChangeYear = (year: number) => {
+        setFieldYear(year)
+
+        console.log(year)
+
         if(timesheetId !== undefined) return;
 
         if(setYear !== undefined) {
-            setYear(fieldYear)
+            setYear(year)
         }
 
-        SetTimesheet(dispatch, fieldYear)
-    }, [fieldYear])
+        SetTimesheet(dispatch, year)
+    }
 
     return (
         <div ref={rootEl} className={isSelectActive ? "section-table__change-full-date drop-down is-active" : "section-table__change-full-date drop-down"}>
@@ -121,7 +127,7 @@ export const TableSelectYearMonth: React.FC<ITableSelectYearMonthProps> = ({setM
                                         <SwiperSlide key={year.year}>
                                             <li className="splide__slide">
                                                 <label>
-                                                    <input disabled={year.isDisabled} onChange={_ => setFieldYear(+year.year)} defaultValue={+year.year} checked={fieldYear === +year.year} type="radio" name="year"/>
+                                                    <input disabled={year.isDisabled} onChange={_ => handleChangeYear(+year.year)} defaultValue={+year.year} checked={fieldYear === +year.year} type="radio" name="year"/>
                                                     <span>
                                                     {year.year}
                                                 </span>

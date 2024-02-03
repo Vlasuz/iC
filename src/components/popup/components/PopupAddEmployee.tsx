@@ -94,6 +94,24 @@ export const PopupAddEmployee: React.FC<IPopupAddNewEmployeeProps> = ({data, set
 
     const inputRef = useMask({mask: '(__) ___ __ __', replacement: {_: /\d/}});
 
+    const handleSetPassword = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setPasswordValue(e.target.value)
+    }
+
+    // const handleCheckInput = (e: any) => {
+    //     // e.setCustomValidity('')
+    //     console.log(e)
+    //     if (e.validity.valueMissing) {
+    //         e.setCustomValidity("Нет значения")
+    //     }
+    //     if (e.validity.typeMismatch) {
+    //         e.setCustomValidity("Не соответствует типу")
+    //     }
+    //     if (e.validity.patternMismatch) {
+    //         e.setCustomValidity("Не соответствует паттерну")
+    //     }
+    // }
+
     return (
         <div className="add-new-employee__body popup-body">
             <h2 className="popup-title title">
@@ -146,7 +164,7 @@ export const PopupAddEmployee: React.FC<IPopupAddNewEmployeeProps> = ({data, set
                                 <Translate>employees_admin.others.password</Translate>
                             </span>
                             <span>
-                                <input autoComplete="off" onChange={e => setPasswordValue(e.target.value)} minLength={8}
+                                <input autoComplete="off" onChange={handleSetPassword} minLength={8}
                                        value={passwordValue} type={`${isOpenPassword ? "text" : "password"}`}
                                        name="password" required
                                        className="input password-input"/>
@@ -185,7 +203,7 @@ export const PopupAddEmployee: React.FC<IPopupAddNewEmployeeProps> = ({data, set
                             </span>
                             <input type="number" className={"input"}
                                    onChange={e => setHolidaysValue(+e.target.value > 99 ? "99" : e.target.value)}
-                                   value={+holidaysValue > 99 ? 99 : holidaysValue}/>
+                                   value={+holidaysValue > 99 ? 99 : (holidaysValue === "0" ? "" : holidaysValue)}/>
                             {!!holidaysValue.length &&
                                 <span className={"input-title"} style={{left: +holidaysValue.length === 1 ? "34px" : +holidaysValue.length === 2 ? "42px" : "50px"}}>
                                 <Translate>employees_admin.others.days_per_year</Translate>

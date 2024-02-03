@@ -42,6 +42,13 @@ export const ProjectStyled = styled.section`
     padding-top: 0 !important; 
   }
 
+  .section-table__row {
+    border-bottom: 1px solid rgba(95, 100, 114, 0.1);
+  }
+  .section-table__row:nth-child(even) {
+    background: rgba(150, 159, 186, 0.07);
+  }
+
   @media screen and (max-width: 992px) {
     .section-table__search--label {
       position: absolute !important;

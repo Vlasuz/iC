@@ -121,7 +121,7 @@ export const CostsStyles = styled.section`
     background: #f2f3f7;
     box-shadow: 0 0 10px #ccc;
 
-    padding: 20px 50px 20px 50px;
+    padding: 25px 50px 20px 50px;
 
     @media screen and (max-width: 1440px) {
       padding: 20px;

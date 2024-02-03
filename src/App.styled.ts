@@ -421,6 +421,7 @@ export const AppStyled = styled.div`
 
   .down-sidebar__total-item {
     gap: 10px;
+    
   }
 
   .summary-item__element--progress .line_done,
@@ -454,6 +455,7 @@ export const AppStyled = styled.div`
       width: 100%;
       max-width: 80px;
       white-space: nowrap;
+      text-align: right;
     }
   }
 
@@ -478,6 +480,9 @@ export const AppStyled = styled.div`
     }
   }
 
+  .project-popup__item_all {
+    cursor: pointer;
+  }
   .project-popup__item_all a {
     font-weight: 600;
   }

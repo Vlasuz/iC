@@ -11,6 +11,10 @@ export const VacationsStyled = styled.section`
   .section-table__param:nth-child(7) {
       background: var(--col-accent);
   }
+
+  .section-table__row {
+    border-bottom: 1px solid rgba(95, 100, 114, 0.1);
+  }
   
   .section-table__param {
     white-space: nowrap;

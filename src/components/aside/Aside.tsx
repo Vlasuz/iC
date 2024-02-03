@@ -13,6 +13,7 @@ import {AsideStyled} from "./Aside.styled";
 import {getApiLink} from "../../functions/getApiLink";
 import {Translate} from "../translate/Translate";
 import SimpleBar from "simplebar-react";
+import getCookies from "../../functions/getCookie";
 
 interface IAsideProps {
 
@@ -99,6 +100,7 @@ export const Aside: React.FC<IAsideProps> = () => {
             setIsLowAside([false, true])
             // @ts-ignore
             document.querySelector('html').style.setProperty('--aside-width', '230px');
+            setCookie("is_sidebar_mini", false)
             setTimeout(() => {
                 setIsLowAside([false, false])
             }, 500)
@@ -106,13 +108,27 @@ export const Aside: React.FC<IAsideProps> = () => {
             setIsLowAside([true, true])
             // @ts-ignore
             document.querySelector('html').style.setProperty('--aside-width', '65px');
+            setCookie("is_sidebar_mini", true)
         }
 
 
         // @ts-ignore
         document.querySelector('body').style.setProperty('--transition-width', 'max-width .5s ease, width .5s ease, left .5s ease');
-        // }
     }
+
+    useEffect(() => {
+
+        if(getCookies("is_sidebar_mini") && JSON.parse(getCookies("is_sidebar_mini") ?? "")) {
+            // @ts-ignore
+            document.querySelector('html').style.setProperty('--aside-width', '65px');
+            setIsLowAside([true, true])
+        } else {
+            // @ts-ignore
+            document.querySelector('html').style.setProperty('--aside-width', '230px');
+            setIsLowAside([false, false])
+        }
+
+    }, [])
 
     return (
         <AsideStyled ref={mainBlockRef}

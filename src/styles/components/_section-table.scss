@@ -106,7 +106,7 @@
 
     &--block {
       &:not(:first-child) {
-        margin-top: 20px;
+        margin-top: 15px;
       }
 
       display: grid;
@@ -1440,6 +1440,7 @@
 
     &__row-block--list .section-table__row {
       position: relative;
+      border-bottom: 1px solid rgba(95, 100, 114, 0.1);
     }
 
     &__row-block--list .section-table__param {
@@ -1469,7 +1470,7 @@
           grid-column: 1;
           position: static;
           height: auto;
-          border-bottom: 1px solid rgba(95, 100, 114, 0.1);
+          //border-bottom: 1px solid rgba(95, 100, 114, 0.1);
           background: transparent;
           > span {
             display: inline;
@@ -1649,6 +1650,7 @@
 
     &:nth-child(even) {
       background: rgb(150, 159, 186, 0.07);
+      border-bottom: 1px solid rgba(95, 100, 114, 0.1);
     }
 
     &.is-active-drop-down::before {

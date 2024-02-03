@@ -64,6 +64,22 @@ export const TableProjectsForUser: React.FC<ITableProjectsForUserProps> = ({
             <div className="section-table__main--project-name-block drop-down__block">
                 <div className="project-popup">
                     <SimpleBar className="project-popup__body" autoHide={false}>
+                        <div className="project-popup__block">
+                            {/*<h2>*/}
+                            {/*    All projects*/}
+                            {/*</h2>*/}
+                            <ul className="project-popup__list">
+                                <li className={`project-popup__item project-popup__item_all ${!projectData ? " is-active" : ""}`}>
+                                    <a onClick={_ => {
+                                        setProject(undefined)
+                                        setProjectData(undefined)
+                                        setIsActiveSelectProjects(false)
+                                    }}>
+                                        <Translate>employees_admin.table.all_projects</Translate>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
                         {!projectList?.length && !!userData?.used_projects?.length &&
                             <div className="project-popup__block">
                                 <h2><Translate>timesheet_page.popups.commonly_used</Translate></h2>

@@ -10,6 +10,10 @@ export const EmployeesStyled = styled.section`
   @media screen and (max-width: 992px) {
     min-height: calc(100vh - 115px);
   };
+
+  .section-table__row {
+    border-bottom: 1px solid rgba(95, 100, 114, 0.1);
+  }
   
   .section-table {
     padding-bottom: 0;
