@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from 'react'
+import React, {useContext, useEffect, useState} from 'react'
 import {PopupClose} from "./PopupClose";
 import {Translate} from "../../translate/Translate";
 import {IsPopupActiveSecondContext} from "../PopupList";
@@ -6,6 +6,9 @@ import {PopupContext} from "../../../App";
 import {IUser} from "../../../models";
 import {useSelector} from "react-redux";
 import {useTranslation} from "react-i18next";
+import axios from 'axios';
+import { getApiLink } from '../../../functions/getApiLink';
+import {getBearer} from "../../../functions/getBearer";
 
 interface IPopupResetPasswordInputProps {
     data: any
@@ -18,16 +21,19 @@ export const PopupResetPasswordInput: React.FC<IPopupResetPasswordInputProps> = 
 
     const userData: IUser = useSelector((state: any) => state.toolkit.user)
 
+    const [password, setPassword] = useState<string>("")
+
     const handleResetPassword = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
 
-        // axios.post(getApiLink(`/api/auth/reset_password/?email=${userData.email}`)).then(({data}) => {
-        //     if(!data.status) return;
-        //
-        //     setPopup({popup: popup.popup, secondPopup: "reset-password-thanks-popup", data: popup.data})
-        // })
+        getBearer("patch")
+        axios.patch(getApiLink(`/api/admin/employee/edit/password/?employee_id=${data.id}`), {
+            "password": password
+        }).then(({data}) => {
+            if(!data.status) return;
 
-        setPopup({popup: popup.popup, secondPopup: "reset-password-thanks-popup", data: popup.data})
+            setPopup({popup: popup.popup, secondPopup: "reset-password-thanks-popup", data: popup.data})
+        })
     }
 
     const setIsPopupSecondActive: any = useContext(IsPopupActiveSecondContext)
@@ -54,7 +60,7 @@ export const PopupResetPasswordInput: React.FC<IPopupResetPasswordInputProps> = 
                     </h2>
                     <div className="forgot-password__text popup-text is-center">
                         <label>
-                            <input required type="password" minLength={8} placeholder={`${t("page_login.password")}`} className={"input"}/>
+                            <input required onChange={e => setPassword(e.target.value)} value={password} type="password" minLength={8} placeholder={`${t("page_login.password")}`} className={"input"}/>
                         </label>
                     </div>
                     <div className="popup-form__row is-min-gap">

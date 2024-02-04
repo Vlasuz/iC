@@ -243,7 +243,7 @@ export const SummaryItem: React.FC<ISummaryItemProps> = ({dataItem, isOpen}) => 
                                             {item.project.name}_{item.project.description}
                                         </h3>
                                         <div className="summary-item__element--progress">
-                                            <span>{item.task.hours} h</span>
+                                            <span>{item.task.hours} <Translate>timesheet_page.table.h</Translate></span>
                                             <span data-value={`${item.task.percent > 100 ? 100 : item.task.percent}%`}>
                                             <div className="line_done" style={{width: `${item.task.percent}%`}}/>
                                         </span>
@@ -339,7 +339,7 @@ export const SummaryItem: React.FC<ISummaryItemProps> = ({dataItem, isOpen}) => 
                                 }
 
                             </div>
-                            <div className="summary-item__footer--col">
+                            <div className="summary-item__footer--col" style={{gridTemplateColumns: dataItem.status !== "approve" ? "1fr 1fr": "1fr"}}>
                                 <button className="summary-item__button btn is-grey is-transparent" type="button" onClick={_ => handleExportPdf()}>
                                     <Translate>summary_page.main.export_monthly_summary</Translate>
                                     <svg width="16" height="17" viewBox="0 0 16 17">
@@ -351,10 +351,9 @@ export const SummaryItem: React.FC<ISummaryItemProps> = ({dataItem, isOpen}) => 
                                     type="button">
                                     <Translate>summary_page.main.send_timesheet_for_approval</Translate>
                                 </a> :
-                                    <a onClick={handleCancelSending} className={`summary-item__button btn is-grey`}
-                                    type="button">
-                                    <Translate>cancel_sending</Translate>
-                                    </a>
+                                    (dataItem.status !== "approve" && <a onClick={handleCancelSending} className={`summary-item__button btn is-grey`} type="button">
+                                        <Translate>cancel_sending</Translate>
+                                    </a>)
                                 }
                             </div>
                         </div>

@@ -3,13 +3,13 @@ import styled from "styled-components";
 export const SummaryEmployeesStyled = styled.section`
   min-height: calc(95vh - 4px);
   margin-bottom: 12px;
-
-  @media screen and (max-width: 992px) {
-    min-height: calc(100vh - 115px);
-  };
   display: flex;
   flex-direction: column;
   padding-bottom: 0;
+
+  @media screen and (max-width: 992px) {
+    min-height: calc(100vh - 115px);
+  }
   
   .section-table__export .drop-down__block {
     width: max-content;
@@ -22,6 +22,10 @@ export const SummaryEmployeesStyled = styled.section`
     
     .custom-select__head {
       height: 100%;
+      
+      span {
+        margin: 0 auto;
+      }
     }
   }
   

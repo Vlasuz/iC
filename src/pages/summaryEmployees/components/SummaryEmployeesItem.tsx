@@ -363,7 +363,7 @@ export const SummaryEmployeesItem: React.FC<ISummaryEmployeesItemProps> = ({
                                             {item.project.name}_{item.project.description}
                                         </h3>
                                         <div className="summary-item__element--progress">
-                                            <span>{item.task.hours} h</span>
+                                            <span>{item.task.hours} <Translate>timesheet_page.table.h</Translate></span>
                                             <span data-value={`${item.task.percent > 100 ? 100 : item.task.percent}%`}>
                                                 <div className="line_done" style={{width: `${item.task.percent}%`}}/>
                                             </span>

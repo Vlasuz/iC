@@ -107,7 +107,7 @@ export const CostsTableItem: React.FC<ICostsTableItemProps> = ({item, index, ite
                 {item.description}
             </div>
             <div className="section-table__param is-center">
-                {item.sum}
+                {item.sum.toFixed(2)}
             </div>
 
             <div className={"drop-down-2__block" + (isOpenContextMenu ? " active" : "")} ref={modalBlock}
