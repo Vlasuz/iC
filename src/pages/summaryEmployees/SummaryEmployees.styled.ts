@@ -20,6 +20,11 @@ export const SummaryEmployeesStyled = styled.section`
     max-width: 100%;
     height: 45px;
     
+    .custom-select__body {
+      li {
+        text-align: center;
+      }
+    }
     .custom-select__head {
       height: 100%;
       
