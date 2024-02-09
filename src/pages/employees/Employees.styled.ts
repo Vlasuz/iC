@@ -29,6 +29,10 @@ export const EmployeesStyled = styled.section`
   
   .drop-down-absolute__block {
     z-index: 1;
+    
+    //@media screen and (max-width: 992px) {
+    //  left: 16px !important;
+    //}
   }
   
   .drop-down__list li.is-active {

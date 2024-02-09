@@ -10,6 +10,7 @@ import {PopupContext} from "../../../App";
 import {LoginChooseCompany} from "./LoginChooseCompany";
 import {Translate} from "../../../components/translate/Translate";
 import {useTranslation} from "react-i18next";
+import {getBearer} from "../../../functions/getBearer";
 
 interface ILoginFormProps {
 
@@ -46,8 +47,9 @@ export const LoginForm: React.FC<ILoginFormProps> = () => {
             "email": emailField.toLowerCase(),
             "password": passwordField
         }).then(({data}) => {
+            console.log(data)
             setIsLoading(false)
-            if (data?.status !== undefined) return setErrorMessage(data.message)
+            if (data?.status === false) return setErrorMessage(data.message)
 
             setCookie("access_token_ic", data.access_token, isStayLoggedIn ? undefined : 86400)
             setCookie("refresh_token_ic", data.refresh_token, isStayLoggedIn ? undefined : 86400)
@@ -55,6 +57,7 @@ export const LoginForm: React.FC<ILoginFormProps> = () => {
             dispatch(setUser(data.user))
             dispatch(setAccessToken(data.access_token))
             dispatch(setRefreshToken(data.refresh_token))
+
             navigate('/')
 
         }).catch(er => {

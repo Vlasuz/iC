@@ -8,6 +8,8 @@ import {getBearer} from "../functions/getBearer";
 
 export const GetAccessToken = (dispatch: any) => {
 
+    setCookie("access_token_ic", "")
+
     getBearer("post")
     axios.post(getApiLink("/api/auth/refresh/"), {
         "refresh_token": getCookies("refresh_token_ic")
@@ -22,7 +24,7 @@ export const GetAccessToken = (dispatch: any) => {
         console.log("er refresh",er)
         if(window.location.href.includes("login")) return;
 
-        window.location.href = "/login"
+        // window.location.href = "/login"
     })
 
 }

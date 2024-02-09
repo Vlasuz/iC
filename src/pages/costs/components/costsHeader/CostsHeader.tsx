@@ -5,7 +5,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {getBearer} from "../../../../functions/getBearer";
 import axios from "axios";
 import {getApiLink} from "../../../../functions/getApiLink";
-import {setExpenses} from "../../../../storage/toolkit";
+import {setExpenses, setTasks} from "../../../../storage/toolkit";
 import {TableExport} from "../../../../components/table/TableExport";
 import {TableSelectYearMonth} from "../../../../components/table/TableSelectYearMonth";
 import {TableCalendar} from "../../../../components/table/TableCalendar";
@@ -17,6 +17,7 @@ import {Translate} from "../../../../components/translate/Translate";
 import {useClickOutside} from "../../../../hooks/ClickOutside";
 import {GetAccessToken} from '../../../../api/GetAccessToken';
 import {useTranslation} from "react-i18next";
+import {useParams} from "react-router-dom";
 
 interface ICostsHeaderProps {
     itemToEdit: IExpense | undefined
@@ -37,6 +38,8 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit, isFixedEdi
     const [descriptionData, setDescriptionData] = useState<string>("")
     const [costData, setCostData] = useState<number>(0)
     const [isLoadingToAdd, setIsLoadingToAdd] = useState(false)
+
+    const {timesheetId}: any = useParams()
 
     const language = useSelector((state: any) => state.toolkit.language)
     const timesheet: ITimesheet[] = useSelector((state: any) => state.toolkit.timesheet)
@@ -229,6 +232,15 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit, isFixedEdi
         "add": `${t("costs_page.top_part.add_expense_2")}`
     }
 
+    const handleSetNewData = () => {
+        // getBearer("get")
+        // axios.get(getApiLink(`/api/timesheet/expenses/?timesheet_id=${timesheetId}`)).then(({data}) => {
+        //     dispatch(setExpenses(data))
+        // }).catch(er => {
+        //     er?.response?.status === 401 && GetAccessToken(dispatch)
+        // })
+    }
+
     return (
         <div
             className={`section-table__header ${isFixedEditBlock && "animate-to-show"} ${isCancelEdit && "animate-to-hide"}`}>
@@ -293,7 +305,7 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit, isFixedEdi
                             </div>
                             <div className="section-table__header--col">
 
-                                <TableSelectYearMonth onSwitch={handleSwitchMonth}/>
+                                <TableSelectYearMonth handleSetNewData={handleSetNewData} onSwitch={handleSwitchMonth}/>
 
                                 <TableExport/>
 

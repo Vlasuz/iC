@@ -10,4 +10,11 @@ export const PopupListStyled = styled.div`
       justify-content: space-between;
     }
   }
+
+
+  @media screen and (max-width: 992px) {
+    .profile .popup-container {
+      overflow: hidden;
+    }
+  }
 `

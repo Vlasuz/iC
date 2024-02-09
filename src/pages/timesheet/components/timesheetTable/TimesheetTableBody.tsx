@@ -37,7 +37,7 @@ export const TimesheetTableBody: React.FC<ITimesheetTableBodyProps> = ({
     const tasksSortByProject = taskList?.filter(item => filterByProjectName ? item.project.name === filterByProjectName : item)?.filter(item => filterByProjectDescription ? item?.project?.description === filterByProjectDescription : item)
 
     useEffect(() => {
-        if (!taskList.length) return;
+        // if (!taskList.length) return;
 
         const summarizedData = tasksSortByProject?.reduce((acc: any, item: any) => {
             const date = item.date;
@@ -72,7 +72,7 @@ export const TimesheetTableBody: React.FC<ITimesheetTableBodyProps> = ({
         }, finalAmountHours);
 
         setAmountStatistic(finalAmountHours)
-    }, [allDates]);
+    }, [allDates, taskList]);
 
     let numberOfRow = 0
 

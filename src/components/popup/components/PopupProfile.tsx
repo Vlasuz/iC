@@ -34,7 +34,7 @@ export const PopupProfile: React.FC<IPopupProfileProps> = ({data}) => {
     }
 
     return (
-        <div className="profile__body popup-body">
+        <div className="profile__body popup-body profile">
             <PopupClose/>
             <form className="profile__container popup-container">
                 <div className="profile__user">

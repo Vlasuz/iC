@@ -616,4 +616,19 @@ export const AppStyled = styled.div`
   }
 
 
+  .section-table__main--container .drop-down-absolute__block {
+    z-index: 2;
+
+    @media screen and (max-width: 992px) {
+      left: 16px !important;
+    }
+  }
+
+  .section-table__head-th:last-child .drop-down-absolute__block.is-right-default {
+    @media screen and (max-width: 992px) {
+      left: auto !important;
+    }
+  }
+
+
 `

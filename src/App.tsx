@@ -5,7 +5,7 @@ import "./styles/Calibri/stylesheet.css"
 import {PopupList} from "./components/popup/PopupList";
 import {Sprites} from "./components/sprites/Sprites";
 import {Wrapper} from "./components/wrapper/Wrapper";
-import {Route, Routes, useLocation, useNavigate} from 'react-router-dom';
+import {Route, Routes, useLocation, useNavigate, useParams} from 'react-router-dom';
 import {Timesheet} from "./pages/timesheet/Timesheet";
 import {Employees} from "./pages/employees/Employees";
 import {useDispatch, useSelector} from 'react-redux';
@@ -141,6 +141,11 @@ function App() {
     const isAdmin = userData.status?.includes("admin")
     const isEmployee = userData.status?.includes("employee")
     const isManager = userData.status?.includes("team_lead") || userData.status?.includes("project_lead")
+
+    useEffect(() => {
+        if(!userData.id) return;
+        navigate("/login")
+    }, [])
 
     return (
         <AppStyled>

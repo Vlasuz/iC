@@ -17,9 +17,10 @@ interface ITableSelectYearMonthProps {
     setMonth?: any
     onSwitch?: any
     setYear?: any
+    handleSetNewData?: any
 }
 
-export const TableSelectYearMonth: React.FC<ITableSelectYearMonthProps> = ({setMonth, setYear, onSwitch}) => {
+export const TableSelectYearMonth: React.FC<ITableSelectYearMonthProps> = ({setMonth, setYear, onSwitch, handleSetNewData}) => {
 
     const [isSelectActive, setIsSelectActive] = useState(false)
     const {rootEl} = useClickOutside(setIsSelectActive)
@@ -47,11 +48,16 @@ export const TableSelectYearMonth: React.FC<ITableSelectYearMonthProps> = ({setM
 
         if(!timesheet.length) return;
 
+        console.log(timesheet)
         const selectedTimesheet = timesheet.filter(item => Number(`${item.date[3]}${item.date[4]}`) === month)[0]
 
         if(selectedTimesheet && !Object.keys(selectedTimesheet).length) return;
 
         dispatch(setChosenTimesheet(selectedTimesheet))
+
+
+        handleSetNewData()
+
 
         setIsSelectActive(false)
     }

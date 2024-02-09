@@ -4,12 +4,12 @@ import "react-datepicker/dist/react-datepicker.css";
 import {TimesheetHeader} from "./components/timesheetHeader/TimesheetHeader";
 import {TimesheetTable} from "./components/timesheetTable/TimesheetTable";
 import {TimesheetStyled} from "./Timesheet.styled";
-import {IComment, IStatistic, ITask, ITimesheet, IUser} from "../../models";
+import {IComment, IStatistic, ISummaryEmployee, ITask, ITimesheet, IUser} from "../../models";
 import {getBearer} from "../../functions/getBearer";
 import axios from "axios";
 import {getApiLink} from "../../functions/getApiLink";
 import {useDispatch, useSelector} from 'react-redux';
-import {setTasks} from '../../storage/toolkit';
+import {setChosenTimesheet, setTasks} from '../../storage/toolkit';
 import {CustomSelect} from "../../components/customSelect/CustomSelect";
 import {RowsPerPage} from "../../constants/RowsPerPage";
 import {DownSidebar} from "../../components/downSidebar/DownSidebar";
@@ -41,6 +41,7 @@ export const Timesheet: React.FC<ITimesheetProps> = () => {
     const taskList: ITask[] = useSelector((state: any) => state.toolkit.tasks)
     const chosenTimesheet: ITimesheet = useSelector((state: any) => state.toolkit.chosenTimesheet)
     const timesheetStatistic: IStatistic = useSelector((state: any) => state.toolkit.timesheetStatistic)
+    const summaryEmployees: ISummaryEmployee = useSelector((state: any) => state.toolkit.summaryEmployees)
 
     const [rowsSelectValue, setRowsSelectValue] = useState(RowsPerPage()[0])
     const [itemToEdit, setItemToEdit] = useState<ITask>()
@@ -50,6 +51,9 @@ export const Timesheet: React.FC<ITimesheetProps> = () => {
     const [isLoad, setIsLoad] = useState(false)
 
     useEffect(() => {
+        if(timesheetId) {
+            window.scrollTo(0,0)
+        }
         if (!!timesheetId || !chosenTimesheet || !Object.keys(chosenTimesheet)?.length) return;
 
         getBearer("get")
@@ -66,9 +70,33 @@ export const Timesheet: React.FC<ITimesheetProps> = () => {
     }, [chosenTimesheet, timesheetId])
 
     useEffect(() => {
-        if(timesheetId === undefined && chosenTimesheet?.user?.id !== user?.id) {
 
-            console.log('123')
+        if(summaryEmployees?.all?.length && timesheetId) {
+
+            const chosenTimesheet = summaryEmployees.all.filter(item => item.id === timesheetId)[0] ?? summaryEmployees.favourite.filter(item => item.id === timesheetId)[0]
+
+            dispatch(setChosenTimesheet(chosenTimesheet))
+
+            getBearer("get")
+            axios.get(getApiLink(`/api/timesheet/tasks/?timesheet_id=${timesheetId}`)).then(({data}) => {
+                console.log(data)
+                dispatch(setTasks(data))
+            })
+
+            getBearer('get')
+            axios.get(getApiLink(`/api/timesheet/statistics/?timesheet_id=${timesheetId}`)).then(({data}) => {
+                console.log(data)
+                setStatistic(data)
+                SetStatistic(dispatch, timesheetId)
+            }).catch(er => console.log(getApiLink("/api/timesheet/statistics/?timesheet_id"), er))
+
+        }
+
+    }, [summaryEmployees])
+
+    useEffect(() => {
+
+        if(timesheetId === undefined && chosenTimesheet?.user?.id !== user?.id) {
 
             SetTimesheet(dispatch)
             SetTasks(dispatch, chosenTimesheet.id)

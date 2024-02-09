@@ -15,8 +15,8 @@ const jsonLanguages = {
 // Инициализация:
 i18n.use(initReactI18next).init({
     resources: jsonLanguages,
-    lng: getCookie("lang") ?? Object.keys(jsonLanguages)[0],
-    fallbackLng: getCookie("lang") ?? Object.keys(jsonLanguages)[0]
+    lng: getCookie("language_ic") ?? Object.keys(jsonLanguages)[0],
+    fallbackLng: getCookie("language_ic") ?? Object.keys(jsonLanguages)[0]
 });
 
 export const useLanguage = () => {
@@ -41,7 +41,7 @@ export const useLanguage = () => {
     useEffect(() => {
 
         dispatch(setLanguage(i18n.language))
-        setCookie('lang', i18n.language)
+        setCookie('language_ic', i18n.language)
 
     }, [i18n.language])
 

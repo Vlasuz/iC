@@ -19,6 +19,7 @@ import {SetStatistic} from "../../../../api/SetStatistic";
 import {Translate} from "../../../../components/translate/Translate";
 import {toast} from "react-toastify";
 import {useTranslation} from "react-i18next";
+import {useParams} from "react-router-dom";
 
 interface ITimesheetHeaderProps {
     itemToEdit: ITask | undefined
@@ -30,6 +31,8 @@ interface ITimesheetHeaderProps {
 export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({itemToEdit, isFixedEditBlock, itemToDuplicate, setItemToDuplicate}) => {
 
     const { t } = useTranslation();
+
+    const {timesheetId}: any = useParams()
 
     const isEditTask = itemToEdit && Object.keys(itemToEdit).length
     const isDuplicateTask = itemToDuplicate && Object.keys(itemToDuplicate).length
@@ -226,6 +229,13 @@ export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({itemToEdit, is
         "add": `${t("timesheet_page.top_part.add_task")}`
     }
 
+    const handleSetNewData = () => {
+        // axios.get(getApiLink(`/api/timesheet/tasks/?timesheet_id=${timesheetId}`)).then(({data}) => {
+        //     console.log(data)
+        //     dispatch(setTasks(data))
+        // })
+    }
+
     return (
         <div className={`section-table__header ${isFixedEditBlock && "animate-to-show"} ${isCancelEdit && "animate-to-hide"}`}>
             <div className="section-table__header--row is-always-row">
@@ -291,7 +301,7 @@ export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({itemToEdit, is
                             </div>
                             <div className="section-table__header--col">
 
-                                <TableSelectYearMonth onSwitch={handleSwitchMonth}/>
+                                <TableSelectYearMonth handleSetNewData={handleSetNewData} onSwitch={handleSwitchMonth}/>
 
                                 <TableExport/>
 

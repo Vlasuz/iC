@@ -4,11 +4,11 @@ import {CostsTable} from "./components/costsTable/CostsTable";
 import {RowsPerPage} from "../../constants/RowsPerPage";
 import {CustomSelect} from "../../components/customSelect/CustomSelect";
 import {useDispatch, useSelector} from "react-redux";
-import {IComment, IExpense, IStatistic, ITask, ITimesheet, IUser} from "../../models";
+import {IComment, IExpense, IStatistic, ISummaryEmployee, ITask, ITimesheet, IUser} from "../../models";
 import {getBearer} from "../../functions/getBearer";
 import axios from "axios";
 import {getApiLink} from "../../functions/getApiLink";
-import {setExpenses, setTasks} from "../../storage/toolkit";
+import {setChosenTimesheet, setExpenses, setTasks} from "../../storage/toolkit";
 import {CostsStyles} from "./Costs.styles";
 import {DownSidebar} from "../../components/downSidebar/DownSidebar";
 import {useParams} from "react-router-dom";
@@ -39,6 +39,7 @@ export const Costs: React.FC<ICostsProps> = () => {
     const expenseList: IExpense[] = useSelector((state: any) => state.toolkit.expenses)
     const chosenTimesheet: ITimesheet = useSelector((state: any) => state.toolkit.chosenTimesheet)
     const timesheetStatistic: IStatistic = useSelector((state: any) => state.toolkit.timesheetStatistic)
+    const summaryEmployees: ISummaryEmployee = useSelector((state: any) => state.toolkit.summaryEmployees)
 
     const [rowsSelectValue, setRowsSelectValue] = useState(RowsPerPage()[0])
     const [itemToEdit, setItemToEdit] = useState<IExpense>()
@@ -47,6 +48,9 @@ export const Costs: React.FC<ICostsProps> = () => {
     const [isLoad, setIsLoad] = useState(false)
 
     useEffect(() => {
+        if(timesheetId) {
+            window.scrollTo(0,0)
+        }
         if (!!timesheetId || !chosenTimesheet || !Object.keys(chosenTimesheet).length) return;
 
         getBearer("get")
@@ -57,6 +61,26 @@ export const Costs: React.FC<ICostsProps> = () => {
             er?.response?.status === 401 && GetAccessToken(dispatch)
         })
     }, [chosenTimesheet, timesheetId])
+
+    useEffect(() => {
+
+        if(summaryEmployees?.all?.length && timesheetId) {
+
+            const chosenTimesheet = summaryEmployees.all.filter(item => item.id === timesheetId)[0] ?? summaryEmployees.favourite.filter(item => item.id === timesheetId)[0]
+
+            dispatch(setChosenTimesheet(chosenTimesheet))
+
+            getBearer("get")
+            axios.get(getApiLink(`/api/timesheet/expenses/?timesheet_id=${timesheetId}`)).then(({data}) => {
+                dispatch(setExpenses(data))
+                SetStatistic(dispatch, timesheetId)
+            }).catch(er => {
+                er?.response?.status === 401 && GetAccessToken(dispatch)
+            })
+
+        }
+
+    }, [summaryEmployees])
 
     useEffect(() => {
         if(timesheetId === undefined && chosenTimesheet?.user?.id !== user?.id) {
