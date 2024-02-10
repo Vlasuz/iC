@@ -167,7 +167,7 @@ export const SummaryEmployees: React.FC<ISummaryEmployeesProps> = () => {
                             const lastNameA = a.user.last_name.toLowerCase();
                             const lastNameB = b.user.last_name.toLowerCase();
 
-                            return lastNameB > lastNameA ? -1 : 1;
+                            return lastNameB > lastNameA ? 1 : -1;
                         })
                         ?.sort((a: any, b: any) => b.status === statusSortValue.value ? 1 : -1)
                         ?.map(item => <SummaryEmployeesItem setStatisticForTable={setStatisticForTable} key={item.id}

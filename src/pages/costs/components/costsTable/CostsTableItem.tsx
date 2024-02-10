@@ -44,7 +44,7 @@ export const CostsTableItem: React.FC<ICostsTableItemProps> = ({item, index, ite
         }
     }, []);
 
-    const isApprove = chosenTimesheet?.status === "waiting"
+    const isApprove = chosenTimesheet?.status === "approve";
 
     useEffect(() => {
         if (!isOpenContextMenu) {
@@ -80,7 +80,7 @@ export const CostsTableItem: React.FC<ICostsTableItemProps> = ({item, index, ite
     }
 
     return (
-        <div className="section-table__row drop-down-2" ref={rowBlock} style={{border: itemToEdit?.id === item?.id ? "1px solid red" : ""}} onContextMenu={e => handleOpenContextMenu({e, isOpenContextMenu, setMenuPosition, setIsOpenContextMenu, height: 160, width: 165})}>
+        <div className="section-table__row drop-down-2" ref={rowBlock} style={{border: itemToEdit?.id === item?.id ? "1px solid red" : ""}} onContextMenu={e => !isApprove && handleOpenContextMenu({e, isOpenContextMenu, setMenuPosition, setIsOpenContextMenu, height: 160, width: 165})}>
             <div className="section-table__param visible-on-mob">
                 <span>
                     {expenseList.length - index}

@@ -36,7 +36,7 @@ export const PopupEditEmployee: React.FC<IPopupEditEmployeeProps> = ({setIsOpenP
     const [firstNameValue, setFirstNameValue] = useState<string>('')
     const [lastNameValue, setLastNameValue] = useState<string>('')
     const [roleValue, setRoleValue] = useState<string>('')
-    const [statusValue, setStatusValue] = useState(EmployeesStatus().filter(item => item.value === data.status)[0])
+    const [statusValue, setStatusValue] = useState(EmployeesStatus().filter(item => item?.value === data?.status)[0])
     const [emailValue, setEmailValue] = useState<string>('')
     const [phoneValue, setPhoneValue] = useState<string>('')
     const [holidaysValue, setHolidaysValue] = useState<string>('')
@@ -44,16 +44,16 @@ export const PopupEditEmployee: React.FC<IPopupEditEmployeeProps> = ({setIsOpenP
     const [phoneCode, setPhoneCode]: any = useState({})
 
     useEffect(() => {
-        setFirstNameValue(data.first_name)
-        setLastNameValue(data.last_name)
-        setRoleValue(data.role)
-        setEmailValue(data.email)
-        setPhoneValue(data.phone.slice(data.phone.indexOf(" ") + 1))
-        setStatusValue(EmployeesStatus().filter(item => item.value === data.status)[0])
-        setHolidaysValue(String(data.holidays))
-        setProjectsList(data.projects?.map((item: any) => item.id))
+        setFirstNameValue(data?.first_name)
+        setLastNameValue(data?.last_name)
+        setRoleValue(data?.role)
+        setEmailValue(data?.email)
+        setPhoneValue(data?.phone.slice(data?.phone.indexOf(" ") + 1))
+        setStatusValue(EmployeesStatus().filter(item => item?.value === data?.status)[0])
+        setHolidaysValue(String(data?.holidays))
+        setProjectsList(data?.projects?.map((item: any) => item.id))
 
-        setPhoneCode(PhoneCodes().filter(item => item.label === data.phone.slice(0, data.phone.indexOf(" ")))[0])
+        setPhoneCode(PhoneCodes().filter(item => item.label === data?.phone.slice(0, data?.phone.indexOf(" ")))[0])
     }, [data])
 
     useEffect(() => {

@@ -18,8 +18,19 @@ export const PopupResetPassword: React.FC<IPopupResetPasswordProps> = ({data, po
 
     const setPopup: any = useContext(PopupContext)
 
+    const userData: IUser = useSelector((state: any) => state.toolkit.user)
+
     const handleResetPassword = () => {
-        setPopup({popup: popup.popup, secondPopup: "reset-password-input-popup", data: popup.data})
+
+        if(userData.role === "admin" || userData.status === "admin") {
+            return setPopup({popup: popup.popup, secondPopup: "reset-password-input-popup", data})
+        }
+
+        axios.post(getApiLink(`/api/auth/reset_password/?email=${userData.email}`)).then(({data}) => {
+            console.log(data)
+            setPopup({popup: popup.popup, secondPopup: "reset-password-sent-popup"})
+        })
+
     }
 
     const setIsPopupSecondActive: any = useContext(IsPopupActiveSecondContext)

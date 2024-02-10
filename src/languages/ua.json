@@ -2,12 +2,16 @@
   "page_login": {
     "login": "Вхід",
     "password": "Пароль",
+    "new_password": "Новий пароль",
+    "new_password_repeat": "Повторіть пароль",
     "stay_log": "Запам'ятати мене",
     "log_in": "Увійти",
     "forgot": "Забули пароль",
     "legal": "Правова інформація",
     "compliance": "Політика відповідності",
-    "copyright_ic": "Авторське право © iC consulenten 2013 - 2023. Всі права захищені."
+    "copyright_ic": "Авторське право © iC consulenten 2013 - 2023. Всі права захищені.",
+    "not_the_same": "Паролі не співпадають",
+    "enter_new_pass": "Введіть новий пароль"
   },
 
   "navigation_all": {

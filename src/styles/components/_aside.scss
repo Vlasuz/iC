@@ -666,7 +666,11 @@
 
 		&--body {
 			//flex: 1 1 auto;
-			min-height: calc(100vh - 90px);
+			min-height: calc(100% - 90px);
+
+			@media screen and (max-width: 992px) {
+				min-height: calc(100vh - 150px);
+			}
 
 			display: flex;
 			flex-direction: column;

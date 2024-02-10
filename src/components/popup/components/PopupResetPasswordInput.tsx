@@ -9,6 +9,7 @@ import {useTranslation} from "react-i18next";
 import axios from 'axios';
 import { getApiLink } from '../../../functions/getApiLink';
 import {getBearer} from "../../../functions/getBearer";
+import {toast} from "react-toastify";
 
 interface IPopupResetPasswordInputProps {
     data: any
@@ -22,14 +23,20 @@ export const PopupResetPasswordInput: React.FC<IPopupResetPasswordInputProps> = 
     const userData: IUser = useSelector((state: any) => state.toolkit.user)
 
     const [password, setPassword] = useState<string>("")
+    const [passwordRepeat, setPasswordRepeat] = useState<string>("")
 
     const handleResetPassword = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
+
+        if(passwordRepeat !== password) {
+            return toast.error(`${t("page_login.not_the_same")}`);
+        }
 
         getBearer("patch")
         axios.patch(getApiLink(`/api/admin/employee/edit/password/?employee_id=${data.id}`), {
             "password": password
         }).then(({data}) => {
+            console.log(data)
             if(!data.status) return;
 
             setPopup({popup: popup.popup, secondPopup: "reset-password-thanks-popup", data: popup.data})
@@ -56,11 +63,14 @@ export const PopupResetPasswordInput: React.FC<IPopupResetPasswordInputProps> = 
                  data-simplebar-auto-hide="false">
                 <form onSubmit={handleResetPassword} className="popup-form">
                     <h2 className="forgot-password__title popup-title title is-center">
-                        <Translate>page_login.password</Translate>
+                        <Translate>page_login.enter_new_pass</Translate>
                     </h2>
                     <div className="forgot-password__text popup-text is-center">
                         <label>
-                            <input required onChange={e => setPassword(e.target.value)} value={password} type="password" minLength={8} placeholder={`${t("page_login.password")}`} className={"input"}/>
+                            <input style={{width: '100%'}} required onChange={e => setPassword(e.target.value)} value={password} type="password" minLength={8} placeholder={`${t("page_login.new_password")}`} className={"input"}/>
+                            <br/>
+                            <br/>
+                            <input style={{width: '100%'}} required onChange={e => setPasswordRepeat(e.target.value)} value={passwordRepeat} type="password" minLength={8} placeholder={`${t("page_login.new_password_repeat")}`} className={"input"}/>
                         </label>
                     </div>
                     <div className="popup-form__row is-min-gap">

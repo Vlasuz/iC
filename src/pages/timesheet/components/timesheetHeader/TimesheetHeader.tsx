@@ -77,6 +77,10 @@ export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({itemToEdit, is
                     setIsLoadingToAdd(false)
 
                     console.log(data)
+                    if (data.message === 'occupied_time') {
+                        setIsCancelEdit(false)
+                        return toast.error(`${t("time_was_used")}`);
+                    }
                     if (data?.status === false) return;
 
                     setIsFixedEditBlock(false)
@@ -190,10 +194,6 @@ export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({itemToEdit, is
 
     function getMondayDate() {
         const today = new Date();
-        // const dayOfWeek = today.getDay();
-        // const difference = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
-        // const monday = new Date(today);
-        // monday.setDate(today.getDate() + difference);
 
         return today;
     }
@@ -207,9 +207,6 @@ export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({itemToEdit, is
     const resetFields = () => {
         setProjectData(undefined)
         setTaskData("")
-        // setDateData(`${lessThenTen(String(getMondayDate().getDate()))}.${chosenTimesheet?.date[3]}${chosenTimesheet?.date[4]}.${getMondayDate().getFullYear()}`)
-        // setTimeData("")
-        // setHoursData(0)
     }
 
     useEffect(() => {
@@ -218,7 +215,7 @@ export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({itemToEdit, is
         setDateData(`${lessThenTen(String(getMondayDate().getDate()))}.${chosenTimesheet?.date[3]}${chosenTimesheet?.date[4]}.${getMondayDate().getFullYear()}`)
     }, [chosenTimesheet])
 
-    const isApprove = chosenTimesheet?.status === "waiting"
+    const isApprove = chosenTimesheet?.status === "approve"
 
     const [isOpenInputSearch, setIsOpenInputSearch] = useState(false)
     const {rootEl} = useClickOutside(setIsOpenInputSearch)

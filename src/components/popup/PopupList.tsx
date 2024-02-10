@@ -20,6 +20,7 @@ import {PopupResetPassword} from "./components/PopupResetPassword";
 import {PopupReviewToTimesheet} from "./components/PopupReviewToTimesheet";
 import {PopupListStyled} from "./PopupList.styled";
 import {PopupResetPasswordInput} from "./components/PopupResetPasswordInput";
+import {PopupResetPasswordSent} from "./components/PopupResetPasswordSent";
 
 interface IPopupListProps {
     popup: any
@@ -59,6 +60,7 @@ export const PopupList: React.FC<IPopupListProps> = ({popup}) => {
         "reset-password-input-popup": <PopupResetPasswordInput popup={popup} data={popup.data}/>,
         "reset-password-popup": <PopupResetPassword popup={popup} data={popup.data}/>,
         "reset-password-thanks-popup": <PopupResetPasswordThankYou popup={popup} data={popup.data}/>,
+        "reset-password-sent-popup": <PopupResetPasswordSent popup={popup} data={popup.data}/>,
     }
 
     const setPopup: any = useContext(PopupContext)

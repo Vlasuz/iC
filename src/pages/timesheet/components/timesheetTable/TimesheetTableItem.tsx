@@ -38,7 +38,7 @@ export const TimesheetTableItem: React.FC<ITimesheetTableItemProps> = ({taskItem
         }
     }, []);
 
-    const isApprove = chosenTimesheet?.status === "waiting"
+    const isApprove = chosenTimesheet?.status === "approve"
 
     useEffect(() => {
         if (!isOpenContextMenu) {
@@ -75,7 +75,7 @@ export const TimesheetTableItem: React.FC<ITimesheetTableItemProps> = ({taskItem
     }
 
     return (
-        <div ref={rowBlock} style={{border: itemToEdit?.id === taskItem?.id ? "1px solid red" : ""}} onContextMenu={e => handleOpenContextMenu({e, isOpenContextMenu, setMenuPosition, setIsOpenContextMenu, height: 160, width: 165})}
+        <div ref={rowBlock} style={{border: itemToEdit?.id === taskItem?.id ? "1px solid red" : ""}} onContextMenu={e => !isApprove && handleOpenContextMenu({e, isOpenContextMenu, setMenuPosition, setIsOpenContextMenu, height: 160, width: 165})}
              className={`section-table__row drop-down-2 ${numberOfRow % 2 ? " even" : " odd"}` + (isOpenContextMenu ? " is-active-drop-down" : "")}>
             <div className={`section-table__param is-center ${numberOfRow % 2 ? " even" : " odd"}`}>
                 <span>

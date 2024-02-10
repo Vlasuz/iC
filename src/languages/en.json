@@ -2,12 +2,16 @@
   "page_login": {
     "login": "Login",
     "password": "Password",
+    "new_password": "New password",
+    "new_password_repeat": "Repeat password",
     "stay_log": "Stay logged in",
     "log_in": "Log in",
     "forgot": "Forgot password",
     "legal": "Legal notice",
     "compliance": "Compliance policy",
-    "copyright_ic": "Copyright © iC consulenten 2013 — 2023. All rights reserved."
+    "copyright_ic": "Copyright © iC consulenten 2013 — 2023. All rights reserved.",
+    "not_the_same": "Паролі не співпадають",
+    "enter_new_pass": "Enter a new password"
   },
 
   "navigation_all": {
