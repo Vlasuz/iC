@@ -8,16 +8,15 @@ import {getBearer} from "../../../functions/getBearer";
 import axios from "axios";
 import {getApiLink} from "../../../functions/getApiLink";
 import {setEmployeesList} from "../../../storage/toolkit";
-import { useDispatch } from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {Translate} from "../../../components/translate/Translate";
+import {IEmployee} from "../../../models";
 
 interface IEmployeesHeaderProps {
-
+    setSearchValueGlobal: any
 }
 
-export const EmployeesHeader: React.FC<IEmployeesHeaderProps> = () => {
-
-    const setSearchValueContext: Dispatch<SetStateAction<string>> = useContext(HeaderSearch)
+export const EmployeesHeader: React.FC<IEmployeesHeaderProps> = ({setSearchValueGlobal}) => {
 
     const setPopup: any = useContext(PopupContext)
 
@@ -26,14 +25,14 @@ export const EmployeesHeader: React.FC<IEmployeesHeaderProps> = () => {
     const [searchValue, setSearchValue] = useState<string>('')
     const [isOpenInputSearch, setIsOpenInputSearch] = useState(false)
 
-    const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
-        setSearchValueContext(searchValue)
+    useEffect(() => {
 
-        if(isOpenInputSearch) {
-            setSearchValueContext(searchValue)
-        }
-    }
+        getBearer("get")
+        axios.get(getApiLink(`/api/admin/employee/?search=${searchValue}`)).then(({data}) => {
+            dispatch(setEmployeesList(data))
+        }).catch(er => console.log(er))
+
+    }, [searchValue])
 
     const dateNow = new Date()
     const [listYear, setListYear] = useState(dateNow.getFullYear())
@@ -67,9 +66,12 @@ export const EmployeesHeader: React.FC<IEmployeesHeaderProps> = () => {
                             <use xlinkHref="#plus"></use>
                         </svg>
                     </a>
-                    <form ref={rootEl} onSubmit={handleSearch} className={`section-table__search ${isOpenInputSearch && "is-active"}`}>
+                    <form ref={rootEl} onSubmit={e => e.preventDefault()} className={`section-table__search ${isOpenInputSearch && "is-active"}`}>
                         <label className="section-table__search--label">
-                            <input onChange={e => setSearchValue(e.target.value)} value={searchValue} type="search" name="search" autoComplete="off" className="section-table__search--input"/>
+                            <input onChange={e => {
+                                setSearchValue(e.target.value)
+                                setSearchValueGlobal(e.target.value)
+                            }} value={searchValue} type="search" name="search" autoComplete="off" className="section-table__search--input"/>
                             <span className="placeholder">
                                 {!searchValue.length ? <Translate>employees_admin.table.search_an_employee</Translate> : ""}
                             </span>

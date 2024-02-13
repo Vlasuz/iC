@@ -69,28 +69,31 @@ export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({itemToEdit, is
 
         if (isEditTask) {
 
-            setIsCancelEdit(true)
             setTimeout(() => {
 
                 getBearer("patch")
                 axios.patch(getApiLink("/api/task/edit/?task_id=" + itemToEdit.id), timesheetRequest).then(({data}) => {
                     setIsLoadingToAdd(false)
 
-                    console.log(data)
                     if (data.message === 'occupied_time') {
                         setIsCancelEdit(false)
                         return toast.error(`${t("time_was_used")}`);
                     }
+
                     if (data?.status === false) return;
 
-                    setIsFixedEditBlock(false)
-                    setIsCancelEdit(false)
-                    setItemToDuplicate({})
-                    setItemEdit({})
+                    setIsCancelEdit(true)
 
-                    SetStatistic(dispatch, chosenTimesheet.id)
-                    SetTasks(dispatch, chosenTimesheet.id)
-                    setIsOpenCreatBlock(false)
+                    setTimeout(() => {
+                        setIsFixedEditBlock(false)
+                        setIsCancelEdit(false)
+                        setItemToDuplicate({})
+                        setItemEdit({})
+
+                        SetStatistic(dispatch, chosenTimesheet.id)
+                        SetTasks(dispatch, chosenTimesheet.id)
+                        setIsOpenCreatBlock(false)
+                    }, 300)
                 })
 
             }, 400)
@@ -175,7 +178,7 @@ export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({itemToEdit, is
             setItemToDuplicate({})
             setIsOpenCreatBlock(false)
             setIsCancelEdit(false)
-        }, 400)
+        }, isFixedEditBlock ? 400 : 0)
     }
 
 
@@ -215,7 +218,7 @@ export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({itemToEdit, is
         setDateData(`${lessThenTen(String(getMondayDate().getDate()))}.${chosenTimesheet?.date[3]}${chosenTimesheet?.date[4]}.${getMondayDate().getFullYear()}`)
     }, [chosenTimesheet])
 
-    const isApprove = chosenTimesheet?.status === "approve"
+    const isApprove = chosenTimesheet?.status === "approve" || chosenTimesheet?.status === "waiting"
 
     const [isOpenInputSearch, setIsOpenInputSearch] = useState(false)
     const {rootEl} = useClickOutside(setIsOpenInputSearch)

@@ -12,6 +12,6 @@ export const SetTasks = async (dispatch: any, timesheetId: string) => {
     await axios.get(getApiLink(`/api/timesheet/tasks/?timesheet_id=${timesheetId}`)).then(({data}) => {
         dispatch(setTasks(data))
     }).catch(er => {
-        er?.response?.status === 401 && GetAccessToken(dispatch)
+        er?.response?.status === 401 && GetAccessToken(dispatch, SetTasks)
     })
 }

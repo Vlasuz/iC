@@ -46,6 +46,17 @@ export const Costs: React.FC<ICostsProps> = () => {
     const [itemToDuplicate, setItemToDuplicate] = useState<IExpense>()
     const [isOpenDownSidebar, setIsOpenDownSidebar] = useState(false)
     const [isLoad, setIsLoad] = useState(false)
+    const [isWindowMobile, setIsWindowMobile] = useState(false)
+
+    const getExpenses = () => {
+        getBearer("get")
+        axios.get(getApiLink(`/api/timesheet/expenses/?timesheet_id=${timesheetId ?? chosenTimesheet.id}`)).then(({data}) => {
+            dispatch(setExpenses(data))
+            SetStatistic(dispatch, timesheetId ?? chosenTimesheet.id)
+        }).catch(er => {
+            er?.response?.status === 401 && GetAccessToken(dispatch, getExpenses)
+        })
+    }
 
     useEffect(() => {
         if(timesheetId) {
@@ -53,13 +64,8 @@ export const Costs: React.FC<ICostsProps> = () => {
         }
         if (!!timesheetId || !chosenTimesheet || !Object.keys(chosenTimesheet).length) return;
 
-        getBearer("get")
-        axios.get(getApiLink(`/api/timesheet/expenses/?timesheet_id=${timesheetId ?? chosenTimesheet.id}`)).then(({data}) => {
-            dispatch(setExpenses(data))
-            SetStatistic(dispatch, timesheetId ?? chosenTimesheet.id)
-        }).catch(er => {
-            er?.response?.status === 401 && GetAccessToken(dispatch)
-        })
+        getExpenses()
+
     }, [chosenTimesheet, timesheetId])
 
     useEffect(() => {
@@ -70,13 +76,7 @@ export const Costs: React.FC<ICostsProps> = () => {
 
             dispatch(setChosenTimesheet(chosenTimesheet))
 
-            getBearer("get")
-            axios.get(getApiLink(`/api/timesheet/expenses/?timesheet_id=${timesheetId}`)).then(({data}) => {
-                dispatch(setExpenses(data))
-                SetStatistic(dispatch, timesheetId)
-            }).catch(er => {
-                er?.response?.status === 401 && GetAccessToken(dispatch)
-            })
+            getExpenses()
 
         }
 
@@ -90,6 +90,8 @@ export const Costs: React.FC<ICostsProps> = () => {
             SetTimesheet(dispatch)
             SetExpenses(dispatch, chosenTimesheet.id)
         }
+
+        setIsWindowMobile(window.innerWidth < 576)
     }, [])
 
     useEffect(() => {
@@ -124,7 +126,7 @@ export const Costs: React.FC<ICostsProps> = () => {
             <AmountStatistic.Provider value={setAmountStatistic}>
                 <FixedTopEdit.Provider value={setIsFixedEditBlock}>
                     <BlockToEdit.Provider value={setItemToEdit}>
-                        <CostsStyles style={{paddingBottom: isOpenDownSidebar ? "270px" : "80px"}}
+                        <CostsStyles style={{paddingBottom: isOpenDownSidebar ? "270px" : (isWindowMobile ? "60px" : "80px")}}
                                      className={`section-table ${isFixedEditBlock && "fixed-edit-block"}`}>
 
                             <CostsExportTable/>

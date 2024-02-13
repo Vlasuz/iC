@@ -49,6 +49,7 @@ export const Timesheet: React.FC<ITimesheetProps> = () => {
     const [isOpenDownSidebar, setIsOpenDownSidebar] = useState(false)
     const [statistic, setStatistic] = useState<IStatistic | undefined>()
     const [isLoad, setIsLoad] = useState(false)
+    const [isWindowMobile, setIsWindowMobile] = useState(false)
 
     useEffect(() => {
         if(timesheetId) {
@@ -101,6 +102,8 @@ export const Timesheet: React.FC<ITimesheetProps> = () => {
             SetTimesheet(dispatch)
             SetTasks(dispatch, chosenTimesheet.id)
         }
+
+        setIsWindowMobile(window.innerWidth < 576)
     }, [])
 
     useEffect(() => {
@@ -140,7 +143,7 @@ export const Timesheet: React.FC<ITimesheetProps> = () => {
             <AmountStatistic.Provider value={setAmountStatistic}>
                 <FixedTopEdit.Provider value={setIsFixedEditBlock}>
                     <BlockToEdit.Provider value={setItemToEdit}>
-                        <TimesheetStyled style={{paddingBottom: isOpenDownSidebar ? "270px" : window.innerWidth < 576 ? "60px" : "80px"}}
+                        <TimesheetStyled style={{paddingBottom: isOpenDownSidebar ? "270px" : (isWindowMobile ? "60px" : "80px")}}
                                          className={`section-table ${isFixedEditBlock && "fixed-edit-block"}`}>
 
                             <TimesheetExportTable/>

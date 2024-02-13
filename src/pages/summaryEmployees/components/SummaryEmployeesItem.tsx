@@ -401,7 +401,7 @@ export const SummaryEmployeesItem: React.FC<ISummaryEmployeesItemProps> = ({
                                     </svg>
                                 </NavLink>
                                 <div className="summary-item__total-element--value">
-                                    {statistic?.all_hours} <Translate>summary_page.main.hours</Translate>
+                                    {statistic?.all_hours.toFixed(1)} <Translate>summary_page.main.hours</Translate>
                                 </div>
                             </div>
                             <div className="summary-item__total--element summary-item__total-element">

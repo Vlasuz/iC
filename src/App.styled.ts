@@ -447,6 +447,10 @@ export const AppStyled = styled.div`
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    
+    @media screen and (max-width: 576px) {
+      width: 100% !important;
+    }
   }
 
   .down-sidebar__total-item--value {

@@ -38,7 +38,7 @@ export const TimesheetTableItem: React.FC<ITimesheetTableItemProps> = ({taskItem
         }
     }, []);
 
-    const isApprove = chosenTimesheet?.status === "approve"
+    const isApprove = chosenTimesheet?.status === "approve" || chosenTimesheet?.status === "waiting"
 
     useEffect(() => {
         if (!isOpenContextMenu) {

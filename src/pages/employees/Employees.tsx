@@ -17,9 +17,9 @@ interface IEmployeesProps {
 export const Employees: React.FC<IEmployeesProps> = () => {
 
     const employees: IEmployee[] = useSelector((state: any) => state.toolkit.employees)
+
     const [searchValue, setSearchValue] = useState<string>('')
     const [selectValue, setSelectValue] = useState(RowsPerPage()[0])
-
     const [isLoad, setIsLoad] = useState(false)
 
     useEffect(() => {
@@ -40,42 +40,51 @@ export const Employees: React.FC<IEmployeesProps> = () => {
         })
     }
 
+    const [employeesList, setEmployeesList] = useState(employees?.filter(item => item?.first_name?.toLowerCase().includes(searchValue.toLowerCase()) || item?.last_name?.toLowerCase().includes(searchValue.toLowerCase()))
+        ?.sort((a, b) => +a.archive - +b.archive))
+
+    useEffect(() => {
+        employees?.length && setEmployeesList(employees?.filter(item => item?.first_name?.toLowerCase().includes(searchValue.toLowerCase()) || item?.last_name?.toLowerCase().includes(searchValue.toLowerCase()))
+            // ?.filter((item, index) => countOfShowRows === 0 ? item : index < countOfShowRows)
+            ?.sort((a, b) => +a.archive - +b.archive))
+    }, [employees])
+
     return (
         <EmployeesStyled className="section-table">
-            <HeaderSearch.Provider value={setSearchValue}>
 
-                    <EmployeesHeader/>
+            <EmployeesHeader setSearchValueGlobal={setSearchValue} />
 
-                    <EmployeesTable rowsSelectValue={selectValue} searchValue={searchValue}/>
+            <EmployeesTable searchValue={searchValue} rowsSelectValue={selectValue}/>
 
-                    <div className="section-table__footer">
-                        <div className="section-table__row-per-page visible-on-mob">
+            <div className="section-table__footer">
+                <div className="section-table__row-per-page visible-on-mob">
                             <span>
                                 <Translate>employees_admin.table.rows_per_page</Translate>
                             </span>
 
-                            <CustomSelect list={RowsPerPage()} defaultValue={RowsPerPage()[0]} selectValue={selectValue} setSelectedItem={setSelectValue}/>
-                        </div>
+                    <CustomSelect list={RowsPerPage()} defaultValue={RowsPerPage()[0]} selectValue={selectValue}
+                                  setSelectedItem={setSelectValue}/>
+                </div>
 
-                        {selectValue.value !== 0 && employees.length > selectValue.value &&
-                            <button onClick={handleAddRows} className="section-table__see-more btn" type="button">
-                                <Translate>employees_admin.table.show_more</Translate>
-                                <svg width="15" height="15" viewBox="0 0 15 15">
-                                    <use xlinkHref="#arrow-down"></use>
-                                </svg>
-                            </button>}
+                {selectValue.value !== 0 && employeesList.length > selectValue.value &&
+                    <button onClick={handleAddRows} className="section-table__see-more btn" type="button">
+                        <Translate>employees_admin.table.show_more</Translate>
+                        <svg width="15" height="15" viewBox="0 0 15 15">
+                            <use xlinkHref="#arrow-down"></use>
+                        </svg>
+                    </button>}
 
-                        <div className="section-table__row-per-page visible-on-desktop">
+                <div className="section-table__row-per-page visible-on-desktop">
                             <span>
                                 <Translate>employees_admin.table.rows_per_page</Translate>
                             </span>
 
-                            <CustomSelect list={RowsPerPage()} defaultValue={RowsPerPage()[0]} selectValue={selectValue} setSelectedItem={setSelectValue}/>
+                    <CustomSelect list={RowsPerPage()} defaultValue={RowsPerPage()[0]} selectValue={selectValue}
+                                  setSelectedItem={setSelectValue}/>
 
-                        </div>
-                    </div>
+                </div>
+            </div>
 
-            </HeaderSearch.Provider>
         </EmployeesStyled>
     )
 }

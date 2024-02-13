@@ -9,6 +9,6 @@ export const SetEmployees = (dispatch: any) => {
     axios.get(getApiLink("/api/admin/employee/")).then(({data}) => {
         dispatch(setEmployeesList(data))
     }).catch(er => {
-        er?.response?.status === 401 && GetAccessToken(dispatch)
+        er?.response?.status === 401 && GetAccessToken(dispatch, SetEmployees)
     })
 }

@@ -65,8 +65,15 @@ function App() {
                 document.querySelector(".main__inner section").style.minHeight = "calc(95vh - 4px)";
 
                 if(document.querySelector(".down-sidebar")) {
-                    // @ts-ignore
-                    document.querySelector(".main__inner section").style.paddingBottom = "80px"
+
+                    if(window.innerWidth < 576) {
+                        // @ts-ignore
+                        document.querySelector(".main__inner section").style.paddingBottom = "60px"
+                    } else {
+                        // @ts-ignore
+                        document.querySelector(".main__inner section").style.paddingBottom = "80px"
+                    }
+
                 } else {
                     // @ts-ignore
                     document.querySelector(".main__inner section").style.paddingBottom = "0px"
@@ -105,17 +112,18 @@ function App() {
 
     }, [userData])
 
-
-    useEffect(() => {
+    const getProfile = () => {
         getBearer('get')
         axios.get(getApiLink("/api/user/profile/")).then(({data}) => {
             dispatch(setUser(data))
             console.log(data)
         }).catch(er => {
-            console.log(getApiLink("/api/user/profile/"), er)
-            GetAccessToken(dispatch)
+            er?.response?.status === 401 && GetAccessToken(dispatch, getProfile)
         })
+    }
 
+    useEffect(() => {
+        getProfile()
 
         window.addEventListener('resize', setZoom);
     }, [])

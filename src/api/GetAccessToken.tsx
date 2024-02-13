@@ -6,9 +6,7 @@ import {setAccessToken, setUser} from "../storage/toolkit";
 import {useNavigate} from "react-router-dom";
 import {getBearer} from "../functions/getBearer";
 
-export const GetAccessToken = (dispatch: any) => {
-
-    setCookie("access_token_ic", "")
+export const GetAccessToken = (dispatch: any, callbackFunction: any) => {
 
     getBearer("post")
     axios.post(getApiLink("/api/auth/refresh/"), {
@@ -19,6 +17,8 @@ export const GetAccessToken = (dispatch: any) => {
         dispatch(setUser(data.user))
         dispatch(setAccessToken(data.access_token))
         window.location.href = "/"
+
+        callbackFunction()
 
     }).catch(er => {
         console.log("er refresh",er)

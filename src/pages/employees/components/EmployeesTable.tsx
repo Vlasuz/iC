@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react'
+import React, {Dispatch, SetStateAction, useContext, useEffect, useRef, useState} from 'react'
 import {IEmployee} from "../../../models";
 import {getBearer} from "../../../functions/getBearer";
 import axios from "axios";
@@ -12,10 +12,11 @@ import {Translate} from "../../../components/translate/Translate";
 import {EmployeesStatus} from "../../../constants/EmployeesStatus";
 import {RowsPerPage} from "../../../constants/RowsPerPage";
 import {EmployeesTableExport} from "./EmployeesTableExport";
+import {HeaderSearch} from "../../../contexts";
 
 interface IEmployeesTableProps {
-    searchValue: string
     rowsSelectValue: any
+    searchValue: string
 }
 
 interface IStatus {
@@ -23,22 +24,11 @@ interface IStatus {
     label: string
 }
 
-export const EmployeesTable: React.FC<IEmployeesTableProps> = ({searchValue, rowsSelectValue}) => {
+export const EmployeesTable: React.FC<IEmployeesTableProps> = ({rowsSelectValue, searchValue}) => {
 
     const {scrollY} = useScrollTopValue()
 
     const employees: IEmployee[] = useSelector((state: any) => state.toolkit.employees)
-    const dispatch = useDispatch()
-
-    useEffect(() => {
-
-        getBearer("get")
-        axios.get(getApiLink(`/api/admin/employee/?search=${searchValue}`)).then(({data}) => {
-            console.log(data)
-            dispatch(setEmployeesList(data))
-        }).catch(er => console.log(er))
-
-    }, [searchValue])
 
 
     const [isActiveStatusDropDown, setIsActiveStatusDropDown] = useState(false)
@@ -275,6 +265,7 @@ export const EmployeesTable: React.FC<IEmployeesTableProps> = ({searchValue, row
                         <div className="section-table__body">
                             {
                                 employees
+                                    ?.filter(item => item?.first_name?.toLowerCase().includes(searchValue.toLowerCase()) || item?.last_name?.toLowerCase().includes(searchValue.toLowerCase()))
                                     ?.filter(item => chosenStatus?.value ? item.status === chosenStatus.value : item)
                                     // ?.filter((item, index) => countOfShowRows === 0 ? item : index < countOfShowRows)
                                     ?.sort((a, b) => a.last_name < b.last_name ? sortByName === "sortUp" ? 1 : -1 : sortByName === "sortDown" ? 1 : -1)

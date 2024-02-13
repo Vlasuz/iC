@@ -10,6 +10,6 @@ export const SetNotifications = (dispatch: any) => {
         dispatch(setNotifications(data))
         console.log(data)
     }).catch(er => {
-        er?.response?.status === 401 && GetAccessToken(dispatch)
+        er?.response?.status === 401 && GetAccessToken(dispatch, SetNotifications)
     })
 }

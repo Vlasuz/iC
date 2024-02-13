@@ -73,7 +73,7 @@ export const SummaryItem: React.FC<ISummaryItemProps> = ({dataItem, isOpen}) => 
             navigate('/costs')
             dispatch(setExpenses(data))
         }).catch(er => {
-            er?.response?.status === 401 && GetAccessToken(dispatch)
+            er?.response?.status === 401 && GetAccessToken(dispatch, handleEntryCost)
         })
     }
 
@@ -279,7 +279,7 @@ export const SummaryItem: React.FC<ISummaryItemProps> = ({dataItem, isOpen}) => 
                                     </svg>
                                 </button>
                                 <div className="summary-item__total-element--value">
-                                    {statistic?.all_hours} <Translate>summary_page.main.hours</Translate>
+                                    {statistic?.all_hours.toFixed(1)} <Translate>summary_page.main.hours</Translate>
                                 </div>
                             </div>
                             <div className="summary-item__total--element summary-item__total-element">

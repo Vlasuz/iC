@@ -3,6 +3,7 @@ import axios from "axios";
 import {getApiLink} from "../functions/getApiLink";
 import {setChosenTimesheet, setTimesheet} from "../storage/toolkit";
 import { GetAccessToken } from "./GetAccessToken";
+import {SetTasks} from "./SetTasks";
 
 export const SetTimesheet = (dispatch: any, year?: number) => {
     const date = new Date()
@@ -14,6 +15,6 @@ export const SetTimesheet = (dispatch: any, year?: number) => {
         dispatch(setTimesheet(data))
         dispatch(setChosenTimesheet(data[0]))
     }).catch(er => {
-        er?.response?.status === 401 && GetAccessToken(dispatch)
+        er?.response?.status === 401 && GetAccessToken(dispatch, SetTasks)
     })
 }

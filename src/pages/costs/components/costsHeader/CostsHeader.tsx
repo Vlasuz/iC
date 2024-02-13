@@ -125,7 +125,7 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit, isFixedEdi
         axios.get(getApiLink(`/api/timesheet/expenses/?search=${searchValueLocal}`)).then(({data}) => {
             dispatch(setExpenses(data))
         }).catch(er => {
-            er?.response?.status === 401 && GetAccessToken(dispatch)
+            er?.response?.status === 401 && GetAccessToken(dispatch, handleSearchTimesheet)
         })
     }
 
@@ -164,7 +164,7 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit, isFixedEdi
             SetStatistic(dispatch, idTasksForMonth)
             dispatch(setExpenses(data))
         }).catch(er => {
-            er?.response?.status === 401 && GetAccessToken(dispatch)
+            er?.response?.status === 401 && GetAccessToken(dispatch, handleSwitchMonth)
         })
     }
 
@@ -197,7 +197,7 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit, isFixedEdi
         setDateData(`${lessThenTen(String(getMondayDate().getDate()))}.${chosenTimesheet?.date[3]}${chosenTimesheet?.date[4]}.${getMondayDate().getFullYear()}`)
     }, [chosenTimesheet])
 
-    const isApprove = chosenTimesheet?.status === "approve"
+    const isApprove = chosenTimesheet?.status === "approve" || chosenTimesheet?.status === "waiting"
 
     const [isOpenInputSearch, setIsOpenInputSearch] = useState(false)
     const {rootEl} = useClickOutside(setIsOpenInputSearch)

@@ -44,7 +44,7 @@ export const CostsTableItem: React.FC<ICostsTableItemProps> = ({item, index, ite
         }
     }, []);
 
-    const isApprove = chosenTimesheet?.status === "approve";
+    const isApprove = chosenTimesheet?.status === "approve" || chosenTimesheet?.status === "waiting"
 
     useEffect(() => {
         if (!isOpenContextMenu) {

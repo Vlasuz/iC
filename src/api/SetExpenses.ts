@@ -13,6 +13,6 @@ export const SetExpenses = async (dispatch: any, timesheetId: string) => {
     await axios.get(getApiLink(`/api/timesheet/expenses/?timesheet_id=${timesheetId}`)).then(({data}) => {
         dispatch(setExpenses(data))
     }).catch(er => {
-        er?.response?.status === 401 && GetAccessToken(dispatch)
+        er?.response?.status === 401 && GetAccessToken(dispatch, SetExpenses)
     })
 }

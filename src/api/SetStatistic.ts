@@ -12,7 +12,7 @@ export const SetStatistic = async (dispatch: any, timesheetId: string) => {
     await axios.get(getApiLink(`/api/timesheet/statistics/?timesheet_id=${timesheetId}`)).then(({data}) => {
         dispatch(setTimesheetStatistic(data))
     }).catch(er => {
-        er?.response?.status === 401 && GetAccessToken(dispatch)
+        er?.response?.status === 401 && GetAccessToken(dispatch, SetStatistic)
     })
 
 }

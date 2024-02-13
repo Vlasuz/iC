@@ -23,9 +23,10 @@ interface IPopupEditEmployeeProps {
     data: any
     chosenProjects: IProject[]
     popup: any
+    setChosenProjects: any
 }
 
-export const PopupEditEmployee: React.FC<IPopupEditEmployeeProps> = ({setIsOpenProjects, data, chosenProjects, popup}) => {
+export const PopupEditEmployee: React.FC<IPopupEditEmployeeProps> = ({setIsOpenProjects, data, setChosenProjects, chosenProjects, popup}) => {
 
     const projects: IProject[] = useSelector((state: any) => state.toolkit.projects)
     const setIsPopupActive: any = useContext(IsPopupActiveContext)
@@ -58,6 +59,7 @@ export const PopupEditEmployee: React.FC<IPopupEditEmployeeProps> = ({setIsOpenP
 
     useEffect(() => {
         setProjectsList(chosenProjects.map(item => item.id))
+        data.all_projects && setProjectsList(projects.map(item => item.id))
     }, [chosenProjects])
 
     const handleChange = (e: React.FormEvent<HTMLFormElement>) => {
@@ -74,7 +76,7 @@ export const PopupEditEmployee: React.FC<IPopupEditEmployeeProps> = ({setIsOpenP
             "phone": phoneValue ? `${phoneCode.label} ${phoneValue}` : "",
             "holidays": +holidaysValue,
             "projects": projectsList,
-            "all_projects": chosenProjects?.length === projects.length
+            "all_projects": chosenProjects?.length === projects.length || data.all_projects
         }
 
         getBearer('patch')
@@ -105,7 +107,7 @@ export const PopupEditEmployee: React.FC<IPopupEditEmployeeProps> = ({setIsOpenP
         })
     }
 
-    console.log(chosenProjects?.length, projects.length)
+    console.log(chosenProjects?.length, projects.length, data)
 
     return (
         <div className="add-new-employee__body popup-body">
@@ -211,7 +213,7 @@ export const PopupEditEmployee: React.FC<IPopupEditEmployeeProps> = ({setIsOpenP
                                className="popup-form__open-sub-popup open-popup">
                                 <span id="checked-projects" data-none-text="None" data-text-1="project"
                                       data-text-2="projects" data-all-text="All projects">
-                                    {chosenProjects?.length === projects.length ?
+                                    {chosenProjects?.length === projects.length || data.all_projects ?
                                         <Translate>employees_admin.others.all_projects</Translate> : `${chosenProjects?.length} projects`}
                                 </span>
                                 <svg width="10" height="7" viewBox="0 0 10 7">

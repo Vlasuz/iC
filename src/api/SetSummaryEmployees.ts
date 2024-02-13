@@ -16,6 +16,6 @@ export const SetSummaryEmployees = async (dispatch: any, month?: number, year?: 
         console.log(getApiLink(`/api/timesheet/employees/?month=${month}&year=${year}${projectId && "&project_id=" + projectId}`), data)
         dispatch(setSummaryEmployees(data))
     }).catch(er => {
-        er?.response?.status === 401 && GetAccessToken(dispatch)
+        er?.response?.status === 401 && GetAccessToken(dispatch, SetSummaryEmployees)
     })
 }

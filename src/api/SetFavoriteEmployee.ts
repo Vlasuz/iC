@@ -10,6 +10,6 @@ export const SetFavoriteEmployee = (dispatch: any, userId: string) => {
     axios.post(getApiLink(`/api/timesheet/employees/favourite/?user_id=${userId}`)).then(({data}) => {
         SetSummaryEmployees(dispatch)
     }).catch(er => {
-        er?.response?.status === 401 && GetAccessToken(dispatch)
+        er?.response?.status === 401 && GetAccessToken(dispatch, SetFavoriteEmployee)
     })
 }

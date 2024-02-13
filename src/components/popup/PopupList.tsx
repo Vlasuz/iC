@@ -41,7 +41,7 @@ export const PopupList: React.FC<IPopupListProps> = ({popup}) => {
 
         "add-new-employee-popup": <PopupAddEmployee data={popup.data} chosenProjects={chosenProjects}
                                                     setIsOpenProjects={setIsOpenProjects}/>,
-        "edit-employee-popup": <PopupEditEmployee popup={popup} data={popup.data} chosenProjects={chosenProjects}
+        "edit-employee-popup": <PopupEditEmployee popup={popup} data={popup.data} setChosenProjects={setChosenProjects} chosenProjects={chosenProjects}
                                                   setIsOpenProjects={setIsOpenProjects}/>,
         "edit-project-popup": <PopupEditProject data={popup.data}/>,
         "add-project-popup": <PopupAddProject/>,
