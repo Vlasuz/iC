@@ -28,8 +28,13 @@ export const PopupResetPasswordInput: React.FC<IPopupResetPasswordInputProps> = 
     const handleResetPassword = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
 
+
         if(passwordRepeat !== password) {
             return toast.error(`${t("page_login.not_the_same")}`);
+        }
+
+        if(password.length < 8 || passwordRepeat.length < 8) {
+            return toast.error(`${t("pass_min")} ${password.length}`);
         }
 
         getBearer("patch")
@@ -67,10 +72,10 @@ export const PopupResetPasswordInput: React.FC<IPopupResetPasswordInputProps> = 
                     </h2>
                     <div className="forgot-password__text popup-text is-center">
                         <label>
-                            <input style={{width: '100%'}} required onChange={e => setPassword(e.target.value)} value={password} type="password" minLength={8} placeholder={`${t("page_login.new_password")}`} className={"input"}/>
+                            <input style={{width: '100%'}} required onChange={e => setPassword(e.target.value)} value={password} type="password" placeholder={`${t("page_login.new_password")}`} className={"input"}/>
                             <br/>
                             <br/>
-                            <input style={{width: '100%'}} required onChange={e => setPasswordRepeat(e.target.value)} value={passwordRepeat} type="password" minLength={8} placeholder={`${t("page_login.new_password_repeat")}`} className={"input"}/>
+                            <input style={{width: '100%'}} required onChange={e => setPasswordRepeat(e.target.value)} value={passwordRepeat} type="password" placeholder={`${t("page_login.new_password_repeat")}`} className={"input"}/>
                         </label>
                     </div>
                     <div className="popup-form__row is-min-gap">

@@ -19,6 +19,7 @@ import {useMask} from '@react-input/mask';
 import {SetEmployees} from "../../../api/SetEmployees";
 import {Translate} from "../../translate/Translate";
 import {toast} from 'react-toastify';
+import {useTranslation} from "react-i18next";
 
 interface IPopupAddNewEmployeeProps {
     setIsOpenProjects: any
@@ -44,23 +45,27 @@ export const PopupAddEmployee: React.FC<IPopupAddNewEmployeeProps> = ({data, set
     const [projectsList, setProjectsList] = useState<string[]>([])
     const [phoneCode, setPhoneCode]: any = useState(PhoneCodes()[0])
 
+    const {t} = useTranslation()
+
     const handleCreateNewEmployee = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
 
+        if(passwordValue.length < 8) {
+            return toast.error(`${t("pass_min")} ${passwordValue.length}`);
+        }
+
         const newDataEmployee = {
-            "first_name": firstNameValue,
-            "last_name": lastNameValue,
-            "role": roleValue,
-            "status": statusValue.value,
-            "email": emailValue,
+            "first_name": firstNameValue.trim(),
+            "last_name": lastNameValue.trim(),
+            "role": roleValue.trim(),
+            "status": statusValue.value.trim(),
+            "email": emailValue.trim(),
             "phone": phoneValue ? `${phoneCode.label} ${phoneValue}` : "",
             "holidays": +holidaysValue,
             "password": passwordValue,
             "projects": projectsList,
             "all_projects": chosenProjects?.length === projects.length
         }
-
-        console.log(newDataEmployee)
 
         getBearer('post')
         axios.post(getApiLink("/api/admin/employee/add/"), newDataEmployee).then(({data}) => {
@@ -164,7 +169,7 @@ export const PopupAddEmployee: React.FC<IPopupAddNewEmployeeProps> = ({data, set
                                 <Translate>employees_admin.others.password</Translate>
                             </span>
                             <span>
-                                <input autoComplete="off" onChange={handleSetPassword} minLength={8}
+                                <input autoComplete="off" onChange={handleSetPassword}
                                        value={passwordValue} type={`${isOpenPassword ? "text" : "password"}`}
                                        name="password" required
                                        className="input password-input"/>

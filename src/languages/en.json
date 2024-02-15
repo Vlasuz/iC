@@ -10,7 +10,7 @@
     "legal": "Legal notice",
     "compliance": "Compliance policy",
     "copyright_ic": "Copyright © iC consulenten 2013 — 2023. All rights reserved.",
-    "not_the_same": "Паролі не співпадають",
+    "not_the_same": "Passwords do not match",
     "enter_new_pass": "Enter a new password"
   },
 
@@ -298,7 +298,7 @@
     "click_to_reset_password": "Click to reset password"
   },
 
-  "user_exist": "This email already used",
+  "user_exist": "Account with this email already exists",
   "user_not_found": "User not found",
   "all": "All",
 
@@ -338,5 +338,7 @@
   "time_was_used": "You are trying to add already occupied time, please change it and try again",
   "cancel_sending": "Cancel sending",
   "all_tasks": "All tasks",
-  "all_costs": "All costs"
+  "all_costs": "All costs",
+
+  "pass_min": "Minimum number of characters in the password: 8. The number is now:"
 }

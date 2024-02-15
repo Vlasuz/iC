@@ -68,11 +68,11 @@ export const PopupEditEmployee: React.FC<IPopupEditEmployeeProps> = ({setIsOpenP
         console.log(statusValue)
 
         const newDataEmployee = {
-            "first_name": firstNameValue,
-            "last_name": lastNameValue,
-            "role": roleValue,
-            "status": statusValue.value,
-            "email": emailValue,
+            "first_name": firstNameValue.trim(),
+            "last_name": lastNameValue.trim(),
+            "role": roleValue.trim(),
+            "status": statusValue.value.trim(),
+            "email": emailValue.trim(),
             "phone": phoneValue ? `${phoneCode.label} ${phoneValue}` : "",
             "holidays": +holidaysValue,
             "projects": projectsList,

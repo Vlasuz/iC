@@ -4,6 +4,7 @@ import { uk, enUS } from 'date-fns/locale';
 import {useClickOutside} from "../../hooks/ClickOutside";
 import {Translate} from "../translate/Translate";
 import { useSelector } from 'react-redux';
+import { startOfWeek } from 'date-fns';
 
 interface ITableCalendarProps {
     setDateData: any
@@ -70,6 +71,14 @@ export const TableCalendar: React.FC<ITableCalendarProps> = ({setDateData, dateD
 
     const language: string = useSelector((state: any) => state.toolkit.language)
 
+    const locale = language === "en" ? enUS : uk;
+
+
+    // Добавляем опцию weekStartsOn для локали
+    if (locale === enUS) {
+        locale.options = { weekStartsOn: 1 };
+    }
+
     return (
         <div className="section-table__add-task--set-date">
 
@@ -87,7 +96,8 @@ export const TableCalendar: React.FC<ITableCalendarProps> = ({setDateData, dateD
                     onInputClick={() => handleCalendarToggle({type: "input", data: !calendarOpen})}
                     onChange={handleSetDate}
                     dateFormat="dd/MM/yyyy"
-                    locale={language === "en" ? enUS : uk}
+                    locale={locale}
+                    startDate={startOfWeek(new Date(), { weekStartsOn: 1 })}
                 />
             </div>
 

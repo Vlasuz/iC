@@ -65,33 +65,33 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit, isFixedEdi
 
         if (isEditExpense) {
 
-            setIsCancelEdit(true)
+            // setIsCancelEdit(true)
             setTimeout(() => {
 
                 getBearer("patch")
                 axios.patch(getApiLink("/api/expense/edit/?expense_id=" + itemToEdit.id), timesheetRequest).then(({data}) => {
                     setIsLoadingToAdd(false)
 
-                    setIsFixedEditBlock(false)
-                    setItemEdit({})
-                    setItemToDuplicate({})
-                    setIsCancelEdit(false)
+                    // setIsFixedEditBlock(false)
+                    // setItemEdit({})
+                    // setItemToDuplicate({})
+                    // setIsCancelEdit(false)
 
                     SetStatistic(dispatch, chosenTimesheet.id)
                     SetExpenses(dispatch, chosenTimesheet.id)
-                    setIsOpenCreatBlock(false)
+                    // setIsOpenCreatBlock(false)
                 })
 
             }, 400)
 
         } else {
             getBearer("post")
-            axios.post(getApiLink("/api/expense/add/"), timesheetRequest).then(({data}) => {
+            axios.post(getApiLink(`/api/expense/add/?timesheet_id=${chosenTimesheet?.id}`), timesheetRequest).then(({data}) => {
                 setIsLoadingToAdd(false)
 
                 SetStatistic(dispatch, chosenTimesheet.id)
                 SetExpenses(dispatch, chosenTimesheet.id)
-                resetFields()
+                // resetFields()
             })
         }
     }

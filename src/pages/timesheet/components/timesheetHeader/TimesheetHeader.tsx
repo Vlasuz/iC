@@ -76,43 +76,45 @@ export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({itemToEdit, is
                     setIsLoadingToAdd(false)
 
                     if (data.message === 'occupied_time') {
-                        setIsCancelEdit(false)
+                        // setIsCancelEdit(false)
                         return toast.error(`${t("time_was_used")}`);
                     }
 
                     if (data?.status === false) return;
 
-                    setIsCancelEdit(true)
+                    // setIsCancelEdit(true)
 
-                    setTimeout(() => {
-                        setIsFixedEditBlock(false)
-                        setIsCancelEdit(false)
-                        setItemToDuplicate({})
-                        setItemEdit({})
+                    SetStatistic(dispatch, chosenTimesheet.id)
+                    SetTasks(dispatch, chosenTimesheet.id)
 
-                        SetStatistic(dispatch, chosenTimesheet.id)
-                        SetTasks(dispatch, chosenTimesheet.id)
-                        setIsOpenCreatBlock(false)
-                    }, 300)
+                    // setTimeout(() => {
+                        // setIsFixedEditBlock(false)
+                        // setIsCancelEdit(false)
+                        // setItemToDuplicate({})
+                        // setItemEdit({})
+
+                        // SetStatistic(dispatch, chosenTimesheet.id)
+                        // SetTasks(dispatch, chosenTimesheet.id)
+                        // setIsOpenCreatBlock(false)
+                    // }, 300)
                 })
 
             }, 400)
 
         } else {
             getBearer("post")
-            axios.post(getApiLink("/api/task/add/"), timesheetRequest).then(({data}) => {
+            axios.post(getApiLink(`/api/task/add/?timesheet_id=${chosenTimesheet?.id}`), timesheetRequest).then(({data}) => {
                 setIsLoadingToAdd(false)
 
                 if (data?.status === false) {
                     return toast.error(`${t("time_was_used")}`);
                 }
 
-                isDuplicateTask && handleBackFromCreate()
+                // isDuplicateTask && handleBackFromCreate()
 
                 SetStatistic(dispatch, chosenTimesheet.id)
-
                 SetTasks(dispatch, chosenTimesheet.id)
-                resetFields()
+                // resetFields()
             })
         }
     }

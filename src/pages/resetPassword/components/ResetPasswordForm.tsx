@@ -4,6 +4,7 @@ import axios from "axios";
 import {getApiLink} from "../../../functions/getApiLink";
 import {NavLink, useParams} from "react-router-dom";
 import {useTranslation} from "react-i18next";
+import {toast} from "react-toastify";
 
 interface IResetPasswordFormProps {
 
@@ -15,11 +16,22 @@ export const ResetPasswordForm: React.FC<IResetPasswordFormProps> = () => {
 
     const [isSuccessChanges, setIsSuccessChanges] = useState(false)
     const [errorMessage, setErrorMessage] = useState<string>("")
+    const [isShowPassword, setIsShowPassword] = useState(false)
+    const [isShowPasswordRepeat, setIsShowPasswordRepeat] = useState(false)
+    const [passwordField, setPasswordField] = useState("")
+    const [secondPasswordField, setSecondPasswordField] = useState("")
 
     const handleReset = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         setErrorMessage("")
-        if (isShowPassword !== isShowPasswordRepeat) return;
+
+        if (passwordField !== secondPasswordField) {
+            return toast.error(`${t("page_login.not_the_same")}`);
+        }
+
+        if(passwordField.length < 8 || secondPasswordField.length < 8) {
+            return toast.error(`${t("pass_min")} ${passwordField.length}`);
+        }
 
         axios.post(getApiLink("/api/auth/reset_password_confirm/"), {
             "email": userEmail,
@@ -42,12 +54,6 @@ export const ResetPasswordForm: React.FC<IResetPasswordFormProps> = () => {
         "invalid_code": "Invalid code",
         "unknown": "Unknown error",
     }
-
-    const [isShowPassword, setIsShowPassword] = useState(false)
-    const [isShowPasswordRepeat, setIsShowPasswordRepeat] = useState(false)
-
-    const [passwordField, setPasswordField] = useState("")
-    const [secondPasswordField, setSecondPasswordField] = useState("")
 
     const {t} = useTranslation();
 
