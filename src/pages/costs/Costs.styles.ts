@@ -150,7 +150,7 @@ export const CostsStyles = styled.section`
   }
 
   &.fixed-edit-block {
-    padding-top: 100px;
+    padding-top: 96px;
     transition: all .3s ease;
 
     @media screen and (max-width: 992px) {

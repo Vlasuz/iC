@@ -100,6 +100,7 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit, isFixedEdi
 
     useEffect(() => {
         if (!chosenTimesheet?.date) return;
+        if (itemToEdit && !Object.keys(itemToEdit).length) return;
         if (isEditExpense) setIsOpenCreatBlock(true)
 
         setProjectData(itemToEdit?.project ?? undefined)
@@ -110,6 +111,7 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit, isFixedEdi
 
     useEffect(() => {
         if (!chosenTimesheet?.date) return;
+        if (itemToDuplicate && !Object.keys(itemToDuplicate).length) return;
         if (isDuplicateExpense) setIsOpenCreatBlock(true)
 
         setProjectData(itemToDuplicate?.project ?? undefined)
@@ -176,10 +178,6 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit, isFixedEdi
 
     function getMondayDate() {
         const today = new Date();
-        // const dayOfWeek = today.getDay();
-        // const difference = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
-        // const monday = new Date(today);
-        // monday.setDate(today.getDate() + difference);
 
         return today;
     }
@@ -188,7 +186,6 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit, isFixedEdi
         setProjectData(undefined)
         setDescriptionData("")
         setCostData(0)
-        // setDateData(`${lessThenTen(String(getMondayDate().getDate()))}.${chosenTimesheet?.date[3]}${chosenTimesheet?.date[4]}.${getMondayDate().getFullYear()}`)
     }
 
     useEffect(() => {

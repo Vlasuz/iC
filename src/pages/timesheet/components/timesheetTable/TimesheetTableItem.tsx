@@ -58,8 +58,8 @@ export const TimesheetTableItem: React.FC<ITimesheetTableItemProps> = ({taskItem
 
     const handleEditTask = (data?: ITask) => {
         editTask(taskItem)
+        duplicateTask({})
         setIsOpenContextMenu(false)
-
         setIsFixedEditBlock(true)
     }
     const handleRemoveTask = (data: ITask) => {
@@ -67,7 +67,7 @@ export const TimesheetTableItem: React.FC<ITimesheetTableItemProps> = ({taskItem
         setIsOpenContextMenu(false)
     }
     const handleDuplicateTask = (data: ITask) => {
-
+        editTask({})
         duplicateTask(taskItem)
         setIsFixedEditBlock(true)
         setIsOpenContextMenu(false)

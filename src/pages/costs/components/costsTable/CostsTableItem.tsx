@@ -64,6 +64,7 @@ export const CostsTableItem: React.FC<ICostsTableItemProps> = ({item, index, ite
 
     const handleEditTask = (data?: IExpense) => {
         editTask(item)
+        duplicateTask({})
         setIsOpenContextMenu(false)
         setIsFixedEditBlock(true)
     }
@@ -72,7 +73,7 @@ export const CostsTableItem: React.FC<ICostsTableItemProps> = ({item, index, ite
         setIsOpenContextMenu(false)
     }
     const handleDuplicateTask = (data: IExpense) => {
-
+        editTask({})
         duplicateTask(item)
         setIsFixedEditBlock(true)
         setIsOpenContextMenu(false)

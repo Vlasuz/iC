@@ -77,7 +77,7 @@ export const ResetPasswordForm: React.FC<IResetPasswordFormProps> = () => {
                     </h1>
                     <label className="login__label">
                         <input type={isShowPassword ? "text" : "password"} name="password" required
-                               onChange={e => setPasswordField(e.target.value)} minLength={8} value={passwordField}
+                               onChange={e => setPasswordField(e.target.value.trim())} value={passwordField}
                                className="login__input input password-input"
                                placeholder={`${t("reset_password.enter_new_password")}`}
                         />
@@ -91,7 +91,7 @@ export const ResetPasswordForm: React.FC<IResetPasswordFormProps> = () => {
                     </label>
                     <label className="login__label">
                         <input type={isShowPasswordRepeat ? "text" : "password"} name="password" required
-                               onChange={e => setSecondPasswordField(e.target.value)} minLength={8}
+                               onChange={e => setSecondPasswordField(e.target.value.trim())}
                                value={secondPasswordField}
                                className="login__input input password-input"
                                placeholder={`${t("reset_password.confirm_new_password")}`}

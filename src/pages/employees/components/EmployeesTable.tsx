@@ -1,18 +1,12 @@
-import React, {Dispatch, SetStateAction, useContext, useEffect, useRef, useState} from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 import {IEmployee} from "../../../models";
-import {getBearer} from "../../../functions/getBearer";
-import axios from "axios";
-import {getApiLink} from "../../../functions/getApiLink";
 import {EmployeesItem} from "./EmployeesItem";
-import {useDispatch, useSelector} from 'react-redux';
-import {setEmployeesList} from '../../../storage/toolkit';
+import {useSelector} from 'react-redux';
 import SimpleBar from "simplebar-react";
 import {useScrollTopValue} from "../../../hooks/ScrollTopValue";
 import {Translate} from "../../../components/translate/Translate";
 import {EmployeesStatus} from "../../../constants/EmployeesStatus";
-import {RowsPerPage} from "../../../constants/RowsPerPage";
 import {EmployeesTableExport} from "./EmployeesTableExport";
-import {HeaderSearch} from "../../../contexts";
 
 interface IEmployeesTableProps {
     rowsSelectValue: any

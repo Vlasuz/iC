@@ -70,7 +70,7 @@ export const SummaryEmployeesStyled = styled.section`
     font-size: 20px;
   }
 
-  @media screen and (max-width: 1440px) {
+  @media screen and (max-width: 1200px) {
     .section-table__add-task--project.drop-down .drop-down__block {
       right: 0;
       left: auto;

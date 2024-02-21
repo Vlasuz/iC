@@ -4,8 +4,7 @@ import React, {useEffect, useState} from 'react'
 import {useClickOutside} from "../../hooks/ClickOutside";
 import {Translate} from "../translate/Translate";
 import html2pdf from 'html2pdf.js';
-import * as ExcelJS from 'exceljs';
-import { saveAs } from 'file-saver';
+import * as XLSX from 'xlsx';
 
 
 
@@ -15,6 +14,10 @@ interface ITableExportProps {
 }
 
 export const TableExport: React.FC<ITableExportProps> = ({title, onClick}) => {
+
+
+
+
 
     const tableToExcel = function() {
         const uri = 'data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,';
@@ -45,39 +48,39 @@ export const TableExport: React.FC<ITableExportProps> = ({title, onClick}) => {
         return function(table, filename = 'excel-export') {
             if (!table.nodeType) table = document.querySelectorAll(table);
 
-            table.forEach((tbl: any) => {
-
+            // @ts-ignore
+            table.forEach((tbl) => {
                 const ctx = {
                     worksheet: filename,
                     table: tbl.innerHTML
                 };
 
-                const blob = new Blob([format(template, ctx)], {
-                    type: 'application/vnd.ms-excel'
-                });
+                const content = format(template, ctx);
+                const blob = new Blob([content], { type: 'application/vnd.ms-excel' });
 
-                // @ts-ignore
-                if (navigator.msSaveBlob) {
-                    // @ts-ignore
-                    navigator.msSaveBlob(blob, filename + '.xls');
-                } else {
-                    const link = document.createElement('a');
-                    if (link.download !== undefined) {
-                        const url = URL.createObjectURL(blob);
-                        link.setAttribute('href', url);
-                        link.setAttribute('download', filename + '.xls');
-                        link.style.visibility = 'hidden';
-                        document.body.appendChild(link);
-                        link.click();
-                        document.body.removeChild(link);
-                    }
-                }
+                // Создаем объект URL для Blob
+                const url = window.URL.createObjectURL(blob);
 
-            })
+                // Создаем ссылку для скачивания
+                const link = document.createElement('a');
+                link.setAttribute('href', url);
 
+                // Добавляем заголовок Content-Disposition
+                link.setAttribute('download', `${filename}.xls`);
+                link.setAttribute('target', '_blank');
+                link.style.visibility = 'hidden';
 
+                // Добавляем ссылку в DOM и эмулируем клик для скачивания файла
+                document.body.appendChild(link);
+                link.click();
+
+                // Удаляем ссылку из DOM и освобождаем ресурсы
+                document.body.removeChild(link);
+                window.URL.revokeObjectURL(url);
+            });
         };
     }();
+
 
 
     const convertToPDF = () => {

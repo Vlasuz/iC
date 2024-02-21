@@ -17,6 +17,7 @@ import {SetEmployees} from "../../../api/SetEmployees";
 import {Translate} from "../../translate/Translate";
 import {PopupContext} from "../../../App";
 import SimpleBar from "simplebar-react";
+import {toast} from "react-toastify";
 
 interface IPopupEditEmployeeProps {
     setIsOpenProjects: any
@@ -82,12 +83,11 @@ export const PopupEditEmployee: React.FC<IPopupEditEmployeeProps> = ({setIsOpenP
         getBearer('patch')
         axios.patch(getApiLink("/api/admin/employee/edit/?employee_id=" + data.id), newDataEmployee).then(({data}) => {
             console.log(getApiLink("/api/admin/employee/edit/?employee_id=" + data.id), data)
+            if (data.message === "user_exists") {
+                return toast.error(<Translate>user_exist</Translate>);
+            }
+
             if (!data.status) return;
-
-            // @ts-ignore
-            // newDataEmployee['id'] = data.id;
-
-            // dispatch(editEmployee({data, newDataEmployee}))
 
             setIsPopupActive(false)
             SetEmployees(dispatch)

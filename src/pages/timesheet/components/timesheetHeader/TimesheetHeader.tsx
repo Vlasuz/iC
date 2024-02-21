@@ -123,6 +123,7 @@ export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({itemToEdit, is
 
     useEffect(() => {
         if (!chosenTimesheet?.date) return;
+        if (itemToEdit && !Object.keys(itemToEdit).length) return;
         if (isEditTask) setIsOpenCreatBlock(true)
 
         document.querySelector(".simplebar-content-wrapper")?.scrollTo({
@@ -139,6 +140,7 @@ export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({itemToEdit, is
 
     useEffect(() => {
         if (!chosenTimesheet?.date) return;
+        if (itemToDuplicate && !Object.keys(itemToDuplicate).length) return;
         if (isDuplicateTask) setIsOpenCreatBlock(true)
 
         document.querySelector(".simplebar-content-wrapper")?.scrollTo({

@@ -13,6 +13,7 @@ import {setEmployeesList} from "../../storage/toolkit";
 import {Translate} from "../../components/translate/Translate";
 import {CustomSelect} from "../../components/customSelect/CustomSelect";
 import {RowsPerPage} from "../../constants/RowsPerPage";
+import {VacationsTableExport} from "./components/VacationsTableExport";
 
 interface IVacationsProps {
 
@@ -20,15 +21,11 @@ interface IVacationsProps {
 
 export const Vacations: React.FC<IVacationsProps> = () => {
 
-    const employees: IEmployee[] = useSelector((state: any) => state.toolkit.employees)
-
     const [valueSearch, setValueSearch] = useState<string>("")
     const [sortByName, setSortByName] = useState<string>("sortDown")
     const [selectValue, setSelectValue] = useState(RowsPerPage()[0])
     const [vacations, setVacations] = useState<IVacation[]>([])
     const [isLoad, setIsLoad] = useState(false)
-
-    const dispatch = useDispatch()
 
     const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -90,6 +87,9 @@ export const Vacations: React.FC<IVacationsProps> = () => {
 
     return (
         <VacationsStyled className="section-table">
+
+            <VacationsTableExport/>
+
             <div className="section-table__header">
                 <div className="section-table__header--row is-always-row">
                     <div className="section-table__header--col">
@@ -134,16 +134,6 @@ export const Vacations: React.FC<IVacationsProps> = () => {
                         <div className="section-table__body">
                                 {
                                     vacations
-                                        // ?.sort((a: any, b: any) => {
-                                        //     if (sortByName === "sortUp") {
-                                        //         return b?.user?.last_name.localeCompare(a?.user?.last_name);
-                                        //     } else if (sortByName === "sortDown") {
-                                        //         return a?.user?.last_name.localeCompare(b?.user?.last_name);
-                                        //     } else {
-                                        //         return 0;
-                                        //     }
-                                        // })
-
                                         ?.sort((a, b) => a.user?.last_name < b.user?.last_name ? sortByName === "sortUp" ? 1 : -1 : sortByName === "sortDown" ? 1 : -1)
                                         ?.filter((item, index) => selectValue.value === 0 ? item : index < selectValue.value)
                                         // ?.sort((a, b) => +a.archive - +b.archive)

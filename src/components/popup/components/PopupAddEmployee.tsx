@@ -62,7 +62,7 @@ export const PopupAddEmployee: React.FC<IPopupAddNewEmployeeProps> = ({data, set
             "email": emailValue.trim(),
             "phone": phoneValue ? `${phoneCode.label} ${phoneValue}` : "",
             "holidays": +holidaysValue,
-            "password": passwordValue,
+            "password": passwordValue.trim(),
             "projects": projectsList,
             "all_projects": chosenProjects?.length === projects.length
         }
@@ -100,7 +100,7 @@ export const PopupAddEmployee: React.FC<IPopupAddNewEmployeeProps> = ({data, set
     const inputRef = useMask({mask: '(__) ___ __ __', replacement: {_: /\d/}});
 
     const handleSetPassword = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setPasswordValue(e.target.value)
+        setPasswordValue(e.target.value.trim())
     }
 
     // const handleCheckInput = (e: any) => {

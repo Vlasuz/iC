@@ -16,6 +16,7 @@ import {TableSelectYear} from "../../components/table/TableSelectYear";
 import {TableExport} from "../../components/table/TableExport";
 import {Translate} from "../../components/translate/Translate";
 import {useClickOutside} from "../../hooks/ClickOutside";
+import {ProjectsTableExport} from "./components/ProjectsTableExport";
 
 interface IProjectsProps {
 
@@ -157,6 +158,9 @@ export const Projects: React.FC<IProjectsProps> = () => {
 
     return (
         <ProjectStyled className="section-table">
+
+            <ProjectsTableExport/>
+
             <div className="section-table__header">
                 <div className="section-table__header--row is-always-row">
                     <div className="section-table__header--col">
