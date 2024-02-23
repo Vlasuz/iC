@@ -109,7 +109,7 @@ export const LoginForm: React.FC<ILoginFormProps> = () => {
 
             <label className="login__label">
                     <input ref={inputRef} onInput={handleInputChange} type={isShowPassword ? "text" : "password"} name="password" required
-                           onChange={e => setPasswordField(e.target.value)} value={passwordField}
+                           onChange={e => setPasswordField(e.target.value.trim())} value={passwordField}
                            className="login__input input password-input"
                            placeholder={`${t("page_login.password")}`}
                     />

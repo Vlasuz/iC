@@ -27,7 +27,7 @@ export const TimesheetHeaderChooseTime: React.FC<ITimesheetHeaderChooseTimeProps
 
     const [timeFromHours, setTimeFromHours] = useState(TimeHoursList()[7])
     const [timeFromMinutes, setTimeFromMinutes] = useState(TimeMinutesList()[0])
-    const [timeToHours, setTimeToHours] = useState(TimeHoursList()[7])
+    const [timeToHours, setTimeToHours] = useState(TimeHoursList()[8])
     const [timeToMinutes, setTimeToMinutes] = useState(TimeMinutesList()[0])
 
     const [isActiveSelectTime, setIsActiveSelectTime] = useState(false)
@@ -101,7 +101,7 @@ export const TimesheetHeaderChooseTime: React.FC<ITimesheetHeaderChooseTimeProps
             setIsChosenDate(false)
             setTimeFromHours(TimeHoursList()[7])
             setTimeFromMinutes(TimeMinutesList()[0])
-            setTimeToHours(TimeHoursList()[7])
+            setTimeToHours(TimeHoursList()[8])
             setTimeToMinutes(TimeMinutesList()[0])
             return;
         }

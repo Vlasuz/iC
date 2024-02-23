@@ -64,11 +64,14 @@ export const Projects: React.FC<IProjectsProps> = () => {
                 value: 999999999
             }
             setPaginationCountStep(data)
-            setPaginationCountTo(data.value)
+            setPaginationCountFrom(0)
+            setPaginationCountTo(999999999)
             setPaginationMaximumPages(0)
+            setRowsSelectValue(data)
             return;
         }
 
+        setRowsSelectValue(e)
         setPaginationCountFrom(0)
         setPaginationCountStep(e)
         setPaginationCountTo(e)
@@ -76,7 +79,7 @@ export const Projects: React.FC<IProjectsProps> = () => {
         const arrayCount = Array?.from({length: Math.ceil(projects?.length / e.value)}, (_, i) => i + 1)
 
         setPaginationNavigation(arrayCount)
-        setPaginationCountTo(paginationCountStep.value)
+        setPaginationCountTo(e.value)
     }
 
 
@@ -93,9 +96,7 @@ export const Projects: React.FC<IProjectsProps> = () => {
     const isNearEnd = paginationNavigation?.slice(paginationCountFrom / paginationCountStep.value, (paginationCountOfMaximumNavigation + paginationCountFrom / paginationCountStep.value))[0] + 3 >= paginationNavigation.slice(paginationMaximumPages - 1)[0]
 
     useEffect(() => {
-        console.log(projects)
         if (projects.length && isLoad) return;
-        console.log(projects.length && isLoad)
 
         const arrayCount = Array?.from({length: Math.ceil(projects?.length / paginationCountStep.value)}, (_, i) => i + 1)
 
@@ -104,13 +105,6 @@ export const Projects: React.FC<IProjectsProps> = () => {
 
         projects.length && setIsLoad(true)
     }, [projects, paginationMaximumPages])
-
-    // useEffect(() => {
-    //
-    //     setPaginationCountFrom(0)
-    //     setPaginationMaximumPages(Math.ceil(projects.length / paginationCountStep.value))
-    //
-    // }, [projects])
 
     const changeNumberPagination = (e: React.MouseEvent<HTMLAnchorElement>, number: number) => {
         e.preventDefault()
@@ -155,6 +149,18 @@ export const Projects: React.FC<IProjectsProps> = () => {
             setIsLoad(true)
         }, 1000)
     }, [projects, isLoad])
+
+    console.log(projects
+        ?.slice()?.sort((a, b) => +a.archive - +b.archive)
+        ?.slice(paginationCountFrom, paginationCountTo)
+        // ?.filter((item, index) => index < Math.ceil(paginationCountStep.value / 2))
+        ?.filter((item, index) => rowsSelectValue.label === "All" ? index % 2 === 1 : index >= Math.ceil(paginationCountStep.value / 2)))
+
+    console.log(projects.length) // Опаздывает
+    console.log(paginationCountFrom, paginationCountTo) // Опаздывает
+    console.log(paginationCountStep) // Опаздывает
+
+    console.log(paginationNavigation.length > 1, rowsSelectValue.label !== "All")
 
     return (
         <ProjectStyled className="section-table">
@@ -242,7 +248,8 @@ export const Projects: React.FC<IProjectsProps> = () => {
                                     !!projects.length && projects
                                         ?.slice()?.sort((a, b) => +a.archive - +b.archive)
                                         ?.slice(paginationCountFrom, paginationCountTo)
-                                        ?.filter((item, index) => index < Math.ceil(paginationCountStep.value / 2))
+                                        // ?.filter((item, index) => index < Math.ceil(paginationCountStep.value / 2))
+                                        ?.filter((item, index) => rowsSelectValue.label === "All" ? index % 2 === 1 : index >= Math.ceil(paginationCountStep.value / 2))
                                         ?.map((project: IProject, index: number) =>
                                             <ProjectItem isArchive={project.archive} key={project.id} data={project}
                                                          index={paginationCountFrom + index}/>
@@ -284,10 +291,11 @@ export const Projects: React.FC<IProjectsProps> = () => {
                                     !!projects.length && projects
                                         ?.slice()?.sort((a, b) => +a.archive - +b.archive)
                                         ?.slice(paginationCountFrom, paginationCountTo)
-                                        ?.filter((item, index) => index >= Math.ceil(paginationCountStep.value / 2))
+                                        // ?.filter((item, index) => index >= Math.ceil(paginationCountStep.value / 2))
+                                        ?.filter((item, index) => rowsSelectValue.label === "All" ? index % 2 === 0 : index >= Math.ceil(paginationCountStep.value / 2))
                                         ?.map((project: IProject, index: number) =>
                                             <ProjectItem isArchive={project.archive} key={project.id} data={project}
-                                                         index={Math.ceil((paginationCountFrom + index) + paginationCountStep.value / 2)}/>
+                                                         index={rowsSelectValue.label === "All" ? projects.length / 2 + index : (Math.ceil((paginationCountFrom + index) + paginationCountStep.value / 2))}/>
                                         )
                                 }
 
@@ -339,7 +347,7 @@ export const Projects: React.FC<IProjectsProps> = () => {
                             <div className="section-table__body">
                                 {
                                     !!projects.length && projects
-                                        ?.slice()?.sort((a, b) => +a.archive - +b.archive)
+                                        // ?.slice()?.sort((a, b) => +a.archive - +b.archive)
                                         // ?.slice(paginationCountFrom, paginationCountTo)
                                         // ?.filter((item, index) => index >= Math.ceil(paginationCountStep.value / 2))
                                         ?.map((project: IProject, index: number) => {
@@ -366,7 +374,7 @@ export const Projects: React.FC<IProjectsProps> = () => {
                     </span>
                     <CustomSelect list={RowsPerPage()} defaultValue={RowsPerPage()[3]} selectValue={rowsSelectValue} setSelectedItem={setRowsSelectValue}/>
                 </div>
-                {paginationNavigation.length > 1 &&
+                {paginationNavigation.length > 1 && rowsSelectValue.label !== "All" &&
                     <div className="section-table__pagination pagination visible-on-desktop">
                         <button onClick={prevNumberPagination} className="pagination__arrow is-prev" type="button"
                                 title="Prev page">
