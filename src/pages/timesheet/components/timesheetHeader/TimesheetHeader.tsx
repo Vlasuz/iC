@@ -1,4 +1,4 @@
-import React, {createContext, useContext, useEffect, useState} from 'react'
+import React, {createContext, useContext, useEffect, useRef, useState} from 'react'
 import {useDispatch, useSelector} from 'react-redux';
 import {IProject, ITask, ITimesheet, IUser} from "../../../../models";
 import {useClickOutside} from "../../../../hooks/ClickOutside";
@@ -10,7 +10,7 @@ import {getBearer} from "../../../../functions/getBearer";
 import {Notifications} from "../../../../components/notifications/Notifications";
 import {setTasks} from "../../../../storage/toolkit";
 import {BlockToEdit, FixedTopEdit} from "../../Timesheet";
-import {TableExport} from "../../../../components/table/TableExport";
+import {TableExportCustom} from "../../../../components/table/TableExportCustom";
 import {TableSelectYearMonth} from "../../../../components/table/TableSelectYearMonth";
 import {TableProjectsForUser} from '../../../../components/table/TableProjectsForUser';
 import {TableCalendar} from "../../../../components/table/TableCalendar";
@@ -20,6 +20,9 @@ import {Translate} from "../../../../components/translate/Translate";
 import {toast} from "react-toastify";
 import {useTranslation} from "react-i18next";
 import {useParams} from "react-router-dom";
+import { useDownloadExcel } from 'react-export-table-to-excel';
+import {CostsExcel} from "../../../costs/components/CostsExcel";
+import { TimesheetExcel } from '../TimesheetExcel';
 
 interface ITimesheetHeaderProps {
     itemToEdit: ITask | undefined
@@ -40,6 +43,7 @@ export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({itemToEdit, is
     const timesheet: ITimesheet[] = useSelector((state: any) => state.toolkit.timesheet)
     const chosenTimesheet: ITimesheet = useSelector((state: any) => state.toolkit.chosenTimesheet)
     const userData: IUser = useSelector((state: any) => state.toolkit.user)
+    const tasks: ITask[] = useSelector((state: any) => state.toolkit.tasks)
 
     const [projectData, setProjectData] = useState<IProject | undefined>()
     const [taskData, setTaskData] = useState<string>("")
@@ -233,12 +237,7 @@ export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({itemToEdit, is
         "add": `${t("timesheet_page.top_part.add_task")}`
     }
 
-    const handleSetNewData = () => {
-        // axios.get(getApiLink(`/api/timesheet/tasks/?timesheet_id=${timesheetId}`)).then(({data}) => {
-        //     console.log(data)
-        //     dispatch(setTasks(data))
-        // })
-    }
+    console.log(tasks)
 
     return (
         <div className={`section-table__header ${isFixedEditBlock && "animate-to-show"} ${isCancelEdit && "animate-to-hide"}`}>
@@ -305,9 +304,13 @@ export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({itemToEdit, is
                             </div>
                             <div className="section-table__header--col">
 
-                                <TableSelectYearMonth handleSetNewData={handleSetNewData} onSwitch={handleSwitchMonth}/>
+                                <TableSelectYearMonth onSwitch={handleSwitchMonth}/>
 
-                                <TableExport/>
+                                <TableExportCustom
+                                    excelFile={(e: any) => TimesheetExcel({chosenTimesheet, tasks, translate: t})}
+                                />
+
+                                {/*<button onClick={onDownload}>dwnl</button>*/}
 
                             </div>
                         </div>

@@ -48,7 +48,6 @@ export const TableSelectYearMonth: React.FC<ITableSelectYearMonthProps> = ({setM
 
         if(!timesheet.length) return;
 
-        console.log(timesheet)
         const selectedTimesheet = timesheet.filter(item => Number(`${item.date[3]}${item.date[4]}`) === month)[0]
 
         if(selectedTimesheet && !Object.keys(selectedTimesheet).length) return;
@@ -56,7 +55,7 @@ export const TableSelectYearMonth: React.FC<ITableSelectYearMonthProps> = ({setM
         dispatch(setChosenTimesheet(selectedTimesheet))
 
 
-        handleSetNewData()
+        handleSetNewData && handleSetNewData()
 
 
         setIsSelectActive(false)

@@ -6,7 +6,7 @@ import {PopupCloseCancel} from "./PopupCloseCancel";
 import {IsPopupActiveContext} from "../PopupList";
 import {PopupContext} from "../../../App";
 import {SetTimesheet} from "../../../api/SetTimesheet";
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {Translate} from "../../translate/Translate";
 
 interface IPopupApproveTimesheetProps {

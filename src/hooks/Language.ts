@@ -7,6 +7,9 @@ import Lang_UA from "../languages/ua.json";
 import i18n from "i18next";
 import getCookie from "../functions/getCookie";
 import { setLanguage } from '../storage/toolkit';
+import axios from "axios";
+import {getApiLink} from "../functions/getApiLink";
+import {getBearer} from "../functions/getBearer";
 
 const jsonLanguages = {
     "en": { translation: Lang_EN },
@@ -40,6 +43,10 @@ export const useLanguage = () => {
 
     useEffect(() => {
 
+        getBearer("patch")
+        axios.patch(getApiLink(`/api/user/update/language/?language=${i18n.language}`)).then(({data}) => {
+            console.log(data)
+        })
         dispatch(setLanguage(i18n.language))
         setCookie('language_ic', i18n.language)
 

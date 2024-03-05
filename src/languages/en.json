@@ -340,5 +340,7 @@
   "all_tasks": "All tasks",
   "all_costs": "All costs",
 
-  "pass_min": "Minimum number of characters in the password: 8. The number is now:"
+  "pass_min": "Minimum number of characters in the password: 8. The number is now:",
+
+  "Timesheet_presence_report": "Timesheet (Presence Report)"
 }

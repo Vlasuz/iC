@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import {SummaryStyled} from "./Summary.styled";
 import {SummaryItem} from "./components/SummaryItem";
 import {TableSelectYear} from "../../components/table/TableSelectYear";
-import {TableExport} from "../../components/table/TableExport";
+import {TableExportCustom} from "../../components/table/TableExportCustom";
 import {Notifications} from "../../components/notifications/Notifications";
 import axios from "axios";
 import {getApiLink} from "../../functions/getApiLink";
@@ -50,7 +50,7 @@ export const Summary: React.FC<ISummaryProps> = () => {
                 </div>
                 <div className="page-header__col">
 
-                    <TableExport title={'export all'}/>
+                    <TableExportCustom title={'export all'}/>
 
                 </div>
             </div>

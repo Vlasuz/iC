@@ -14,7 +14,7 @@ import {DownSidebar} from "../../components/downSidebar/DownSidebar";
 import {useParams} from "react-router-dom";
 import {SetStatistic} from "../../api/SetStatistic";
 import {Translate} from "../../components/translate/Translate";
-import {CostsExportTable} from "./components/CostsExportTable";
+import {CostsExcel} from "./components/CostsExcel";
 import {GetAccessToken} from '../../api/GetAccessToken';
 import {SetTimesheet} from "../../api/SetTimesheet";
 import {SetTasks} from "../../api/SetTasks";
@@ -115,7 +115,13 @@ export const Costs: React.FC<ICostsProps> = () => {
     const [comments, setComments] = useState<IComment[]>([])
 
     useEffect(() => {
-        setComments(chosenTimesheet?.comments)
+        if(!chosenTimesheet?.id) return;
+
+        getBearer("get")
+        axios.get(getApiLink(`/api/comment/?timesheet_id=${chosenTimesheet.id}`)).then(({data}) => {
+            setComments(data)
+        })
+
     }, [chosenTimesheet])
 
     const [isFixedEditBlock, setIsFixedEditBlock] = useState(false)
@@ -128,8 +134,6 @@ export const Costs: React.FC<ICostsProps> = () => {
                     <BlockToEdit.Provider value={setItemToEdit}>
                         <CostsStyles style={{paddingBottom: isOpenDownSidebar ? "270px" : (isWindowMobile ? "60px" : "80px")}}
                                      className={`section-table ${isFixedEditBlock && "fixed-edit-block"}`}>
-
-                            <CostsExportTable/>
 
                             <CostsHeader itemToDuplicate={itemToDuplicate} setItemToDuplicate={setItemToDuplicate} isFixedEditBlock={isFixedEditBlock} itemToEdit={itemToEdit}/>
                             {chosenTimesheet?.id && <CostsTable itemToEdit={itemToEdit} rowsSelectValue={rowsSelectValue}/>}

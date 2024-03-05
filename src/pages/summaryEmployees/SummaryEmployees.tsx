@@ -3,7 +3,7 @@ import {SummaryEmployeesItem} from "./components/SummaryEmployeesItem";
 import {Notifications} from "../../components/notifications/Notifications";
 import {TableSelectYearMonth} from "../../components/table/TableSelectYearMonth";
 import {TableProjectsForUser} from "../../components/table/TableProjectsForUser";
-import {TableExport} from "../../components/table/TableExport";
+import {TableExportCustom} from "../../components/table/TableExportCustom";
 import {CustomSelect} from "../../components/customSelect/CustomSelect";
 import {SummaryEmployeesStyled} from "./SummaryEmployees.styled";
 import {RowsPerPage} from "../../constants/RowsPerPage";
@@ -43,17 +43,26 @@ export const SummaryEmployees: React.FC<ISummaryEmployeesProps> = () => {
         }
     ]
 
+    const user: IUser = useSelector((state: any) => state.toolkit.user)
+    const summaryEmployees: ISummaryEmployee = useSelector((state: any) => state.toolkit.summaryEmployees)
+    const chosenTimesheet = useSelector((state: any) => state.toolkit.chosenTimesheet)
+
+    const [actualMonth, setActualMonth] = useState('')
+    const [actualYear, setActualYear] = useState('')
+
+    useEffect(() => {
+        if(!chosenTimesheet?.date) return;
+        setActualMonth(`${chosenTimesheet?.date[3]}${chosenTimesheet?.date[4]}`)
+        setActualYear(`20${chosenTimesheet?.date[6]}${chosenTimesheet?.date[7]}`)
+    }, [chosenTimesheet])
 
     const [projectData, setProjectData] = useState<any>(undefined)
     const [statusSortValue, setStatusSortValue] = useState(statusSortList[0])
     const [rowsSelectValue, setRowsSelectValue] = useState(RowsPerPage()[0])
-    const [year, setYear] = useState()
-    const [month, setMonth] = useState()
+    const [year, setYear] = useState(+actualYear)
+    const [month, setMonth] = useState(+actualMonth)
     const [isLoad, setIsLoad] = useState(false)
     const [statisticForTable, setStatisticForTable]: any = useState([])
-
-    const user: IUser = useSelector((state: any) => state.toolkit.user)
-    const summaryEmployees: ISummaryEmployee = useSelector((state: any) => state.toolkit.summaryEmployees)
 
     const handleAddRows = () => {
         const plusCount = window.innerWidth < 768 ? 10 : 20
@@ -66,7 +75,15 @@ export const SummaryEmployees: React.FC<ISummaryEmployeesProps> = () => {
 
     useEffect(() => {
         setRowsSelectValue(RowsPerPage()[0].value < summaryEmployees?.all?.length ? RowsPerPage()[0] : RowsPerPage()[3])
-        SetSummaryEmployees(dispatch)
+
+        if(chosenTimesheet?.date) {
+            const actualMonth = `${chosenTimesheet?.date[3]}${chosenTimesheet?.date[4]}`
+            const actualYear = `20${chosenTimesheet?.date[6]}${chosenTimesheet?.date[7]}`
+
+            SetSummaryEmployees(dispatch, +actualMonth, +actualYear)
+        } else {
+            SetSummaryEmployees(dispatch)
+        }
 
         axios.get(getApiLink("/api/timesheet/projects/")).then(({data}) => {
             setAllProjects(data)
@@ -89,14 +106,14 @@ export const SummaryEmployees: React.FC<ISummaryEmployeesProps> = () => {
 
     useEffect(() => {
         if (!month) return;
-        SetSummaryEmployees(dispatch, month, year)
+        SetSummaryEmployees(dispatch, month, year === 0 ? +actualYear : year)
     }, [month])
 
     const [valueSearch, setValueSearch] = useState("")
     const [allProjects, setAllProjects] = useState<IProject[]>([])
 
     useEffect(() => {
-        SetSummaryEmployees(dispatch, undefined, undefined, projectData?.id)
+        SetSummaryEmployees(dispatch, month, year, projectData?.id)
     }, [projectData])
 
     let numberOfRow = 0;
@@ -155,7 +172,7 @@ export const SummaryEmployees: React.FC<ISummaryEmployeesProps> = () => {
                                       selectValue={statusSortValue}/>
                     </div>
 
-                    {user.status === "team_lead" && <TableExport onClick={handleOpenExport}/>}
+                    {user.status === "team_lead" && <TableExportCustom onClick={handleOpenExport}/>}
                 </form>
             </div>
             <div className="summary__main">

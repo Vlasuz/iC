@@ -1,15 +1,27 @@
 import React, {useEffect, useState} from 'react'
 import {IProject, IUser} from "../../models";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {useClickOutside} from "../../hooks/ClickOutside";
 import SimpleBar from "simplebar-react";
 import {Translate} from "../translate/Translate";
 import {useTranslation} from "react-i18next";
+import axios from "axios";
+import {getApiLink} from "../../functions/getApiLink";
+import {GetAccessToken} from "../../api/GetAccessToken";
+import {getBearer} from "../../functions/getBearer";
 
 interface ITableProjectsForUserProps {
     setProjectData: any
     projectData: any
     projectList?: IProject[]
+}
+
+interface IAllUserProjects {
+    used_projects: {
+        project: IProject,
+        count: number
+    }[]
+    projects_list: IProject[]
 }
 
 export const TableProjectsForUser: React.FC<ITableProjectsForUserProps> = ({
@@ -20,8 +32,23 @@ export const TableProjectsForUser: React.FC<ITableProjectsForUserProps> = ({
 
     const userData: IUser = useSelector((state: any) => state.toolkit.user)
 
+    const dispatch = useDispatch()
+
+    const getUserProjects = () => {
+        getBearer("get")
+        axios.get<IAllUserProjects>(getApiLink('/api/user/projects_info/')).then(({data}) => {
+            console.log(data)
+            setAllUserProjects(data)
+        }).catch(er => {
+            er?.response?.status === 401 && GetAccessToken(dispatch, getUserProjects)
+        })
+    }
+
+    useEffect(getUserProjects, [])
+
     const [searchValue, setSearchValue] = useState<string>("")
     const [project, setProject] = useState<IProject | undefined>()
+    const [allUserProjects, setAllUserProjects] = useState<IAllUserProjects>()
 
     const [isActiveSelectProjects, setIsActiveSelectProjects] = useState(false)
     const {rootEl} = useClickOutside(setIsActiveSelectProjects)
@@ -80,13 +107,13 @@ export const TableProjectsForUser: React.FC<ITableProjectsForUserProps> = ({
                                 </li>
                             </ul>
                         </div>
-                        {!projectList?.length && !!userData?.used_projects?.length &&
+                        {!projectList?.length && !!allUserProjects?.used_projects?.length &&
                             <div className="project-popup__block">
                                 <h2><Translate>timesheet_page.popups.commonly_used</Translate></h2>
                                 <ul className="project-popup__list">
 
                                     {
-                                        userData?.used_projects
+                                        allUserProjects?.used_projects
                                             ?.slice(0, 5)
                                             ?.filter(item => !item.project.archive)
                                             ?.filter(item => searchValue ? item.project.name.toLowerCase().includes(searchValue.toLowerCase()) || item.project.description.toLowerCase().includes(searchValue.toLowerCase()) : item)
@@ -107,7 +134,7 @@ export const TableProjectsForUser: React.FC<ITableProjectsForUserProps> = ({
                             <ul className="project-popup__list">
 
                                 {
-                                    !projectList?.length ? userData?.projects_list
+                                    !projectList?.length ? allUserProjects?.projects_list
                                             ?.filter(item => searchValue ? item.name.toLowerCase().includes(searchValue.toLowerCase()) || item.description.toLowerCase().includes(searchValue.toLowerCase()) : item)
                                             ?.map(item =>
                                                 <li key={item.id}

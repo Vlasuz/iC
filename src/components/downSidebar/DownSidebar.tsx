@@ -62,13 +62,15 @@ export const DownSidebar: React.FC<IDownSidebarProps> = ({
     const handleSendComment = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
 
-        axios.post(getApiLink(`/api/timesheet/comment/?timesheet_id=${chosenTimesheet.id}`), {
+        axios.post(getApiLink(`/api/comment/?timesheet_id=${chosenTimesheet.id}`), {
             "text": textValue.slice(textValue.indexOf(".") + 1),
             "answer_user_id": answerCommentUser?.id?.length ? answerCommentUser?.id : null
         }).then(({data}) => {
             if (data.status === false) return;
 
             if (!answerCommentUser?.first_name) delete data.answer;
+
+            console.log(data)
 
             setComments((prev: any) => [...prev, data])
             setTextValue("")
@@ -86,7 +88,7 @@ export const DownSidebar: React.FC<IDownSidebarProps> = ({
 
     const handleDeleteComment = (id: string) => {
         getBearer("delete")
-        axios.delete(getApiLink(`/api/timesheet/comment/delete/?comment_id=${id}`)).then(({data}) => {
+        axios.delete(getApiLink(`/api/comment/delete/?comment_id=${id}`)).then(({data}) => {
             console.log(data)
             setComments((prev: any) => prev.filter((item: any) => item.id !== id))
         })

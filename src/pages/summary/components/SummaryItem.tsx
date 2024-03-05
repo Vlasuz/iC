@@ -20,7 +20,7 @@ import {SummaryExportTableTimesheet} from "./SummaryExportTableTimesheet";
 import {SetTasks} from "../../../api/SetTasks";
 import {SetExpenses} from "../../../api/SetExpenses";
 import {da} from "date-fns/locale";
-import {CostsExportTable} from "../../costs/components/CostsExportTable";
+import {CostsExcel} from "../../costs/components/CostsExcel";
 import {SetStatistic} from "../../../api/SetStatistic";
 import {SetTimesheet} from "../../../api/SetTimesheet";
 
@@ -208,7 +208,7 @@ export const SummaryItem: React.FC<ISummaryItemProps> = ({dataItem, isOpen}) => 
         <>
             {isClickToExport && <SummaryExportTable statistic={statistic} statisticList={statisticList}/>}
             {isClickToExport && <SummaryExportTableTimesheet />}
-            {isClickToExport && <CostsExportTable />}
+            {/*{isClickToExport && <CostsExcel />}*/}
 
             <div className={`summary-item ${isActive && "is-active"}`}>
                 <div onClick={_ => setIsActive(prev => !prev)} className="summary-item__target">

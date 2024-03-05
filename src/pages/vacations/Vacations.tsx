@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import {VacationsStyled} from "./Vacations.styled";
-import {TableExport} from "../../components/table/TableExport";
+import {TableExportCustom} from "../../components/table/TableExportCustom";
 import {TableSelectYear} from "../../components/table/TableSelectYear";
 import {VacationsHeader} from "./components/VacationsHeader";
 import {useDispatch, useSelector } from 'react-redux';
@@ -119,7 +119,7 @@ export const Vacations: React.FC<IVacationsProps> = () => {
                     </div>
                     <div className="section-table__header--col">
                         <TableSelectYear setYear={setListYear}/>
-                        <TableExport/>
+                        <TableExportCustom/>
                     </div>
                 </div>
             </div>

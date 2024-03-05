@@ -25,9 +25,9 @@ export const LoginChooseCompany: React.FC<ILoginChooseCompanyProps> = () => {
             <div className="drop-down__block select-drop-down__block">
                 <ul className="drop-down__list">
                     <li>
-                        <NavLink to="/login-2">
+                        <a href={"https://ces.timesheet.space/"}>
                             CES clean energy solutions
-                        </NavLink>
+                        </a>
                     </li>
                 </ul>
             </div>

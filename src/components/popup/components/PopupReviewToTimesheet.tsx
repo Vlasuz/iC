@@ -5,7 +5,7 @@ import {IsPopupActiveContext} from "../PopupList";
 import axios from "axios";
 import {getApiLink} from "../../../functions/getApiLink";
 import {SetSummaryEmployees} from "../../../api/SetSummaryEmployees";
-import { useDispatch } from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {Translate} from "../../translate/Translate";
 
 interface IPopupReviewToTimesheetProps {
@@ -15,13 +15,19 @@ interface IPopupReviewToTimesheetProps {
 export const PopupReviewToTimesheet: React.FC<IPopupReviewToTimesheetProps> = ({data}) => {
 
     const setIsPopupActive: any = useContext(IsPopupActiveContext)
+
+    const chosenTimesheet = useSelector((state: any) => state.toolkit.chosenTimesheet)
+
     const dispatch = useDispatch()
 
     const handleReview = () => {
         axios.post(getApiLink(`/api/timesheet/employees/review/?timesheet_id=${data?.timesheetId}&status=${data.status}`)).then(({data}) => {
             if(!data?.status) return;
 
-            SetSummaryEmployees(dispatch)
+            const actualMonth = `${chosenTimesheet.date[3]}${chosenTimesheet.date[4]}`
+            const actualYear = `20${chosenTimesheet.date[6]}${chosenTimesheet.date[7]}`
+
+            SetSummaryEmployees(dispatch, +actualMonth, +actualYear)
 
             setIsPopupActive(false)
         })

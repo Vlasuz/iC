@@ -3,7 +3,7 @@ import {HeaderSearch} from "../../../contexts";
 import {PopupContext} from "../../../App";
 import {useClickOutside} from "../../../hooks/ClickOutside";
 import {TableSelectYear} from "../../../components/table/TableSelectYear";
-import {TableExport} from "../../../components/table/TableExport";
+import {TableExportCustom} from "../../../components/table/TableExportCustom";
 import {getBearer} from "../../../functions/getBearer";
 import axios from "axios";
 import {getApiLink} from "../../../functions/getApiLink";
@@ -89,7 +89,7 @@ export const EmployeesHeader: React.FC<IEmployeesHeaderProps> = ({setSearchValue
 
                     <TableSelectYear setYear={setListYear}/>
 
-                    <TableExport/>
+                    <TableExportCustom/>
 
                 </div>
             </div>

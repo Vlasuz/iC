@@ -4,7 +4,7 @@ import {Translate} from "../../../components/translate/Translate";
 import axios from "axios";
 import {getApiLink} from "../../../functions/getApiLink";
 import {SetSummaryEmployees} from "../../../api/SetSummaryEmployees";
-import { useDispatch } from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 
 interface ISummaryEmployeesChangeDecisionProps {
     itemData: any
@@ -16,11 +16,16 @@ export const SummaryEmployeesChangeDecision: React.FC<ISummaryEmployeesChangeDec
 
     const dispatch = useDispatch()
 
+    const chosenTimesheet = useSelector((state: any) => state.toolkit.chosenTimesheet)
+
     const handleChangeDecision = () => {
         axios.post(getApiLink(`/api/timesheet/employees/review/?timesheet_id=${itemData?.id}&status=waiting`)).then(({data}) => {
             if(!data?.status) return;
 
-            SetSummaryEmployees(dispatch)
+            const actualMonth = `${chosenTimesheet.date[3]}${chosenTimesheet.date[4]}`
+            const actualYear = `20${chosenTimesheet.date[6]}${chosenTimesheet.date[7]}`
+
+            SetSummaryEmployees(dispatch, +actualMonth, +actualYear)
         })
     }
 

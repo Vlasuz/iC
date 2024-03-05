@@ -48,8 +48,7 @@ export const SummaryEmployeesExportTableCosts: React.FC<ISummaryEmployeesExportT
     }, [statisticForTable])
 
     const findProject: any = (data: any, proj: any) => {
-        console.log(data)
-        return data.filter((item: any) => item.project.id === proj.id)[0]?.expense?.sum ?? 0
+        return data.filter((item: any) => item.project.id === proj.id)[0]?.expense?.sum ? data.filter((item: any) => item.project.id === proj.id)[0]?.expense?.sum.toFixed(2) : 0
     }
     const sumTotalForProj: any = (proj: any) => {
 
@@ -64,7 +63,7 @@ export const SummaryEmployeesExportTableCosts: React.FC<ISummaryEmployeesExportT
 
         })
 
-        return sum;
+        return sum?.toFixed(2);
     }
 
     return (
@@ -114,35 +113,57 @@ export const SummaryEmployeesExportTableCosts: React.FC<ISummaryEmployeesExportT
                 </tr>
 
                 <tr>
-                    <td></td>
-                    <td></td>
+                    <td style={{color: "#fff", background: "#FF0A00", textAlign: "center", border: "1px solid #000"}}
+                        colSpan={2}>
+                        iC Ukraine Internal
+                    </td>
 
                     {
                         statProjectForExport.map((item: any) =>
-                            <td style={{verticalAlign: "top", textAlign: "center"}}>
+                            <td style={{
+                                verticalAlign: "top",
+                                textAlign: "center",
+                                color: "#fff",
+                                background: "#FF0A00",
+                                border: "1px solid #000"
+                            }}>
                                 {item?.name}
                             </td>
                         )
                     }
+
+                    <td style={{color: "#fff", background: "#FF0A00", border: "1px solid #000"}}>Costs</td>
                 </tr>
 
                 <tr>
-                    <td style={{width: "25px", textAlign: "center"}}>
+                    <td style={{width: "25px", textAlign: "center", color: "#fff", background: "#FF0A00", border: "1px solid #000"}}>
                         <b>No</b>
                     </td>
-                    <td style={{width: "138px", textAlign: "center"}}>
+                    <td style={{width: "138px", textAlign: "center", color: "#fff", background: "#FF0A00", border: "1px solid #000"}}>
                         <b>Users</b>
                     </td>
 
                     {
                         statProjectForExport.map((item: any) =>
-                            <td style={{width: "91px", textAlign: "center", verticalAlign: "top"}}>
+                            <td style={{
+                                width: "91px",
+                                textAlign: "center",
+                                verticalAlign: "top",
+                                color: "#fff",
+                                background: "#FF0A00", border: "1px solid #000"
+                            }}>
                                 <b>{item?.description}</b>
                             </td>
                         )
                     }
 
-                    <td style={{width: "48px", verticalAlign: "top", textAlign: "center"}}>
+                    <td style={{
+                        width: "48px",
+                        verticalAlign: "top",
+                        textAlign: "center",
+                        color: "#fff",
+                        background: "#FF0A00", border: "1px solid #000"
+                    }}>
                         <b>Total</b>
                     </td>
                 </tr>
@@ -167,8 +188,8 @@ export const SummaryEmployeesExportTableCosts: React.FC<ISummaryEmployeesExportT
                                 )
                             }
 
-                            <td style={{textAlign: "center"}}>
-                                {item?.all_sum}
+                            <td style={{textAlign: "center", background: "#EFEFEF"}}>
+                                {item?.all_sum.toFixed(2)}
                             </td>
 
                         </tr>
@@ -176,14 +197,13 @@ export const SummaryEmployeesExportTableCosts: React.FC<ISummaryEmployeesExportT
                 }
 
                 <tr>
-                    <td></td>
-                    <td>
+                    <td style={{background: "#D1D1D1", border: "1px solid #000"}} colSpan={2}>
                         <b>Total expense / month</b>
                     </td>
 
                     {
                         statProjectForExport.map((proj: any) =>
-                            <td style={{textAlign: "center"}}>
+                            <td style={{textAlign: "center", background: "#D1D1D1", border: "1px solid #000"}}>
                                 {
                                     sumTotalForProj(proj)
                                 }
@@ -191,8 +211,8 @@ export const SummaryEmployeesExportTableCosts: React.FC<ISummaryEmployeesExportT
                         )
                     }
 
-                    <td style={{textAlign: "center", color: "#ff0000"}}>
-                        <b>{allSumForTable}</b>
+                    <td style={{textAlign: "center", color: "#ff0000", background: "#D1D1D1", border: "1px solid #000"}}>
+                        <b>{allSumForTable.toFixed(2)}</b>
                     </td>
                 </tr>
 

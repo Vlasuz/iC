@@ -2,9 +2,13 @@ import React, {useEffect, useState} from 'react'
 import SimpleBar from "simplebar-react";
 import {Translate} from "../translate/Translate";
 import {useScrollTopValue} from "../../hooks/ScrollTopValue";
-import {IUser} from "../../models";
-import {useSelector} from "react-redux";
+import {IProject, IUser} from "../../models";
+import {useDispatch, useSelector} from "react-redux";
 import {useClickOutside} from "../../hooks/ClickOutside";
+import {getBearer} from "../../functions/getBearer";
+import axios from "axios";
+import {getApiLink} from "../../functions/getApiLink";
+import {GetAccessToken} from "../../api/GetAccessToken";
 
 interface ITableHeaderProjectsProps {
     setFilterByProjectName: any
@@ -13,6 +17,15 @@ interface ITableHeaderProjectsProps {
     title: string
     icon: string
 }
+
+interface IAllUserProjects {
+    used_projects: {
+        project: IProject,
+        count: number
+    }[]
+    projects_list: IProject[]
+}
+
 
 export const TableHeaderProjects: React.FC<ITableHeaderProjectsProps> = ({
                                                                              setFilterByProjectName,
@@ -24,12 +37,26 @@ export const TableHeaderProjects: React.FC<ITableHeaderProjectsProps> = ({
 
     const [searchProjectName, setSearchProjectName]: any = useState<string>("")
     const [chosenProjectName, setChosenProjectName]: any = useState<string>("")
+    const [allUserProjects, setAllUserProjects] = useState<IAllUserProjects>()
+
+    const dispatch = useDispatch()
 
     const {rootEl} = useClickOutside(setIsActiveBlock)
 
     const userData: IUser = useSelector((state: any) => state.toolkit.user)
 
     const {scrollY} = useScrollTopValue()
+
+    const getUserProjects = () => {
+        getBearer("get")
+        axios.get<IAllUserProjects>(getApiLink('/api/user/projects_info/')).then(({data}) => {
+            console.log(data)
+            setAllUserProjects(data)
+        }).catch(er => {
+            er?.response?.status === 401 && GetAccessToken(dispatch, getUserProjects)
+        })
+    }
+    useEffect(getUserProjects, [])
 
     useEffect(() => {
         setSearchProjectName("")
@@ -78,7 +105,7 @@ export const TableHeaderProjects: React.FC<ITableHeaderProjectsProps> = ({
                             <ul className="project-popup__list">
 
                                 {
-                                    userData.used_projects
+                                    allUserProjects?.used_projects
                                         ?.slice(0, 5)
                                         ?.filter(item => item.project.name.toLowerCase().includes(searchProjectName.toLowerCase()) || item.project.description.toLowerCase().includes(searchProjectName.toLowerCase()))
                                         ?.map(item =>
@@ -102,7 +129,7 @@ export const TableHeaderProjects: React.FC<ITableHeaderProjectsProps> = ({
                             <ul className="project-popup__list">
 
                                 {
-                                    userData.projects_list
+                                    allUserProjects?.projects_list
                                         ?.filter(item => item.name.toLowerCase().includes(searchProjectName.toLowerCase()) || item.description.toLowerCase().includes(searchProjectName.toLowerCase()))
                                         ?.map(item =>
                                             <li key={item.id}

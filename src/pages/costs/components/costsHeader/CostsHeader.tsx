@@ -6,7 +6,7 @@ import {getBearer} from "../../../../functions/getBearer";
 import axios from "axios";
 import {getApiLink} from "../../../../functions/getApiLink";
 import {setExpenses, setTasks} from "../../../../storage/toolkit";
-import {TableExport} from "../../../../components/table/TableExport";
+import {TableExportCustom} from "../../../../components/table/TableExportCustom";
 import {TableSelectYearMonth} from "../../../../components/table/TableSelectYearMonth";
 import {TableCalendar} from "../../../../components/table/TableCalendar";
 import {BlockToEdit, FixedTopEdit} from '../../Costs';
@@ -18,6 +18,10 @@ import {useClickOutside} from "../../../../hooks/ClickOutside";
 import {GetAccessToken} from '../../../../api/GetAccessToken';
 import {useTranslation} from "react-i18next";
 import {useParams} from "react-router-dom";
+import {CostsExcel} from "../CostsExcel";
+import ExcelJS from "exceljs";
+import {MonthNumber} from "../../../../constants/MonthNumber";
+import FileSaver from "file-saver";
 
 interface ICostsHeaderProps {
     itemToEdit: IExpense | undefined
@@ -44,6 +48,7 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit, isFixedEdi
     const language = useSelector((state: any) => state.toolkit.language)
     const timesheet: ITimesheet[] = useSelector((state: any) => state.toolkit.timesheet)
     const chosenTimesheet: ITimesheet = useSelector((state: any) => state.toolkit.chosenTimesheet)
+    const expenses: IExpense[] = useSelector((state: any) => state.toolkit.expenses)
     const userData: IUser = useSelector((state: any) => state.toolkit.user)
 
     const [searchValueLocal, setSearchValueLocal] = useState("")
@@ -219,23 +224,12 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit, isFixedEdi
         setCostData(inputValue);
     }
 
-
     const {t} = useTranslation();
-
 
     const secondTitle: { [key: string]: string } = {
         "duplicate": `${t("duplicate_cost")}`,
         "edit": `${t("edit_cost")}`,
         "add": `${t("costs_page.top_part.add_expense_2")}`
-    }
-
-    const handleSetNewData = () => {
-        // getBearer("get")
-        // axios.get(getApiLink(`/api/timesheet/expenses/?timesheet_id=${timesheetId}`)).then(({data}) => {
-        //     dispatch(setExpenses(data))
-        // }).catch(er => {
-        //     er?.response?.status === 401 && GetAccessToken(dispatch)
-        // })
     }
 
     return (
@@ -302,9 +296,11 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit, isFixedEdi
                             </div>
                             <div className="section-table__header--col">
 
-                                <TableSelectYearMonth handleSetNewData={handleSetNewData} onSwitch={handleSwitchMonth}/>
+                                <TableSelectYearMonth onSwitch={handleSwitchMonth}/>
 
-                                <TableExport/>
+                                <TableExportCustom
+                                    excelFile={(e: any) => CostsExcel({chosenTimesheet, expenses, translate: t})}
+                                />
 
                             </div>
                         </div>
@@ -328,7 +324,10 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit, isFixedEdi
 
                             <TableCalendar dateData={dateData} setDateData={setDateData}/>
 
-                            <TableProjectsForUser projectData={projectData} setProjectData={setProjectData}/>
+                            <TableProjectsForUser
+                                projectData={projectData}
+                                setProjectData={setProjectData}
+                            />
 
                             <div className="section-table__add-costs--text">
                                 <label>

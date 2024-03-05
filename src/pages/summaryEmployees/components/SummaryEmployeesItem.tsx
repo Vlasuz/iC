@@ -19,7 +19,7 @@ import {currency} from "../../../constants/Currency";
 import {PopupContext} from "../../../App";
 import {SummaryExportTable} from "../../summary/components/SummaryExportTable";
 import {SummaryExportTableTimesheet} from "../../summary/components/SummaryExportTableTimesheet";
-import {CostsExportTable} from "../../costs/components/CostsExportTable";
+import {CostsExcel} from "../../costs/components/CostsExcel";
 import {SetStatistic} from "../../../api/SetStatistic";
 import {SetExpenses} from "../../../api/SetExpenses";
 import {SetTasks} from "../../../api/SetTasks";
@@ -304,7 +304,7 @@ export const SummaryEmployeesItem: React.FC<ISummaryEmployeesItemProps> = ({
             {isClickToExport &&
                 <SummaryExportTable user={itemData.user} statistic={statistic} statisticList={statisticList}/>}
             {isClickToExport && <SummaryExportTableTimesheet user={itemData.user}/>}
-            {isClickToExport && <CostsExportTable user={itemData.user}/>}
+            {/*{isClickToExport && <CostsExcel user={itemData.user}/>}*/}
 
             <div ref={summaryBlock} className={`summary-item ${isOpen && "is-active"}`}>
                 <div onClick={handleOpenItem} className="summary-item__target">

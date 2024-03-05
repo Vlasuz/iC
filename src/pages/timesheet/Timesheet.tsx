@@ -17,7 +17,7 @@ import {DownSidebar} from "../../components/downSidebar/DownSidebar";
 import {useParams} from "react-router-dom";
 import {Translate} from "../../components/translate/Translate";
 import {SetStatistic} from "../../api/SetStatistic";
-import {TimesheetExportTable} from "./components/TimesheetExportTable";
+import {TimesheetExcel} from "./components/TimesheetExcel";
 import {SetTimesheet} from "../../api/SetTimesheet";
 import {SetTasks} from "../../api/SetTasks";
 import {SetExpenses} from "../../api/SetExpenses";
@@ -50,6 +50,7 @@ export const Timesheet: React.FC<ITimesheetProps> = () => {
     const [statistic, setStatistic] = useState<IStatistic | undefined>()
     const [isLoad, setIsLoad] = useState(false)
     const [isWindowMobile, setIsWindowMobile] = useState(false)
+    const [comments, setComments] = useState<IComment[]>([])
 
     useEffect(() => {
         if(timesheetId) {
@@ -100,7 +101,7 @@ export const Timesheet: React.FC<ITimesheetProps> = () => {
         if(timesheetId === undefined && chosenTimesheet?.user?.id !== user?.id) {
 
             SetTimesheet(dispatch)
-            SetTasks(dispatch, chosenTimesheet.id)
+            SetTasks(dispatch, chosenTimesheet?.id)
         }
 
         setIsWindowMobile(window.innerWidth < 576)
@@ -129,10 +130,14 @@ export const Timesheet: React.FC<ITimesheetProps> = () => {
     }
 
 
-    const [comments, setComments] = useState<IComment[]>([])
-
     useEffect(() => {
-        setComments(chosenTimesheet?.comments)
+        if(!chosenTimesheet?.id) return;
+
+        getBearer("get")
+        axios.get(getApiLink(`/api/comment/?timesheet_id=${chosenTimesheet.id}`)).then(({data}) => {
+            setComments(data)
+        })
+
     }, [chosenTimesheet])
 
     const [isFixedEditBlock, setIsFixedEditBlock] = useState(false)
@@ -145,8 +150,6 @@ export const Timesheet: React.FC<ITimesheetProps> = () => {
                     <BlockToEdit.Provider value={setItemToEdit}>
                         <TimesheetStyled style={{paddingBottom: isOpenDownSidebar ? "270px" : (isWindowMobile ? "60px" : "80px")}}
                                          className={`section-table ${isFixedEditBlock && "fixed-edit-block"}`}>
-
-                            <TimesheetExportTable/>
 
                             <TimesheetHeader itemToDuplicate={itemToDuplicate} setItemToDuplicate={setItemToDuplicate} isFixedEditBlock={isFixedEditBlock} itemToEdit={itemToEdit}/>
 

@@ -13,7 +13,7 @@ import {CustomSelect1} from "../../components/select/CustomSelect1";
 import {RowsPerPage} from "../../constants/RowsPerPage";
 import {CustomSelect} from "../../components/customSelect/CustomSelect";
 import {TableSelectYear} from "../../components/table/TableSelectYear";
-import {TableExport} from "../../components/table/TableExport";
+import {TableExportCustom} from "../../components/table/TableExportCustom";
 import {Translate} from "../../components/translate/Translate";
 import {useClickOutside} from "../../hooks/ClickOutside";
 import {ProjectsTableExport} from "./components/ProjectsTableExport";
@@ -38,6 +38,7 @@ export const Projects: React.FC<IProjectsProps> = () => {
 
         getBearer("get")
         axios.get(getApiLink(`/api/admin/project/?search=${searchValue}&year=${listYear}`)).then(({data}) => {
+            console.log(searchValue, data)
             dispatch(setProjects(data))
             setIsLoad(false)
         }).catch(er => console.log(getApiLink("/api/admin/project/"), er))
@@ -52,6 +53,11 @@ export const Projects: React.FC<IProjectsProps> = () => {
         axios.get(getApiLink(`/api/admin/project/?year=${listYear}`)).then(({data}) => {
             dispatch(setProjects(data))
             setIsLoad(false)
+
+            // setRowsSelectValue({
+            //     value: 20,
+            //     label: "20"
+            // })
         }).catch(er => console.log(er))
     }, [searchValue, listYear])
 
@@ -94,6 +100,8 @@ export const Projects: React.FC<IProjectsProps> = () => {
 
     const paginationCountOfEndingNavigation = paginationMaximumPages - 5 <= 0 ? 0 : paginationMaximumPages - 5
     const isNearEnd = paginationNavigation?.slice(paginationCountFrom / paginationCountStep.value, (paginationCountOfMaximumNavigation + paginationCountFrom / paginationCountStep.value))[0] + 3 >= paginationNavigation.slice(paginationMaximumPages - 1)[0]
+
+    console.log(projects)
 
     useEffect(() => {
         if (projects.length && isLoad) return;
@@ -150,17 +158,8 @@ export const Projects: React.FC<IProjectsProps> = () => {
         }, 1000)
     }, [projects, isLoad])
 
-    console.log(projects
-        ?.slice()?.sort((a, b) => +a.archive - +b.archive)
-        ?.slice(paginationCountFrom, paginationCountTo)
-        // ?.filter((item, index) => index < Math.ceil(paginationCountStep.value / 2))
-        ?.filter((item, index) => rowsSelectValue.label === "All" ? index % 2 === 1 : index >= Math.ceil(paginationCountStep.value / 2)))
 
-    console.log(projects.length) // Опаздывает
-    console.log(paginationCountFrom, paginationCountTo) // Опаздывает
-    console.log(paginationCountStep) // Опаздывает
-
-    console.log(paginationNavigation.length > 1, rowsSelectValue.label !== "All")
+    console.log(rowsSelectValue)
 
     return (
         <ProjectStyled className="section-table">
@@ -208,7 +207,7 @@ export const Projects: React.FC<IProjectsProps> = () => {
 
                         <TableSelectYear setYear={setListYear}/>
 
-                        <TableExport/>
+                        <TableExportCustom/>
 
                     </div>
                 </div>
@@ -249,7 +248,7 @@ export const Projects: React.FC<IProjectsProps> = () => {
                                         ?.slice()?.sort((a, b) => +a.archive - +b.archive)
                                         ?.slice(paginationCountFrom, paginationCountTo)
                                         // ?.filter((item, index) => index < Math.ceil(paginationCountStep.value / 2))
-                                        ?.filter((item, index) => rowsSelectValue.label === "All" ? index % 2 === 1 : index >= Math.ceil(paginationCountStep.value / 2))
+                                        ?.filter((item, index) => rowsSelectValue.label === "All" || searchValue ? index % 2 === 0 : index >= Math.ceil(paginationCountStep.value / 2))
                                         ?.map((project: IProject, index: number) =>
                                             <ProjectItem isArchive={project.archive} key={project.id} data={project}
                                                          index={paginationCountFrom + index}/>
@@ -292,7 +291,7 @@ export const Projects: React.FC<IProjectsProps> = () => {
                                         ?.slice()?.sort((a, b) => +a.archive - +b.archive)
                                         ?.slice(paginationCountFrom, paginationCountTo)
                                         // ?.filter((item, index) => index >= Math.ceil(paginationCountStep.value / 2))
-                                        ?.filter((item, index) => rowsSelectValue.label === "All" ? index % 2 === 0 : index >= Math.ceil(paginationCountStep.value / 2))
+                                        ?.filter((item, index) => rowsSelectValue.label === "All" || searchValue ? index % 2 === 1 : index >= Math.ceil(paginationCountStep.value / 2))
                                         ?.map((project: IProject, index: number) =>
                                             <ProjectItem isArchive={project.archive} key={project.id} data={project}
                                                          index={rowsSelectValue.label === "All" ? projects.length / 2 + index : (Math.ceil((paginationCountFrom + index) + paginationCountStep.value / 2))}/>
