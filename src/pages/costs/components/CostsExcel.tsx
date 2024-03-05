@@ -97,12 +97,15 @@ export const CostsExcel = async ({chosenTimesheet, expenses, translate}: ICostsE
         font: {size: 10},
         alignment: {vertical: 'middle', horizontal: 'center'},
         border: {
-            top: {style: 'dotted', color: {argb: '000000'}},
-            left: {style: 'dotted', color: {argb: '000000'}},
-            bottom: {style: 'dotted', color: {argb: '000000'}},
-            right: {style: 'dotted', color: {argb: '000000'}},
+            top: {style: 'hair', color: {argb: '000000'}},
+            left: {style: 'hair', color: {argb: '000000'}},
+            bottom: {style: 'hair', color: {argb: '000000'}},
+            right: {style: 'hair', color: {argb: '000000'}},
         }
     }
+
+    const cell = worksheet.getCell('G4'); // Получаем ячейку C2
+    cell.value = { formula: `SUM(F7:F${expenses.length - 1 + 7})` };
 
     expenses.slice().reverse().map((item: any, index: number) => {
         return worksheet.addRow({
@@ -111,9 +114,12 @@ export const CostsExcel = async ({chosenTimesheet, expenses, translate}: ICostsE
             col3: item.project.name,
             col4: item.project.description,
             col5: item.description,
-            col6: item.sum.toFixed(2),
+            col6: item.sum,
         }).eachCell((cell, colNumber) => {
             cell.style = styleForTableBody;
+            if (colNumber === 6) {
+                cell.numFmt = '#,##0.00';
+            }
         });
     })
 

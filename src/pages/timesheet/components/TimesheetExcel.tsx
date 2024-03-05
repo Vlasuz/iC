@@ -122,10 +122,10 @@ export const TimesheetExcel = async ({chosenTimesheet, tasks, translate}: ITimes
     const styleForTableBody: Partial<ExcelJS.Style> = {
         font: {size: 10},
         border: {
-            top: {style: 'dotted', color: {argb: '000000'}},
-            left: {style: 'dotted', color: {argb: '000000'}},
-            bottom: {style: 'dotted', color: {argb: '000000'}},
-            right: {style: 'dotted', color: {argb: '000000'}},
+            top: {style: 'hair', color: {argb: '000000'}},
+            left: {style: 'hair', color: {argb: '000000'}},
+            bottom: {style: 'hair', color: {argb: '000000'}},
+            right: {style: 'hair', color: {argb: '000000'}},
         }
     }
 
