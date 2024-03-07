@@ -15,6 +15,11 @@ import axios from "axios";
 import {getApiLink} from "../../functions/getApiLink";
 import {SummaryEmployeesExportTable} from "./components/SummaryEmployeesExportTable";
 import {SummaryEmployeesExportTableCosts} from "./components/SummaryEmployeesExportTableCosts";
+import {CostsExcel} from "../costs/components/CostsExcel";
+import {GetAccessToken} from "../../api/GetAccessToken";
+import {useTranslation} from "react-i18next";
+import {SummaryEmployeesExcel} from "./components/SummaryEmployeesExcel";
+import {getBearer} from "../../functions/getBearer";
 
 interface ISummaryEmployeesProps {
 
@@ -64,14 +69,14 @@ export const SummaryEmployees: React.FC<ISummaryEmployeesProps> = () => {
     const [isLoad, setIsLoad] = useState(false)
     const [statisticForTable, setStatisticForTable]: any = useState([])
 
-    const handleAddRows = () => {
-        const plusCount = window.innerWidth < 768 ? 10 : 20
-
-        setRowsSelectValue({
-            value: summaryEmployees.all.length <= +rowsSelectValue.label + plusCount ? 0 : rowsSelectValue.value + plusCount,
-            label: summaryEmployees.all.length <= +rowsSelectValue.label + plusCount ? "All" : String(+rowsSelectValue.label + plusCount)
-        })
-    }
+    // const handleAddRows = () => {
+    //     const plusCount = window.innerWidth < 768 ? 10 : 20
+    //
+    //     setRowsSelectValue({
+    //         value: summaryEmployees.all.length <= +rowsSelectValue.label + plusCount ? 0 : rowsSelectValue.value + plusCount,
+    //         label: summaryEmployees.all.length <= +rowsSelectValue.label + plusCount ? "All" : String(+rowsSelectValue.label + plusCount)
+    //     })
+    // }
 
     useEffect(() => {
         setRowsSelectValue(RowsPerPage()[0].value < summaryEmployees?.all?.length ? RowsPerPage()[0] : RowsPerPage()[3])
@@ -87,6 +92,8 @@ export const SummaryEmployees: React.FC<ISummaryEmployeesProps> = () => {
 
         axios.get(getApiLink("/api/timesheet/projects/")).then(({data}) => {
             setAllProjects(data)
+            setProjects(data)
+            console.log(data)
         })
     }, [])
 
@@ -101,11 +108,13 @@ export const SummaryEmployees: React.FC<ISummaryEmployeesProps> = () => {
 
     useEffect(() => {
         if (!year) return;
+        setIsHaveEmployees(false)
         SetSummaryEmployees(dispatch, month, year)
     }, [year])
 
     useEffect(() => {
         if (!month) return;
+        setIsHaveEmployees(false)
         SetSummaryEmployees(dispatch, month, year === 0 ? +actualYear : year)
     }, [month])
 
@@ -123,6 +132,44 @@ export const SummaryEmployees: React.FC<ISummaryEmployeesProps> = () => {
     const handleOpenExport = () => {
         setIsOpen(true)
     }
+
+
+    const {t} = useTranslation()
+
+
+    const [projects, setProjects] = useState<IProject[]>([])
+    const [users, setUsers] = useState<any[]>([])
+
+    // const getAllProjects = () => {
+    //     axios.get(getApiLink('/api/admin/project/')).then(({data}) => {
+    //         // setProjects(data.projects_list)
+    //         console.log(data)
+    //     }).catch(er => {
+    //         er.response.status === 401 && GetAccessToken(dispatch, getAllProjects)
+    //     })
+    // }
+    // useEffect(getAllProjects, [chosenTimesheet])
+
+    const [isHaveEmployees, setIsHaveEmployees] = useState(false)
+
+    useEffect(() => {
+        setUsers([])
+        if(!summaryEmployees?.all?.length) return;
+        if(isHaveEmployees) return;
+        setIsHaveEmployees(true)
+
+        summaryEmployees?.all?.map(async (user) => {
+            getBearer('get')
+            await axios.get(getApiLink(`/api/timesheet/statistics/?timesheet_id=${user?.id}`)).then(({data}) => {
+                setUsers(prev => [...prev, {
+                    user,
+                    timesheet: data
+                }])
+            }).catch(er => console.log(getApiLink("/api/timesheet/statistics/?timesheet_id"), er))
+        })
+
+    }, [summaryEmployees, month, year])
+
 
     return (
         <SummaryEmployeesStyled className="summary">
@@ -172,7 +219,13 @@ export const SummaryEmployees: React.FC<ISummaryEmployeesProps> = () => {
                                       selectValue={statusSortValue}/>
                     </div>
 
-                    {user.status === "team_lead" && <TableExportCustom onClick={handleOpenExport}/>}
+                    {user.status === "team_lead" &&
+                        <TableExportCustom
+                            excelFile={(e: any) => SummaryEmployeesExcel({chosenTimesheet, projects, users, translate: t})}
+                        />
+                    }
+
+                    {/*{user.status === "team_lead" && <TableExportCustom onClick={handleOpenExport}/>}*/}
                 </form>
             </div>
             <div className="summary__main">

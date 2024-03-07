@@ -13,7 +13,6 @@ export const SetSummaryEmployees = async (dispatch: any, month?: number, year?: 
 
     getBearer('get')
     await axios.get(getApiLink(`/api/timesheet/employees/?month=${month}&year=${year}${projectId && "&project_id=" + projectId}`)).then(({data}) => {
-        console.log(getApiLink(`/api/timesheet/employees/?month=${month}&year=${year}${projectId && "&project_id=" + projectId}`), data)
         dispatch(setSummaryEmployees(data))
     }).catch(er => {
         er?.response?.status === 401 && GetAccessToken(dispatch, SetSummaryEmployees)

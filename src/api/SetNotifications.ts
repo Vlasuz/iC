@@ -6,7 +6,7 @@ import { GetAccessToken } from "./GetAccessToken";
 
 export const SetNotifications = (dispatch: any) => {
     getBearer("get")
-    axios.get(getApiLink(`/api/user/notifications/`)).then(({data}) => {
+    axios.get(getApiLink(`/api/notifications/`)).then(({data}) => {
         dispatch(setNotifications(data))
         console.log(data)
     }).catch(er => {

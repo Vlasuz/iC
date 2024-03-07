@@ -49,7 +49,7 @@ export const Notifications: React.FC<INotificationsProps> = () => {
         setIsActive(prev => !prev)
 
         getBearer("post")
-        axios.post(getApiLink("/api/user/notifications/view/"), notifications?.map(item => item.id)).then(({data}) => {
+        axios.post(getApiLink("/api/notifications/view/"), notifications?.map(item => item.id)).then(({data}) => {
             console.log(data)
             setIsHaveNotice(false)
 
