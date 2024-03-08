@@ -20,6 +20,7 @@
     "gh-pages": "^6.1.0",
     "html-react-parser": "^4.2.2",
     "html2pdf.js": "^0.10.1",
+    "image-to-base64": "^2.2.0",
     "jspdf": "^2.5.1",
     "jspdf-autotable": "^3.8.1",
     "react": "^18.2.0",
@@ -77,6 +78,7 @@
   "devDependencies": {
     "@splidejs/splide": "^4.1.4",
     "@types/file-saver": "^2.0.7",
+    "@types/image-to-base64": "^2.1.2",
     "@types/react-datepicker": "^4.19.3",
     "browser-sync": "^2.29.3",
     "clipboard": "^2.0.11",
