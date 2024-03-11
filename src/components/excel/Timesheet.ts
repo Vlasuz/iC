@@ -8,9 +8,10 @@ interface ITimesheetProps {
     chosenTimesheet: ITimesheet
     tasks: ITask[]
     translate: any
+    logo: number
 }
 
-export const Timesheet = ({worksheet, chosenTimesheet, tasks, translate}: ITimesheetProps) => {
+export const Timesheet = ({worksheet, chosenTimesheet, tasks, translate, logo}: ITimesheetProps) => {
 
     const documentAuthor = `${chosenTimesheet?.user?.first_name} ${chosenTimesheet?.user?.last_name}`
     const approvalDate = chosenTimesheet?.status === "approve" ? chosenTimesheet?.updated_at : ''
@@ -189,5 +190,12 @@ export const Timesheet = ({worksheet, chosenTimesheet, tasks, translate}: ITimes
             ]
         };
     }
+
+    worksheet.addImage(logo, {
+    // @ts-ignore
+        tl: { col: 8, row: 0 },
+    // @ts-ignore
+        br: { col: 9, row: 1 }
+    });
 
 }

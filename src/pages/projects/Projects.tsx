@@ -248,7 +248,7 @@ export const Projects: React.FC<IProjectsProps> = () => {
                                         ?.slice()?.sort((a, b) => +a.archive - +b.archive)
                                         ?.slice(paginationCountFrom, paginationCountTo)
                                         // ?.filter((item, index) => index < Math.ceil(paginationCountStep.value / 2))
-                                        ?.filter((item, index) => rowsSelectValue.label === "All" || searchValue ? index % 2 === 0 : index >= Math.ceil(paginationCountStep.value / 2))
+                                        ?.filter((item, index) => rowsSelectValue.label === "All" || searchValue ? index <= projects.length / 2 : index >= Math.ceil(paginationCountStep.value / 2))
                                         ?.map((project: IProject, index: number) =>
                                             <ProjectItem isArchive={project.archive} key={project.id} data={project}
                                                          index={paginationCountFrom + index}/>
@@ -291,7 +291,7 @@ export const Projects: React.FC<IProjectsProps> = () => {
                                         ?.slice()?.sort((a, b) => +a.archive - +b.archive)
                                         ?.slice(paginationCountFrom, paginationCountTo)
                                         // ?.filter((item, index) => index >= Math.ceil(paginationCountStep.value / 2))
-                                        ?.filter((item, index) => rowsSelectValue.label === "All" || searchValue ? index % 2 === 1 : index >= Math.ceil(paginationCountStep.value / 2))
+                                        ?.filter((item, index) => rowsSelectValue.label === "All" || searchValue ? index >= projects.length / 2 : index >= Math.ceil(paginationCountStep.value / 2))
                                         ?.map((project: IProject, index: number) =>
                                             <ProjectItem isArchive={project.archive} key={project.id} data={project}
                                                          index={rowsSelectValue.label === "All" ? projects.length / 2 + index : (Math.ceil((paginationCountFrom + index) + paginationCountStep.value / 2))}/>

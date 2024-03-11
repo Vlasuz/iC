@@ -83,7 +83,7 @@ export const ProjectItem: React.FC<IProjectItemProps> = ({data, index, isArchive
                 <span>{data.name}</span>
             </div>
             <div className="section-table__param visible-on-desktop is-center">
-                {index + 1}
+                {Math.ceil(index + 1)}
             </div>
             <div className="section-table__param visible-on-desktop is-center">
                 {data.name}

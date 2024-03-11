@@ -33,6 +33,8 @@ export const PopupProfile: React.FC<IPopupProfileProps> = ({data}) => {
         toast.success("Successfully copied!")
     }
 
+    console.log(data)
+
     return (
         <div className="profile__body popup-body profile">
             <PopupClose/>

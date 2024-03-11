@@ -134,7 +134,7 @@ export const Vacations: React.FC<IVacationsProps> = () => {
                         <div className="section-table__body">
                                 {
                                     vacations
-                                        ?.sort((a, b) => a.user?.last_name < b.user?.last_name ? sortByName === "sortUp" ? 1 : -1 : sortByName === "sortDown" ? 1 : -1)
+                                        // ?.sort((a, b) => a.user?.last_name < b.user?.last_name ? sortByName === "sortUp" ? 1 : -1 : sortByName === "sortDown" ? 1 : -1)
                                         ?.filter((item, index) => selectValue.value === 0 ? item : index < selectValue.value)
                                         // ?.sort((a, b) => +a.archive - +b.archive)
 

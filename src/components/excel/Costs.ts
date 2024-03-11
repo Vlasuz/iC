@@ -8,9 +8,10 @@ interface ICostProps {
     expenses: IExpense[]
     translate: any
     worksheet: ExcelJS.Worksheet
+    logo: number
 }
 
-export const Costs = ({worksheet, translate, chosenTimesheet, expenses}: ICostProps) => {
+export const Costs = ({worksheet, translate, chosenTimesheet, expenses, logo}: ICostProps) => {
 
     const documentAuthor = `${chosenTimesheet?.user?.first_name} ${chosenTimesheet?.user?.last_name}`
     const approvalDate = chosenTimesheet?.status === "approve" ? chosenTimesheet?.updated_at : ''
@@ -171,5 +172,13 @@ export const Costs = ({worksheet, translate, chosenTimesheet, expenses}: ICostPr
             ]
         };
     }
+
+
+    worksheet.addImage(logo, {
+        // @ts-ignore
+        tl: { col: 6.5, row: 0 },
+        // @ts-ignore
+        br: { col: 7, row: 1 },
+    });
 
 }

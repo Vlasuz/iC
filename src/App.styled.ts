@@ -536,8 +536,8 @@ export const AppStyled = styled.div`
   }
 
   .react-datepicker__navigation {
-    //opacity: 0;
-    //pointer-events: none;
+    opacity: 0;
+    pointer-events: none;
   }
 
   .section-table__add:disabled {
