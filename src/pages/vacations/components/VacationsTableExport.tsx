@@ -328,8 +328,8 @@ export const VacationsTableExport: React.FC<IVacationsTableExportProps> = () => 
                                 {+vacation.remain + +vacation.extra + +vacation.user.holidays}
                             </td>
                             {
-                                vacation.months.map(item =>
-                                    <td key={item.days + item.month} style={{
+                                vacation.months.map((item, index2) =>
+                                    <td key={index2} style={{
                                         textAlign: "center",
                                         width: "25px",
                                         ...tdStyle

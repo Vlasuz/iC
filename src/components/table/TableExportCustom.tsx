@@ -15,12 +15,14 @@ interface ITableExportProps {
     title?: string
     onClick?: any
     excelFile?: any
+    isCanNotExportPdf?: boolean
 }
 
 export const TableExportCustom: React.FC<ITableExportProps> = ({
                                                                    title,
                                                                    onClick,
-                                                                   excelFile
+                                                                   excelFile,
+                                                                   isCanNotExportPdf
                                                                }) => {
 
 
@@ -136,12 +138,12 @@ export const TableExportCustom: React.FC<ITableExportProps> = ({
                             <Translate>export_as</Translate> .xlsx
                         </a>
                     </li>
-                    <li>
+                    {!isCanNotExportPdf && <li>
                         {/*<a onClick={e => exportToPdf()}>*/}
                         <a onClick={e => convertToPDF()}>
                             <Translate>export_as</Translate> .pdf
                         </a>
-                    </li>
+                    </li>}
                 </ul>
             </div>
         </div>

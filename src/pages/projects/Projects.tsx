@@ -158,8 +158,8 @@ export const Projects: React.FC<IProjectsProps> = () => {
         }, 1000)
     }, [projects, isLoad])
 
+    console.log(projects)
 
-    console.log(rowsSelectValue)
 
     return (
         <ProjectStyled className="section-table">
@@ -248,7 +248,7 @@ export const Projects: React.FC<IProjectsProps> = () => {
                                         ?.slice()?.sort((a, b) => +a.archive - +b.archive)
                                         ?.slice(paginationCountFrom, paginationCountTo)
                                         // ?.filter((item, index) => index < Math.ceil(paginationCountStep.value / 2))
-                                        ?.filter((item, index) => rowsSelectValue.label === "All" || searchValue ? index <= projects.length / 2 : index >= Math.ceil(paginationCountStep.value / 2))
+                                        ?.filter((item, index) => rowsSelectValue.label === "All" || searchValue ? index <= projects.length / 2 : index < Math.ceil(paginationCountStep.value / 2))
                                         ?.map((project: IProject, index: number) =>
                                             <ProjectItem isArchive={project.archive} key={project.id} data={project}
                                                          index={paginationCountFrom + index}/>

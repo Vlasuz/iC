@@ -145,8 +145,8 @@ export const VacationsItem: React.FC<IVacationsItemProps> = ({itemData, index}) 
                 {total.toFixed(1)}
             </div>
             {
-                itemData.months.map(item =>
-                    <div key={item.days + item.month} className="section-table__param">
+                itemData.months.map((item, index2) =>
+                    <div key={index2} className="section-table__param">
                         {item.days.toFixed(1)}
                     </div>
                 )

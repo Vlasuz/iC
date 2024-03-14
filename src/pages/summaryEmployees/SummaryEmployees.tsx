@@ -221,6 +221,7 @@ export const SummaryEmployees: React.FC<ISummaryEmployeesProps> = () => {
 
                     {user.status === "team_lead" &&
                         <TableExportCustom
+                            isCanNotExportPdf={true}
                             excelFile={(e: any) => SummaryEmployeesExcel({chosenTimesheet, projects, users, translate: t})}
                         />
                     }
