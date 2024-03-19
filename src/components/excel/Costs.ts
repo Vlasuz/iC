@@ -23,7 +23,8 @@ export const Costs = ({worksheet, translate, chosenTimesheet, expenses, logo}: I
         {header: '', key: 'col3', width: 13.33},
         {header: '', key: 'col4', width: 22.50},
         {header: '', key: 'col5', width: 54.83},
-        {header: '', key: 'col6', width: 22.67},
+        {header: '', key: 'col6', width: 11.67},
+        {header: '', key: 'col7', width: 6.17},
     ];
 
 
@@ -31,7 +32,7 @@ export const Costs = ({worksheet, translate, chosenTimesheet, expenses, logo}: I
     worksheet.getRow(1).height = 25;
 
     const styleForHeader: Partial<ExcelJS.Style> = {
-        font: {bold: true, size: 24},
+        font: {bold: true, size: 22},
         alignment: {vertical: 'middle', horizontal: 'center'}
     };
 
@@ -44,16 +45,16 @@ export const Costs = ({worksheet, translate, chosenTimesheet, expenses, logo}: I
     worksheet.mergeCells('B4:D4');
     worksheet.getCell('B4').value = {
         richText: [
-            {text: 'Name: ', font: {bold: true, size: 16}},
-            {text: String(documentAuthor), font: {bold: false, size: 16}}
+            {text: 'Name: ', font: {bold: true, size: 14}},
+            {text: String(documentAuthor), font: {bold: false, size: 14}}
         ]
     };
 
     const date = `${translate(MonthNumber()[+(chosenTimesheet?.date[3] + chosenTimesheet?.date[4])]?.translate_code)}, 20${chosenTimesheet?.date && chosenTimesheet?.date[6]}${chosenTimesheet?.date && chosenTimesheet?.date[7]}`
-    worksheet.mergeCells('E4:G4');
+    worksheet.mergeCells('E4:H4');
     worksheet.getCell('E4').value = {
         richText: [
-            {text: date, font: {bold: true, size: 16}},
+            {text: date, font: {bold: true, size: 14}},
         ]
     };
     worksheet.getCell('E4').alignment = {
@@ -88,6 +89,9 @@ export const Costs = ({worksheet, translate, chosenTimesheet, expenses, logo}: I
     }).eachCell((cell, colNumber) => {
         cell.style = styleForTableHeader;
     });
+
+    worksheet.mergeCells(`G6:H6`);
+
     worksheet.getRow(6).height = 18;
 
     const styleForTableBody: Partial<ExcelJS.Style> = {
@@ -112,7 +116,7 @@ export const Costs = ({worksheet, translate, chosenTimesheet, expenses, logo}: I
         }).eachCell((cell, colNumber) => {
             cell.style = styleForTableBody;
 
-            if (colNumber === 6) {
+            if (colNumber === 7) {
                 cell.style = {
                     font: {size: 10},
                     fill: {
@@ -128,11 +132,32 @@ export const Costs = ({worksheet, translate, chosenTimesheet, expenses, logo}: I
                         right: {style: 'hair', color: {argb: '000000'}},
                     }
                 }
-                cell.numFmt = '#,##0.00';
+                cell.numFmt = '0.00';
+            }
+            if (colNumber === 3) {
+                cell.style = {
+                    font: {size: 10},
+                    fill: {
+                        type: 'pattern',
+                        pattern: 'solid',
+                        fgColor: {argb: 'ffffff'}
+                    },
+                    alignment: {vertical: 'middle', horizontal: 'center'},
+                    border: {
+                        top: {style: 'hair', color: {argb: '000000'}},
+                        left: {style: 'hair', color: {argb: '000000'}},
+                        bottom: {style: 'hair', color: {argb: '000000'}},
+                        right: {style: 'hair', color: {argb: '000000'}},
+                    }
+                }
+                cell.numFmt = 'dd/mm/yy';
             }
         });
     })
 
+    for(let a = 0; a < expenses.length; a++) {
+        worksheet.mergeCells(`G${a + 7}:H${a + 7}`);
+    }
 
     worksheet.addRow({})
 
@@ -148,9 +173,17 @@ export const Costs = ({worksheet, translate, chosenTimesheet, expenses, logo}: I
         return sum + current.sum
     }, 0)
 
-    worksheet.mergeCells(`E${rowNumberForTotal}:G${rowNumberForTotal}`);
-    worksheet.getCell(`E${rowNumberForTotal}`).value = `Total: ${total.toFixed(2)} UAH`;
-    worksheet.getCell(`E${rowNumberForTotal}`).style = styleForTotal;
+    // worksheet.mergeCells(`E${rowNumberForTotal}:G${rowNumberForTotal}`);
+    // worksheet.getCell(`E${rowNumberForTotal}`).value = `Total: ${total.toFixed(2)} UAH`;
+    // worksheet.getCell(`E${rowNumberForTotal}`).style = styleForTotal;
+
+    worksheet.getCell(`F${rowNumberForTotal}`).value = `Total:`;
+    worksheet.getCell(`F${rowNumberForTotal}`).style = styleForTotal;
+    worksheet.getCell(`G${rowNumberForTotal}`).value = +total;
+    worksheet.getCell(`G${rowNumberForTotal}`).style = styleForTotal;
+    worksheet.getCell(`G${rowNumberForTotal}`).numFmt = '0.00';
+    worksheet.getCell(`H${rowNumberForTotal}`).value = ` UAH`;
+    worksheet.getCell(`H${rowNumberForTotal}`).style = styleForTotal;
 
     if (!!approvalDate) {
         worksheet.addRow({})
@@ -159,16 +192,16 @@ export const Costs = ({worksheet, translate, chosenTimesheet, expenses, logo}: I
         worksheet.mergeCells(`A${rowNumberForApproval}:D${rowNumberForApproval}`);
         worksheet.getCell(`A${rowNumberForApproval}`).value = {
             richText: [
-                {text: 'Approval: ', font: {bold: true, size: 16}},
-                {text: String(documentAuthor), font: {size: 16}}
+                {text: 'Approval: ', font: {bold: true, size: 14}},
+                {text: String(documentAuthor), font: {size: 14}}
             ]
         };
         const rowNumberForApprovalDate = taskLength + 11;
         worksheet.mergeCells(`A${rowNumberForApprovalDate}:D${rowNumberForApprovalDate}`);
         worksheet.getCell(`A${rowNumberForApprovalDate}`).value = {
             richText: [
-                {text: 'Date: ', font: {bold: true, size: 16}},
-                {text: String(approvalDate), font: {size: 16}}
+                {text: 'Date: ', font: {bold: true, size: 14}},
+                {text: String(approvalDate), font: {size: 14}}
             ]
         };
     }
@@ -176,9 +209,9 @@ export const Costs = ({worksheet, translate, chosenTimesheet, expenses, logo}: I
 
     worksheet.addImage(logo, {
         // @ts-ignore
-        tl: { col: 6.5, row: 0 },
+        tl: { col: 7.5, row: 0 },
         // @ts-ignore
-        br: { col: 7, row: 1 },
+        br: { col: 8, row: 1 },
     });
 
 }

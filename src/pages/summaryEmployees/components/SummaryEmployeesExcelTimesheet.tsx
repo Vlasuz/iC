@@ -34,7 +34,7 @@ export const SummaryEmployeesExcelTimesheet = ({worksheet, projects, chosenTimes
     worksheet.getRow(1).height = 25;
 
     const styleForHeader: Partial<ExcelJS.Style> = {
-        font: {bold: true, size: 24},
+        font: {bold: true, size: 22},
         alignment: {vertical: 'middle', horizontal: 'left'}
     };
 
@@ -48,7 +48,7 @@ export const SummaryEmployeesExcelTimesheet = ({worksheet, projects, chosenTimes
     worksheet.mergeCells('B4:N4');
     worksheet.getCell('B4').value = {
         richText: [
-            {text: date, font: {bold: true, size: 16}},
+            {text: date, font: {bold: true, size: 14}},
         ]
     };
 
@@ -109,7 +109,6 @@ export const SummaryEmployeesExcelTimesheet = ({worksheet, projects, chosenTimes
     // Создание строки шапки 1
 
 
-
     // Создание строки шапки 2
     const rowHeader: any = {
         colNo: 'No',
@@ -147,7 +146,6 @@ export const SummaryEmployeesExcelTimesheet = ({worksheet, projects, chosenTimes
     // Создание строки шапки 2
 
 
-
     const styleForTableBody: Partial<ExcelJS.Style> = {
         font: {size: 10},
         alignment: {vertical: 'middle', horizontal: 'center'},
@@ -172,7 +170,7 @@ export const SummaryEmployeesExcelTimesheet = ({worksheet, projects, chosenTimes
 
         projects.forEach((project, index) => {
 
-            if(user.timesheet.tasks.some((proj: any) => proj?.project?.id === project?.id)) {
+            if (user.timesheet.tasks.some((proj: any) => proj?.project?.id === project?.id)) {
                 rowUser[`col${index + 1}`] = user.timesheet.tasks.filter((proj: any) => proj?.project?.id === project?.id)[0]?.hours
 
                 allAmount += user.timesheet.tasks.filter((proj: any) => proj?.project?.id === project?.id)[0]?.hours
@@ -188,7 +186,7 @@ export const SummaryEmployeesExcelTimesheet = ({worksheet, projects, chosenTimes
         worksheet.addRow(rowUser).eachCell((cell, colNumber) => {
             cell.style = styleForTableBody;
 
-            if(cell?.value && String(cell?.value) !== "0") {
+            if (cell?.value && String(cell?.value) !== "0") {
                 cell.style = {
                     font: {size: 10, bold: true},
                     alignment: {vertical: 'middle', horizontal: 'center'},
@@ -218,6 +216,25 @@ export const SummaryEmployeesExcelTimesheet = ({worksheet, projects, chosenTimes
                     }
                 }
                 cell.numFmt = '#,##0.00';
+
+                if (String(cell?.value) !== "0") {
+                    cell.style = {
+                        font: {size: 10, bold: true},
+                        fill: {
+                            type: 'pattern',
+                            pattern: 'solid',
+                            fgColor: {argb: 'EBEBEB'}
+                        },
+                        alignment: {vertical: 'middle', horizontal: 'center'},
+                        border: {
+                            top: {style: 'hair', color: {argb: '000000'}},
+                            left: {style: 'hair', color: {argb: '000000'}},
+                            bottom: {style: 'hair', color: {argb: '000000'}},
+                            right: {style: 'hair', color: {argb: '000000'}},
+                        }
+                    }
+                }
+
             } else if (colNumber === 3) {
                 cell.style = {
                     alignment: {vertical: 'middle', horizontal: 'left', wrapText: true},
@@ -255,11 +272,9 @@ export const SummaryEmployeesExcelTimesheet = ({worksheet, projects, chosenTimes
             }
         });
 
-        worksheet.getRow(8 + index).height = 25;
+        worksheet.getRow(8 + index).height = 37;
 
     })
-
-
 
     const styleForTableFooter: Partial<ExcelJS.Style> = {
         font: {bold: true, size: 10, color: {argb: '000000'}},
@@ -286,7 +301,7 @@ export const SummaryEmployeesExcelTimesheet = ({worksheet, projects, chosenTimes
         let sum = 0;
 
         users.forEach((user: any) => {
-            if(user.timesheet.tasks.some((proj: any) => proj.project.id === project.id)) {
+            if (user.timesheet.tasks.some((proj: any) => proj.project.id === project.id)) {
                 sum += user.timesheet.tasks.filter((proj: any) => proj.project.id === project.id)[0].hours
             }
         })
@@ -299,8 +314,7 @@ export const SummaryEmployeesExcelTimesheet = ({worksheet, projects, chosenTimes
     worksheet.addRow(rowFooter).eachCell((cell, colNumber) => {
         cell.style = styleForTableFooter;
 
-
-        if(colNumber === projects.length + 4) {
+        if (colNumber === projects.length + 4) {
             cell.numFmt = '#,##0.00';
             cell.style = {
                 font: {bold: true, size: 10, color: {argb: 'EF3129'}},

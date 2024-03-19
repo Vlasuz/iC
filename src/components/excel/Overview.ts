@@ -30,7 +30,7 @@ export const Overview = ({worksheet, translate, chosenTimesheet, data}: IOvervie
     worksheet.getRow(1).height = 25;
 
     const styleForHeader: Partial<ExcelJS.Style> = {
-        font: {bold: true, size: 24},
+        font: {bold: true, size: 22},
         alignment: {vertical: 'middle', horizontal: 'center'}
     };
 
@@ -45,8 +45,8 @@ export const Overview = ({worksheet, translate, chosenTimesheet, data}: IOvervie
     worksheet.mergeCells('B4:D4');
     worksheet.getCell('B4').value = {
         richText: [
-            {text: 'Name: ', font: {bold: true, size: 16}},
-            {text: String(documentAuthor), font: {bold: false, size: 16}}
+            {text: 'Name: ', font: {bold: true, size: 14}},
+            {text: String(documentAuthor), font: {bold: false, size: 14}}
         ]
     };
 
@@ -54,7 +54,7 @@ export const Overview = ({worksheet, translate, chosenTimesheet, data}: IOvervie
     worksheet.mergeCells('F4:F4');
     worksheet.getCell('F4').value = {
         richText: [
-            {text: date, font: {bold: true, size: 16}},
+            {text: date, font: {bold: true, size: 14}},
         ]
     };
     worksheet.getCell('F4').alignment = {
@@ -171,7 +171,7 @@ export const Overview = ({worksheet, translate, chosenTimesheet, data}: IOvervie
         worksheet.mergeCells(`B${rowNumberForApproval}:E${rowNumberForApproval}`);
         worksheet.getCell(`B${rowNumberForApproval}`).value = {
             richText: [
-                {text: 'Bpproval: ', font: {bold: true, size: 16}},
+                {text: 'Approval: ', font: {bold: true, size: 16}},
                 {text: String(documentAuthor), font: {size: 16}}
             ]
         };

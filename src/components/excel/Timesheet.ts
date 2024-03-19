@@ -33,7 +33,7 @@ export const Timesheet = ({worksheet, chosenTimesheet, tasks, translate, logo}: 
     worksheet.getRow(1).height = 25;
 
     const styleForHeader: Partial<ExcelJS.Style> = {
-        font: {bold: true, size: 24},
+        font: {bold: true, size: 22},
         alignment: {vertical: 'middle', horizontal: 'center'}
     };
 
@@ -48,8 +48,8 @@ export const Timesheet = ({worksheet, chosenTimesheet, tasks, translate, logo}: 
     worksheet.mergeCells('B4:D4');
     worksheet.getCell('B4').value = {
         richText: [
-            {text: 'Name: ', font: {bold: true, size: 16}},
-            {text: String(documentAuthor), font: {bold: false, size: 16}}
+            {text: 'Name: ', font: {bold: true, size: 14}},
+            {text: String(documentAuthor), font: {bold: false, size: 14}}
         ]
     };
 
@@ -57,7 +57,7 @@ export const Timesheet = ({worksheet, chosenTimesheet, tasks, translate, logo}: 
     worksheet.mergeCells('F4:I4');
     worksheet.getCell('F4').value = {
         richText: [
-            {text: date, font: {bold: true, size: 16}},
+            {text: date, font: {bold: true, size: 14}},
         ]
     };
     worksheet.getCell('F4').alignment = {
@@ -135,6 +135,7 @@ export const Timesheet = ({worksheet, chosenTimesheet, tasks, translate, logo}: 
         worksheet.getCell(`B${startRow + plusNum}`).value = index + 1;
         worksheet.getCell(`B${startRow + plusNum}`).style = {...styleForTableBody, alignment: {vertical: 'middle', horizontal: 'center'},};
         worksheet.getCell(`C${startRow + plusNum}`).value = item.date;
+        worksheet.getCell(`C${startRow + plusNum}`).numFmt = 'dd/mm/yy';
         worksheet.getCell(`C${startRow + plusNum}`).style = {...styleForTableBody, alignment: {vertical: 'middle', horizontal: 'center'},};
         worksheet.getCell(`D${startRow + plusNum}`).value = item.project.name;
         worksheet.getCell(`D${startRow + plusNum}`).style = {...styleForTableBody, alignment: {vertical: 'middle', horizontal: 'center'},};
@@ -146,8 +147,10 @@ export const Timesheet = ({worksheet, chosenTimesheet, tasks, translate, logo}: 
         worksheet.getCell(`G${startRow + plusNum}`).style = {...styleForTableBody, alignment: {vertical: 'middle', horizontal: 'center'},};
         worksheet.getCell(`H${startRow + plusNum}`).value = item.hours;
         worksheet.getCell(`H${startRow + plusNum}`).style = {...styleForTableBody, alignment: {vertical: 'middle', horizontal: 'center'},};
+        worksheet.getCell(`H${startRow + plusNum}`).numFmt = '0.0';
         worksheet.getCell(`I${startRow + plusNum}`).value = amountHours;
         worksheet.getCell(`I${startRow + plusNum}`).style = {...styleForTableBody, alignment: {vertical: 'middle', horizontal: 'center'},};
+        worksheet.getCell(`I${startRow + plusNum}`).numFmt = '0.0';
 
     })
 
@@ -158,7 +161,7 @@ export const Timesheet = ({worksheet, chosenTimesheet, tasks, translate, logo}: 
     const rowNumberForTotal = taskLength + 8;
 
     const styleForTotal: Partial<ExcelJS.Style> = {
-        font: {bold: true, size: 16, color: {argb: 'EF3129'}},
+        font: {bold: true, size: 14, color: {argb: 'EF3129'}},
         alignment: {vertical: 'middle', horizontal: 'right'},
     };
 
@@ -166,9 +169,13 @@ export const Timesheet = ({worksheet, chosenTimesheet, tasks, translate, logo}: 
         return sum + current.hours
     }, 0)
 
-    worksheet.mergeCells(`F${rowNumberForTotal}:I${rowNumberForTotal}`);
-    worksheet.getCell(`F${rowNumberForTotal}`).value = `Total: ${total} hours`;
-    worksheet.getCell(`F${rowNumberForTotal}`).style = styleForTotal;
+    worksheet.getCell(`G${rowNumberForTotal}`).value = `Total:`;
+    worksheet.getCell(`G${rowNumberForTotal}`).style = styleForTotal;
+    worksheet.getCell(`H${rowNumberForTotal}`).value = +total;
+    worksheet.getCell(`H${rowNumberForTotal}`).style = styleForTotal;
+    worksheet.getCell(`H${rowNumberForTotal}`).numFmt = '0.0';
+    worksheet.getCell(`I${rowNumberForTotal}`).value = ` hours`;
+    worksheet.getCell(`I${rowNumberForTotal}`).style = styleForTotal;
 
     if (!!approvalDate) {
         worksheet.addRow({})
@@ -177,7 +184,7 @@ export const Timesheet = ({worksheet, chosenTimesheet, tasks, translate, logo}: 
         worksheet.mergeCells(`B${rowNumberForApproval}:E${rowNumberForApproval}`);
         worksheet.getCell(`B${rowNumberForApproval}`).value = {
             richText: [
-                {text: 'Bpproval: ', font: {bold: true, size: 16}},
+                {text: 'Approval: ', font: {bold: true, size: 16}},
                 {text: String(documentAuthor), font: {size: 16}}
             ]
         };
@@ -185,8 +192,8 @@ export const Timesheet = ({worksheet, chosenTimesheet, tasks, translate, logo}: 
         worksheet.mergeCells(`B${rowNumberForApprovalDate}:E${rowNumberForApprovalDate}`);
         worksheet.getCell(`B${rowNumberForApprovalDate}`).value = {
             richText: [
-                {text: 'Date: ', font: {bold: true, size: 16}},
-                {text: String(approvalDate), font: {size: 16}}
+                {text: 'Date: ', font: {bold: true, size: 14}},
+                {text: String(approvalDate), font: {size: 14}}
             ]
         };
     }

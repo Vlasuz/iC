@@ -15,7 +15,7 @@ interface ITimesheetExcelProps {
 
 export const TimesheetExcel = async ({chosenTimesheet, tasks, translate}: ITimesheetExcelProps) => {
 
-    const documentName = `${chosenTimesheet?.date?.split('/').reverse().join('')}_Timesheet_${chosenTimesheet?.user?.first_name}_${chosenTimesheet?.user?.last_name}`
+    const documentName = `${chosenTimesheet?.date?.split('/').reverse().join('')}_Timesheet_${chosenTimesheet?.user?.first_name}_${chosenTimesheet?.user?.last_name}_${MonthNumber()[+(chosenTimesheet?.date[3] + chosenTimesheet?.date[4])]?.en_title}`
 
     const workbook = new ExcelJS.Workbook();
     const worksheetTimesheet = workbook.addWorksheet(documentName);
