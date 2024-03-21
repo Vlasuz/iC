@@ -5,6 +5,8 @@ import ExcelJS from "exceljs";
 import FileSaver from "file-saver";
 import {SummaryEmployeesExcelTimesheet} from "./SummaryEmployeesExcelTimesheet";
 import {SummaryEmployeesExcelCosts} from "./SummaryEmployeesExcelCosts";
+import logo from './../../../assets/html/img/logo.png'
+import imageToBase64 from "image-to-base64/browser";
 
 interface ISummaryEmployeesExcelProps {
     chosenTimesheet: ITimesheet
@@ -30,10 +32,15 @@ export const SummaryEmployeesExcel = async ({
     const worksheetTimesheet = workbook.addWorksheet("Timesheet");
     const worksheetCosts = workbook.addWorksheet("Costs");
 
+    const base64Logo = await imageToBase64(logo) // Path to the image
 
+    const imageId = workbook.addImage({
+        base64: base64Logo,
+        extension: 'png',
+    });
 
-    SummaryEmployeesExcelTimesheet({worksheet: worksheetTimesheet, chosenTimesheet, projects, users, translate})
-    SummaryEmployeesExcelCosts({worksheet: worksheetCosts, chosenTimesheet, projects, users, translate})
+    SummaryEmployeesExcelTimesheet({worksheet: worksheetTimesheet, chosenTimesheet, projects, users, translate, logo: imageId})
+    SummaryEmployeesExcelCosts({worksheet: worksheetCosts, chosenTimesheet, projects, users, translate, logo: imageId})
 
 
 

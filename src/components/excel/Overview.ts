@@ -35,7 +35,6 @@ export const Overview = ({worksheet, translate, chosenTimesheet, data}: IOvervie
     };
 
 
-
     worksheet.mergeCells('B2:F2');
     worksheet.getCell('B2').value = "Timesheet (Overview)";
     worksheet.getCell('B2').style = styleForHeader;
@@ -91,8 +90,6 @@ export const Overview = ({worksheet, translate, chosenTimesheet, data}: IOvervie
     worksheet.getRow(6).height = 18;
 
 
-
-
     const styleForTableBody: Partial<ExcelJS.Style> = {
         font: {size: 10, color: {argb: '000000'}},
         alignment: {vertical: 'middle', horizontal: 'center'},
@@ -121,7 +118,19 @@ export const Overview = ({worksheet, translate, chosenTimesheet, data}: IOvervie
         }).eachCell((cell, colNumber) => {
             cell.style = styleForTableBody;
 
-            if(colNumber === 5 || colNumber === 6) {
+            if (colNumber === 5) {
+                cell.style = {
+                    font: {size: 10, color: {argb: '000000'}},
+                    alignment: {vertical: 'middle', horizontal: 'center'},
+                    border: {
+                        top: {style: 'hair', color: {argb: '000000'}},
+                        left: {style: 'hair', color: {argb: '000000'}},
+                        bottom: {style: 'hair', color: {argb: '000000'}},
+                        right: {style: 'hair', color: {argb: '000000'}}
+                    }
+                }
+                cell.numFmt = '#,##0.0';
+            } else if (colNumber === 6) {
                 cell.style = {
                     font: {size: 10, color: {argb: '000000'}},
                     alignment: {vertical: 'middle', horizontal: 'center'},
@@ -140,7 +149,6 @@ export const Overview = ({worksheet, translate, chosenTimesheet, data}: IOvervie
     worksheet.addRow({})
 
 
-
     const styleForTableTotal: Partial<ExcelJS.Style> = {
         font: {bold: true, size: 16, color: {argb: 'EF3129'}},
         alignment: {vertical: 'middle', horizontal: 'center'},
@@ -153,13 +161,23 @@ export const Overview = ({worksheet, translate, chosenTimesheet, data}: IOvervie
     }).eachCell((cell, colNumber) => {
         cell.style = styleForTableTotal;
 
-        if(colNumber === 5 || colNumber === 6) {
-            cell.numFmt = '#,##0.00';
-        } else if(colNumber === 4) {
+        if (colNumber === 4) {
             cell.style = {
                 font: {bold: true, size: 16, color: {argb: 'EF3129'}},
                 alignment: {vertical: 'middle', horizontal: 'right'},
             }
+        } else if (colNumber === 5) {
+            cell.style = {
+                font: {bold: true, size: 16, color: {argb: 'EF3129'}},
+                alignment: {vertical: 'middle', horizontal: 'center'},
+            }
+            cell.numFmt = '#,##0.0';
+        } else if (colNumber === 6) {
+            cell.style = {
+                font: {bold: true, size: 16, color: {argb: 'EF3129'}},
+                alignment: {vertical: 'middle', horizontal: 'center'},
+            }
+            cell.numFmt = '#,##0.00';
         }
     });
 

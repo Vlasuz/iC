@@ -25,7 +25,6 @@ export const TimesheetExcel = async ({chosenTimesheet, tasks, translate}: ITimes
     const imageId = workbook.addImage({
         base64: base64Logo,
         extension: 'png',
-
     });
 
     Timesheet({worksheet: worksheetTimesheet, chosenTimesheet, tasks, translate, logo: imageId})

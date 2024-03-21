@@ -22,7 +22,11 @@ export const GetAccessToken = (dispatch: any, callbackFunction: any) => {
 
     }).catch(er => {
         console.log("er refresh",er)
+
         if(window.location.href.includes("login")) return;
+
+        if(er?.response?.status === 401) window.location.href = "/login"
+
 
         // window.location.href = "/login"
     })

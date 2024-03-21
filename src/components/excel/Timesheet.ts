@@ -45,7 +45,7 @@ export const Timesheet = ({worksheet, chosenTimesheet, tasks, translate, logo}: 
 
     worksheet.addRow({})
 
-    worksheet.mergeCells('B4:D4');
+    worksheet.mergeCells('B4:E4');
     worksheet.getCell('B4').value = {
         richText: [
             {text: 'Name: ', font: {bold: true, size: 14}},
@@ -202,7 +202,7 @@ export const Timesheet = ({worksheet, chosenTimesheet, tasks, translate, logo}: 
     // @ts-ignore
         tl: { col: 8, row: 0 },
     // @ts-ignore
-        br: { col: 9, row: 1 }
+        br: { col: 9, row: 1.3 }
     });
 
 }

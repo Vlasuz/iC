@@ -42,7 +42,7 @@ export const Costs = ({worksheet, translate, chosenTimesheet, expenses, logo}: I
 
     worksheet.addRow({})
 
-    worksheet.mergeCells('B4:D4');
+    worksheet.mergeCells('B4:E4');
     worksheet.getCell('B4').value = {
         richText: [
             {text: 'Name: ', font: {bold: true, size: 14}},
@@ -51,13 +51,13 @@ export const Costs = ({worksheet, translate, chosenTimesheet, expenses, logo}: I
     };
 
     const date = `${translate(MonthNumber()[+(chosenTimesheet?.date[3] + chosenTimesheet?.date[4])]?.translate_code)}, 20${chosenTimesheet?.date && chosenTimesheet?.date[6]}${chosenTimesheet?.date && chosenTimesheet?.date[7]}`
-    worksheet.mergeCells('E4:H4');
-    worksheet.getCell('E4').value = {
+    worksheet.mergeCells('F4:H4');
+    worksheet.getCell('F4').value = {
         richText: [
             {text: date, font: {bold: true, size: 14}},
         ]
     };
-    worksheet.getCell('E4').alignment = {
+    worksheet.getCell('F4').alignment = {
         horizontal: 'right'
     };
 

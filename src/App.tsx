@@ -123,6 +123,7 @@ function App() {
     }
 
     useEffect(() => {
+
         getProfile()
 
         window.addEventListener('resize', setZoom);
@@ -133,12 +134,6 @@ function App() {
         setZoom();
     }, [location.pathname])
 
-
-    // useEffect(() => {
-    //     if (chosenTimesheet && !Object.keys(chosenTimesheet).length) return;
-    //
-    //     SetStatistic(dispatch, chosenTimesheet?.id)
-    // }, [chosenTimesheet])
 
 
     const [popup, setPopup] = useState({

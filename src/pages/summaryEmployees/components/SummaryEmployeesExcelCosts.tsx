@@ -8,9 +8,10 @@ interface IProps {
     projects: IProject[]
     users: any
     translate: any
+    logo: any
 }
 
-export const SummaryEmployeesExcelCosts = ({worksheet, projects, chosenTimesheet, translate, users}: IProps) => {
+export const SummaryEmployeesExcelCosts = ({worksheet, projects, chosenTimesheet, translate, users, logo}: IProps) => {
 
     let totalHours = 0
     // Создание основных колонок
@@ -34,7 +35,7 @@ export const SummaryEmployeesExcelCosts = ({worksheet, projects, chosenTimesheet
     worksheet.getRow(1).height = 25;
 
     const styleForHeader: Partial<ExcelJS.Style> = {
-        font: {bold: true, size: 24},
+        font: {bold: true, size: 22},
         alignment: {vertical: 'middle', horizontal: 'left'}
     };
 
@@ -48,7 +49,7 @@ export const SummaryEmployeesExcelCosts = ({worksheet, projects, chosenTimesheet
     worksheet.mergeCells('B4:N4');
     worksheet.getCell('B4').value = {
         richText: [
-            {text: date, font: {bold: true, size: 16}},
+            {text: date, font: {bold: true, size: 14}},
         ]
     };
 
@@ -255,7 +256,7 @@ export const SummaryEmployeesExcelCosts = ({worksheet, projects, chosenTimesheet
             }
         });
 
-        worksheet.getRow(8 + index).height = 25;
+        worksheet.getRow(8 + index).height = 37;
 
     })
 
@@ -323,5 +324,12 @@ export const SummaryEmployeesExcelCosts = ({worksheet, projects, chosenTimesheet
     });
 
     worksheet.mergeCells(`B${8 + users.length}`, `C${8 + users.length}`);
+
+    worksheet.addImage(logo, {
+        // @ts-ignore
+        tl: { col: projects.length + 3.9, row: 0.9 },
+        // @ts-ignore
+        br: { col: projects.length + 4, row: 2.3 }
+    });
 
 }

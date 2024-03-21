@@ -8,11 +8,13 @@ interface IProps {
     projects: IProject[]
     users: any
     translate: any
+    logo: number
 }
 
-export const SummaryEmployeesExcelTimesheet = ({worksheet, projects, chosenTimesheet, translate, users}: IProps) => {
+export const SummaryEmployeesExcelTimesheet = ({worksheet, projects, chosenTimesheet, translate, users, logo}: IProps) => {
 
     let totalHours = 0
+    let totalCosts = 0
     // Создание основных колонок
     worksheet.columns = [
         {header: '', key: 'colEmpty', width: 8.33},
@@ -173,8 +175,11 @@ export const SummaryEmployeesExcelTimesheet = ({worksheet, projects, chosenTimes
             if (user.timesheet.tasks.some((proj: any) => proj?.project?.id === project?.id)) {
                 rowUser[`col${index + 1}`] = user.timesheet.tasks.filter((proj: any) => proj?.project?.id === project?.id)[0]?.hours
 
+                console.log(user.timesheet.expenses.filter((proj: any) => proj?.project?.id === project?.id)[0]?.sum)
+
                 allAmount += user.timesheet.tasks.filter((proj: any) => proj?.project?.id === project?.id)[0]?.hours
                 totalHours += user.timesheet.tasks.filter((proj: any) => proj?.project?.id === project?.id)[0]?.hours
+                totalCosts += user.timesheet.expenses.filter((proj: any) => proj?.project?.id === project?.id)[0]?.sum ? user.timesheet.expenses.filter((proj: any) => proj?.project?.id === project?.id)[0]?.sum : 0
             } else {
                 rowUser[`col${index + 1}`] = 0
             }
@@ -215,7 +220,7 @@ export const SummaryEmployeesExcelTimesheet = ({worksheet, projects, chosenTimes
                         right: {style: 'hair', color: {argb: '000000'}},
                     }
                 }
-                cell.numFmt = '#,##0.00';
+                cell.numFmt = '#,##0.0';
 
                 if (String(cell?.value) !== "0") {
                     cell.style = {
@@ -268,7 +273,7 @@ export const SummaryEmployeesExcelTimesheet = ({worksheet, projects, chosenTimes
                     }
                 }
             } else if (colNumber !== 2 && colNumber !== 3) {
-                cell.numFmt = '#,##0.00';
+                cell.numFmt = '#,##0.0';
             }
         });
 
@@ -315,7 +320,7 @@ export const SummaryEmployeesExcelTimesheet = ({worksheet, projects, chosenTimes
         cell.style = styleForTableFooter;
 
         if (colNumber === projects.length + 4) {
-            cell.numFmt = '#,##0.00';
+            cell.numFmt = '#,##0.0';
             cell.style = {
                 font: {bold: true, size: 10, color: {argb: 'EF3129'}},
                 alignment: {vertical: 'top', horizontal: 'center', wrapText: true},
@@ -332,10 +337,87 @@ export const SummaryEmployeesExcelTimesheet = ({worksheet, projects, chosenTimes
                 }
             }
         } else if (colNumber !== 2 && colNumber !== 3) {
-            cell.numFmt = '#,##0.00';
+            cell.numFmt = '#,##0.0';
         }
     });
 
     worksheet.mergeCells(`B${8 + users.length}`, `C${8 + users.length}`);
+
+
+
+
+
+
+    const styleForTableFooterCosts: Partial<ExcelJS.Style> = {
+        font: {bold: true, size: 10, color: {argb: '000000'}},
+        alignment: {vertical: 'top', horizontal: 'center', wrapText: true},
+        fill: {
+            type: 'pattern',
+            pattern: 'solid',
+            fgColor: {argb: '959595'}
+        },
+        border: {
+            top: {style: 'thin', color: {argb: '000000'}},
+            left: {style: 'thin', color: {argb: '000000'}},
+            bottom: {style: 'thin', color: {argb: '000000'}},
+            right: {style: 'thin', color: {argb: '000000'}}
+        }
+    }
+
+    const rowFooterCosts: any = {
+        colNo: 'Total expense / month',
+        // colUsers: 'Users',
+    }
+
+    projects.map((project, index) => {
+        let sum = 0;
+
+        users.forEach((user: any) => {
+            if(user.timesheet.expenses.some((proj: any) => proj.project.id === project.id)) {
+                sum += user.timesheet.expenses.filter((proj: any) => proj.project.id === project.id)[0]?.sum
+            }
+        })
+
+        rowFooterCosts[`col${index + 1}`] = sum
+    })
+
+    rowFooterCosts[`colTotal`] = totalCosts
+
+    worksheet.addRow(rowFooterCosts).eachCell((cell, colNumber) => {
+        cell.style = styleForTableFooterCosts;
+
+
+        if(colNumber === projects.length + 4) {
+            cell.numFmt = '#,##0.00';
+            cell.style = {
+                font: {bold: true, size: 10, color: {argb: 'EF3129'}},
+                alignment: {vertical: 'top', horizontal: 'center', wrapText: true},
+                fill: {
+                    type: 'pattern',
+                    pattern: 'solid',
+                    fgColor: {argb: '959595'}
+                },
+                border: {
+                    top: {style: 'thin', color: {argb: '000000'}},
+                    left: {style: 'thin', color: {argb: '000000'}},
+                    bottom: {style: 'thin', color: {argb: '000000'}},
+                    right: {style: 'thin', color: {argb: '000000'}}
+                }
+            }
+        } else if (colNumber !== 2 && colNumber !== 3) {
+            cell.numFmt = '#,##0.00';
+        }
+    });
+
+    worksheet.mergeCells(`B${9 + users.length}`, `C${9 + users.length}`);
+
+    console.log(projects)
+
+    worksheet.addImage(logo, {
+        // @ts-ignore
+        tl: { col: projects.length + 3.9, row: 0.9 },
+        // @ts-ignore
+        br: { col: projects.length + 4, row: 2.3 }
+    });
 
 }
