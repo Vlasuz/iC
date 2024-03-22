@@ -16,7 +16,9 @@ import {TableSelectYear} from "../../components/table/TableSelectYear";
 import {TableExportCustom} from "../../components/table/TableExportCustom";
 import {Translate} from "../../components/translate/Translate";
 import {useClickOutside} from "../../hooks/ClickOutside";
-import {ProjectsTableExport} from "./components/ProjectsTableExport";
+import {EmployeesExcel} from "../employees/components/EmployeesExcel";
+import {ProjectsExcel} from "./components/ProjectsExcel";
+import {useTranslation} from "react-i18next";
 
 interface IProjectsProps {
 
@@ -150,7 +152,7 @@ export const Projects: React.FC<IProjectsProps> = () => {
     }
 
     useEffect(() => {
-        if(isLoad) return;
+        if (isLoad) return;
 
         setRowsSelectValue(projects.length > +RowsPerPage()[0].value ? RowsPerPage()[0] : RowsPerPage()[3])
         setTimeout(() => {
@@ -160,11 +162,11 @@ export const Projects: React.FC<IProjectsProps> = () => {
 
     console.log(projects)
 
+    const {t} = useTranslation()
+
 
     return (
         <ProjectStyled className="section-table">
-
-            <ProjectsTableExport/>
 
             <div className="section-table__header">
                 <div className="section-table__header--row is-always-row">
@@ -207,7 +209,9 @@ export const Projects: React.FC<IProjectsProps> = () => {
 
                         <TableSelectYear setYear={setListYear}/>
 
-                        <TableExportCustom/>
+                        <TableExportCustom
+                            excelFile={(e: any) => ProjectsExcel({projects, listYear, translate: t})}
+                        />
 
                     </div>
                 </div>
@@ -371,7 +375,8 @@ export const Projects: React.FC<IProjectsProps> = () => {
                     <span>
                         <Translate>projects_admin.rows_per_page</Translate>
                     </span>
-                    <CustomSelect list={RowsPerPage()} defaultValue={RowsPerPage()[3]} selectValue={rowsSelectValue} setSelectedItem={setRowsSelectValue}/>
+                    <CustomSelect list={RowsPerPage()} defaultValue={RowsPerPage()[3]} selectValue={rowsSelectValue}
+                                  setSelectedItem={setRowsSelectValue}/>
                 </div>
                 {paginationNavigation.length > 1 && rowsSelectValue.label !== "All" &&
                     <div className="section-table__pagination pagination visible-on-desktop">

@@ -11,6 +11,10 @@ import {setEmployeesList} from "../../../storage/toolkit";
 import {useDispatch, useSelector} from 'react-redux';
 import {Translate} from "../../../components/translate/Translate";
 import {IEmployee} from "../../../models";
+import {SummaryEmployeesExcel} from "../../summaryEmployees/components/SummaryEmployeesExcel";
+import {TimesheetExcel} from "../../timesheet/components/TimesheetExcel";
+import {EmployeesExcel} from "./EmployeesExcel";
+import {useTranslation} from "react-i18next";
 
 interface IEmployeesHeaderProps {
     setSearchValueGlobal: any
@@ -48,6 +52,10 @@ export const EmployeesHeader: React.FC<IEmployeesHeaderProps> = ({setSearchValue
     }, [searchValue, listYear])
 
     const {rootEl} = useClickOutside(setIsOpenInputSearch)
+
+    const employees: IEmployee[] = useSelector((state: any) => state.toolkit.employees)
+
+    const {t} = useTranslation()
 
     return (
         <div className="section-table__header">
@@ -89,7 +97,9 @@ export const EmployeesHeader: React.FC<IEmployeesHeaderProps> = ({setSearchValue
 
                     <TableSelectYear setYear={setListYear}/>
 
-                    <TableExportCustom/>
+                    <TableExportCustom
+                        excelFile={(e: any) => EmployeesExcel({employees, listYear, translate: t})}
+                    />
 
                 </div>
             </div>

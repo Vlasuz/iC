@@ -13,7 +13,9 @@ import {setEmployeesList} from "../../storage/toolkit";
 import {Translate} from "../../components/translate/Translate";
 import {CustomSelect} from "../../components/customSelect/CustomSelect";
 import {RowsPerPage} from "../../constants/RowsPerPage";
-import {VacationsTableExport} from "./components/VacationsTableExport";
+import {VacationsExcel} from "./components/VacationsExcel";
+import {useTranslation} from "react-i18next";
+import {ProjectsExcel} from "../projects/components/ProjectsExcel";
 
 interface IVacationsProps {
 
@@ -86,11 +88,10 @@ export const Vacations: React.FC<IVacationsProps> = () => {
         })
     }, [listYear])
 
+    const {t} = useTranslation()
 
     return (
         <VacationsStyled className="section-table">
-
-            <VacationsTableExport/>
 
             <div className="section-table__header">
                 <div className="section-table__header--row is-always-row">
@@ -121,7 +122,11 @@ export const Vacations: React.FC<IVacationsProps> = () => {
                     </div>
                     <div className="section-table__header--col">
                         <TableSelectYear setYear={setListYear}/>
-                        <TableExportCustom/>
+
+                        <TableExportCustom
+                            excelFile={(e: any) => VacationsExcel({vacations, listYear, translate: t})}
+                        />
+
                     </div>
                 </div>
             </div>

@@ -6,7 +6,7 @@ import SimpleBar from "simplebar-react";
 import {useScrollTopValue} from "../../../hooks/ScrollTopValue";
 import {Translate} from "../../../components/translate/Translate";
 import {EmployeesStatus} from "../../../constants/EmployeesStatus";
-import {EmployeesTableExport} from "./EmployeesTableExport";
+import {EmployeesExcel} from "./EmployeesExcel";
 
 interface IEmployeesTableProps {
     rowsSelectValue: any
@@ -82,8 +82,6 @@ export const EmployeesTable: React.FC<IEmployeesTableProps> = ({rowsSelectValue,
 
     return (
         <div className="section-table__main table-employees">
-
-            <EmployeesTableExport/>
 
             <SimpleBar autoHide={false}>
                 <div className="section-table__main--container">
