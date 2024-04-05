@@ -49,6 +49,7 @@ export const Costs: React.FC<ICostsProps> = () => {
     const [isWindowMobile, setIsWindowMobile] = useState(false)
 
     const getExpenses = () => {
+        if(!timesheetId && !chosenTimesheet.id) return;
         getBearer("get")
         axios.get(getApiLink(`/api/timesheet/expenses/?timesheet_id=${timesheetId ?? chosenTimesheet.id}`)).then(({data}) => {
             dispatch(setExpenses(data))
@@ -62,7 +63,7 @@ export const Costs: React.FC<ICostsProps> = () => {
         if(timesheetId) {
             window.scrollTo(0,0)
         }
-        if (!!timesheetId || !chosenTimesheet || !Object.keys(chosenTimesheet).length) return;
+        if (!!timesheetId && (chosenTimesheet && !Object.keys(chosenTimesheet).length)) return;
 
         getExpenses()
 

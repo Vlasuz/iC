@@ -30,7 +30,12 @@ interface ICostsHeaderProps {
     setItemToDuplicate: any
 }
 
-export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit, isFixedEditBlock, itemToDuplicate, setItemToDuplicate}) => {
+export const CostsHeader: React.FC<ICostsHeaderProps> = ({
+                                                             itemToEdit,
+                                                             isFixedEditBlock,
+                                                             itemToDuplicate,
+                                                             setItemToDuplicate
+                                                         }) => {
 
 
     const isEditExpense = itemToEdit && Object.keys(itemToEdit).length
@@ -232,9 +237,11 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit, isFixedEdi
         "add": `${t("costs_page.top_part.add_expense_2")}`
     }
 
+    const isWindowMin = isFixedEditBlock && window.innerWidth > 1200 && window.innerWidth < 1500
+
     return (
-        <div
-            className={`section-table__header ${isFixedEditBlock && "animate-to-show"} ${isCancelEdit && "animate-to-hide"}`}>
+        <div style={{paddingLeft: isFixedEditBlock ? isWindowMin ? "170px" : "51px" : "0"}}
+             className={`section-table__header ${isFixedEditBlock && "animate-to-show"} ${isCancelEdit && "animate-to-hide"}`}>
             <div className="section-table__header--row is-always-row">
                 <div className="section-table__header--col">
                     <h1 className="section-table__title title change-title" id="main-title">
@@ -348,7 +355,9 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({itemToEdit, isFixedEdi
                             </div>
                             <button className="section-table__add-expense--submit btn"
                                     type="submit">
-                                {!isLoadingToAdd ? (isEditExpense ? <Translate>edit_expense</Translate> : <Translate>costs_page.top_part.add_expense_2</Translate>) : <Translate>loading</Translate>}
+                                {!isLoadingToAdd ? (isEditExpense ? <Translate>edit_expense</Translate> :
+                                        <Translate>costs_page.top_part.add_expense_2</Translate>) :
+                                    <Translate>loading</Translate>}
                             </button>
                         </form>
                     </div>

@@ -1,4 +1,5 @@
 import {
+    IAllUserProjects,
     IEmployee,
     IExpense,
     INotification,
@@ -26,6 +27,7 @@ export const initialState = () => {
         chosenTimesheet: <ITimesheet>{},
         summaryEmployees: <ISummaryEmployee[]>[],
         notifications: <INotification[]>[],
+        allUserProjects: <IAllUserProjects>{},
 
         projects: <IProject[]>[],
 

@@ -46,7 +46,7 @@ export const SummaryEmployeesExcelTimesheet = ({worksheet, projects, chosenTimes
 
     worksheet.addRow({})
 
-    const date = `${translate(MonthNumber()[+(chosenTimesheet?.date[3] + chosenTimesheet?.date[4])]?.translate_code)}, 20${chosenTimesheet?.date && chosenTimesheet?.date[6]}${chosenTimesheet?.date && chosenTimesheet?.date[7]}`
+    const date = `${MonthNumber()[+(chosenTimesheet?.date[3] + chosenTimesheet?.date[4])]?.en_title}, 20${chosenTimesheet?.date && chosenTimesheet?.date[6]}${chosenTimesheet?.date && chosenTimesheet?.date[7]}`
     worksheet.mergeCells('B4:N4');
     worksheet.getCell('B4').value = {
         richText: [
@@ -168,18 +168,18 @@ export const SummaryEmployeesExcelTimesheet = ({worksheet, projects, chosenTimes
         let allAmount = 0
 
         rowUser[`colNo`] = index + 1
-        rowUser[`colUsers`] = `${user?.user?.user?.first_name} ${user?.user?.user?.last_name}`
+        rowUser[`colUsers`] = `${user?.user?.first_name} ${user?.user?.last_name}`
 
         projects.forEach((project, index) => {
 
-            if (user.timesheet.tasks.some((proj: any) => proj?.project?.id === project?.id)) {
-                rowUser[`col${index + 1}`] = user.timesheet.tasks.filter((proj: any) => proj?.project?.id === project?.id)[0]?.hours
+            if (user.statistics.tasks.some((proj: any) => proj?.project?.id === project?.id)) {
+                rowUser[`col${index + 1}`] = user.statistics.tasks.filter((proj: any) => proj?.project?.id === project?.id)[0]?.hours
 
-                console.log(user.timesheet.expenses.filter((proj: any) => proj?.project?.id === project?.id)[0]?.sum)
+                console.log(user.statistics.expenses.filter((proj: any) => proj?.project?.id === project?.id)[0]?.sum)
 
-                allAmount += user.timesheet.tasks.filter((proj: any) => proj?.project?.id === project?.id)[0]?.hours
-                totalHours += user.timesheet.tasks.filter((proj: any) => proj?.project?.id === project?.id)[0]?.hours
-                totalCosts += user.timesheet.expenses.filter((proj: any) => proj?.project?.id === project?.id)[0]?.sum ? user.timesheet.expenses.filter((proj: any) => proj?.project?.id === project?.id)[0]?.sum : 0
+                allAmount += user.statistics.tasks.filter((proj: any) => proj?.project?.id === project?.id)[0]?.hours
+                totalHours += user.statistics.tasks.filter((proj: any) => proj?.project?.id === project?.id)[0]?.hours
+                totalCosts += user.statistics.expenses.filter((proj: any) => proj?.project?.id === project?.id)[0]?.sum ? user.statistics.expenses.filter((proj: any) => proj?.project?.id === project?.id)[0]?.sum : 0
             } else {
                 rowUser[`col${index + 1}`] = 0
             }
@@ -306,8 +306,8 @@ export const SummaryEmployeesExcelTimesheet = ({worksheet, projects, chosenTimes
         let sum = 0;
 
         users.forEach((user: any) => {
-            if (user.timesheet.tasks.some((proj: any) => proj.project.id === project.id)) {
-                sum += user.timesheet.tasks.filter((proj: any) => proj.project.id === project.id)[0].hours
+            if (user.statistics.tasks.some((proj: any) => proj.project.id === project.id)) {
+                sum += user.statistics.tasks.filter((proj: any) => proj.project.id === project.id)[0].hours
             }
         })
 
@@ -373,8 +373,8 @@ export const SummaryEmployeesExcelTimesheet = ({worksheet, projects, chosenTimes
         let sum = 0;
 
         users.forEach((user: any) => {
-            if(user.timesheet.expenses.some((proj: any) => proj.project.id === project.id)) {
-                sum += user.timesheet.expenses.filter((proj: any) => proj.project.id === project.id)[0]?.sum
+            if(user.statistics.expenses.some((proj: any) => proj.project.id === project.id)) {
+                sum += user.statistics.expenses.filter((proj: any) => proj.project.id === project.id)[0]?.sum
             }
         })
 

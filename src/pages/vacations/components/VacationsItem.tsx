@@ -25,6 +25,12 @@ export const VacationsItem: React.FC<IVacationsItemProps> = ({itemData, index}) 
     const [isChangeExtraDays, setIsChangeExtraDays] = useState(false)
     const [isOpenContextMenu, setIsOpenContextMenu] = useState(false)
     const [menuPosition, setMenuPosition] = useState({})
+    const [comment, setComment] = useState<string>('')
+    const [isCanEditComment, setIsCanEditComment] = useState<boolean>(false)
+
+    useEffect(() => {
+        setComment(itemData.comment)
+    }, [])
 
     const inputBlock: any = useRef(null)
 
@@ -53,21 +59,28 @@ export const VacationsItem: React.FC<IVacationsItemProps> = ({itemData, index}) 
 
     const changeExtra = () => {
         getBearer("patch")
-        axios.patch(getApiLink(`/api/admin/employee/vacations/update/?vacation_id=${itemData.user.id}`), {
-            "extra": +extraDays
+        axios.patch(getApiLink(`/api/admin/employee/vacations/update/?vacation_id=${itemData.id}`), {
+            "extra": +extraDays,
+            "comment": itemData.comment
         }).then(({data}) => {
             console.log(data)
             setIsChangeExtraDays(false)
         }).catch(er => {
-            console.log(getApiLink(`/api/admin/employee/vacations/update/?vacation_id=${itemData.user.id}`), er)
+            console.log(getApiLink(`/api/admin/employee/vacations/update/?vacation_id=${itemData.id}`), er)
         })
     }
 
     const rootEl: any = useRef(null);
+    const commentEl: any = useRef(null);
 
     useEffect(() => {
         const onClick = (e: any) => {
-            console.log('11', isChangeExtraDays, isOpenContextMenu)
+            // console.log(isCanEditComment, !isOpenContextMenu)
+            // if (!commentEl.current?.contains(e.target) && isCanEditComment && !isOpenContextMenu) {
+            //     setIsCanEditComment(false)
+            //     handleChangeComment()
+            // }
+
             if (!rootEl.current?.contains(e.target) && isChangeExtraDays && !isOpenContextMenu) {
                 setIsChangeExtraDays(false)
                 changeExtra()
@@ -75,11 +88,8 @@ export const VacationsItem: React.FC<IVacationsItemProps> = ({itemData, index}) 
         };
         document.addEventListener('click', onClick);
         return () => document.removeEventListener('click', onClick);
-    }, [isChangeExtraDays]);
+    }, [isOpenContextMenu]);
 
-    // const chosenTimesheet: ITimesheet = useSelector((state: any) => state.toolkit.chosenTimesheet)
-    //
-    // const dispatch = useDispatch()
 
     const modalBlock: any = useRef(null)
     const rowBlock: any = useRef(null)
@@ -108,6 +118,35 @@ export const VacationsItem: React.FC<IVacationsItemProps> = ({itemData, index}) 
         }
     }, [isOpenContextMenu])
 
+    const handleChangeComment = () => {
+        getBearer("patch")
+        axios.patch(getApiLink(`/api/admin/employee/vacations/update/?vacation_id=${itemData.id}`), {
+            "extra": +itemData.extra,
+            "comment": comment
+        }).then(({data}) => {
+            console.log(data)
+            setIsCanEditComment(false)
+        }).catch(er => {
+            console.log(getApiLink(`/api/admin/employee/vacations/update/?vacation_id=${itemData.id}`), er)
+        })
+    }
+
+    const handleOpenToAddComment = () => {
+        setIsOpenContextMenu(false)
+        setIsCanEditComment(true)
+    }
+
+    useEffect(() => {
+        const onClick = (e: any) => {
+            if (!e.target.closest("textarea") && !e.target.closest(".drop-down-2__list") && isCanEditComment && !isOpenContextMenu) {
+                setIsCanEditComment(true)
+                handleChangeComment()
+            }
+        };
+        document.addEventListener('click', onClick);
+        return () => document.removeEventListener('click', onClick);
+    }, [isOpenContextMenu, isCanEditComment, comment])
+
     return (
         <div className="section-table__row drop-down-2" ref={rowBlock} onContextMenu={e => handleOpenContextMenu({e, isOpenContextMenu, setMenuPosition, setIsOpenContextMenu, height: 60, width: 175})}>
             <div className="section-table__param visible-on-mob">
@@ -124,10 +163,10 @@ export const VacationsItem: React.FC<IVacationsItemProps> = ({itemData, index}) 
             <div className="section-table__param visible-on-desktop is-none-vertical-hover" style={{whiteSpace: "pre-wrap", wordBreak: "normal"}}>
                 {itemData.user.first_name} {itemData.user.last_name}
             </div>
-            <div className="section-table__param">
+            <div className="section-table__param" style={{fontWeight: itemData?.remain !== 0 ? "bold" : ""}}>
                 {itemData.remain.toFixed(1)}
             </div>
-            <div className="section-table__param">
+            <div className="section-table__param section-table__param_extra" style={{fontWeight: extraDays !== 0 ? "bold" : ""}}>
 
                 {
                     !isChangeExtraDays ? extraDays.toFixed(1) :
@@ -137,21 +176,28 @@ export const VacationsItem: React.FC<IVacationsItemProps> = ({itemData, index}) 
                         </form>
                 }
 
+                {(itemData?.comment || comment) && <div className="rectangle"/>}
+
+                {((itemData?.comment || comment) || isCanEditComment) && <textarea ref={commentEl}
+                           style={{opacity: isCanEditComment ? 1 : 0, visibility: isCanEditComment ? "visible" : "hidden"}}
+                           disabled={!isCanEditComment}
+                           className={`section-table__comment ${!itemData?.comment && "non-have-comment"}`} value={comment}
+                           onChange={e => setComment(e.target.value)}/>}
             </div>
-            <div className="section-table__param">
-                {itemData.user.holidays}
+            <div className="section-table__param" style={{fontWeight: itemData?.user?.holidays ? "bold" : ""}}>
+                {itemData?.user?.holidays}
             </div>
-            <div className="section-table__param">
+            <div className="section-table__param" style={{fontWeight: total !== 0 ? "bold" : ""}}>
                 {total.toFixed(1)}
             </div>
             {
                 itemData.months.map((item, index2) =>
-                    <div key={index2} className="section-table__param">
+                    <div key={index2} className="section-table__param" style={{fontWeight: item.days !== 0 ? "bold" : ""}}>
                         {item.days.toFixed(1)}
                     </div>
                 )
             }
-            <div className="section-table__param">
+            <div className="section-table__param" style={{fontWeight: (total - totalMonth) !== 0 ? "bold" : ""}}>
                 {(total - totalMonth).toFixed(1)}
             </div>
             <div className={"drop-down-2__block" + (isOpenContextMenu ? " active" : "")} ref={modalBlock}
@@ -163,6 +209,14 @@ export const VacationsItem: React.FC<IVacationsItemProps> = ({itemData, index}) 
                                 <use xlinkHref="#edit"></use>
                             </svg>
                             <Translate>vacations_admin.edit_extra_days</Translate>
+                        </a>
+                    </li>
+                    <li>
+                        <a onClick={handleOpenToAddComment}>
+                            <svg width="15" height="16" viewBox="0 0 15 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <use xlinkHref="#plus"></use>
+                            </svg>
+                            <Translate>add_comment</Translate>
                         </a>
                     </li>
                 </ul>

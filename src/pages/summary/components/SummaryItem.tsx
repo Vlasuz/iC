@@ -67,6 +67,8 @@ export const SummaryItem: React.FC<ISummaryItemProps> = ({dataItem, isOpen}) => 
     const handleEntryCost = () => {
         dispatch(setChosenTimesheet(dataItem))
 
+        if(!dataItem?.id) return;
+
         getBearer("get")
         axios.get(getApiLink(`/api/timesheet/expenses/?timesheet_id=${dataItem.id}`)).then(({data}) => {
             navigate('/costs')
@@ -91,6 +93,8 @@ export const SummaryItem: React.FC<ISummaryItemProps> = ({dataItem, isOpen}) => 
     }, [statistic])
 
     useEffect(() => {
+        if(!dataItem?.id) return;
+
         getBearer('get')
         axios.get(getApiLink(`/api/timesheet/statistics/?timesheet_id=${dataItem.id}`)).then(({data}) => {
             setStatistic(data)

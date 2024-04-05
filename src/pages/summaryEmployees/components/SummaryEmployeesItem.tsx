@@ -24,11 +24,14 @@ import {SetStatistic} from "../../../api/SetStatistic";
 import {SetExpenses} from "../../../api/SetExpenses";
 import {SetTasks} from "../../../api/SetTasks";
 import html2pdf from "html2pdf.js";
+import {SummaryExcel} from "../../summary/components/SummaryExcel";
+import {GetAccessToken} from "../../../api/GetAccessToken";
 
 interface ISummaryEmployeesItemProps {
     itemData: ITimesheet
     isFavorite?: boolean
     setStatisticForTable: any
+    allUserStatistics: any
 }
 
 interface IStatisticList {
@@ -50,15 +53,16 @@ interface IStatisticList {
 export const SummaryEmployeesItem: React.FC<ISummaryEmployeesItemProps> = ({
                                                                                itemData,
                                                                                isFavorite,
-                                                                               setStatisticForTable
+                                                                               setStatisticForTable,
+                                                                               allUserStatistics
                                                                            }) => {
 
     const summaryEmployees: ISummaryEmployee = useSelector((state: any) => state.toolkit.summaryEmployees)
     const summaryEmployeeIdOpen: string = useSelector((state: any) => state.toolkit.summaryEmployeeIdOpen)
+    const chosenTimesheet: ITimesheet = useSelector((state: any) => state.toolkit.chosenTimesheet)
 
     const [isOpen, setIsOpen] = useState(summaryEmployeeIdOpen === itemData?.id)
     const [isFavoriteLocal, setIsFavoriteLocal] = useState(isFavorite)
-    const [statistic, setStatistic] = useState<IStatistic | undefined>()
     const [isChangeDecision, setIsChangeDecision] = useState(false)
     const [isLoad, setIsLoad] = useState(false)
 
@@ -77,7 +81,7 @@ export const SummaryEmployeesItem: React.FC<ISummaryEmployeesItemProps> = ({
             // Прокручиваем пользователя к элементу
             setTimeout(() => {
                 // @ts-ignore
-                summaryBlock.current.closest(".simplebar-content-wrapper").scrollTo({
+                summaryBlock.current?.closest(".simplebar-content-wrapper").scrollTo({
                     top: blockHeight, // Вычитаем высоту элемента, чтобы цель оказалась выше визуальной области
                     behavior: 'smooth', // Для плавной прокрутки
                 });
@@ -97,106 +101,60 @@ export const SummaryEmployeesItem: React.FC<ISummaryEmployeesItemProps> = ({
 
     const [isClickToExport, setIsClickToExport] = useState(false)
     const handleExportPdf = () => {
-        setIsClickToExport(true)
-    }
+        // setIsClickToExport(true)
 
-    const tableToExcel = function () {
-        const uri = 'data:application/vnd.ms-excel;base64,';
-        const template = `
-    <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
-    <head>
-        <!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]-->
-    </head>
-    <body>
-        <table>{table}</table>
-    </body>
-    </html>`;
+        getBearer("get")
+        axios.get(getApiLink(`/api/timesheet/tasks/?timesheet_id=${itemData.id}`)).then((resTasks) => {
 
-        // @ts-ignore
-        const base64 = function (s) {
-            return window.btoa(unescape(encodeURIComponent(s)));
-        };
 
-        // @ts-ignore
-        const format = function (s, c) {
-            // @ts-ignore
-            return s.replace(/{(\w+)}/g, function (m, p) {
-                return c[p];
-            });
-        };
+            getBearer("get")
+            axios.get(getApiLink(`/api/timesheet/expenses/?timesheet_id=${itemData.id}`)).then((resExpenses) => {
 
-        // @ts-ignore
-        return function (table, filename = 'excel-export') {
-            if (!table.nodeType) table = document.querySelectorAll(table);
+                SummaryExcel({chosenTimesheet: itemData, translate: t, data: statisticList, tasks: resTasks.data, expenses: resExpenses.data})
 
-            table.forEach((tbl: any) => {
-
-                const ctx = {
-                    worksheet: filename,
-                    table: tbl.innerHTML
-                };
-
-                const blob = new Blob([format(template, ctx)], {
-                    type: 'application/vnd.ms-excel'
-                });
-
-                // @ts-ignore
-                if (navigator.msSaveBlob) {
-                    // @ts-ignore
-                    navigator.msSaveBlob(blob, filename + '.xls');
-                } else {
-                    const link = document.createElement('a');
-                    if (link.download !== undefined) {
-                        const url = URL.createObjectURL(blob);
-                        link.setAttribute('href', url);
-                        link.setAttribute('download', filename + '.xls');
-                        link.style.visibility = 'hidden';
-                        document.body.appendChild(link);
-                        link.click();
-                        document.body.removeChild(link);
-                    }
-                }
-
+            }).catch(er => {
+                er?.response?.status === 401 && GetAccessToken(dispatch, handleExportPdf)
             })
 
 
-        };
-    }();
-
-    const convertToPDF = () => {
-        const element = document.querySelectorAll('.table-to-download-excel');
-
-        element.forEach(tbl => {
-            const opt = {
-                margin: 0.5,
-                filename: 'timesheet.pdf',
-                image: {type: 'jpeg', quality: 0.98},
-                html2canvas: {scale: 6},
-                jsPDF: {unit: 'in', format: 'letter',} // Установка альбомной ориентации
-            };
-
-            html2pdf().from(tbl).set(opt).save();
+        }).catch(er => {
+            er?.response?.status === 401 && GetAccessToken(dispatch, handleExportPdf)
         })
-    };
+    }
 
     const [count, setCount] = useState(0)
 
-    useEffect(() => {
-        console.log(count, isClickToExport)
-
-        if (isClickToExport && count === 3) {
-
-            setTimeout(() => {
-                convertToPDF()
-                tableToExcel('.table-to-download-excel', "timesheet")
-
-                setTimeout(() => {
-                    setIsClickToExport(false)
-                }, 1500)
-            }, 1000)
-
-        }
-    }, [count, isClickToExport])
+    // useEffect(() => {
+    //
+    //     if (isClickToExport && count === 3) {
+    //
+    //         getBearer("get")
+    //         axios.get(getApiLink(`/api/timesheet/tasks/?timesheet_id=${itemData.id}`)).then((resTasks) => {
+    //
+    //
+    //             getBearer("get")
+    //             axios.get(getApiLink(`/api/timesheet/expenses/?timesheet_id=${itemData.id}`)).then((resExpenses) => {
+    //
+    //                 SummaryExcel({chosenTimesheet, translate: t, data: statisticList, tasks: resTasks.data, expenses: resExpenses.data})
+    //
+    //             }).catch(er => {
+    //                 er?.response?.status === 401 && GetAccessToken(dispatch, handleEntryCost)
+    //             })
+    //
+    //
+    //         }).catch(er => {
+    //             er?.response?.status === 401 && GetAccessToken(dispatch, handleEntryCost)
+    //         })
+    //
+    //         // setTimeout(() => {
+    //         //
+    //         //     setTimeout(() => {
+    //         //         setIsClickToExport(false)
+    //         //     }, 1500)
+    //         // }, 1000)
+    //
+    //     }
+    // }, [count, isClickToExport])
 
     useEffect(() => {
         if (!isClickToExport) return;
@@ -240,10 +198,11 @@ export const SummaryEmployeesItem: React.FC<ISummaryEmployeesItemProps> = ({
 
     useEffect(() => {
 
-        getBearer('get')
-        axios.get(getApiLink(`/api/timesheet/statistics/?timesheet_id=${itemData?.id}`)).then(({data}) => {
-            setStatistic(data)
-        }).catch(er => console.log(getApiLink("/api/timesheet/statistics/?timesheet_id"), er))
+        // getBearer('get')
+        // axios.get(getApiLink(`/api/timesheet/statistics/?timesheet_id=${itemData?.id}`)).then(({data}) => {
+        //     console.log(data)
+        //     setStatistic(data)
+        // }).catch(er => console.log(getApiLink("/api/timesheet/statistics/?timesheet_id"), er))
 
     }, [])
 
@@ -283,17 +242,17 @@ export const SummaryEmployeesItem: React.FC<ISummaryEmployeesItemProps> = ({
     const [statisticList, setStatisticList]: any = useState([])
 
     useEffect(() => {
-        if (!statistic || !Object.keys(statistic).length) return;
+        if (!allUserStatistics || !Object.keys(allUserStatistics).length) return;
 
-        setStatisticList(mergeAndSum(statistic?.expenses, statistic?.tasks).statistic)
+        setStatisticList(mergeAndSum(allUserStatistics?.expenses, allUserStatistics?.tasks).statistic)
 
         setStatisticForTable((prev: any[]) => [...prev, {
             user: itemData.user,
-            data: mergeAndSum(statistic?.expenses, statistic?.tasks).statistic,
-            all_hours: statistic.all_hours,
-            all_sum: statistic.all_sum
+            data: mergeAndSum(allUserStatistics?.expenses, allUserStatistics?.tasks).statistic,
+            all_hours: allUserStatistics.all_hours,
+            all_sum: allUserStatistics.all_sum
         }])
-    }, [statistic])
+    }, [allUserStatistics])
 
     const handleOpenProfile = () => {
         setPopup({popup: "profile-popup", data: itemData.user})
@@ -302,7 +261,7 @@ export const SummaryEmployeesItem: React.FC<ISummaryEmployeesItemProps> = ({
     return (
         <>
             {isClickToExport &&
-                <SummaryExportTable user={itemData.user} statistic={statistic} statisticList={statisticList}/>}
+                <SummaryExportTable user={itemData.user} statistic={allUserStatistics} statisticList={statisticList}/>}
             {isClickToExport && <SummaryExportTableTimesheet user={itemData.user}/>}
             {/*{isClickToExport && <CostsExcel user={itemData.user}/>}*/}
 
@@ -401,7 +360,7 @@ export const SummaryEmployeesItem: React.FC<ISummaryEmployeesItemProps> = ({
                                     </svg>
                                 </NavLink>
                                 <div className="summary-item__total-element--value">
-                                    {statistic?.all_hours.toFixed(1)} <Translate>summary_page.main.hours</Translate>
+                                    {allUserStatistics?.all_hours?.toFixed(1)} <Translate>summary_page.main.hours</Translate>
                                 </div>
                             </div>
                             <div className="summary-item__total--element summary-item__total-element">
@@ -422,7 +381,7 @@ export const SummaryEmployeesItem: React.FC<ISummaryEmployeesItemProps> = ({
                                     </svg>
                                 </NavLink>
                                 <div className="summary-item__total-element--value">
-                                    {statistic?.all_sum.toFixed(2)} {currency}
+                                    {allUserStatistics?.all_sum?.toFixed(2)} {currency}
                                 </div>
                             </div>
                         </div>

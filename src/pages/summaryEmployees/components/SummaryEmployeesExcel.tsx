@@ -1,5 +1,5 @@
 import React from 'react'
-import {IExpense, IProject, ITimesheet} from "../../../models";
+import {IAllUserProjects, IExpense, IProject, ITimesheet} from "../../../models";
 import {MonthNumber} from "../../../constants/MonthNumber";
 import ExcelJS from "exceljs";
 import FileSaver from "file-saver";
@@ -23,10 +23,8 @@ export const SummaryEmployeesExcel = async ({
                                             }: ISummaryEmployeesExcelProps) => {
 
 
-    console.log(projects, users)
-
-
-    const documentName = `${chosenTimesheet?.date?.split('/').reverse().join('')}_Project_Controling_${MonthNumber()[+(chosenTimesheet?.date[3] + chosenTimesheet?.date[4])]?.en_title}`
+    const today = `${String(new Date().getFullYear()).slice(2, 4)}${(new Date().getMonth() + 1) < 10 ? "0" + (new Date().getMonth() + 1) : new Date().getMonth() + 1}${new Date().getDate() < 10 ? "0" + new Date().getDate() : new Date().getDate()}`
+    const documentName = `${today}_Project_Controling_${MonthNumber()[+(chosenTimesheet?.date[3] + chosenTimesheet?.date[4])]?.en_title}`
 
     const workbook = new ExcelJS.Workbook();
     const worksheetTimesheet = workbook.addWorksheet("Timesheet");

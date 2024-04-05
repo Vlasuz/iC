@@ -4,7 +4,7 @@ import {TableExportCustom} from "../../components/table/TableExportCustom";
 import {TableSelectYear} from "../../components/table/TableSelectYear";
 import {VacationsHeader} from "./components/VacationsHeader";
 import {useDispatch, useSelector } from 'react-redux';
-import {IEmployee, IVacation} from "../../models";
+import {IEmployee, IUser, IVacation} from "../../models";
 import {VacationsItem} from "./components/VacationsItem";
 import {getBearer} from "../../functions/getBearer";
 import axios from "axios";
@@ -24,10 +24,12 @@ interface IVacationsProps {
 export const Vacations: React.FC<IVacationsProps> = () => {
 
     const [valueSearch, setValueSearch] = useState<string>("")
-    const [sortByName, setSortByName] = useState<string>("sortDown")
+    const [sortByName, setSortByName] = useState<string>("default")
     const [selectValue, setSelectValue] = useState(RowsPerPage()[0])
     const [vacations, setVacations] = useState<IVacation[]>([])
     const [isLoad, setIsLoad] = useState(false)
+
+    const user: IUser = useSelector((state: any) => state.toolkit.user)
 
     const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -35,19 +37,18 @@ export const Vacations: React.FC<IVacationsProps> = () => {
         getBearer("get")
         axios.get(getApiLink("/api/admin/employee/vacations/" + (valueSearch && `?search=${valueSearch}`))).then(({data}) => {
             setVacations(data)
-            console.log(data)
         }).catch(er => console.log(er))
     }
 
     useEffect(() => {
-        if(valueSearch.length > 0) return;
+        if(!user.id) return;
+        if(sortByName !== "default") return;
 
         getBearer("get")
         axios.get(getApiLink(`/api/admin/employee/vacations/`)).then(({data}) => {
             setVacations(data)
-            console.log(data)
         }).catch(er => console.log(er))
-    }, [valueSearch])
+    }, [valueSearch, user, sortByName])
 
 
     useEffect(() => {
@@ -73,16 +74,12 @@ export const Vacations: React.FC<IVacationsProps> = () => {
         setSelectValue(vacations.length > +RowsPerPage()[0].value ? RowsPerPage()[0] : RowsPerPage()[3])
     }, [vacations])
 
-    useEffect(() => {
-        axios.get(getApiLink("/api/admin/employee/vacations/")).then(({data}) => {
-            setVacations(data)
-        })
-    }, [])
-
     const dateNow = new Date()
     const [listYear, setListYear] = useState(dateNow.getFullYear())
 
     useEffect(() => {
+        if(!user?.id) return;
+
         axios.get(getApiLink(`/api/admin/employee/vacations/?year=${listYear}`)).then(({data}) => {
             setVacations(data)
         })
@@ -141,7 +138,7 @@ export const Vacations: React.FC<IVacationsProps> = () => {
                         <div className="section-table__body">
                                 {
                                     vacations
-                                        // ?.sort((a, b) => a.user?.last_name < b.user?.last_name ? sortByName === "sortUp" ? 1 : -1 : sortByName === "sortDown" ? 1 : -1)
+                                        ?.sort((a, b) => sortByName !== "default" ? (a.user?.last_name < b.user?.last_name ? sortByName === "sortUp" ? 1 : -1 : sortByName === "sortDown" ? 1 : -1) : 0)
                                         // ?.filter((item, index) => selectValue.value === 0 ? item : index < selectValue.value)
                                         // ?.sort((a, b) => +a.archive - +b.archive)
 

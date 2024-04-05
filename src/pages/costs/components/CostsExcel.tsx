@@ -15,7 +15,8 @@ interface ICostsExportTableProps {
 
 export const CostsExcel = async ({chosenTimesheet, expenses, translate}: ICostsExportTableProps) => {
 
-    const documentName = `${chosenTimesheet?.date?.split('/').reverse().join('')}_Costs_${chosenTimesheet?.user?.first_name}_${chosenTimesheet?.user?.last_name}_${MonthNumber()[+(chosenTimesheet?.date[3] + chosenTimesheet?.date[4])]?.en_title}`
+    const today = `${String(new Date().getFullYear()).slice(2, 4)}${(new Date().getMonth() + 1) < 10 ? "0" + (new Date().getMonth() + 1) : new Date().getMonth() + 1}${new Date().getDate() < 10 ? "0" + new Date().getDate() : new Date().getDate()}`
+    const documentName = `${today}_Costs_${chosenTimesheet?.user?.first_name}_${chosenTimesheet?.user?.last_name}_${MonthNumber()[+(chosenTimesheet?.date[3] + chosenTimesheet?.date[4])]?.en_title}`
 
     const workbook = new ExcelJS.Workbook();
     const worksheetCost = workbook.addWorksheet("Costs");

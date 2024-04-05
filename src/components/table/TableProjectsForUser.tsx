@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import {IProject, IUser} from "../../models";
+import {IAllUserProjects, IProject, IUser} from "../../models";
 import {useDispatch, useSelector} from "react-redux";
 import {useClickOutside} from "../../hooks/ClickOutside";
 import SimpleBar from "simplebar-react";
@@ -16,14 +16,6 @@ interface ITableProjectsForUserProps {
     projectList?: IProject[]
 }
 
-interface IAllUserProjects {
-    used_projects: {
-        project: IProject,
-        count: number
-    }[]
-    projects_list: IProject[]
-}
-
 export const TableProjectsForUser: React.FC<ITableProjectsForUserProps> = ({
                                                                                setProjectData,
                                                                                projectData,
@@ -34,21 +26,22 @@ export const TableProjectsForUser: React.FC<ITableProjectsForUserProps> = ({
 
     const dispatch = useDispatch()
 
-    const getUserProjects = () => {
-        getBearer("get")
-        axios.get<IAllUserProjects>(getApiLink('/api/user/projects_info/')).then(({data}) => {
-            console.log(data)
-            setAllUserProjects(data)
-        }).catch(er => {
-            er?.response?.status === 401 && GetAccessToken(dispatch, getUserProjects)
-        })
-    }
+    // const getUserProjects = () => {
+    //     getBearer("get")
+    //     axios.get<IAllUserProjects>(getApiLink('/api/user/projects_info/')).then(({data}) => {
+    //         console.log(data)
+    //         dispatch(setAllUserProjects(data))
+    //     }).catch(er => {
+    //         er?.response?.status === 401 && GetAccessToken(dispatch, getUserProjects)
+    //     })
+    // }
 
-    useEffect(getUserProjects, [])
+    // useEffect(getUserProjects, [])
 
     const [searchValue, setSearchValue] = useState<string>("")
     const [project, setProject] = useState<IProject | undefined>()
-    const [allUserProjects, setAllUserProjects] = useState<IAllUserProjects>()
+
+    const allUserProjects: IAllUserProjects = useSelector((state: any) => state.toolkit.allUserProjects)
 
     const [isActiveSelectProjects, setIsActiveSelectProjects] = useState(false)
     const {rootEl} = useClickOutside(setIsActiveSelectProjects)

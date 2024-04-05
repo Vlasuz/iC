@@ -6171,7 +6171,8 @@ body {
 .summary-item__element--progress {
     display: flex;
     align-items: center;
-    gap: 5px
+    gap: 5px;
+
 }
 
 .summary-item__element--progress:nth-child(3)>span:nth-child(1) {

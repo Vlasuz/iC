@@ -10,6 +10,8 @@ import 'swiper/css';
 import {SetTimesheet} from "../../api/SetTimesheet";
 import {Years} from "../../constants/Years";
 import {useParams} from "react-router-dom";
+import axios from "axios";
+import {getApiLink} from "../../functions/getApiLink";
 
 SwiperCore.use([Navigation]);
 
@@ -42,6 +44,21 @@ export const TableSelectYearMonth: React.FC<ITableSelectYearMonthProps> = ({setM
             onSwitch(month)
         }
 
+        if(timesheetId) {
+
+            console.log(month)
+            axios.get(getApiLink(`/api/timesheet/tasks/?month=${month}&year=${fieldYear}&user_id=${chosenTimesheet?.user?.id}`)).then(({data}) => {
+                console.log(data)
+                dispatch(setTasks(data))
+            })
+
+            return;
+        }
+
+        // if(onSwitch !== undefined) {
+        //     onSwitch(month)
+        // }
+
         if(setMonth !== undefined) {
             setMonth(month)
         }
@@ -54,9 +71,7 @@ export const TableSelectYearMonth: React.FC<ITableSelectYearMonthProps> = ({setM
 
         dispatch(setChosenTimesheet(selectedTimesheet))
 
-
         handleSetNewData && handleSetNewData()
-
 
         setIsSelectActive(false)
     }
@@ -72,8 +87,6 @@ export const TableSelectYearMonth: React.FC<ITableSelectYearMonthProps> = ({setM
 
     const handleChangeYear = (year: number) => {
         setFieldYear(year)
-
-        console.log(year)
 
         if(timesheetId !== undefined) return;
 
@@ -117,32 +130,32 @@ export const TableSelectYearMonth: React.FC<ITableSelectYearMonthProps> = ({setM
                 <div className="section-table__change-full-date--slider splide">
                     <div className="splide__track">
 
-                            <Swiper
-                                slidesPerView={3}
-                                navigation={{
-                                    nextEl: '.splide__arrow--next',
-                                    prevEl: '.splide__arrow--prev'
-                                }}
-                                modules={[Navigation]}
-                                initialSlide={1}
-                            >
+                        <Swiper
+                            slidesPerView={3}
+                            navigation={{
+                                nextEl: '.splide__arrow--next',
+                                prevEl: '.splide__arrow--prev'
+                            }}
+                            modules={[Navigation]}
+                            initialSlide={1}
+                        >
 
-                                {
-                                    Years().map(year =>
-                                        <SwiperSlide key={year.year}>
-                                            <li className="splide__slide">
-                                                <label>
-                                                    <input disabled={year.isDisabled} onChange={_ => handleChangeYear(+year.year)} defaultValue={+year.year} checked={fieldYear === +year.year} type="radio" name="year"/>
-                                                    <span>
+                            {
+                                Years().map(year =>
+                                    <SwiperSlide key={year.year}>
+                                        <li className="splide__slide">
+                                            <label>
+                                                <input disabled={year.isDisabled} onChange={_ => handleChangeYear(+year.year)} defaultValue={+year.year} checked={fieldYear === +year.year} type="radio" name="year"/>
+                                                <span>
                                                     {year.year}
                                                 </span>
-                                                </label>
-                                            </li>
-                                        </SwiperSlide>
-                                    )
-                                }
+                                            </label>
+                                        </li>
+                                    </SwiperSlide>
+                                )
+                            }
 
-                            </Swiper>
+                        </Swiper>
 
                     </div>
                     <div className="splide__arrows">

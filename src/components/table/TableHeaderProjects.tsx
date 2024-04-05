@@ -37,26 +37,13 @@ export const TableHeaderProjects: React.FC<ITableHeaderProjectsProps> = ({
 
     const [searchProjectName, setSearchProjectName]: any = useState<string>("")
     const [chosenProjectName, setChosenProjectName]: any = useState<string>("")
-    const [allUserProjects, setAllUserProjects] = useState<IAllUserProjects>()
 
-    const dispatch = useDispatch()
+    const allUserProjects: IAllUserProjects = useSelector((state: any) => state.toolkit.allUserProjects)
+    const userData: IUser = useSelector((state: any) => state.toolkit.user)
 
     const {rootEl} = useClickOutside(setIsActiveBlock)
 
-    const userData: IUser = useSelector((state: any) => state.toolkit.user)
-
     const {scrollY} = useScrollTopValue()
-
-    const getUserProjects = () => {
-        getBearer("get")
-        axios.get<IAllUserProjects>(getApiLink('/api/user/projects_info/')).then(({data}) => {
-            console.log(data)
-            setAllUserProjects(data)
-        }).catch(er => {
-            er?.response?.status === 401 && GetAccessToken(dispatch, getUserProjects)
-        })
-    }
-    useEffect(getUserProjects, [])
 
     useEffect(() => {
         setSearchProjectName("")

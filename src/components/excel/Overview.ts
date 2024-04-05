@@ -13,6 +13,7 @@ interface IOverviewProps {
 export const Overview = ({worksheet, translate, chosenTimesheet, data}: IOverviewProps) => {
 
     const documentAuthor = `${chosenTimesheet?.user?.first_name} ${chosenTimesheet?.user?.last_name}`
+    const approvalAuthor = `${chosenTimesheet?.manager?.first_name} ${chosenTimesheet?.manager?.last_name}`
     const approvalDate = chosenTimesheet?.status === "approve" ? chosenTimesheet?.updated_at : ''
 
 
@@ -189,16 +190,16 @@ export const Overview = ({worksheet, translate, chosenTimesheet, data}: IOvervie
         worksheet.mergeCells(`B${rowNumberForApproval}:E${rowNumberForApproval}`);
         worksheet.getCell(`B${rowNumberForApproval}`).value = {
             richText: [
-                {text: 'Approval: ', font: {bold: true, size: 16}},
-                {text: String(documentAuthor), font: {size: 16}}
+                {text: 'Approval: ', font: {bold: true, size: 14}},
+                {text: String(approvalAuthor), font: {size: 14}}
             ]
         };
         const rowNumberForApprovalDate = data.length + 10 + 11;
         worksheet.mergeCells(`B${rowNumberForApprovalDate}:E${rowNumberForApprovalDate}`);
         worksheet.getCell(`B${rowNumberForApprovalDate}`).value = {
             richText: [
-                {text: 'Date: ', font: {bold: true, size: 16}},
-                {text: String(approvalDate), font: {size: 16}}
+                {text: 'Date: ', font: {bold: true, size: 14}},
+                {text: String(approvalDate), font: {size: 14}}
             ]
         };
     }

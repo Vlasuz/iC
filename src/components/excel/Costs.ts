@@ -14,6 +14,7 @@ interface ICostProps {
 export const Costs = ({worksheet, translate, chosenTimesheet, expenses, logo}: ICostProps) => {
 
     const documentAuthor = `${chosenTimesheet?.user?.first_name} ${chosenTimesheet?.user?.last_name}`
+    const approvalAuthor = `${chosenTimesheet?.manager?.first_name} ${chosenTimesheet?.manager?.last_name}`
     const approvalDate = chosenTimesheet?.status === "approve" ? chosenTimesheet?.updated_at : ''
 
     worksheet.columns = [
@@ -23,7 +24,7 @@ export const Costs = ({worksheet, translate, chosenTimesheet, expenses, logo}: I
         {header: '', key: 'col3', width: 13.33},
         {header: '', key: 'col4', width: 22.50},
         {header: '', key: 'col5', width: 54.83},
-        {header: '', key: 'col6', width: 11.67},
+        {header: '', key: 'col6', width: 13.67},
         {header: '', key: 'col7', width: 6.17},
     ];
 
@@ -189,16 +190,16 @@ export const Costs = ({worksheet, translate, chosenTimesheet, expenses, logo}: I
         worksheet.addRow({})
 
         const rowNumberForApproval = taskLength + 10;
-        worksheet.mergeCells(`A${rowNumberForApproval}:D${rowNumberForApproval}`);
-        worksheet.getCell(`A${rowNumberForApproval}`).value = {
+        worksheet.mergeCells(`B${rowNumberForApproval}:E${rowNumberForApproval}`);
+        worksheet.getCell(`B${rowNumberForApproval}`).value = {
             richText: [
                 {text: 'Approval: ', font: {bold: true, size: 14}},
-                {text: String(documentAuthor), font: {size: 14}}
+                {text: String(approvalAuthor), font: {size: 14}}
             ]
         };
         const rowNumberForApprovalDate = taskLength + 11;
-        worksheet.mergeCells(`A${rowNumberForApprovalDate}:D${rowNumberForApprovalDate}`);
-        worksheet.getCell(`A${rowNumberForApprovalDate}`).value = {
+        worksheet.mergeCells(`B${rowNumberForApprovalDate}:E${rowNumberForApprovalDate}`);
+        worksheet.getCell(`B${rowNumberForApprovalDate}`).value = {
             richText: [
                 {text: 'Date: ', font: {bold: true, size: 14}},
                 {text: String(approvalDate), font: {size: 14}}

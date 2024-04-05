@@ -16,6 +16,10 @@ export const VacationsHeader: React.FC<IVacationsHeaderProps> = ({sortByName, se
 
     const sortByNameList = [
         {
+            value: "default",
+            label: <Translate>by_default</Translate>
+        },
+        {
             value: "sortDown",
             label: "A-Z"
         },

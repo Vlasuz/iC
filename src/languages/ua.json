@@ -341,5 +341,9 @@
 
   "pass_min": "Мінімальна кількість символів у паролі: 8. Кількість зараз:",
 
-  "Timesheet_presence_report": "Timesheet (Presence Report)"
+  "Timesheet_presence_report": "Timesheet (Presence Report)",
+
+  "all_statuses": "Усі статуси",
+  "add_comment": "Додати коментар",
+  "by_default": "За замовченням"
 }

@@ -51,6 +51,10 @@ const toolkit = createSlice({
             state.projects = state.projects.filter(item => item.id !== action.payload.id)
         },
 
+        setAllUserProjects(state, action) {
+            state.allUserProjects = action.payload
+        },
+
         setLanguage(state, action) {
             state.language = action.payload
         },
@@ -148,6 +152,7 @@ export const {
     addProject,
     editProject,
     removeProject,
+    setAllUserProjects,
 
     setLanguage,
 

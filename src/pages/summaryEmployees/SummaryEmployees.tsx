@@ -31,6 +31,10 @@ export const SummaryEmployees: React.FC<ISummaryEmployeesProps> = () => {
 
     const statusSortList = [
         {
+            label: <Translate>all_statuses</Translate>,
+            value: "default"
+        },
+        {
             label: <Translate>employees_page.table.pending_first</Translate>,
             value: "waiting"
         },
@@ -52,8 +56,8 @@ export const SummaryEmployees: React.FC<ISummaryEmployeesProps> = () => {
     const summaryEmployees: ISummaryEmployee = useSelector((state: any) => state.toolkit.summaryEmployees)
     const chosenTimesheet = useSelector((state: any) => state.toolkit.chosenTimesheet)
 
-    const [actualMonth, setActualMonth] = useState('')
-    const [actualYear, setActualYear] = useState('')
+    const [actualMonth, setActualMonth] = useState<string>(String(new Date().getMonth() + 1))
+    const [actualYear, setActualYear] = useState<string>(String(new Date().getFullYear()))
 
     useEffect(() => {
         if(!chosenTimesheet?.date) return;
@@ -93,7 +97,6 @@ export const SummaryEmployees: React.FC<ISummaryEmployeesProps> = () => {
         axios.get(getApiLink("/api/timesheet/projects/")).then(({data}) => {
             setAllProjects(data)
             setProjects(data)
-            console.log(data)
         })
     }, [])
 
@@ -129,26 +132,12 @@ export const SummaryEmployees: React.FC<ISummaryEmployeesProps> = () => {
 
     const [isOpen, setIsOpen] = useState(false)
 
-    const handleOpenExport = () => {
-        setIsOpen(true)
-    }
-
-
     const {t} = useTranslation()
 
 
     const [projects, setProjects] = useState<IProject[]>([])
     const [users, setUsers] = useState<any[]>([])
-
-    // const getAllProjects = () => {
-    //     axios.get(getApiLink('/api/admin/project/')).then(({data}) => {
-    //         // setProjects(data.projects_list)
-    //         console.log(data)
-    //     }).catch(er => {
-    //         er.response.status === 401 && GetAccessToken(dispatch, getAllProjects)
-    //     })
-    // }
-    // useEffect(getAllProjects, [chosenTimesheet])
+    const [allUsersStatistics, setAllUsersStatistics] = useState<any[]>([])
 
     const [isHaveEmployees, setIsHaveEmployees] = useState(false)
 
@@ -158,24 +147,21 @@ export const SummaryEmployees: React.FC<ISummaryEmployeesProps> = () => {
         if(isHaveEmployees) return;
         setIsHaveEmployees(true)
 
-        summaryEmployees?.all?.map(async (user) => {
-            getBearer('get')
-            await axios.get(getApiLink(`/api/timesheet/statistics/?timesheet_id=${user?.id}`)).then(({data}) => {
-                setUsers(prev => [...prev, {
-                    user,
-                    timesheet: data
-                }])
-            }).catch(er => console.log(getApiLink("/api/timesheet/statistics/?timesheet_id"), er))
-        })
+        if(!year && !month) return;
+
+        getBearer('get')
+        axios.get(getApiLink(`/api/timesheet/statistics/all/?year=${year}&month=${month}`)).then(({data}) => {
+            setAllUsersStatistics(data)
+        }).catch(er => console.log(er))
+
 
     }, [summaryEmployees, month, year])
-
 
     return (
         <SummaryEmployeesStyled className="summary">
 
-            <SummaryEmployeesExportTable isOpen={isOpen} statisticForTable={statisticForTable}/>
-            <SummaryEmployeesExportTableCosts isOpen={isOpen} statisticForTable={statisticForTable}/>
+            {/*<SummaryEmployeesExportTable isOpen={isOpen} statisticForTable={statisticForTable}/>*/}
+            {/*<SummaryEmployeesExportTableCosts isOpen={isOpen} statisticForTable={statisticForTable}/>*/}
 
             <div className="summary__header page-header">
                 <div className="page-header__col">
@@ -222,11 +208,10 @@ export const SummaryEmployees: React.FC<ISummaryEmployeesProps> = () => {
                     {user.status === "team_lead" &&
                         <TableExportCustom
                             isCanNotExportPdf={true}
-                            excelFile={(e: any) => SummaryEmployeesExcel({chosenTimesheet, projects, users, translate: t})}
+                            excelFile={(e: any) => SummaryEmployeesExcel({chosenTimesheet, projects, users: allUsersStatistics, translate: t})}
                         />
                     }
 
-                    {/*{user.status === "team_lead" && <TableExportCustom onClick={handleOpenExport}/>}*/}
                 </form>
             </div>
             <div className="summary__main">
@@ -238,10 +223,11 @@ export const SummaryEmployees: React.FC<ISummaryEmployeesProps> = () => {
                             const lastNameA = a.user.last_name.toLowerCase();
                             const lastNameB = b.user.last_name.toLowerCase();
 
-                            return lastNameB > lastNameA ? 1 : -1;
+                            return lastNameB > lastNameA ? -1 : 1;
                         })
-                        ?.sort((a: any, b: any) => b.status === statusSortValue.value ? 1 : -1)
-                        ?.map(item => <SummaryEmployeesItem setStatisticForTable={setStatisticForTable} key={item.id}
+                        // ?.filter((a: any, b: any) => b.status === statusSortValue.value ? 1 : -1)
+                        ?.filter((item: any) => statusSortValue.value === "default" ? item : item.status === statusSortValue.value)
+                        ?.map(item => <SummaryEmployeesItem allUserStatistics={allUsersStatistics.filter((item2: any) => item2.user.id === item.user.id)[0]?.statistics} setStatisticForTable={setStatisticForTable} key={item.id}
                                                             isFavorite={true} itemData={item}/>)
                 }
                 {
@@ -251,41 +237,20 @@ export const SummaryEmployees: React.FC<ISummaryEmployeesProps> = () => {
                             const lastNameA = a.user.last_name.toLowerCase();
                             const lastNameB = b.user.last_name.toLowerCase();
 
-                            return lastNameB > lastNameA ? 1 : -1;
+                            return lastNameB > lastNameA ? -1 : 1;
                         })
-                        ?.sort((a: any, b: any) => b.status === statusSortValue.value ? 1 : -1)
+                        ?.filter((item: any) => statusSortValue.value === "default" ? item : item.status === statusSortValue.value)
                         ?.map(item => {
                             numberOfRow += 1;
 
                             // if (rowsSelectValue?.value && rowsSelectValue?.value < numberOfRow) return "";
 
-                            return <SummaryEmployeesItem setStatisticForTable={setStatisticForTable} key={item.id} itemData={item}/>
+                            return <SummaryEmployeesItem allUserStatistics={allUsersStatistics.filter((item2: any) => item2.user.id === item.user.id)[0]?.statistics} setStatisticForTable={setStatisticForTable} key={item.id} itemData={item}/>
                         })
                 }
 
 
             </div>
-            {/*<div className="summary__footer page-footer">*/}
-            {/*    <div className="page-footer__row-per-page visible-on-mob">*/}
-            {/*        <span>Rows per page:</span>*/}
-            {/*        <CustomSelect list={RowsPerPage()} defaultValue={RowsPerPage()[0]} selectValue={rowsSelectValue}*/}
-            {/*                      setSelectedItem={setRowsSelectValue}/>*/}
-            {/*    </div>*/}
-            {/*    {rowsSelectValue.value !== 0 && summaryEmployees?.all?.length > rowsSelectValue.value &&*/}
-            {/*        <button onClick={handleAddRows} className="section-table__see-more btn" type="button">*/}
-            {/*            <Translate>costs_page.table.show_more</Translate>*/}
-            {/*            <svg width="15" height="15" viewBox="0 0 15 15">*/}
-            {/*                <use xlinkHref="#arrow-down"></use>*/}
-            {/*            </svg>*/}
-            {/*        </button>}*/}
-            {/*    <div className="page-footer__row-per-page visible-on-desktop">*/}
-            {/*        <span>*/}
-            {/*            <Translate>costs_page.table.rows_per_page</Translate>*/}
-            {/*        </span>*/}
-            {/*        <CustomSelect list={RowsPerPage()} defaultValue={RowsPerPage()[0]} selectValue={rowsSelectValue}*/}
-            {/*                      setSelectedItem={setRowsSelectValue}/>*/}
-            {/*    </div>*/}
-            {/*</div>*/}
         </SummaryEmployeesStyled>
     )
 }

@@ -178,10 +178,20 @@ export interface INotification {
 
 export interface IVacation {
     extra: number
+    id: string
+    comment: string
     months: {
         month: number
         days: number
     }[]
     remain: number
     user: IUser
+}
+
+export interface IAllUserProjects {
+    used_projects: {
+        project: IProject,
+        count: number
+    }[]
+    projects_list: IProject[]
 }

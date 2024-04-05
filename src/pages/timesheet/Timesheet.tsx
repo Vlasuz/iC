@@ -63,6 +63,8 @@ export const Timesheet: React.FC<ITimesheetProps> = () => {
             dispatch(setTasks(data))
         })
 
+        if(!timesheetId && !chosenTimesheet?.id) return;
+
         getBearer('get')
         axios.get(getApiLink(`/api/timesheet/statistics/?timesheet_id=${timesheetId ?? chosenTimesheet?.id}`)).then(({data}) => {
             setStatistic(data)
@@ -87,7 +89,6 @@ export const Timesheet: React.FC<ITimesheetProps> = () => {
 
             getBearer('get')
             axios.get(getApiLink(`/api/timesheet/statistics/?timesheet_id=${timesheetId}`)).then(({data}) => {
-                console.log(data)
                 setStatistic(data)
                 SetStatistic(dispatch, timesheetId)
             }).catch(er => console.log(getApiLink("/api/timesheet/statistics/?timesheet_id"), er))
@@ -97,9 +98,9 @@ export const Timesheet: React.FC<ITimesheetProps> = () => {
     }, [summaryEmployees])
 
     useEffect(() => {
+        if(!chosenTimesheet?.id) return;
 
         if(timesheetId === undefined && chosenTimesheet?.user?.id !== user?.id) {
-
             SetTimesheet(dispatch)
             SetTasks(dispatch, chosenTimesheet?.id)
         }
@@ -117,6 +118,7 @@ export const Timesheet: React.FC<ITimesheetProps> = () => {
     }, [taskList, isLoad])
 
     useEffect(() => {
+        if(!timesheetStatistic) return;
         setStatistic(timesheetStatistic)
     }, [timesheetStatistic])
 

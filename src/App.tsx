@@ -19,7 +19,7 @@ import {Costs} from "./pages/costs/Costs";
 import {Summary} from "./pages/summary/Summary";
 import {SummaryEmployees} from "./pages/summaryEmployees/SummaryEmployees";
 import getCookies from "./functions/getCookie";
-import {ITimesheet} from "./models";
+import {ITimesheet, IUser} from "./models";
 import {SetTimesheet} from "./api/SetTimesheet";
 import {SetStatistic} from "./api/SetStatistic";
 import {ResetPassword} from "./pages/resetPassword/ResetPassword";
@@ -32,6 +32,8 @@ import {SetTasks} from "./api/SetTasks";
 import {SetExpenses} from './api/SetExpenses';
 import {setProjects, setUser} from './storage/toolkit';
 import {SetSummaryEmployees} from "./api/SetSummaryEmployees";
+import getCookie from "./functions/getCookie";
+import {SetAllUserProjects} from "./api/SetAllUserProjects";
 
 export const PopupContext: any = createContext(null)
 
@@ -87,10 +89,19 @@ function App() {
     const dispatch = useDispatch()
     const location = useLocation()
 
-    const userData = useSelector((state: any) => state.toolkit.user)
+    const userData: IUser = useSelector((state: any) => state.toolkit.user)
     const chosenTimesheet: ITimesheet = useSelector((state: any) => state.toolkit.chosenTimesheet)
 
     useEffect(() => {
+
+        getProfile()
+
+        window.addEventListener('resize', setZoom);
+    }, [])
+
+    useEffect(() => {
+        if(!userData?.id) return ;
+
         if (!getCookies('access_token_ic') && !location.pathname.includes("reset-password")) {
             return navigate("/login");
         } else if (location.pathname.includes("login")) {
@@ -99,35 +110,35 @@ function App() {
             return;
         }
 
-        SetTasks(dispatch, chosenTimesheet?.id)
-        SetExpenses(dispatch, chosenTimesheet?.id)
-        SetTimesheet(dispatch)
-        SetNotifications(dispatch)
-        SetSummaryEmployees(dispatch)
+        if(userData?.role === "admin") {
+            getBearer('get')
+            axios.get(getApiLink("/api/admin/project/")).then(({data}) => {
+                dispatch(setProjects(data))
+            }).catch(er => console.log(getApiLink("api/admin/project/"), er))
+        } else {
+            SetTasks(dispatch, chosenTimesheet?.id)
+            SetExpenses(dispatch, chosenTimesheet?.id)
+            SetTimesheet(dispatch)
+            SetNotifications(dispatch)
+            SetSummaryEmployees(dispatch)
+            SetAllUserProjects(dispatch)
+        }
 
-        getBearer('get')
-        axios.get(getApiLink("/api/admin/project/")).then(({data}) => {
-            dispatch(setProjects(data))
-        }).catch(er => console.log(getApiLink("api/admin/project/"), er))
 
     }, [userData])
 
     const getProfile = () => {
+        if(!getCookie("access_token_ic")) return;
+
         getBearer('get')
         axios.get(getApiLink("/api/user/profile/")).then(({data}) => {
             dispatch(setUser(data))
             console.log(data)
         }).catch(er => {
+            console.log(er)
             er?.response?.status === 401 && GetAccessToken(dispatch, getProfile)
         })
     }
-
-    useEffect(() => {
-
-        getProfile()
-
-        window.addEventListener('resize', setZoom);
-    }, [])
 
 
     useEffect(() => {

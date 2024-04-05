@@ -1,7 +1,7 @@
 import React, {useContext, useEffect, useState} from 'react'
 import axios from "axios";
 import {getApiLink} from "../../functions/getApiLink";
-import {IEmployee, IProject} from "../../models";
+import {IEmployee, IProject, IUser} from "../../models";
 import {getBearer} from "../../functions/getBearer";
 import {useDispatch, useSelector} from 'react-redux';
 import {setEmployeesList, setProjects, setSelectedEmployee} from "../../storage/toolkit";
@@ -31,6 +31,7 @@ export const Projects: React.FC<IProjectsProps> = () => {
     const dispatch = useDispatch()
 
     const projects: IProject[] = useSelector((state: any) => state.toolkit.projects)
+    const user: IUser = useSelector((state: any) => state.toolkit.user)
 
     const [searchValue, setSearchValue] = useState<string>('')
     const [listYear, setListYear] = useState(dateNow.getFullYear())
@@ -49,17 +50,13 @@ export const Projects: React.FC<IProjectsProps> = () => {
     const setPopup: any = useContext(PopupContext);
 
     useEffect(() => {
+        if (!user.id) return;
         if (searchValue.length > 0) return;
 
         getBearer("get")
         axios.get(getApiLink(`/api/admin/project/?year=${listYear}`)).then(({data}) => {
             dispatch(setProjects(data))
             setIsLoad(false)
-
-            // setRowsSelectValue({
-            //     value: 20,
-            //     label: "20"
-            // })
         }).catch(er => console.log(er))
     }, [searchValue, listYear])
 

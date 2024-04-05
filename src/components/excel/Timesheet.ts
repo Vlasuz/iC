@@ -14,6 +14,7 @@ interface ITimesheetProps {
 export const Timesheet = ({worksheet, chosenTimesheet, tasks, translate, logo}: ITimesheetProps) => {
 
     const documentAuthor = `${chosenTimesheet?.user?.first_name} ${chosenTimesheet?.user?.last_name}`
+    const approvalAuthor = `${chosenTimesheet?.manager?.first_name} ${chosenTimesheet?.manager?.last_name}`
     const approvalDate = chosenTimesheet?.status === "approve" ? chosenTimesheet?.updated_at : ''
 
     worksheet.columns = [
@@ -24,7 +25,7 @@ export const Timesheet = ({worksheet, chosenTimesheet, tasks, translate, logo}: 
         {header: '', key: 'col4', width: 22.50},
         {header: '', key: 'col5', width: 47.67},
         {header: '', key: 'col6', width: 12.83},
-        {header: '', key: 'col7', width: 6.0},
+        {header: '', key: 'col7', width: 7.0},
         {header: '', key: 'col8', width: 6.50},
     ];
 
@@ -53,7 +54,7 @@ export const Timesheet = ({worksheet, chosenTimesheet, tasks, translate, logo}: 
         ]
     };
 
-    const date = `${translate(MonthNumber()[+(chosenTimesheet?.date[3] + chosenTimesheet?.date[4])]?.translate_code)}, 20${chosenTimesheet?.date && chosenTimesheet?.date[6]}${chosenTimesheet?.date && chosenTimesheet?.date[7]}`
+    const date = `${MonthNumber()[+(chosenTimesheet?.date[3] + chosenTimesheet?.date[4])]?.en_title}, 20${chosenTimesheet?.date && chosenTimesheet?.date[6]}${chosenTimesheet?.date && chosenTimesheet?.date[7]}`
     worksheet.mergeCells('F4:I4');
     worksheet.getCell('F4').value = {
         richText: [
@@ -185,7 +186,7 @@ export const Timesheet = ({worksheet, chosenTimesheet, tasks, translate, logo}: 
         worksheet.getCell(`B${rowNumberForApproval}`).value = {
             richText: [
                 {text: 'Approval: ', font: {bold: true, size: 16}},
-                {text: String(documentAuthor), font: {size: 16}}
+                {text: String(approvalAuthor), font: {size: 16}}
             ]
         };
         const rowNumberForApprovalDate = taskLength + 11;

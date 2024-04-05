@@ -3,8 +3,9 @@ import {useClickOutside} from "../../hooks/ClickOutside";
 import {Navigation} from "swiper";
 import {Swiper, SwiperSlide} from "swiper/react";
 import {SetTimesheet} from "../../api/SetTimesheet";
-import { useDispatch } from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {Years} from "../../constants/Years";
+import {IUser} from "../../models";
 
 interface ITableSelectYearProps {
     setYear?: any
@@ -15,13 +16,19 @@ export const TableSelectYear: React.FC<ITableSelectYearProps> = ({setYear}) => {
     const [isSelectActive, setIsSelectActive] = useState(false)
     const {rootEl} = useClickOutside(setIsSelectActive)
 
+    const user: IUser = useSelector((state: any) => state.toolkit.user)
+
     const dateNow = new Date()
     const [fieldYear, setFieldYear] = useState(dateNow.getFullYear())
 
     const dispatch = useDispatch()
 
     useEffect(() => {
+        if(!user?.role) return;
+        if(user.role === "admin") return;
+
         setYear(fieldYear)
+        console.log('123')
         SetTimesheet(dispatch, fieldYear)
     }, [fieldYear])
 

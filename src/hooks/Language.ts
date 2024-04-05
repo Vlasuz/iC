@@ -43,9 +43,13 @@ export const useLanguage = () => {
 
     useEffect(() => {
 
+        if(!getCookie("access_token_ic")) return;
+
         getBearer("patch")
         axios.patch(getApiLink(`/api/user/update/language/?language=${i18n.language}`)).then(({data}) => {
             console.log(data)
+        }).catch(er => {
+            console.log(er)
         })
         dispatch(setLanguage(i18n.language))
         setCookie('language_ic', i18n.language)

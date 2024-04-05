@@ -30,6 +30,7 @@ export const EmployeesHeader: React.FC<IEmployeesHeaderProps> = ({setSearchValue
     const [isOpenInputSearch, setIsOpenInputSearch] = useState(false)
 
     useEffect(() => {
+        if(!searchValue.length) return;
 
         getBearer("get")
         axios.get(getApiLink(`/api/admin/employee/?search=${searchValue}`)).then(({data}) => {
