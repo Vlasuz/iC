@@ -176,9 +176,9 @@ export const VacationsItem: React.FC<IVacationsItemProps> = ({itemData, index}) 
                         </form>
                 }
 
-                {(itemData?.comment || comment) && <div className="rectangle"/>}
+                {comment && <div className="rectangle"/>}
 
-                {((itemData?.comment || comment) || isCanEditComment) && <textarea ref={commentEl}
+                {(comment || isCanEditComment) && <textarea ref={commentEl}
                            style={{opacity: isCanEditComment ? 1 : 0, visibility: isCanEditComment ? "visible" : "hidden"}}
                            disabled={!isCanEditComment}
                            className={`section-table__comment ${!itemData?.comment && "non-have-comment"}`} value={comment}

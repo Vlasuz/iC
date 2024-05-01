@@ -1,6 +1,7 @@
 import ExcelJS from "exceljs";
 import {MonthNumber} from "../../../constants/MonthNumber";
 import {IProject, ITimesheet} from "../../../models";
+import {generateAlphaNumericSequence} from "../../../functions/getAlphabetNumbers";
 
 interface IProps {
     worksheet: ExcelJS.Worksheet
@@ -175,8 +176,6 @@ export const SummaryEmployeesExcelTimesheet = ({worksheet, projects, chosenTimes
             if (user.statistics.tasks.some((proj: any) => proj?.project?.id === project?.id)) {
                 rowUser[`col${index + 1}`] = user.statistics.tasks.filter((proj: any) => proj?.project?.id === project?.id)[0]?.hours
 
-                console.log(user.statistics.expenses.filter((proj: any) => proj?.project?.id === project?.id)[0]?.sum)
-
                 allAmount += user.statistics.tasks.filter((proj: any) => proj?.project?.id === project?.id)[0]?.hours
                 totalHours += user.statistics.tasks.filter((proj: any) => proj?.project?.id === project?.id)[0]?.hours
                 totalCosts += user.statistics.expenses.filter((proj: any) => proj?.project?.id === project?.id)[0]?.sum ? user.statistics.expenses.filter((proj: any) => proj?.project?.id === project?.id)[0]?.sum : 0
@@ -186,7 +185,7 @@ export const SummaryEmployeesExcelTimesheet = ({worksheet, projects, chosenTimes
 
         })
 
-        rowUser[`colTotal`] = allAmount
+        rowUser[`colTotal`] = +allAmount.toFixed(1)
 
         worksheet.addRow(rowUser).eachCell((cell, colNumber) => {
             cell.style = styleForTableBody;
@@ -220,7 +219,6 @@ export const SummaryEmployeesExcelTimesheet = ({worksheet, projects, chosenTimes
                         right: {style: 'hair', color: {argb: '000000'}},
                     }
                 }
-                cell.numFmt = '#,##0.0';
 
                 if (String(cell?.value) !== "0") {
                     cell.style = {
@@ -239,6 +237,8 @@ export const SummaryEmployeesExcelTimesheet = ({worksheet, projects, chosenTimes
                         }
                     }
                 }
+
+                cell.numFmt = '#,##0.0';
 
             } else if (colNumber === 3) {
                 cell.style = {
@@ -279,7 +279,18 @@ export const SummaryEmployeesExcelTimesheet = ({worksheet, projects, chosenTimes
 
         worksheet.getRow(8 + index).height = 37;
 
+
+        const valuesCount = 100;
+        const result = generateAlphaNumericSequence(valuesCount);
+        const allProjectsLength = projects.length
+
+        const firstLetter = result[3]
+        const lastLetter = result
+
+        worksheet.getCell(`${lastLetter[allProjectsLength + 3]}${8 + index}`).value = { formula: `SUM(${firstLetter}${8 + index}:${lastLetter[allProjectsLength + 2]}${8 + index})` };
+
     })
+
 
     const styleForTableFooter: Partial<ExcelJS.Style> = {
         font: {bold: true, size: 10, color: {argb: '000000'}},
@@ -314,7 +325,7 @@ export const SummaryEmployeesExcelTimesheet = ({worksheet, projects, chosenTimes
         rowFooter[`col${index + 1}`] = sum
     })
 
-    rowFooter[`colTotal`] = totalHours
+    rowFooter[`colTotal`] = +totalHours.toFixed(1)
 
     worksheet.addRow(rowFooter).eachCell((cell, colNumber) => {
         cell.style = styleForTableFooter;
@@ -342,9 +353,6 @@ export const SummaryEmployeesExcelTimesheet = ({worksheet, projects, chosenTimes
     });
 
     worksheet.mergeCells(`B${8 + users.length}`, `C${8 + users.length}`);
-
-
-
 
 
 
@@ -381,11 +389,10 @@ export const SummaryEmployeesExcelTimesheet = ({worksheet, projects, chosenTimes
         rowFooterCosts[`col${index + 1}`] = sum
     })
 
-    rowFooterCosts[`colTotal`] = totalCosts
+    rowFooterCosts[`colTotal`] = +totalCosts.toFixed(1)
 
     worksheet.addRow(rowFooterCosts).eachCell((cell, colNumber) => {
         cell.style = styleForTableFooterCosts;
-
 
         if(colNumber === projects.length + 4) {
             cell.numFmt = '#,##0.00';
@@ -411,7 +418,18 @@ export const SummaryEmployeesExcelTimesheet = ({worksheet, projects, chosenTimes
 
     worksheet.mergeCells(`B${9 + users.length}`, `C${9 + users.length}`);
 
-    console.log(projects)
+
+    projects.map((project, index) => {
+        const cellToSum = users.length + 8
+        const valuesCount = 100;
+        const result = generateAlphaNumericSequence(valuesCount);
+
+        worksheet.getCell(`${result[index + 3]}${cellToSum}`).value = { formula: `SUM(${result[index + 3]}${8}:${result[index + 3]}${cellToSum - 1})` };
+    })
+
+    const valuesCount = 100;
+    const result = generateAlphaNumericSequence(valuesCount);
+    worksheet.getCell(`${result[projects.length + 3]}${users.length + 8}`).value = { formula: `SUM(${result[projects.length + 3]}${8}:${result[projects.length + 3]}${users.length + 8 - 1})` };
 
     worksheet.addImage(logo, {
         // @ts-ignore

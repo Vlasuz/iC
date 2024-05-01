@@ -58,9 +58,13 @@ export const EmployeesTable: React.FC<IEmployeesTableProps> = ({rowsSelectValue,
     }
 
 
-    const [sortByName, setSortByName] = useState("sortDown")
+    const [sortByName, setSortByName] = useState("default")
 
     const sortByNameList = [
+        {
+            value: "default",
+            label: <Translate>by_default</Translate>
+        },
         {
             value: "sortDown",
             label: "A-Z"
@@ -260,7 +264,7 @@ export const EmployeesTable: React.FC<IEmployeesTableProps> = ({rowsSelectValue,
                                     ?.filter(item => item?.first_name?.toLowerCase().includes(searchValue.toLowerCase()) || item?.last_name?.toLowerCase().includes(searchValue.toLowerCase()))
                                     ?.filter(item => chosenStatus?.value ? item.status === chosenStatus.value : item)
                                     // ?.filter((item, index) => countOfShowRows === 0 ? item : index < countOfShowRows)
-                                    // ?.sort((a, b) => a.last_name < b.last_name ? sortByName === "sortUp" ? 1 : -1 : sortByName === "sortDown" ? 1 : -1)
+                                    ?.sort((a, b) => sortByName === "default" ? 0 : a.last_name < b.last_name ? sortByName === "sortUp" ? 1 : -1 : sortByName === "sortDown" ? 1 : -1)
                                     ?.sort((a, b) => +a.archive - +b.archive)
                                     ?.map((employee: IEmployee, index) => {
                                         numberOfRow += 1

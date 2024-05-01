@@ -16,7 +16,8 @@ interface IEmployeesExcelProps {
 
 export const EmployeesExcel = async ({listYear, employees, translate}: IEmployeesExcelProps) => {
 
-    const documentName = `Employees`
+    const today = `${String(new Date().getFullYear()).slice(2, 4)}${(new Date().getMonth() + 1) < 10 ? "0" + (new Date().getMonth() + 1) : new Date().getMonth() + 1}${new Date().getDate() < 10 ? "0" + new Date().getDate() : new Date().getDate()}`
+    const documentName = `${today}_Employees`
 
     const workbook = new ExcelJS.Workbook();
     const worksheetTimesheet = workbook.addWorksheet(documentName);

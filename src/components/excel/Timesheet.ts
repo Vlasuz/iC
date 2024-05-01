@@ -122,6 +122,9 @@ export const Timesheet = ({worksheet, chosenTimesheet, tasks, translate, logo}: 
                 const endLine = amountToMerge - 1 + tasks.filter((item2: any) => item2.date === item.date).length
                 worksheet.mergeCells(`C${amountToMerge}:C${endLine}`);
                 worksheet.mergeCells(`I${amountToMerge}:I${endLine}`);
+
+                worksheet.getCell(`I${amountToMerge}`).value = { formula: `SUM(H${amountToMerge}:H${endLine})` };
+
                 tasks.filter((item2: any) => {
                     if(item2.date === item.date) {
                         amountHours += item2.hours
@@ -129,9 +132,6 @@ export const Timesheet = ({worksheet, chosenTimesheet, tasks, translate, logo}: 
                 })
             }
         }
-
-        amountToMerge += 1
-
 
         worksheet.getCell(`B${startRow + plusNum}`).value = index + 1;
         worksheet.getCell(`B${startRow + plusNum}`).style = {...styleForTableBody, alignment: {vertical: 'middle', horizontal: 'center'},};
@@ -141,17 +141,19 @@ export const Timesheet = ({worksheet, chosenTimesheet, tasks, translate, logo}: 
         worksheet.getCell(`D${startRow + plusNum}`).value = item.project.name;
         worksheet.getCell(`D${startRow + plusNum}`).style = {...styleForTableBody, alignment: {vertical: 'middle', horizontal: 'center'},};
         worksheet.getCell(`E${startRow + plusNum}`).value = item.project.description;
-        worksheet.getCell(`E${startRow + plusNum}`).style = {...styleForTableBody, alignment: {vertical: 'middle', horizontal: 'center'},};
+        worksheet.getCell(`E${startRow + plusNum}`).style = {...styleForTableBody, alignment: { vertical: 'middle', horizontal: 'center'},};
         worksheet.getCell(`F${startRow + plusNum}`).value = item.task;
-        worksheet.getCell(`F${startRow + plusNum}`).style = {...styleForTableBody, alignment: {vertical: 'top', horizontal: 'left'},};
+        worksheet.getCell(`F${startRow + plusNum}`).style = {...styleForTableBody, alignment: {vertical: 'top', horizontal: 'left', wrapText: true },};
         worksheet.getCell(`G${startRow + plusNum}`).value = item.time;
         worksheet.getCell(`G${startRow + plusNum}`).style = {...styleForTableBody, alignment: {vertical: 'middle', horizontal: 'center'},};
         worksheet.getCell(`H${startRow + plusNum}`).value = item.hours;
         worksheet.getCell(`H${startRow + plusNum}`).style = {...styleForTableBody, alignment: {vertical: 'middle', horizontal: 'center'},};
         worksheet.getCell(`H${startRow + plusNum}`).numFmt = '0.0';
-        worksheet.getCell(`I${startRow + plusNum}`).value = amountHours;
         worksheet.getCell(`I${startRow + plusNum}`).style = {...styleForTableBody, alignment: {vertical: 'middle', horizontal: 'center'},};
         worksheet.getCell(`I${startRow + plusNum}`).numFmt = '0.0';
+
+
+        amountToMerge += 1
 
     })
 
@@ -172,7 +174,7 @@ export const Timesheet = ({worksheet, chosenTimesheet, tasks, translate, logo}: 
 
     worksheet.getCell(`G${rowNumberForTotal}`).value = `Total:`;
     worksheet.getCell(`G${rowNumberForTotal}`).style = styleForTotal;
-    worksheet.getCell(`H${rowNumberForTotal}`).value = +total;
+    worksheet.getCell(`H${rowNumberForTotal}`).value = { formula: `SUM(H7:H${rowNumberForTotal - 2})` };
     worksheet.getCell(`H${rowNumberForTotal}`).style = styleForTotal;
     worksheet.getCell(`H${rowNumberForTotal}`).numFmt = '0.0';
     worksheet.getCell(`I${rowNumberForTotal}`).value = ` hours`;

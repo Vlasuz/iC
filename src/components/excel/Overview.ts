@@ -50,7 +50,7 @@ export const Overview = ({worksheet, translate, chosenTimesheet, data}: IOvervie
         ]
     };
 
-    const date = `${translate(MonthNumber()[+(chosenTimesheet?.date[3] + chosenTimesheet?.date[4])]?.translate_code)}, 20${chosenTimesheet?.date && chosenTimesheet?.date[6]}${chosenTimesheet?.date && chosenTimesheet?.date[7]}`
+    const date = `${translate(MonthNumber()[+(chosenTimesheet?.date[3] + chosenTimesheet?.date[4])]?.en_title)}, 20${chosenTimesheet?.date && chosenTimesheet?.date[6]}${chosenTimesheet?.date && chosenTimesheet?.date[7]}`
     worksheet.mergeCells('F4:F4');
     worksheet.getCell('F4').value = {
         richText: [

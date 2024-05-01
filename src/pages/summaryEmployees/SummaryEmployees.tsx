@@ -20,6 +20,7 @@ import {GetAccessToken} from "../../api/GetAccessToken";
 import {useTranslation} from "react-i18next";
 import {SummaryEmployeesExcel} from "./components/SummaryEmployeesExcel";
 import {getBearer} from "../../functions/getBearer";
+import {generateAlphaNumericSequence} from "../../functions/getAlphabetNumbers";
 
 interface ISummaryEmployeesProps {
 
@@ -28,6 +29,14 @@ interface ISummaryEmployeesProps {
 export const SummaryEmployees: React.FC<ISummaryEmployeesProps> = () => {
 
     const dispatch = useDispatch()
+
+    useEffect(() => {
+
+        const valuesCount = 100;
+        const result = generateAlphaNumericSequence(valuesCount);
+        console.log(result);
+
+    }, [])
 
     const statusSortList = [
         {

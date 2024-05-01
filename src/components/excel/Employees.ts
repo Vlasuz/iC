@@ -2,6 +2,7 @@ import React, {useEffect} from 'react'
 import ExcelJS from "exceljs";
 import {MonthNumber} from "../../constants/MonthNumber";
 import {IEmployee, ITimesheet} from "../../models";
+import {Translate} from "../translate/Translate";
 
 interface IEmployeesProps {
     employees: IEmployee[]
@@ -20,8 +21,8 @@ export const Employees = ({worksheet, translate, listYear, employees, logo}: IEm
         {header: '', key: 'col3', width: 18.33},
         {header: '', key: 'col4', width: 10.17},
         {header: '', key: 'col5', width: 22.50},
-        {header: '', key: 'col6', width: 8.0},
-        {header: '', key: 'col7', width: 16.33},
+        {header: '', key: 'col6', width: 9.0},
+        {header: '', key: 'col7', width: 18.5},
         {header: '', key: 'col8', width: 10.50},
     ];
 
@@ -42,11 +43,9 @@ export const Employees = ({worksheet, translate, listYear, employees, logo}: IEm
 
     const date = listYear
     worksheet.mergeCells('G4:I4');
-    worksheet.getCell('G4').value = {
-        richText: [
-            {text: date, font: {bold: true, size: 14}},
-        ]
-    };
+    worksheet.getCell('G4').value = date;
+    worksheet.getCell('G4').style = {font: {bold: true, size: 14}};
+    worksheet.getCell('G4').numFmt = "0000"
     worksheet.getCell('G4').alignment = {
         horizontal: 'right'
     };
@@ -110,7 +109,7 @@ export const Employees = ({worksheet, translate, listYear, employees, logo}: IEm
             col1: index + 1,
             col2: `${item.first_name} ${item.last_name}`,
             col3: item.role,
-            col4: item.status,
+            col4: translate(`employees_admin.table.${item.status}`),
             col5: item.email,
             col6: item.all_projects ? "All projects" : item.projects.length,
             col7: item.phone,
@@ -118,18 +117,19 @@ export const Employees = ({worksheet, translate, listYear, employees, logo}: IEm
         }).eachCell((cell, colNumber) => {
             cell.style = item.archive ? styleForTableBodyRetire : styleForTableBody;
 
-            if (colNumber === 2 || colNumber === 5 || colNumber === 9) {
-                cell.style = item.archive ?
-                    {
+            if (colNumber === 2 || colNumber === 5 || colNumber === 9 || colNumber === 7 || colNumber === 8) {
+                if(item.archive) {
+                    cell.style = {
                         ...styleForTableBody,
                         alignment: {vertical: 'middle', horizontal: 'center'},
                         font: {size: 10, color: {argb: 'cccccc'}},
                     }
-                    :
-                    {
+                } else {
+                    cell.style = {
                         ...styleForTableBody,
                         alignment: {vertical: 'middle', horizontal: 'center'},
                     }
+                }
             }
         });
     })
@@ -137,9 +137,9 @@ export const Employees = ({worksheet, translate, listYear, employees, logo}: IEm
 
     worksheet.addImage(logo, {
         // @ts-ignore
-        tl: {col: 8.5, row: 0.5},
+        tl: {col: 8.9, row: 0},
         // @ts-ignore
-        br: {col: 9, row: 2},
+        br: {col: 9, row: 1.9},
     });
 
 }

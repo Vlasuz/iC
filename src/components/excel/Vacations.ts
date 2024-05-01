@@ -15,7 +15,7 @@ export const Vacations = ({worksheet, translate, listYear, vacations, logo}: IVa
     worksheet.columns = [
         {header: '', key: 'col0', width: 8.00},
         {header: '', key: 'col1', width: 4.00},
-        {header: '', key: 'col2', width: 13.50},
+        {header: '', key: 'col2', width: 18.50},
         {header: '', key: 'col3', width: 7.0},
         {header: '', key: 'col4', width: 7.0},
         {header: '', key: 'col5', width: 7.0},
@@ -52,11 +52,9 @@ export const Vacations = ({worksheet, translate, listYear, vacations, logo}: IVa
 
     const date = listYear
     worksheet.mergeCells('Q4:T4');
-    worksheet.getCell('Q4').value = {
-        richText: [
-            {text: date, font: {bold: true, size: 14}},
-        ]
-    };
+    worksheet.getCell('Q4').value = date;
+    worksheet.getCell('Q4').style = {font: {bold: true, size: 14}};
+    worksheet.getCell('Q4').numFmt = "0000"
     worksheet.getCell('Q4').alignment = {
         horizontal: 'right'
     };
@@ -138,6 +136,13 @@ export const Vacations = ({worksheet, translate, listYear, vacations, logo}: IVa
         worksheet.addRow(rowObject).eachCell((cell, colNumber) => {
             cell.style = styleForTableBody;
 
+            if (cell?.value && String(cell?.value) !== "0") {
+                cell.style = {
+                    ...styleForTableBody,
+                    font: {size: 10, bold: true},
+                }
+            }
+
             if (colNumber === 2) {
                 cell.style = {
                     ...styleForTableBody,
@@ -147,6 +152,7 @@ export const Vacations = ({worksheet, translate, listYear, vacations, logo}: IVa
                         fgColor: {argb: 'EFEFEF'}
                     },
                 }
+                cell.numFmt = "0"
             } else if (colNumber === 3) {
                 cell.style = {
                     ...styleForTableBody,
@@ -167,7 +173,14 @@ export const Vacations = ({worksheet, translate, listYear, vacations, logo}: IVa
                     },
                 }
             }
+
+            if (colNumber !== 2) {
+                cell.numFmt = "#0.0"
+            }
         });
+
+        worksheet.getCell(`G${index + 7}`).value = { formula: `SUM(D${index + 7}:F${index + 7})` };
+        worksheet.getCell(`T${index + 7}`).value = { formula: `SUM(G${index + 7}:S${index + 7})` };
 
         return worksheet.getRow(index + 7).height = 20;
     })

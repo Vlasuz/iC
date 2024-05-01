@@ -100,7 +100,7 @@ function App() {
     }, [])
 
     useEffect(() => {
-        if(!userData?.id) return ;
+        if(!userData?.id) return;
 
         if (!getCookies('access_token_ic') && !location.pathname.includes("reset-password")) {
             return navigate("/login");
@@ -128,7 +128,7 @@ function App() {
     }, [userData])
 
     const getProfile = () => {
-        if(!getCookie("access_token_ic")) return;
+        if(!getCookie("access_token_ic")) return navigate("/login");
 
         getBearer('get')
         axios.get(getApiLink("/api/user/profile/")).then(({data}) => {
@@ -136,7 +136,11 @@ function App() {
             console.log(data)
         }).catch(er => {
             console.log(er)
-            er?.response?.status === 401 && GetAccessToken(dispatch, getProfile)
+            if(getCookie("access_token_ic") && getCookie("refresh_token_ic")) {
+                GetAccessToken(dispatch, getProfile)
+            } else {
+                return er?.response?.status === 401 && GetAccessToken(dispatch, getProfile)
+            }
         })
     }
 

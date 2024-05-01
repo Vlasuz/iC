@@ -13,6 +13,8 @@ interface IProjectsProps {
 
 export const Projects = ({worksheet, translate, listYear, projects, logo}: IProjectsProps) => {
 
+    projects = projects?.slice()?.sort((a, b) => +a.archive - +b.archive)
+
     worksheet.columns = [
         {header: '', key: 'col0', width: 8.00},
         {header: '', key: 'col1', width: 5.00},
@@ -37,11 +39,9 @@ export const Projects = ({worksheet, translate, listYear, projects, logo}: IProj
 
     const date = listYear
     worksheet.mergeCells('C4:D4');
-    worksheet.getCell('C4').value = {
-        richText: [
-            {text: date, font: {bold: true, size: 14}},
-        ]
-    };
+    worksheet.getCell('C4').value = date;
+    worksheet.getCell('C4').style = {font: {bold: true, size: 14}};
+    worksheet.getCell('C4').numFmt = "0000"
     worksheet.getCell('C4').alignment = {
         horizontal: 'right'
     };
@@ -122,9 +122,9 @@ export const Projects = ({worksheet, translate, listYear, projects, logo}: IProj
 
     worksheet.addImage(logo, {
         // @ts-ignore
-        tl: {col: 3.1, row: 0.5},
+        tl: {col: 4.0, row: 0.5},
         // @ts-ignore
-        br: {col: 3.9, row: 1},
+        br: {col: 4.5, row: 1},
     });
 
 }

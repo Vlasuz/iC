@@ -21,7 +21,8 @@ interface IVacationsExcelProps {
 
 export const VacationsExcel = async ({listYear, vacations, translate}: IVacationsExcelProps) => {
 
-    const documentName = `Vacations`
+    const today = `${String(new Date().getFullYear()).slice(2, 4)}${(new Date().getMonth() + 1) < 10 ? "0" + (new Date().getMonth() + 1) : new Date().getMonth() + 1}${new Date().getDate() < 10 ? "0" + new Date().getDate() : new Date().getDate()}`
+    const documentName = `${today}_Vacations`
 
     const workbook = new ExcelJS.Workbook();
     const worksheetTimesheet = workbook.addWorksheet(documentName);

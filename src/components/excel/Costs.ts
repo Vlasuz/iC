@@ -51,7 +51,7 @@ export const Costs = ({worksheet, translate, chosenTimesheet, expenses, logo}: I
         ]
     };
 
-    const date = `${translate(MonthNumber()[+(chosenTimesheet?.date[3] + chosenTimesheet?.date[4])]?.translate_code)}, 20${chosenTimesheet?.date && chosenTimesheet?.date[6]}${chosenTimesheet?.date && chosenTimesheet?.date[7]}`
+    const date = `${translate(MonthNumber()[+(chosenTimesheet?.date[3] + chosenTimesheet?.date[4])]?.en_title)}, 20${chosenTimesheet?.date && chosenTimesheet?.date[6]}${chosenTimesheet?.date && chosenTimesheet?.date[7]}`
     worksheet.mergeCells('F4:H4');
     worksheet.getCell('F4').value = {
         richText: [
@@ -174,13 +174,9 @@ export const Costs = ({worksheet, translate, chosenTimesheet, expenses, logo}: I
         return sum + current.sum
     }, 0)
 
-    // worksheet.mergeCells(`E${rowNumberForTotal}:G${rowNumberForTotal}`);
-    // worksheet.getCell(`E${rowNumberForTotal}`).value = `Total: ${total.toFixed(2)} UAH`;
-    // worksheet.getCell(`E${rowNumberForTotal}`).style = styleForTotal;
-
     worksheet.getCell(`F${rowNumberForTotal}`).value = `Total:`;
     worksheet.getCell(`F${rowNumberForTotal}`).style = styleForTotal;
-    worksheet.getCell(`G${rowNumberForTotal}`).value = +total;
+    worksheet.getCell(`G${rowNumberForTotal}`).value = { formula: `SUM(G7:G${rowNumberForTotal - 2})` };
     worksheet.getCell(`G${rowNumberForTotal}`).style = styleForTotal;
     worksheet.getCell(`G${rowNumberForTotal}`).numFmt = '0.00';
     worksheet.getCell(`H${rowNumberForTotal}`).value = ` UAH`;
