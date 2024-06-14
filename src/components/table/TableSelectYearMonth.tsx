@@ -46,18 +46,12 @@ export const TableSelectYearMonth: React.FC<ITableSelectYearMonthProps> = ({setM
 
         if(timesheetId) {
 
-            console.log(month)
             axios.get(getApiLink(`/api/timesheet/tasks/?month=${month}&year=${fieldYear}&user_id=${chosenTimesheet?.user?.id}`)).then(({data}) => {
-                console.log(data)
                 dispatch(setTasks(data))
             })
 
             return;
         }
-
-        // if(onSwitch !== undefined) {
-        //     onSwitch(month)
-        // }
 
         if(setMonth !== undefined) {
             setMonth(month)
@@ -96,6 +90,10 @@ export const TableSelectYearMonth: React.FC<ITableSelectYearMonthProps> = ({setM
 
         SetTimesheet(dispatch, year)
     }
+
+    useEffect(() => {
+        setMonth && setMonth(filedMonth)
+    }, [])
 
     return (
         <div ref={rootEl} className={isSelectActive ? "section-table__change-full-date drop-down is-active" : "section-table__change-full-date drop-down"}>

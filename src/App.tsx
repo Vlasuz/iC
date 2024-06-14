@@ -34,6 +34,8 @@ import {setProjects, setUser} from './storage/toolkit';
 import {SetSummaryEmployees} from "./api/SetSummaryEmployees";
 import getCookie from "./functions/getCookie";
 import {SetAllUserProjects} from "./api/SetAllUserProjects";
+import AppleSignin from 'react-apple-signin-auth';
+
 
 export const PopupContext: any = createContext(null)
 
@@ -48,7 +50,7 @@ function App() {
                 // @ts-ignore
                 document.querySelector(".main__inner section").style.minHeight = "calc(140vh - 60px)";
 
-                if(document.querySelector(".down-sidebar")) {
+                if (document.querySelector(".down-sidebar")) {
                     // @ts-ignore
                     document.querySelector(".main__inner section").style.paddingBottom = "110px"
                 } else {
@@ -66,9 +68,9 @@ function App() {
                 // @ts-ignore
                 document.querySelector(".main__inner section").style.minHeight = "calc(95vh - 4px)";
 
-                if(document.querySelector(".down-sidebar")) {
+                if (document.querySelector(".down-sidebar")) {
 
-                    if(window.innerWidth < 576) {
+                    if (window.innerWidth < 576) {
                         // @ts-ignore
                         document.querySelector(".main__inner section").style.paddingBottom = "60px"
                     } else {
@@ -100,7 +102,7 @@ function App() {
     }, [])
 
     useEffect(() => {
-        if(!userData?.id) return;
+        if (!userData?.id) return;
 
         if (!getCookies('access_token_ic') && !location.pathname.includes("reset-password")) {
             return navigate("/login");
@@ -110,7 +112,7 @@ function App() {
             return;
         }
 
-        if(userData?.role === "admin") {
+        if (userData?.role === "admin") {
             getBearer('get')
             axios.get(getApiLink("/api/admin/project/")).then(({data}) => {
                 dispatch(setProjects(data))
@@ -128,7 +130,7 @@ function App() {
     }, [userData])
 
     const getProfile = () => {
-        if(!getCookie("access_token_ic")) return navigate("/login");
+        if (!getCookie("access_token_ic")) return navigate("/login");
 
         getBearer('get')
         axios.get(getApiLink("/api/user/profile/")).then(({data}) => {
@@ -136,7 +138,7 @@ function App() {
             console.log(data)
         }).catch(er => {
             console.log(er)
-            if(getCookie("access_token_ic") && getCookie("refresh_token_ic")) {
+            if (getCookie("access_token_ic") && getCookie("refresh_token_ic")) {
                 GetAccessToken(dispatch, getProfile)
             } else {
                 return er?.response?.status === 401 && GetAccessToken(dispatch, getProfile)
@@ -150,7 +152,6 @@ function App() {
     }, [location.pathname])
 
 
-
     const [popup, setPopup] = useState({
         popup: '',
         data: null
@@ -161,7 +162,7 @@ function App() {
     const isManager = userData.status?.includes("team_lead") || userData.status?.includes("project_lead")
 
     useEffect(() => {
-        if(!userData.id) return;
+        if (!userData.id) return;
         navigate("/login")
     }, [])
 
@@ -170,6 +171,7 @@ function App() {
             <PopupContext.Provider value={setPopup}>
                 <Sprites/>
                 <PopupList popup={popup}/>
+
 
                 <Wrapper>
 

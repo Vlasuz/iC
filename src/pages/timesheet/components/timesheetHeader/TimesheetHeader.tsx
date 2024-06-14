@@ -1,28 +1,28 @@
-import React, {createContext, useContext, useEffect, useRef, useState} from 'react'
-import {useDispatch, useSelector} from 'react-redux';
-import {IProject, ITask, ITimesheet, IUser} from "../../../../models";
-import {useClickOutside} from "../../../../hooks/ClickOutside";
-import {TimesheetHeaderChooseTime} from "./TimesheetHeaderChooseTime";
-import {TimesheetHeaderTask} from "./TimesheetHeaderTask";
+import React, { createContext, useContext, useEffect, useRef, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
+import { IProject, ITask, ITimesheet, IUser } from "../../../../models";
+import { useClickOutside } from "../../../../hooks/ClickOutside";
+import { TimesheetHeaderChooseTime } from "./TimesheetHeaderChooseTime";
+import { TimesheetHeaderTask } from "./TimesheetHeaderTask";
 import axios from "axios";
-import {getApiLink} from "../../../../functions/getApiLink";
-import {getBearer} from "../../../../functions/getBearer";
-import {Notifications} from "../../../../components/notifications/Notifications";
-import {setTasks} from "../../../../storage/toolkit";
-import {BlockToEdit, FixedTopEdit} from "../../Timesheet";
-import {TableExportCustom} from "../../../../components/table/TableExportCustom";
-import {TableSelectYearMonth} from "../../../../components/table/TableSelectYearMonth";
-import {TableProjectsForUser} from '../../../../components/table/TableProjectsForUser';
-import {TableCalendar} from "../../../../components/table/TableCalendar";
-import {SetTasks} from "../../../../api/SetTasks";
-import {SetStatistic} from "../../../../api/SetStatistic";
-import {Translate} from "../../../../components/translate/Translate";
-import {toast} from "react-toastify";
-import {useTranslation} from "react-i18next";
-import {useParams} from "react-router-dom";
-import {useDownloadExcel} from 'react-export-table-to-excel';
-import {CostsExcel} from "../../../costs/components/CostsExcel";
-import {TimesheetExcel} from '../TimesheetExcel';
+import { getApiLink } from "../../../../functions/getApiLink";
+import { getBearer } from "../../../../functions/getBearer";
+import { Notifications } from "../../../../components/notifications/Notifications";
+import { setTasks } from "../../../../storage/toolkit";
+import { BlockToEdit, FixedTopEdit } from "../../Timesheet";
+import { TableExportCustom } from "../../../../components/table/TableExportCustom";
+import { TableSelectYearMonth } from "../../../../components/table/TableSelectYearMonth";
+import { TableProjectsForUser } from '../../../../components/table/TableProjectsForUser';
+import { TableCalendar } from "../../../../components/table/TableCalendar";
+import { SetTasks } from "../../../../api/SetTasks";
+import { SetStatistic } from "../../../../api/SetStatistic";
+import { Translate } from "../../../../components/translate/Translate";
+import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
+import { useDownloadExcel } from 'react-export-table-to-excel';
+import { CostsExcel } from "../../../costs/components/CostsExcel";
+import { TimesheetExcel } from '../TimesheetExcel';
 
 interface ITimesheetHeaderProps {
     itemToEdit: ITask | undefined
@@ -32,15 +32,15 @@ interface ITimesheetHeaderProps {
 }
 
 export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({
-                                                                     itemToEdit,
-                                                                     isFixedEditBlock,
-                                                                     itemToDuplicate,
-                                                                     setItemToDuplicate
-                                                                 }) => {
+    itemToEdit,
+    isFixedEditBlock,
+    itemToDuplicate,
+    setItemToDuplicate
+}) => {
 
-    const {t} = useTranslation();
+    const { t } = useTranslation();
 
-    const {timesheetId}: any = useParams()
+    const { timesheetId }: any = useParams()
 
     const isEditTask = itemToEdit && Object.keys(itemToEdit).length
     const isDuplicateTask = itemToDuplicate && Object.keys(itemToDuplicate).length
@@ -81,7 +81,7 @@ export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({
             setTimeout(() => {
 
                 getBearer("patch")
-                axios.patch(getApiLink("/api/task/edit/?task_id=" + itemToEdit.id), timesheetRequest).then(({data}) => {
+                axios.patch(getApiLink("/api/task/edit/?task_id=" + itemToEdit.id), timesheetRequest).then(({ data }) => {
                     setIsLoadingToAdd(false)
 
                     if (data.message === 'occupied_time') {
@@ -96,15 +96,18 @@ export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({
                     SetStatistic(dispatch, chosenTimesheet.id)
                     SetTasks(dispatch, chosenTimesheet.id)
 
-                    // setTimeout(() => {
-                    // setIsFixedEditBlock(false)
-                    // setIsCancelEdit(false)
-                    // setItemToDuplicate({})
-                    // setItemEdit({})
+                    resetFields()
+                    handleBackFromCreate()
 
-                    // SetStatistic(dispatch, chosenTimesheet.id)
-                    // SetTasks(dispatch, chosenTimesheet.id)
-                    // setIsOpenCreatBlock(false)
+                    // setTimeout(() => {
+                    //     setIsFixedEditBlock(false)
+                    //     setIsCancelEdit(false)
+                    //     setItemToDuplicate({})
+                    //     setItemEdit({})
+
+                    //     SetStatistic(dispatch, chosenTimesheet.id)
+                    //     SetTasks(dispatch, chosenTimesheet.id)
+                    //     setIsOpenCreatBlock(false)
                     // }, 300)
                 })
 
@@ -112,18 +115,18 @@ export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({
 
         } else {
             getBearer("post")
-            axios.post(getApiLink(`/api/task/add/?timesheet_id=${chosenTimesheet?.id}`), timesheetRequest).then(({data}) => {
+            axios.post(getApiLink(`/api/task/add/?timesheet_id=${chosenTimesheet?.id}`), timesheetRequest).then(({ data }) => {
                 setIsLoadingToAdd(false)
 
                 if (data?.status === false) {
                     return toast.error(`${t("time_was_used")}`);
                 }
 
-                // isDuplicateTask && handleBackFromCreate()
+                isDuplicateTask && handleBackFromCreate()
 
                 SetStatistic(dispatch, chosenTimesheet.id)
                 SetTasks(dispatch, chosenTimesheet.id)
-                // resetFields()
+                resetFields()
             })
         }
     }
@@ -170,7 +173,7 @@ export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({
         e.preventDefault()
 
         getBearer("get")
-        axios.get(getApiLink(`/api/timesheet/tasks/?search=${searchValueLocal}&user_id=${chosenTimesheet?.user?.id}&month=${currentMonth}&year=${new Date().getFullYear()}`)).then(({data}) => {
+        axios.get(getApiLink(`/api/timesheet/tasks/?search=${searchValueLocal}&user_id=${chosenTimesheet?.user?.id}&month=${currentMonth}&year=${new Date().getFullYear()}`)).then(({ data }) => {
             dispatch(setTasks(data))
         })
     }
@@ -180,7 +183,7 @@ export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({
         if (!chosenTimesheet?.user?.id) return;
 
         getBearer("get")
-        axios.get(getApiLink(`/api/timesheet/tasks/?user_id=${chosenTimesheet?.user?.id}&month=${currentMonth}&year=${new Date().getFullYear()}`)).then(({data}) => {
+        axios.get(getApiLink(`/api/timesheet/tasks/?user_id=${chosenTimesheet?.user?.id}&month=${currentMonth}&year=${new Date().getFullYear()}`)).then(({ data }) => {
             dispatch(setTasks(data))
         })
     }, [searchValueLocal])
@@ -220,7 +223,7 @@ export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({
         if (!idTasksForMonth?.length) return;
 
         getBearer("get")
-        axios.get(getApiLink(`/api/timesheet/tasks/?timesheet_id=${idTasksForMonth}`)).then(({data}) => {
+        axios.get(getApiLink(`/api/timesheet/tasks/?timesheet_id=${idTasksForMonth}`)).then(({ data }) => {
             dispatch(setTasks(data))
         })
     }
@@ -239,7 +242,9 @@ export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({
 
     const resetFields = () => {
         setProjectData(undefined)
-        setTaskData("")
+        setTaskData('')
+        setTimeData('')
+        setHoursData(0)
     }
 
     useEffect(() => {
@@ -251,7 +256,7 @@ export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({
     const isApprove = chosenTimesheet?.status === "approve" || chosenTimesheet?.status === "waiting"
 
     const [isOpenInputSearch, setIsOpenInputSearch] = useState(false)
-    const {rootEl} = useClickOutside(setIsOpenInputSearch)
+    const { rootEl } = useClickOutside(setIsOpenInputSearch)
 
     const secondTitle: { [key: string]: string } = {
         "duplicate": `${t("duplicate_task")}`,
@@ -262,8 +267,8 @@ export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({
     const isWindowMin = isFixedEditBlock && window.innerWidth > 1200 && window.innerWidth < 1500
 
     return (
-        <div style={{paddingLeft: isFixedEditBlock ? isWindowMin ? "170px" : "51px" : "0"}}
-             className={`section-table__header ${isFixedEditBlock && "animate-to-show"} ${isCancelEdit && "animate-to-hide"}`}>
+        <div style={{ paddingLeft: isFixedEditBlock ? isWindowMin ? "170px" : "51px" : "0" }}
+            className={`section-table__header ${isFixedEditBlock && "animate-to-show"} ${isCancelEdit && "animate-to-hide"}`}>
             <div className="section-table__header--row is-always-row">
                 <div className="section-table__header--col">
                     <h1 className="section-table__title title change-title" id="main-title">
@@ -288,7 +293,7 @@ export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({
                     </h1>
                 </div>
 
-                <Notifications/>
+                <Notifications />
 
             </div>
             <div className={`section-table__header--block block-for-is-active ${isOpenCreatBlock && "is-active"}`}>
@@ -297,20 +302,20 @@ export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({
                         <div className="section-table__header--row row-2">
                             <div className="section-table__header--col">
                                 <button disabled={isApprove} onClick={handleOpenToCreate} type="button"
-                                        className="section-table__add btn add-is-active"
-                                        data-add-active-change-title="main-title">
+                                    className="section-table__add btn add-is-active"
+                                    data-add-active-change-title="main-title">
                                     <Translate>timesheet_page.top_part.add_task</Translate>
                                     <svg width="16" height="15" viewBox="0 0 16 15">
                                         <use xlinkHref="#plus"></use>
                                     </svg>
                                 </button>
                                 <form ref={rootEl} onSubmit={handleSearchTimesheet}
-                                      className={`section-table__search ${isOpenInputSearch && "is-active"}`}>
+                                    className={`section-table__search ${isOpenInputSearch && "is-active"}`}>
                                     <label className="section-table__search--label">
                                         <input type="search" name="search"
-                                               className="section-table__search--input"
-                                               onChange={e => setSearchValueLocal(e.target.value)}
-                                               value={searchValueLocal}
+                                            className="section-table__search--input"
+                                            onChange={e => setSearchValueLocal(e.target.value)}
+                                            value={searchValueLocal}
                                         />
                                         <span className="placeholder">
                                             {!searchValueLocal &&
@@ -318,8 +323,8 @@ export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({
                                         </span>
                                     </label>
                                     <button onClick={_ => setIsOpenInputSearch(true)}
-                                            className="section-table__search--submit btn is-grey is-min-on-mob"
-                                            type="submit">
+                                        className="section-table__search--submit btn is-grey is-min-on-mob"
+                                        type="submit">
                                         <Translate>timesheet_page.top_part.search</Translate>
                                         <svg width="15" height="15" viewBox="0 0 15 15">
                                             <use xlinkHref="#search"></use>
@@ -329,10 +334,10 @@ export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({
                             </div>
                             <div className="section-table__header--col">
 
-                                <TableSelectYearMonth onSwitch={handleSwitchMonth}/>
+                                <TableSelectYearMonth onSwitch={handleSwitchMonth} />
 
                                 <TableExportCustom
-                                    excelFile={(e: any) => TimesheetExcel({chosenTimesheet, tasks, translate: t})}
+                                    excelFile={(e: any) => TimesheetExcel({ chosenTimesheet, tasks, translate: t })}
                                 />
 
                                 {/*<button onClick={onDownload}>dwnl</button>*/}
@@ -344,11 +349,11 @@ export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({
                 <div className="section-table__header--block-item">
                     <div>
                         <form onSubmit={handleCreateTask}
-                              className="section-table__header--add-task section-table__add-task">
+                            className="section-table__header--add-task section-table__add-task">
                             <button onClick={handleBackFromCreate}
-                                    className="section-table__add-task--back back-btn remove-is-active"
-                                    data-remove-active-change-title="main-title" type="button"
-                                    aria-label="Go back">
+                                className="section-table__add-task--back back-btn remove-is-active"
+                                data-remove-active-change-title="main-title" type="button"
+                                aria-label="Go back">
                                 <svg width="7" height="10" viewBox="0 0 7 10">
                                     <use xlinkHref="#arrow-prev"></use>
                                 </svg>
@@ -357,19 +362,19 @@ export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({
                                 </span>
                             </button>
 
-                            <TableCalendar dateData={dateData} setDateData={setDateData}/>
+                            <TableCalendar dateData={dateData} setDateData={setDateData} />
 
-                            <TableProjectsForUser projectData={projectData} setProjectData={setProjectData}/>
+                            <TableProjectsForUser projectData={projectData} setProjectData={setProjectData} />
 
-                            <TimesheetHeaderTask taskData={taskData} setTaskData={setTaskData}/>
+                            <TimesheetHeaderTask taskData={taskData} setTaskData={setTaskData} />
 
                             <TimesheetHeaderChooseTime hoursData={hoursData} timeData={timeData}
-                                                       setHoursData={setHoursData} setTimeData={setTimeData}/>
+                                setHoursData={setHoursData} setTimeData={setTimeData} />
 
                             <button disabled={isLoadingToAdd} className="section-table__add-task--submit btn"
-                                    type="submit">
+                                type="submit">
                                 {!isLoadingToAdd ? (isEditTask ? <Translate>edit_task</Translate> :
-                                        <Translate>timesheet_page.top_part.add_task</Translate>) :
+                                    <Translate>timesheet_page.top_part.add_task</Translate>) :
                                     <Translate>loading</Translate>}
                             </button>
                         </form>

@@ -13,10 +13,6 @@ import {IProject, ISummaryEmployee, IUser} from "../../models";
 import {Translate} from "../../components/translate/Translate";
 import axios from "axios";
 import {getApiLink} from "../../functions/getApiLink";
-import {SummaryEmployeesExportTable} from "./components/SummaryEmployeesExportTable";
-import {SummaryEmployeesExportTableCosts} from "./components/SummaryEmployeesExportTableCosts";
-import {CostsExcel} from "../costs/components/CostsExcel";
-import {GetAccessToken} from "../../api/GetAccessToken";
 import {useTranslation} from "react-i18next";
 import {SummaryEmployeesExcel} from "./components/SummaryEmployeesExcel";
 import {getBearer} from "../../functions/getBearer";
@@ -29,14 +25,6 @@ interface ISummaryEmployeesProps {
 export const SummaryEmployees: React.FC<ISummaryEmployeesProps> = () => {
 
     const dispatch = useDispatch()
-
-    useEffect(() => {
-
-        const valuesCount = 100;
-        const result = generateAlphaNumericSequence(valuesCount);
-        console.log(result);
-
-    }, [])
 
     const statusSortList = [
         {
@@ -69,40 +57,21 @@ export const SummaryEmployees: React.FC<ISummaryEmployeesProps> = () => {
     const [actualYear, setActualYear] = useState<string>(String(new Date().getFullYear()))
 
     useEffect(() => {
+        if(month) return;
         if(!chosenTimesheet?.date) return;
+
         setActualMonth(`${chosenTimesheet?.date[3]}${chosenTimesheet?.date[4]}`)
         setActualYear(`20${chosenTimesheet?.date[6]}${chosenTimesheet?.date[7]}`)
     }, [chosenTimesheet])
 
     const [projectData, setProjectData] = useState<any>(undefined)
     const [statusSortValue, setStatusSortValue] = useState(statusSortList[0])
-    const [rowsSelectValue, setRowsSelectValue] = useState(RowsPerPage()[0])
     const [year, setYear] = useState(+actualYear)
     const [month, setMonth] = useState(+actualMonth)
     const [isLoad, setIsLoad] = useState(false)
     const [statisticForTable, setStatisticForTable]: any = useState([])
 
-    // const handleAddRows = () => {
-    //     const plusCount = window.innerWidth < 768 ? 10 : 20
-    //
-    //     setRowsSelectValue({
-    //         value: summaryEmployees.all.length <= +rowsSelectValue.label + plusCount ? 0 : rowsSelectValue.value + plusCount,
-    //         label: summaryEmployees.all.length <= +rowsSelectValue.label + plusCount ? "All" : String(+rowsSelectValue.label + plusCount)
-    //     })
-    // }
-
     useEffect(() => {
-        setRowsSelectValue(RowsPerPage()[0].value < summaryEmployees?.all?.length ? RowsPerPage()[0] : RowsPerPage()[3])
-
-        if(chosenTimesheet?.date) {
-            const actualMonth = `${chosenTimesheet?.date[3]}${chosenTimesheet?.date[4]}`
-            const actualYear = `20${chosenTimesheet?.date[6]}${chosenTimesheet?.date[7]}`
-
-            SetSummaryEmployees(dispatch, +actualMonth, +actualYear)
-        } else {
-            SetSummaryEmployees(dispatch)
-        }
-
         axios.get(getApiLink("/api/timesheet/projects/")).then(({data}) => {
             setAllProjects(data)
             setProjects(data)
@@ -112,7 +81,6 @@ export const SummaryEmployees: React.FC<ISummaryEmployeesProps> = () => {
     useEffect(() => {
         if (isLoad) return;
 
-        setRowsSelectValue(summaryEmployees.all?.length > +RowsPerPage()[0].value ? RowsPerPage()[0] : RowsPerPage()[3])
         setTimeout(() => {
             setIsLoad(true)
         }, 1000)
@@ -120,43 +88,36 @@ export const SummaryEmployees: React.FC<ISummaryEmployeesProps> = () => {
 
     useEffect(() => {
         if (!year) return;
-        setIsHaveEmployees(false)
-        SetSummaryEmployees(dispatch, month, year)
-    }, [year])
-
-    useEffect(() => {
         if (!month) return;
         setIsHaveEmployees(false)
         SetSummaryEmployees(dispatch, month, year === 0 ? +actualYear : year)
-    }, [month])
+    }, [month, year])
 
     const [valueSearch, setValueSearch] = useState("")
     const [allProjects, setAllProjects] = useState<IProject[]>([])
 
     useEffect(() => {
+        if(!projectData?.id) return
         SetSummaryEmployees(dispatch, month, year, projectData?.id)
     }, [projectData])
 
     let numberOfRow = 0;
 
-    const [isOpen, setIsOpen] = useState(false)
-
     const {t} = useTranslation()
 
 
     const [projects, setProjects] = useState<IProject[]>([])
-    const [users, setUsers] = useState<any[]>([])
     const [allUsersStatistics, setAllUsersStatistics] = useState<any[]>([])
 
     const [isHaveEmployees, setIsHaveEmployees] = useState(false)
 
     useEffect(() => {
-        setUsers([])
         if(!summaryEmployees?.all?.length) return;
         if(isHaveEmployees) return;
         setIsHaveEmployees(true)
 
         if(!year && !month) return;
+
 
         getBearer('get')
         axios.get(getApiLink(`/api/timesheet/statistics/all/?year=${year}&month=${month}`)).then(({data}) => {
@@ -168,9 +129,6 @@ export const SummaryEmployees: React.FC<ISummaryEmployeesProps> = () => {
 
     return (
         <SummaryEmployeesStyled className="summary">
-
-            {/*<SummaryEmployeesExportTable isOpen={isOpen} statisticForTable={statisticForTable}/>*/}
-            {/*<SummaryEmployeesExportTableCosts isOpen={isOpen} statisticForTable={statisticForTable}/>*/}
 
             <div className="summary__header page-header">
                 <div className="page-header__col">
