@@ -9,9 +9,10 @@ interface ITimesheetProps {
     tasks: ITask[]
     translate: any
     logo: number
+    currentMonth?: number | undefined
 }
 
-export const Timesheet = ({worksheet, chosenTimesheet, tasks, translate, logo}: ITimesheetProps) => {
+export const Timesheet = ({worksheet, chosenTimesheet, tasks, translate, currentMonth, logo}: ITimesheetProps) => {
 
     const documentAuthor = `${chosenTimesheet?.user?.first_name} ${chosenTimesheet?.user?.last_name}`
     const approvalAuthor = `${chosenTimesheet?.manager?.first_name} ${chosenTimesheet?.manager?.last_name}`
@@ -54,7 +55,7 @@ export const Timesheet = ({worksheet, chosenTimesheet, tasks, translate, logo}: 
         ]
     };
 
-    const date = `${MonthNumber()[+(chosenTimesheet?.date[3] + chosenTimesheet?.date[4])]?.en_title}, 20${chosenTimesheet?.date && chosenTimesheet?.date[6]}${chosenTimesheet?.date && chosenTimesheet?.date[7]}`
+    const date = `${MonthNumber()[currentMonth ?? +(chosenTimesheet?.date[3] + chosenTimesheet?.date[4])]?.en_title}, 20${chosenTimesheet?.date && chosenTimesheet?.date[6]}${chosenTimesheet?.date && chosenTimesheet?.date[7]}`
     worksheet.mergeCells('F4:I4');
     worksheet.getCell('F4').value = {
         richText: [

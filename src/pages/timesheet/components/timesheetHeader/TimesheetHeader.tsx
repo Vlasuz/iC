@@ -337,7 +337,7 @@ export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({
                                 <TableSelectYearMonth onSwitch={handleSwitchMonth} />
 
                                 <TableExportCustom
-                                    excelFile={(e: any) => TimesheetExcel({ chosenTimesheet, tasks, translate: t })}
+                                    excelFile={(e: any) => TimesheetExcel({ chosenTimesheet, tasks, translate: t, currentMonth })}
                                 />
 
                                 {/*<button onClick={onDownload}>dwnl</button>*/}

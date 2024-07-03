@@ -161,9 +161,10 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({
     }
 
     const [isOpenCreatBlock, setIsOpenCreatBlock] = useState(false)
-
+    const [currentMonth, setCurrentMonth] = useState(new Date().getMonth() + 1)
 
     const handleSwitchMonth = (month: number) => {
+        setCurrentMonth(month)
         if (!timesheet.length) return;
 
         const idTasksForMonth = timesheet.filter(item => Number(`${item.date[3]}${item.date[4]}`) === month)[0]?.id
@@ -306,7 +307,7 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({
                                 <TableSelectYearMonth onSwitch={handleSwitchMonth}/>
 
                                 <TableExportCustom
-                                    excelFile={(e: any) => CostsExcel({chosenTimesheet, expenses, translate: t})}
+                                    excelFile={(e: any) => CostsExcel({chosenTimesheet, expenses, currentMonth, translate: t})}
                                 />
 
                             </div>

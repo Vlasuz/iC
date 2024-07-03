@@ -9,9 +9,10 @@ interface ICostProps {
     translate: any
     worksheet: ExcelJS.Worksheet
     logo: number
+    currentMonth?: number | undefined
 }
 
-export const Costs = ({worksheet, translate, chosenTimesheet, expenses, logo}: ICostProps) => {
+export const Costs = ({worksheet, translate, chosenTimesheet, expenses, logo, currentMonth}: ICostProps) => {
 
     const documentAuthor = `${chosenTimesheet?.user?.first_name} ${chosenTimesheet?.user?.last_name}`
     const approvalAuthor = `${chosenTimesheet?.manager?.first_name} ${chosenTimesheet?.manager?.last_name}`
@@ -51,7 +52,7 @@ export const Costs = ({worksheet, translate, chosenTimesheet, expenses, logo}: I
         ]
     };
 
-    const date = `${translate(MonthNumber()[+(chosenTimesheet?.date[3] + chosenTimesheet?.date[4])]?.en_title)}, 20${chosenTimesheet?.date && chosenTimesheet?.date[6]}${chosenTimesheet?.date && chosenTimesheet?.date[7]}`
+    const date = `${translate(MonthNumber()[currentMonth ?? +(chosenTimesheet?.date[3] + chosenTimesheet?.date[4])]?.en_title)}, 20${chosenTimesheet?.date && chosenTimesheet?.date[6]}${chosenTimesheet?.date && chosenTimesheet?.date[7]}`
     worksheet.mergeCells('F4:H4');
     worksheet.getCell('F4').value = {
         richText: [
