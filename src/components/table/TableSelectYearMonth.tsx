@@ -3,7 +3,7 @@ import {useClickOutside} from "../../hooks/ClickOutside";
 import {MonthNumber} from "../../constants/MonthNumber";
 import {useDispatch, useSelector } from 'react-redux';
 import {ITimesheet} from "../../models";
-import {setChosenTimesheet, setTasks} from "../../storage/toolkit";
+import {setChosenTimesheet, setExpenses, setTasks} from "../../storage/toolkit";
 import SwiperCore, {Navigation} from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
@@ -48,6 +48,9 @@ export const TableSelectYearMonth: React.FC<ITableSelectYearMonthProps> = ({setM
 
             axios.get(getApiLink(`/api/timesheet/tasks/?month=${month}&year=${fieldYear}&user_id=${chosenTimesheet?.user?.id}`)).then(({data}) => {
                 dispatch(setTasks(data))
+            })
+            axios.get(getApiLink(`/api/timesheet/expenses/?month=${month}&year=${fieldYear}&user_id=${chosenTimesheet?.user?.id}`)).then(({data}) => {
+                dispatch(setExpenses(data))
             })
 
             return;

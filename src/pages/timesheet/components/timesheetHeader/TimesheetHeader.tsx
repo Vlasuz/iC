@@ -202,7 +202,7 @@ export const TimesheetHeader: React.FC<ITimesheetHeaderProps> = ({
     }
 
 
-    const [currentMonth, setCurrentMonth] = useState(new Date().getMonth() + 1)
+    const [currentMonth, setCurrentMonth] = useState((chosenTimesheet && Object.keys(chosenTimesheet)?.length) ? Number(`${chosenTimesheet?.date[3]}${chosenTimesheet?.date[4]}`) : new Date()?.getMonth() + 1)
 
     const handleSwitchMonth = (month: number) => {
         setCurrentMonth(month)

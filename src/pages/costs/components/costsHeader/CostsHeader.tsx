@@ -161,11 +161,24 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({
     }
 
     const [isOpenCreatBlock, setIsOpenCreatBlock] = useState(false)
-    const [currentMonth, setCurrentMonth] = useState(new Date().getMonth() + 1)
+
+
+    const [currentMonth, setCurrentMonth] = useState((chosenTimesheet && Object.keys(chosenTimesheet)?.length) ? Number(`${chosenTimesheet?.date[3]}${chosenTimesheet?.date[4]}`) : new Date()?.getMonth() + 1)
+
+    console.log(currentMonth);
 
     const handleSwitchMonth = (month: number) => {
         setCurrentMonth(month)
         if (!timesheet.length) return;
+
+        if (timesheetId) {
+            // getBearer("get")
+            // axios.get(getApiLink(`/api/timesheet/tasks/?timesheet_id=${timesheetId}`)).then(({data}) => {
+            //     console.log(data)
+            // })
+
+            return;
+        }
 
         const idTasksForMonth = timesheet.filter(item => Number(`${item.date[3]}${item.date[4]}`) === month)[0]?.id
 
@@ -180,6 +193,27 @@ export const CostsHeader: React.FC<ICostsHeaderProps> = ({
             er?.response?.status === 401 && GetAccessToken(dispatch, handleSwitchMonth)
         })
     }
+
+
+    // const [currentMonth, setCurrentMonth] = useState(new Date().getMonth() + 1)
+
+    // const handleSwitchMonth = (month: number) => {
+    //     setCurrentMonth(month)
+    //     if (!timesheet.length) return;
+
+        // const idTasksForMonth = timesheet.filter(item => Number(`${item.date[3]}${item.date[4]}`) === month)[0]?.id
+
+    //     if (!idTasksForMonth?.length) return;
+
+        // getBearer("get")
+        // axios.get(getApiLink(`/api/timesheet/expenses/?timesheet_id=${idTasksForMonth}`)).then(({data}) => {
+
+        //     SetStatistic(dispatch, idTasksForMonth)
+        //     dispatch(setExpenses(data))
+        // }).catch(er => {
+        //     er?.response?.status === 401 && GetAccessToken(dispatch, handleSwitchMonth)
+        // })
+    // }
 
     const handleOpenToCreate = () => {
         setIsOpenCreatBlock(true)
