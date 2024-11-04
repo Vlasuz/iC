@@ -26,8 +26,18 @@ export const TableCalendar: React.FC<ITableCalendarProps> = ({setDateData, dateD
     useEffect(() => {
         if (!dateData) return;
 
-        const dateParts = dateData.split('.');
-        const formattedDate = new Date(`${dateParts[1]}-${dateParts[0]}-${dateParts[2]}`);
+        // const dateParts = dateData.split('.');
+        // const formattedDate = new Date(`${dateParts[1]}-${dateParts[0]}-${dateParts[2]}`);
+
+        let dateParts = dateData.split('.');
+
+        dateParts = dateParts.map((i, x) => x === 2 && i.length < 3 ? "20"+i : i)
+        
+        const day = dateParts[0]
+        const month = dateParts[1]
+        const year = dateParts[2]
+        
+        const formattedDate = new Date(+year, +month-1, +day)
 
         setDate(formattedDate)
 
